@@ -127,7 +127,7 @@ graph TD
 ## 📁 6. Estructura del Repositorio Local
 
 ```text
-/mnt/Data/kommo-chatwoot/
+/mnt/Data/Projects for Antigravity/kommo-chatwoot/
 ├── PROJECT_CONTEXT.md          # Este documento maestro de persistencia
 ├── .gitignore                  # Exclusiones de Git (seguridad y temporales)
 ├── requirements.txt            # Dependencias de Python
