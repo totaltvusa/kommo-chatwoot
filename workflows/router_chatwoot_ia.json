@@ -1,0 +1,437 @@
+{
+  "id": "n0zgnS1vlOGNcGNY",
+  "name": "Chatwoot + IA Agent",
+  "active": true,
+  "isArchived": false,
+  "versionId": "14d5e839-5e9a-45a4-91e9-f8032859d056",
+  "activeVersionId": "14d5e839-5e9a-45a4-91e9-f8032859d056",
+  "triggerCount": 1,
+  "nodeCount": 11,
+  "createdAt": "2026-08-10T00:47:38.454Z",
+  "updatedAt": "2026-08-23T03:22:47.488Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "¿Es mensaje entrante?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es mensaje entrante?": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Obtener Conversacion Debounce",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Conversacion Debounce": {
+      "main": [
+        [
+          {
+            "node": "Debounce and Combine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Debounce and Combine": {
+      "main": [
+        [
+          {
+            "node": "Should Respond?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Respond?": {
+      "main": [
+        [
+          {
+            "node": "Determinar Marca",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Determinar Marca": {
+      "main": [
+        [
+          {
+            "node": "Is TotalTv USA?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is TotalTv USA?": {
+      "main": [
+        [
+          {
+            "node": "Call Agente TotalTv USA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Agente TVTotal24",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Agente TotalTv USA": {
+      "main": [
+        [
+          {
+            "node": "Responder en Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Agente TVTotal24": {
+      "main": [
+        [
+          {
+            "node": "Responder en Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.event }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "message_created"
+            },
+            {
+              "leftValue": "={{ String($json.body.message_type) }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "incoming"
+            },
+            {
+              "leftValue": "={{ String($json.body.private) }}",
+              "operator": {
+                "operation": "notEquals",
+                "type": "string"
+              },
+              "rightValue": "true"
+            },
+            {
+              "leftValue": "={{ ($json.body.conversation?.labels || []).map(l => String(l).toLowerCase()).includes('human') }}",
+              "operator": {
+                "operation": "notEquals",
+                "type": "string"
+              },
+              "rightValue": "true"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -240
+      ],
+      "id": "0b18dda2-f34c-4557-980b-ef0bd25c56cc",
+      "name": "¿Es mensaje entrante?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $('Determinar Marca').first().json.account_id || $('Webhook').first().json.body.account.id || 1 }}/conversations/{{ $('Determinar Marca').first().json.conversation_id || $('Webhook').first().json.body.conversation.id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: $json.output || $json.text || $json.formatted_response || '', message_type: 'outgoing', private: false }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2512,
+        -240
+      ],
+      "id": "c7641a56-50ae-429d-8ef3-42c2ee5b7a45",
+      "name": "Responder en Chatwoot"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatwoot-inbound-webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        -240
+      ],
+      "id": "52fa9661-4a0b-4acd-be2b-dddf2a0606f1",
+      "name": "Webhook",
+      "webhookId": "7bfd04bb-7995-4838-ae0c-263069af03d6"
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "452978b6-7ede-4ca6-963b-73143ce7d659",
+      "name": "Wait 5 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        -240
+      ],
+      "webhookId": "31aee553-2b9e-4f0e-bd61-e7b3bd1c84e4"
+    },
+    {
+      "parameters": {
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.body?.account?.id || 1 }}/conversations/{{ $json.body?.conversation?.id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "684c3039-44a3-4df6-8163-4950de84f13e",
+      "name": "Obtener Conversacion Debounce",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        672,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let triggerMsg = {};\ntry {\n  triggerMsg = $('Webhook').first().json.body || {};\n} catch (e) {\n  try {\n    triggerMsg = $('¿Es mensaje entrante?').first().json.body || {};\n  } catch (e2) {}\n}\n\nconst triggerMsgId = triggerMsg.id;\nconst messagesData = $input.item.json || {};\nconst messages = Array.isArray(messagesData.payload) ? messagesData.payload : (messagesData.messages || []);\n\nconst incomingMessages = messages.filter(m => (m.message_type === 0 || m.message_type === 'incoming') && !m.private);\nif (incomingMessages.length === 0) {\n  return { json: { should_respond: false } };\n}\n\nconst latestMsg = incomingMessages[incomingMessages.length - 1];\n\nif (triggerMsgId && latestMsg.id !== triggerMsgId) {\n  return { json: { should_respond: false } };\n}\n\nlet lastOutgoingIndex = -1;\nfor (let i = messages.length - 1; i >= 0; i--) {\n  if ((messages[i].message_type === 1 || messages[i].message_type === 'outgoing') && !messages[i].private) {\n    lastOutgoingIndex = i;\n    break;\n  }\n}\n\nconst unrespondedIncoming = messages.filter((m, idx) => {\n  const isIncoming = (m.message_type === 0 || m.message_type === 'incoming') && !m.private && m.content && m.content.trim();\n  return idx > lastOutgoingIndex && isIncoming;\n});\n\nif (unrespondedIncoming.length === 0) {\n  return { json: { should_respond: false } };\n}\n\nconst combinedText = unrespondedIncoming.map(m => m.content.trim()).join(' ');\n\nreturn {\n  json: {\n    should_respond: true,\n    combined_message: combinedText,\n    conversation_id: triggerMsg.conversation?.id,\n    account_id: triggerMsg.account?.id || 1,\n    inbox_id: triggerMsg.inbox?.id || triggerMsg.conversation?.inbox_id,\n    inbox_name: triggerMsg.inbox?.name || '',\n    labels: triggerMsg.conversation?.labels || []\n  }\n};"
+      },
+      "id": "2fe96f03-7fe1-417e-9dc8-040a32609ecc",
+      "name": "Debounce and Combine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.should_respond }}",
+              "operator": {
+                "operation": "true",
+                "type": "boolean"
+              }
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "id": "2c15e96b-5db4-4c88-b1f3-fb882aef0227",
+      "name": "Should Respond?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.item.json;\nconst inbox_id = parseInt(item.inbox_id) || 0;\nconst labels = (item.labels || []).map(l => String(l).toLowerCase());\nconst inbox_name = String(item.inbox_name || \"\").toLowerCase();\n\nlet brand = \"totaltvusa\";\n\n// TVTotal24 (Latina): Inbox 10 (Telegram) or Latina funnel label / name\nif (\n  inbox_id === 10 ||\n  labels.includes(\"funnel-totaltv-latina\") ||\n  labels.includes(\"funnel-total-tv-latina\") ||\n  inbox_name.includes(\"tvtotal24\") ||\n  inbox_name.includes(\"lat\")\n) {\n  brand = \"tvtotal24\";\n} else {\n  // TotalTv USA: Inboxes 4 (WhatsApp), 6 (Telegram), 7 (Telegram), etc.\n  brand = \"totaltvusa\";\n}\n\nreturn {\n  json: {\n    brand,\n    conversation_id: item.conversation_id,\n    account_id: item.account_id,\n    inbox_id: item.inbox_id,\n    inbox_name: item.inbox_name,\n    message: item.combined_message\n  }\n};"
+      },
+      "id": "c0255a26-2cc4-4cbf-86ac-3b803caf59e4",
+      "name": "Determinar Marca",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.brand }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "totaltvusa"
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "id": "1c37ea6b-cb47-4ad1-8eee-09a9396fdd6b",
+      "name": "Is TotalTv USA?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "asQhO3WgzQW4gR5P"
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "id": "78b45edf-8fea-4330-a946-1218b0ce5efa",
+      "name": "Call Agente TotalTv USA",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1712,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Vfweu0rjoTT3FUl1"
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "id": "11bce6ea-0357-4f7d-b417-696f0465024b",
+      "name": "Call Agente TVTotal24",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1712,
+        400
+      ]
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

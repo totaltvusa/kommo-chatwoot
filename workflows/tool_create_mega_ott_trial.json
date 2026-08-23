@@ -1,0 +1,1253 @@
+{
+  "id": "e1R7zQorWBaaqgou",
+  "name": "Create Mega OTT Trial Tool",
+  "active": true,
+  "isArchived": false,
+  "versionId": "3e450459-4383-44b1-aee3-57c4e312adeb",
+  "activeVersionId": "3e450459-4383-44b1-aee3-57c4e312adeb",
+  "triggerCount": 0,
+  "nodeCount": 31,
+  "createdAt": "2026-08-20T01:59:31.383Z",
+  "updatedAt": "2026-08-20T01:59:34.630Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generar Credenciales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Credenciales": {
+      "main": [
+        [
+          {
+            "node": "Obtener Datos Conversación Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Datos Conversación Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Evaluar Historial de Trials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar Historial de Trials": {
+      "main": [
+        [
+          {
+            "node": "Is Create?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Create?": {
+      "main": [
+        [
+          {
+            "node": "Crear Linea - Teléfono",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Check Trial?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Linea - Teléfono": {
+      "main": [
+        [
+          {
+            "node": "Check Status Phone",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Status Phone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status Phone": {
+      "main": [
+        [
+          {
+            "node": "Is Success Phone?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Success Phone?": {
+      "main": [
+        [
+          {
+            "node": "Preparar PUT Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Linea - Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar PUT Contacto": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Contacto Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Contacto Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Nota privada Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nota privada Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Notificar Administrador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar Administrador": {
+      "main": [
+        [
+          {
+            "node": "Format Success Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Linea - Email": {
+      "main": [
+        [
+          {
+            "node": "Check Status Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Status Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status Email": {
+      "main": [
+        [
+          {
+            "node": "Is Success Email?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Success Email?": {
+      "main": [
+        [
+          {
+            "node": "Preparar PUT Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Linea - Auto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Linea - Auto": {
+      "main": [
+        [
+          {
+            "node": "Check Status Auto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Status Auto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status Auto": {
+      "main": [
+        [
+          {
+            "node": "Is Success Auto?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Success Auto?": {
+      "main": [
+        [
+          {
+            "node": "Preparar PUT Contacto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nota privada Chatwoot (Error)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nota privada Chatwoot (Error)": {
+      "main": [
+        [
+          {
+            "node": "Notificar Administrador (Error)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar Administrador (Error)": {
+      "main": [
+        [
+          {
+            "node": "Obtener etiquetas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener etiquetas": {
+      "main": [
+        [
+          {
+            "node": "Agregar etiqueta human",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar etiqueta human": {
+      "main": [
+        [
+          {
+            "node": "Marcar como humano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar como humano": {
+      "main": [
+        [
+          {
+            "node": "Format Error Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Check Trial?": {
+      "main": [
+        [
+          {
+            "node": "Consultar Estado Trial 1 Mega OTT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Limit Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Estado Trial 1 Mega OTT": {
+      "main": [
+        [
+          {
+            "node": "Evaluar Estado Trial 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Evaluar Estado Trial 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar Estado Trial 1": {
+      "main": [
+        [
+          {
+            "node": "Is Trial Waiting?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Trial Waiting?": {
+      "main": [
+        [
+          {
+            "node": "Format Waiting Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Linea - Teléfono",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "975d916a-4891-42d2-bc26-10c8c7912fcf",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "9727dd3d-4785-4861-b9dd-0c4f23ddc9d4",
+      "name": "Generar Credenciales",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const trigger = $input.item.json;\nlet contact_name = \"Cliente\";\nlet email = \"\";\nlet phone = \"\";\n\nif (trigger.query) {\n  try {\n    const parsed = JSON.parse(trigger.query);\n    contact_name = parsed.contact_name || contact_name;\n    email = parsed.email || email;\n    phone = parsed.phone || phone;\n  } catch (e) {\n    // Ignore parse error\n  }\n}\n\ncontact_name = trigger.contact_name || contact_name;\nemail = trigger.email || email;\nphone = trigger.phone || phone;\n\nconst conversation_id = trigger.conversation_id || \"\";\nconst account_id = trigger.account_id || \"\";\n\nconst randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();\nconst auto_username = \"TTV\" + randomStr;\nconst auto_password = Math.random().toString(36).substring(2, 8).toUpperCase();\n\nreturn {\n  json: {\n    conversation_id,\n    account_id,\n    contact_name: String(contact_name).trim(),\n    email: String(email).trim().toLowerCase(),\n    phone: String(phone).replace(/\\D/g, \"\"),\n    auto_username,\n    auto_password,\n    note: String(contact_name).trim()\n  }\n};"
+      }
+    },
+    {
+      "id": "30007e8d-4161-44cf-bf26-bf05f67534cc",
+      "name": "Obtener Datos Conversación Chatwoot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $(\"Generar Credenciales\").item.json.account_id }}/conversations/{{ $(\"Generar Credenciales\").item.json.conversation_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "eef5a7e1-2938-4bd0-8705-ac9290b01353",
+      "name": "Evaluar Historial de Trials",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        550,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const res = $('Obtener Datos Conversación Chatwoot').item.json;\nconst sender = res.meta?.sender || (res.payload && res.payload[0] ? res.payload[0].meta?.sender : {}) || {};\nconst contact_id = sender.id || \"\";\nconst attrs = sender.custom_attributes || {};\n\nconst trial_count = parseInt(attrs.trial_count) || 0;\nconst trial_1_id = attrs.trial_1_id || null;\nconst trial_1_username = attrs.trial_1_username || \"\";\nconst trial_2_id = attrs.trial_2_id || null;\nconst trial_2_username = attrs.trial_2_username || \"\";\n\nlet action = \"create\";\nlet trial_number = 1;\n\nif (trial_count === 1) {\n  if (trial_1_id) {\n    action = \"check_first_trial\";\n    trial_number = 2;\n  } else {\n    action = \"create\";\n    trial_number = 2;\n  }\n} else if (trial_count >= 2) {\n  action = \"limit_reached\";\n}\n\nreturn {\n  json: {\n    action,\n    trial_number,\n    contact_id,\n    trial_1_id,\n    trial_1_username,\n    trial_2_id,\n    trial_2_username\n  }\n};"
+      }
+    },
+    {
+      "id": "099c0c45-6336-45c3-862b-1c59052c2aea",
+      "name": "Is Create?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.action }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "create"
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          }
+        }
+      }
+    },
+    {
+      "id": "586734c8-1e4b-456b-8f3f-d4f02fb509b0",
+      "name": "Crear Linea - Teléfono",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1450,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://megaott.net/api/v1/subscriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 1655|Uk2GI2EUH0v8NIcUFjGwLeKLlp14bVmEi2rcGSuJ48ec8236"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": "M3U"
+            },
+            {
+              "name": "username",
+              "value": "={{ $(\"Generar Credenciales\").item.json.phone }}"
+            },
+            {
+              "name": "package_id",
+              "value": "1"
+            },
+            {
+              "name": "max_connections",
+              "value": "1"
+            },
+            {
+              "name": "forced_country",
+              "value": "ALL"
+            },
+            {
+              "name": "adult",
+              "value": "0"
+            },
+            {
+              "name": "enable_vpn",
+              "value": "0"
+            },
+            {
+              "name": "paid",
+              "value": "0"
+            },
+            {
+              "name": "note",
+              "value": "={{ $(\"Generar Credenciales\").item.json.note }}"
+            }
+          ]
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "6379f44d-f8a2-478f-b889-2da80ec915a7",
+      "name": "Check Status Phone",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.item.json;\nif (item.error || !item.id) {\n  let error_message = \"Error con el teléfono.\";\n  if (item.error && item.error.message) {\n    error_message = item.error.message;\n    try {\n      const jsonPart = error_message.substring(error_message.indexOf('{'));\n      const parsed = JSON.parse(jsonPart);\n      if (parsed.message) error_message = parsed.message;\n    } catch(e) {}\n  }\n  return {\n    json: {\n      success: false,\n      error_message: String(error_message).replace(/[\"\\\\]/g, \"\")\n    }\n  };\n} else {\n  return {\n    json: {\n      success: true,\n      id: item.id,\n      username: item.username,\n      password: item.password,\n      dns_link: item.dns_link,\n      dns_link_for_samsung_lg: item.dns_link_for_samsung_lg\n    }\n  };\n}"
+      }
+    },
+    {
+      "id": "97b464a9-4fd1-4c1a-86ca-8e900b4d180a",
+      "name": "Is Success Phone?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        200
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.success }}",
+              "operator": {
+                "operation": "true",
+                "type": "boolean"
+              }
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          }
+        }
+      }
+    },
+    {
+      "id": "08a94ad0-8cb5-48ab-987f-244feebc159b",
+      "name": "Preparar PUT Contacto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2800,
+        200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const trial_number = $('Evaluar Historial de Trials').item.json.trial_number;\nconst contact_id = $('Evaluar Historial de Trials').item.json.contact_id;\nconst subscription = $input.item.json;\n\nconst custom_attributes = {\n  trial_count: String(trial_number)\n};\ncustom_attributes[`trial_${trial_number}_id`] = String(subscription.id);\ncustom_attributes[`trial_${trial_number}_username`] = subscription.username;\n\nreturn {\n  json: {\n    contact_id,\n    body: {\n      custom_attributes\n    },\n    username: subscription.username,\n    password: subscription.password,\n    dns_link: subscription.dns_link,\n    dns_link_for_samsung_lg: subscription.dns_link_for_samsung_lg,\n    id: subscription.id\n  }\n};"
+      }
+    },
+    {
+      "id": "99a04631-e94f-48e6-8e3c-bdd83a841af7",
+      "name": "Actualizar Contacto Chatwoot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2950,
+        200
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $(\"Generar Credenciales\").item.json.account_id }}/contacts/{{ $json.contact_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "f87baf60-e4aa-4f23-b4a9-260db275d9a4",
+      "name": "Nota privada Chatwoot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3100,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $(\"Generar Credenciales\").item.json.account_id }}/conversations/{{ $(\"Generar Credenciales\").item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: \"✅ Prueba de 24 horas generada automáticamente en Mega OTT:\\nUsuario: \" + $(\"Preparar PUT Contacto\").item.json.username + \"\\nContraseña: \" + $(\"Preparar PUT Contacto\").item.json.password + \"\\nEmail: \" + $(\"Generar Credenciales\").item.json.email + \"\\nTeléfono: \" + $(\"Generar Credenciales\").item.json.phone, message_type: \"outgoing\", private: true }) }}"
+      }
+    },
+    {
+      "id": "f5a2898a-c319-4d0f-861e-e49d76f0a575",
+      "name": "Notificar Administrador",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3250,
+        200
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "40371837",
+        "text": "=🔔 <b>Prueba Automática Generada</b>\n\n👤 <b>Datos del Cliente:</b>\n- Nombre: {{ $(\"Generar Credenciales\").item.json.contact_name }}\n- Email: {{ $(\"Generar Credenciales\").item.json.email }}\n- Teléfono: {{ $(\"Generar Credenciales\").item.json.phone }}\n\n🔑 <b>Datos de la Prueba:</b>\n- Usuario: <code>{{ $(\"Preparar PUT Contacto\").item.json.username }}</code>\n- Contraseña: <code>{{ $(\"Preparar PUT Contacto\").item.json.password }}</code>\n- DNS: {{ $(\"Preparar PUT Contacto\").item.json.dns_link }}\n- DNS Smarters: {{ $(\"Preparar PUT Contacto\").item.json.dns_link_for_samsung_lg }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "webhookId": "3ce0c353-a396-4ba9-81a6-ca775775fd2c",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "id": "6ae3250c-adb5-4c42-9eec-d69d25a297e9",
+      "name": "Format Success Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3400,
+        200
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return {\n  json: {\n    status: \"created\",\n    success: true,\n    username: $(\"Preparar PUT Contacto\").item.json.username,\n    password: $(\"Preparar PUT Contacto\").item.json.password,\n    dns: $(\"Preparar PUT Contacto\").item.json.dns_link,\n    dns_smarters: $(\"Preparar PUT Contacto\").item.json.dns_link_for_samsung_lg\n  }\n};"
+      }
+    },
+    {
+      "id": "c45f684c-1f37-419d-9707-4fecd2050fe6",
+      "name": "Crear Linea - Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1900,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://megaott.net/api/v1/subscriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 1655|Uk2GI2EUH0v8NIcUFjGwLeKLlp14bVmEi2rcGSuJ48ec8236"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": "M3U"
+            },
+            {
+              "name": "username",
+              "value": "={{ $(\"Generar Credenciales\").item.json.email }}"
+            },
+            {
+              "name": "package_id",
+              "value": "1"
+            },
+            {
+              "name": "max_connections",
+              "value": "1"
+            },
+            {
+              "name": "forced_country",
+              "value": "ALL"
+            },
+            {
+              "name": "adult",
+              "value": "0"
+            },
+            {
+              "name": "enable_vpn",
+              "value": "0"
+            },
+            {
+              "name": "paid",
+              "value": "0"
+            },
+            {
+              "name": "note",
+              "value": "={{ $(\"Generar Credenciales\").item.json.note }}"
+            }
+          ]
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "ecb3c02d-6d4b-4ea0-959d-b42147fdec2f",
+      "name": "Check Status Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2050,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.item.json;\nif (item.error || !item.id) {\n  let error_message = \"Error con el email.\";\n  if (item.error && item.error.message) {\n    error_message = item.error.message;\n    try {\n      const jsonPart = error_message.substring(error_message.indexOf('{'));\n      const parsed = JSON.parse(jsonPart);\n      if (parsed.message) error_message = parsed.message;\n    } catch(e) {}\n  }\n  return {\n    json: {\n      success: false,\n      error_message: String(error_message).replace(/[\"\\\\]/g, \"\")\n    }\n  };\n} else {\n  return {\n    json: {\n      success: true,\n      id: item.id,\n      username: item.username,\n      password: item.password,\n      dns_link: item.dns_link,\n      dns_link_for_samsung_lg: item.dns_link_for_samsung_lg\n    }\n  };\n}"
+      }
+    },
+    {
+      "id": "068f366e-421a-4ddb-bf04-8dd459d30caa",
+      "name": "Is Success Email?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.success }}",
+              "operator": {
+                "operation": "true",
+                "type": "boolean"
+              }
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          }
+        }
+      }
+    },
+    {
+      "id": "98affd77-bf2f-43ed-a532-868916daa376",
+      "name": "Crear Linea - Auto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2350,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://megaott.net/api/v1/subscriptions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 1655|Uk2GI2EUH0v8NIcUFjGwLeKLlp14bVmEi2rcGSuJ48ec8236"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": "M3U"
+            },
+            {
+              "name": "username",
+              "value": "={{ $(\"Generar Credenciales\").item.json.auto_username }}"
+            },
+            {
+              "name": "package_id",
+              "value": "1"
+            },
+            {
+              "name": "max_connections",
+              "value": "1"
+            },
+            {
+              "name": "forced_country",
+              "value": "ALL"
+            },
+            {
+              "name": "adult",
+              "value": "0"
+            },
+            {
+              "name": "enable_vpn",
+              "value": "0"
+            },
+            {
+              "name": "paid",
+              "value": "0"
+            },
+            {
+              "name": "note",
+              "value": "={{ $(\"Generar Credenciales\").item.json.note }}"
+            }
+          ]
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "54396178-51e5-4daa-87eb-96f68f33241a",
+      "name": "Check Status Auto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        400
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.item.json;\nif (item.error || !item.id) {\n  let error_message = \"Error con creación automática.\";\n  if (item.error && item.error.message) {\n    error_message = item.error.message;\n    try {\n      const jsonPart = error_message.substring(error_message.indexOf('{'));\n      const parsed = JSON.parse(jsonPart);\n      if (parsed.message) error_message = parsed.message;\n    } catch(e) {}\n  }\n  return {\n    json: {\n      success: false,\n      error_message: String(error_message).replace(/[\"\\\\]/g, \"\")\n    }\n  };\n} else {\n  return {\n    json: {\n      success: true,\n      id: item.id,\n      username: item.username,\n      password: item.password,\n      dns_link: item.dns_link,\n      dns_link_for_samsung_lg: item.dns_link_for_samsung_lg\n    }\n  };\n}"
+      }
+    },
+    {
+      "id": "d9c881db-6351-4b4b-a5c2-30675d885b61",
+      "name": "Is Success Auto?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2650,
+        400
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.success }}",
+              "operator": {
+                "operation": "true",
+                "type": "boolean"
+              }
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          }
+        }
+      }
+    },
+    {
+      "id": "11693b68-2a9c-4b1c-b223-13bca65898c7",
+      "name": "Nota privada Chatwoot (Error)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2800,
+        500
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $(\"Generar Credenciales\").item.json.account_id }}/conversations/{{ $(\"Generar Credenciales\").item.json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: \"⚠️ Error al generar prueba automática en Mega OTT:\\n\" + ($node[\"Check Status Auto\"] ? $node[\"Check Status Auto\"].json.error_message : \"Error desconocido\") + \"\\n\\nLa conversación se transfiere a un humano para generación manual.\", message_type: \"outgoing\", private: true }) }}"
+      }
+    },
+    {
+      "id": "ab4fe786-6dfb-4b4e-b21e-9e785296f4a9",
+      "name": "Notificar Administrador (Error)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2950,
+        500
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "40371837",
+        "text": "=⚠️ <b>Error al Generar Prueba Automática</b>\n\n👤 <b>Datos del Cliente:</b>\n- Nombre: {{ $(\"Generar Credenciales\").item.json.contact_name }}\n- Email: {{ $(\"Generar Credenciales\").item.json.email }}\n- Teléfono: {{ $(\"Generar Credenciales\").item.json.phone }}\n\n❌ <b>Detalle del Error:</b>\n<code>{{ ($node[\"Check Status Auto\"] ? $node[\"Check Status Auto\"].json.error_message : \"Error desconocido\").replace(/[<>&]/g, \"\") }}</code>\n\nLa conversación se ha transferido a soporte humano para asistencia manual.",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "webhookId": "89cc1e89-8aa7-4873-bd1a-44f4334eca53",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "id": "c8e6510e-bd5e-4027-aad2-7b9c3c321ee0",
+      "name": "Obtener etiquetas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3100,
+        500
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $(\"Generar Credenciales\").item.json.account_id }}/conversations/{{ $(\"Generar Credenciales\").item.json.conversation_id }}/labels",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7a1a1ac8-88b0-4cef-aa83-edf8a9fdcd00",
+      "name": "Agregar etiqueta human",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3250,
+        500
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const currentLabels = $input.item.json.payload || [];\nconst conversation_id = $('Generar Credenciales').item.json.conversation_id;\nconst account_id = $('Generar Credenciales').item.json.account_id;\n\nif (!currentLabels.includes('human')) {\n  currentLabels.push('human');\n}\n\nreturn {\n  json: {\n    conversation_id,\n    account_id,\n    labels: currentLabels\n  }\n};"
+      }
+    },
+    {
+      "id": "01388245-6956-424e-86c4-54004692fb34",
+      "name": "Marcar como humano",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3400,
+        500
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/labels",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"labels\": {{ JSON.stringify($json.labels) }}}"
+      }
+    },
+    {
+      "id": "e9053941-95a3-4fe7-9450-5a11e42316ae",
+      "name": "Format Error Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3550,
+        500
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return {\n  json: {\n    status: \"error\",\n    success: false,\n    error_message: ($node[\"Check Status Auto\"] ? $node[\"Check Status Auto\"].json.error_message : \"Unknown error\"),\n    message: \"Trial creation failed. The conversation was marked as human and the administrator was notified.\"\n  }\n};"
+      }
+    },
+    {
+      "id": "5a27b3a8-f773-4fdd-9416-a592d9319bc9",
+      "name": "Is Check Trial?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        850,
+        450
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.action }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "check_first_trial"
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          }
+        }
+      }
+    },
+    {
+      "id": "f0ca3452-a9fe-4376-bc37-53eb1cab6d05",
+      "name": "Consultar Estado Trial 1 Mega OTT",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        450
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://megaott.net/api/v1/subscriptions/{{ $(\"Evaluar Historial de Trials\").item.json.trial_1_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 1655|Uk2GI2EUH0v8NIcUFjGwLeKLlp14bVmEi2rcGSuJ48ec8236"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "47d88d86-5235-4ccb-9a5a-fe9793d7f7af",
+      "name": "Evaluar Estado Trial 1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1150,
+        450
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.item.json;\nconst trial_1_username = $('Evaluar Historial de Trials').item.json.trial_1_username;\n\nif (item.error || !item.id) {\n  return {\n    json: {\n      action: \"create\"\n    }\n  };\n}\n\nif (!item.expiring_at) {\n  return {\n    json: {\n      action: \"waiting\",\n      username: item.username || trial_1_username,\n      password: item.password || \"\",\n      dns_link: item.dns_link || \"\",\n      dns_link_for_samsung_lg: item.dns_link_for_samsung_lg || \"\"\n    }\n  };\n} else {\n  return {\n    json: {\n      action: \"create\"\n    }\n  };\n}"
+      }
+    },
+    {
+      "id": "fb494ecd-3afb-4beb-ba1c-7d06b5f555c2",
+      "name": "Is Trial Waiting?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        450
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.action }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "waiting"
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          }
+        }
+      }
+    },
+    {
+      "id": "4257e15f-3a44-49e9-8dc5-4cc334c6803b",
+      "name": "Format Waiting Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1450,
+        450
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const trial = $('Evaluar Estado Trial 1').item.json;\nreturn {\n  json: {\n    status: \"already_active\",\n    success: true,\n    username: trial.username,\n    password: trial.password,\n    dns: trial.dns_link,\n    dns_smarters: trial.dns_link_for_samsung_lg,\n    message: \"The customer already has an active 24-hour trial that has not been used yet. Remind them of their credentials and that the 24 hours will start counting from their first login.\"\n  }\n};"
+      }
+    },
+    {
+      "id": "0e1e4add-66db-47b1-a88a-41f44e18da5b",
+      "name": "Format Limit Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        600
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return {\n  json: {\n    status: \"limit_reached\",\n    success: false,\n    message: \"The customer has already reached the maximum limit of 2 free trials. Invite them to purchase a paid subscription.\"\n  }\n};"
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

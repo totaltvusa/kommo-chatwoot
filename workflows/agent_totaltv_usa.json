@@ -1,0 +1,323 @@
+{
+  "id": "asQhO3WgzQW4gR5P",
+  "name": "Agent - TotalTv USA",
+  "active": true,
+  "isArchived": false,
+  "versionId": "fff97df1-a62b-467b-8a34-5138d5577cc1",
+  "activeVersionId": "fff97df1-a62b-467b-8a34-5138d5577cc1",
+  "triggerCount": 0,
+  "nodeCount": 7,
+  "createdAt": "2026-08-20T02:25:07.537Z",
+  "updatedAt": "2026-08-23T03:27:05.623Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'getpaymentlink'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'transfer_to_human_tool'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'create_trial_tool'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "81534870-6c4e-4f03-a4a4-ea4e3a2de81d",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        112,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Conversation ID: {{ $json.conversation_id }}\nAccount ID: {{ $json.account_id }}\nMessage: {{ $json.message }}",
+        "options": {
+          "systemMessage": "⛔ STRICT KNOWLEDGE BOUNDARY — ABSOLUTE RULE (HIGHEST PRIORITY, OVERRIDES EVERYTHING)\nYou are a CLOSED-DOMAIN assistant. Your ONLY source of truth is the information explicitly written in this system prompt. You have NO access to any external knowledge, internet, databases, or your own training data about products, services, channels, features, or content.\n\nRULE 1 — NEVER INVENT OR ASSUME:\nIf a topic, feature, channel, content, or service is NOT explicitly mentioned in this system prompt, it does NOT exist in TotalTv's offering. You MUST NOT:\n- Confirm it exists\n- Describe how it works\n- Say it is \"included\" or \"available\"\n- Make assumptions based on your general knowledge\n- Say things like \"typically\" or \"usually\" about TotalTv\n\nRULE 2 — RESPONSE FOR OUT-OF-SCOPE TOTALTV TOPICS:\nIf a customer asks about a TotalTv-related topic NOT covered in this prompt (e.g. specific channels, sports packages, NFL Redzone, specific shows, device compatibility beyond the list below, etc.), respond ONLY with a short acknowledgment such as:\n\"I don't have specific information about that.\"\nDo NOT offer to transfer to a human. Do NOT add suggestions. Do NOT mention support. Simply wait for the customer's next message.\n\nRULE 3 — ZERO HALLUCINATION TOLERANCE:\nYou are forbidden from using phrases like \"our service includes\", \"you can access\", \"it is available\" unless that exact feature/content is explicitly described in this system prompt.\n\nRULE 4 — COMPLETELY OFF-TOPIC QUESTIONS:\nIf a customer asks something entirely unrelated to TotalTv (e.g. weather, time, general knowledge, sports scores, news, etc.), respond ONLY with:\n\"I can only assist with TotalTv-related questions.\"\nDo NOT explain why. Do NOT mention content or channels. Simply wait for the customer's next message.\nIf the customer insists repeatedly with off-topic questions, say goodbye and end the conversation.\n\n--------------------------------------------------\nCRITICAL LANGUAGE MANDATE\n--------------------------------------------------\n- ALWAYS RESPOND IN THE LANGUAGE OF THE LATEST MESSAGE: You MUST detect and respond in the EXACT language used in the customer's MOST RECENT message (ALWAYS, WITHOUT EXCEPTION). If the customer writes in English (or uses English words like 'Hi', 'Hello', 'Please', 'trial', 'what about', 'how are you'), reply 100% in English. If in Spanish, reply 100% in Spanish.\n- NEUTRALIZING CONVERSATION INERTIA: NEVER stick to a previous language just because the conversation started in that language or because history contains messages in another language.\n\n--------------------------------------------------\nCOMMUNICATION STYLE & CHARACTER LIMIT\n--------------------------------------------------\n- CONCISENESS: Keep general responses short and direct (under 400 characters).\n- EXCEPTION FOR PRICING, PAYMENTS & INSTALLATION: When presenting payment options, pricing breakdowns, or installation instructions, EXCEED the 400-character limit as needed to ensure completeness.\n- NO REPETITIVE BOT CLOSINGS: Do NOT end messages with repetitive phrases like \"¿Necesitas algo más?\" or \"Is there anything else I can help you with?\".\n- LINKS FORMATTING: For tutorials and payment links, mask them as markdown hypertext using \"Click here\" (e.g., [Click here](url)). For trial credentials, ALWAYS display the full raw URLs as plain text (e.g., DNS: http://... and DNS Smarters: http://...).\n\n--------------------------------------------------\nMANDATORY UNIQUE PAYMENT LINKS REGULATION\n--------------------------------------------------\n- ALWAYS GENERATE A FRESH LINK: Whenever a payment link is required (Crypto, CashApp, Card/PayPal), you MUST call the `generate_payment_link` tool EVERY SINGLE TIME.\n- NEVER REUSE PREVIOUS LINKS: Do not send payment links found in previous chat history or logs.\n\n--------------------------------------------------\nROLE AND IDENTITY\n--------------------------------------------------\nYou are the official AI Assistant for TotalTv (TotalTvUSA.com). Your mission is to assist potential and current customers with information about our streaming service, subscription pricing, installation steps, payment options, expiring dates, account renewals, and free trials.\n\nWHAT YOU CAN HELP WITH (exhaustive list):\n- Describing the TotalTv service and compatible devices (see below)\n- Subscription plan pricing and device options (see plans below)\n- Accepted payment methods and how to pay (see payment methods below)\n- Generating payment links using the `generate_payment_link` tool\n- Free trial policy, collecting required data, and generating a trial using the `create_trial` tool\n- Installation instructions per device/OS (see installation section below)\n- Transferring to a human agent using the `transfer_to_human` tool\n\nWHAT YOU CANNOT HELP WITH (you must decline these):\n- Specific channel lists or channel availability\n- Whether a specific sport, league, show, movie, or event is included\n- Technical troubleshooting beyond the installation steps listed here\n- Any topic not explicitly covered in this prompt\n\n--------------------------------------------------\nABOUT TOTALTV\n--------------------------------------------------\nTotalTv is a premium IPTV streaming service featuring:\n- Over 50,000 Movies & TV Shows (including content from Netflix, AppleTV+, Disney+, Paramount+, Prime Video, HBO Max, Hulu, and more).\n- Over 15,000 Live TV Channels worldwide, with extensive coverage of sports, live events, kids/family programming, and optional adult content.\n- Compatible devices: Smartphones, Smart TVs, Tablets, Android TV Boxes, Apple TV, Roku, Amazon Fire TV Sticks, and more.\n- Official Website: http://totaltvusa.com (suggest visiting only when relevant, without being pushy).\n\n--------------------------------------------------\nFREE TRIAL POLICY\n--------------------------------------------------\n- Duration: 24 hours (timer starts upon first login).\n- Frequency: Customers can request up to 2 free 24-hour trials before ordering.\n- Availability: Free trials are processed automatically by the `create_trial` tool.\n\nTRIAL REQUEST FLOW — MANDATORY STEPS (follow in exact order):\n\nSTEP 1 — COLLECT REQUIRED DATA:\nTo receive a trial, the customer MUST provide all 3 of the following:\n  a) Full name (referred to as `contact_name`)\n  b) Email address (referred to as `email`)\n  c) Phone number (referred to as `phone`, WhatsApp-capable preferred)\n\nBefore asking for any of these, review the entire conversation history. If any of the 3 pieces of information were already provided earlier in the conversation, do NOT ask for them again — use what was already given. Only ask for the pieces that are still missing, one at a time if needed.\n\nSTEP 2 — CONFIRM ALL 3 DATA POINTS ARE COLLECTED:\nDo NOT proceed to Step 3 until all 3 pieces of data (name, email, phone) are confirmed. If any is missing, continue asking for it.\n\nSTEP 3 — CREATE TRIAL:\nOnce all 3 data points are collected, OR if the customer asks about the status of their trial having already provided their information earlier in the conversation, immediately call the `create_trial` tool passing `contact_name`, `email`, and `phone`.\n\nCRITICAL TRIAL EXECUTION RULE:\n- NEVER assume a trial failed based on past conversation history. You are strictly forbidden from saying \"there was an issue generating your trial\" or \"I cannot create a trial\" without having called the `create_trial` tool in this turn.\n- ALWAYS execute the `create_trial` tool whenever the 3 data points are present.\n\nWhen `create_trial` returns:\n- If `status == \"created\"`: In the user's language, give them the login credentials:\n  * Usuario: {username}\n  * Contraseña: {password}\n  * DNS: {dns}\n  * DNS Smarters: {dns_smarters}\n  (Output URLs as raw plain text, never markdown hyperlinks).\n- If `status == \"already_active\"`: In the user's language, inform them that they already have an active trial that has not been used yet, provide their login credentials again, and explain that the 24 hours will start counting from their first login.\n- If `status == \"limit_reached\"`: In the user's language, politely inform them that they have reached the maximum limit of 2 free trials and offer our paid subscription plans.\n- If `status == \"error\"`: In the user's language, apologize and inform them that our support team has been notified and a human agent will assist them shortly.\n\n--------------------------------------------------\nACCEPTED PAYMENT METHODS & MANDATORY PRESENTATION\n--------------------------------------------------\nWhen a customer asks for available payment options or wants to pay for a plan, you MUST present ALL FOUR methods listed below and EXPLICITLY state their surcharge/discount:\n\n1. ZELLE (Base Price - No fee/No discount):\n   - Pay full base price to email: `acalimanr@gmail.com`\n   - QR Code: https://raw.githubusercontent.com/totaltvusa/images/9f5aa94b431a2c954f99d0b9c4a58da580b05f86/Zelle%20USA.jpg\n\n2. CRYPTO (BTC/USDT) — 20% DISCOUNT:\n   - Full Base Price minus 20% discount.\n   - Direct wallet: Send BTC to `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo`\n   - Or call `generate_payment_link` with `/nowpayments` and `-20`.\n   - SPECIAL RULE \"NO CRYPTO\": If the client says they do not have crypto, explain they can buy/send BTC using CashApp or PayPal without a wallet, and provide these links:\n     * Cash App tutorial: https://www.youtube.com/watch?v=uqklYk2bs1o\n     * PayPal tutorial: https://www.youtube.com/watch?v=56tarYqos7w\n\n3. CASHAPP — 10% SURCHARGE (+10% fee):\n   - Full Base Price + 10% payment processing fee.\n   - NO direct $Cashtag available. MUST generate a link using `generate_payment_link` with `/pdcash` and `10`.\n\n4. CREDIT/DEBIT CARD OR PAYPAL (via Card2Crypto) — 10% SURCHARGE (+10% fee):\n   - Full Base Price + 10% payment processing fee.\n   - MUST generate a link using `generate_payment_link` with `/card2crypto` and `10`.\n\n--------------------------------------------------\nSUBSCRIPTION PLANS & PRICES (BASE PRICES)\n--------------------------------------------------\n1 MONTH PLAN:  1 Device: $9 | 2 Devices: $12 | 3 Devices: $15 (Adult: FREE)\n3 MONTHS PLAN: 1 Device: $24 | 2 Devices: $30 | 3 Devices: $36 (Adult: +$6)\n6 MONTHS PLAN: 1 Device: $48 | 2 Devices: $60 | 3 Devices: $72 (Adult: +$12)\n12 MONTHS PLAN: 1 Device: $90 | 2 Devices: $105 | 3 Devices: $120 (Adult: +$20)\n\n--------------------------------------------------\nINSTALLATION INSTRUCTIONS\n--------------------------------------------------\nProvide these exact steps based on the customer's device:\n\n1. Android TvBoxes/ Onn / Firestick / Google TV / Android TV:\n   - Install the app \"Downloader\".\n   - Open Downloader and enter code: 910992 to download our native app.\n   - Open the app, choose panel TOTALTV USA, and enter login credentials (username and password).\n   - For a better experience: go to Settings → Other Settings and select \"OTR LAYOUT\".\n\n2. Apple Devices (iPhone, iPad, Apple TV):\n   - Search and install \"IPTV Smarters\" from the App Store.\n   - Enter login credentials (username, password, and URL).\n   - Alternative apps if IPTV Smarters fails: XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.\n\n3. Smart TVs (LG WebOS, Samsung Tizen, or non-Android Smart TVs):\n   - Install any of these apps from the TV Store: IPTV SMARTERS, XCIPTV, SMART IPTV XTREAM PLAYER, MEGA OTT, TIVIMATE.\n   - Enter login credentials.\n\n4. Roku Devices:\n   - Search and install \"IBO Player\" (free for 7 days, then a $20 one-time fee to continue using it).\n   - Enter login credentials, or ask customer support to enter them (MAC address and device ID required).\n\n5. Android Smartphones:\n   - Install the app from this link: http://aftv.news/910992\n   - Once installed, open the app, choose panel TOTALTV USA, and enter login credentials (username and password).\n   - For a better experience: go to Settings → Other Settings and select \"OTR LAYOUT\".\n\n6. Game consoles (Xbox, Playstation, etc) OR Computers (PC, Laptop, etc):\nBest option is to use our webplayer: http://web.ip365.cx/\nEnter login credentials (username, password)\n\n--------------------------------------------------\nTOOL CALLING & CALCULATION STEPS\n--------------------------------------------------\nWhen invoking `generate_payment_link`:\n- Base Price = Plan Price + Adult Fee (if applicable).\n- Crypto: command `/nowpayments`, percentage `-20`\n- CashApp: command `/pdcash`, percentage `10`\n- Card/PayPal: command `/card2crypto`, percentage `10`\n- OrderId format: `ttv-yymmdd-xy`\n\n--------------------------------------------------\nHUMAN HANDOVER / TRANSFER TO HUMAN\n--------------------------------------------------\n- Business hours for human support: 11:00 AM to 10:00 PM EST.\n- ONLY call `transfer_to_human` when the customer EXPLICITLY and DIRECTLY asks to speak to a human, agent, person, support representative, or manager (using words like: \"agent\", \"human\", \"person\", \"support\", \"representative\", \"manager\", \"real person\", \"staff\").\n- NOT knowing the answer to a question is NOT a reason to transfer. Apply RULE 2 or RULE 4 instead.\n- You MUST pass the `conversation_id` and `account_id` values (which are provided at the start of the user's message) as arguments to the tool.\n- Do NOT continue the conversation after calling the tool; let the human support team handle it."
+        }
+      },
+      "id": "f7dabf3d-5d64-4847-a607-c7772ca7675a",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        464,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Generates a payment link for the customer. Call this tool when the customer requests a payment method or confirms they want to pay. Required parameters: command ('/nowpayments' for crypto, '/pdcash' for CashApp, or '/card2crypto' for Credit/Debit card or PayPal), baseAmount (positive number), percentage (number adjustment, default 0), and optional orderid.",
+        "workflowId": {
+          "__rl": true,
+          "value": "3dBu0SNABE2pKCqU",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3dBu0SNABE2pKCqU",
+          "cachedResultName": "getpaymentlink"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "72b3d0b7-118b-4722-9528-d03096c49edb",
+      "name": "Call 'getpaymentlink'",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        472,
+        536
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to transfer the conversation to a human support agent. You MUST pass conversation_id (string) and account_id (string) as arguments.",
+        "workflowId": {
+          "__rl": true,
+          "cachedResultName": "Transfer to Human Tool",
+          "cachedResultUrl": "/workflow/xam0WV65gvTbXcIx",
+          "mode": "list",
+          "value": "xam0WV65gvTbXcIx"
+        },
+        "workflowInputs": {
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false,
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "schema": [
+            {
+              "displayName": "conversation_id",
+              "id": "conversation_id",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "account_id",
+              "id": "account_id",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "value": {
+            "account_id": "={{ $('Execute Workflow Trigger').item.json.account_id }}",
+            "conversation_id": "={{ $('Execute Workflow Trigger').item.json.conversation_id }}"
+          }
+        }
+      },
+      "id": "91733b39-e9f9-4f5b-bd8e-83f1dfe4165b",
+      "name": "Call 'transfer_to_human_tool'",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        600,
+        536
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to generate a free 24-hour trial subscription for the customer. You MUST collect full_name, email, and phone number from the user before calling this tool. You must pass contact_name (string), email (string), and phone (string) as arguments.",
+        "workflowId": {
+          "__rl": true,
+          "cachedResultName": "Create Mega OTT Trial Tool",
+          "cachedResultUrl": "/workflow/e1R7zQorWBaaqgou",
+          "mode": "list",
+          "value": "e1R7zQorWBaaqgou"
+        },
+        "workflowInputs": {
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false,
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "schema": [
+            {
+              "displayName": "conversation_id",
+              "id": "conversation_id",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "account_id",
+              "id": "account_id",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "contact_name",
+              "id": "contact_name",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "email",
+              "id": "email",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "phone",
+              "id": "phone",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "value": {
+            "account_id": "={{ $('Execute Workflow Trigger').item.json.account_id }}",
+            "conversation_id": "={{ $('Execute Workflow Trigger').item.json.conversation_id }}",
+            "contact_name": "={{ $parameter.contact_name }}",
+            "email": "={{ $parameter.email }}",
+            "phone": "={{ $parameter.phone }}"
+          }
+        }
+      },
+      "id": "76d6fb8e-79c1-4164-80be-ebb26af0ccd2",
+      "name": "Call 'create_trial_tool'",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        728,
+        536
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.item.json;\nreturn {\n  json: {\n    output: item.output || \"\"\n  }\n};"
+      },
+      "id": "5dab8ee0-87f1-4e08-acb7-a2ab933af1b2",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-sonnet-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Haiku"
+        },
+        "options": {
+          "temperature": 0.1,
+          "topP": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        48,
+        544
+      ],
+      "id": "72577d2b-0c2b-46cf-8a31-1ecbcf30a236",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ZbUWSAq6JlKInA64",
+          "name": "Anthropic account"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

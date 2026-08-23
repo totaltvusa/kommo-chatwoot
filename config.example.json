@@ -1,0 +1,32 @@
+{
+  "subdomain": "your_subdomain",
+  "access_token": "your_kommo_long_lived_or_oauth_token",
+  "lead_ids": [1234567, 2345678, 3456789],
+  "channels": {
+    "Telegram": {
+      "scope_id": "",
+      "channel_secret": "",
+      "sample_chat_id": ""
+    },
+    "Facebook": {
+      "scope_id": "",
+      "channel_secret": "",
+      "sample_chat_id": ""
+    },
+    "Instagram": {
+      "scope_id": "",
+      "channel_secret": "",
+      "sample_chat_id": ""
+    },
+    "WhatsApp API": {
+      "scope_id": "",
+      "channel_secret": "",
+      "sample_chat_id": ""
+    },
+    "WhatsApp Lite": {
+      "scope_id": "",
+      "channel_secret": "",
+      "sample_chat_id": ""
+    }
+  }
+}

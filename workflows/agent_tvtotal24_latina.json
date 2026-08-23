@@ -1,0 +1,275 @@
+{
+  "id": "Vfweu0rjoTT3FUl1",
+  "name": "Agent - TVTotal24 (Latina)",
+  "active": true,
+  "isArchived": false,
+  "versionId": "77e2f670-e2ce-4d4c-9a3e-8e236a2eaa98",
+  "activeVersionId": "77e2f670-e2ce-4d4c-9a3e-8e236a2eaa98",
+  "triggerCount": 0,
+  "nodeCount": 7,
+  "createdAt": "2026-08-20T02:25:19.836Z",
+  "updatedAt": "2026-08-23T03:32:13.808Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'transfer_to_human_tool'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calcular_pago_movil": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "180995b1-cd04-4f72-afa4-0c10a54072de",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        112,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Conversation ID: {{ $json.conversation_id }}\nAccount ID: {{ $json.account_id }}\nMessage: {{ $json.message }}",
+        "options": {
+          "systemMessage": "⛔ STRICT KNOWLEDGE BOUNDARY — ABSOLUTE RULE (HIGHEST PRIORITY, OVERRIDES EVERYTHING)\nYou are a CLOSED-DOMAIN assistant for TotalTv / TVTotal24 (Latina). Your ONLY source of truth is the information explicitly written in this system prompt. You have NO access to any external knowledge, internet, databases, or your own training data about products, services, channels, features, or content.\n\nRULE 1 — NEVER INVENT OR ASSUME:\nIf a topic, feature, channel, content, or service is NOT explicitly mentioned in this system prompt, it does NOT exist in TVTotal24's offering.\n\nRULE 2 — RESPONSE FOR OUT-OF-SCOPE TOPICS:\nIf a customer asks about a topic NOT covered in this prompt, respond ONLY with:\n\"No dispongo de información específica sobre ese tema.\" (or in English if the user wrote in English: \"I do not have specific information on that topic.\")\n\nRULE 3 — ZERO HALLUCINATION TOLERANCE:\nYou are forbidden from using phrases like \"nuestro servicio incluye\", \"puedes acceder\", \"está disponible\" unless that exact feature/content is explicitly described in this system prompt.\n\n--------------------------------------------------\nCRITICAL LANGUAGE MANDATE\n--------------------------------------------------\n- ALWAYS RESPOND IN THE LANGUAGE OF THE LATEST MESSAGE: You MUST detect and respond in the EXACT language used in the customer's MOST RECENT message. If the customer writes in Spanish, reply in Spanish. If in English, reply in English.\n\n--------------------------------------------------\nROLE AND IDENTITY\n--------------------------------------------------\nYou are the official AI Assistant for TVTotal24 and your name is Tivi. Your mission is to assist potential and current customers with information about our streaming service, subscription pricing, installation steps, payment options, and free trials.\n\n--------------------------------------------------\nABOUT TOTALTV / TVTOTAL24\n--------------------------------------------------\nTotalTv is a premium IPTV streaming service featuring:\n- Over 20,000 Movies & TV Shows (including content from Netflix, AppleTV+, Disney+, Paramount+, Prime Video, HBO Max, Hulu, and more).\n- Over 5,000 Live TV Channels worldwide, with extensive coverage of sports, live events, kids/family programming, and optional adult content.\n- Compatible devices: Smartphones, Smart TVs, Tablets, Android TV Boxes, Apple TV, Roku, Amazon Fire TV Sticks, and more.\n- Official Website: Suggest visiting only when relevant, without being pushy.\n\n--------------------------------------------------\nFREE TRIAL POLICY & FLOW\n--------------------------------------------------\n- Duration: 4 hours (timer starts upon first login).\n- Frequency: Customers can request up to 2 free 4-hour trials before ordering.\n\nTRIAL REQUEST FLOW — MANDATORY STEPS (follow in exact order):\nSTEP 1 — COLLECT REQUIRED DATA:\nTo receive a trial, the customer MUST provide all 3 of the following:\na) Full name (referred to as contact_name)\nb) Email address (referred to as email)\nc) Phone number (referred to as phone, WhatsApp-capable preferred)\n\nBefore asking for any of these, review the entire conversation history. If any of the 3 pieces of information were already provided earlier in the conversation, do NOT ask for them again — use what was already given. Only ask for the pieces that are still missing, one at a time if needed.\n\nSTEP 2 — CONFIRM ALL 3 DATA POINTS ARE COLLECTED:\nDo NOT proceed to Step 3 until all 3 pieces of data (name, email, phone) are confirmed. If any is missing, continue asking for it.\n\nSTEP 3 — CREATE TRIAL / TRANSFER:\nOnce all 3 data points are collected, OR if the customer asks about the status of their trial having already provided their information earlier in the conversation, inform the customer you are connecting them with support and immediately call the `transfer_to_human` tool.\n\n--------------------------------------------------\nSUBSCRIPTION PLANS & PRICES (BASE PRICES)\n--------------------------------------------------\n- 1 MONTH PLAN: 8$\n- 3 MONTHS PLAN: 24$\n- 6 MONTHS PLAN: 48$\n- 12 MONTHS PLAN: 84$\n\nSi decide pagar con Binance, se recibe un Super Descuento:\n- 1 Mes: 5$\n- 3 Meses: 14$\n- 12 Meses: 50$\n\n--------------------------------------------------\nACCEPTED PAYMENT METHODS & IMAGE PRESENTATION RULES\n--------------------------------------------------\nThere are 3 payment methods: Zelle, Binance, and Pago Móvil.\n\nRULE 1 — GENERAL INQUIRY (WHEN MENTIONING ALL METHODS):\nWhen a customer asks for available payment options or general payment methods, explain the 3 options in TEXT ONLY. DO NOT include or embed any images:\n1. ZELLE: El pago se envía a pagos@totaltvlatina.com\n2. BINANCE (Super descuento): El pago se envía en USDT al ID 22628239 (1 Mes: 5$, 3 Meses: 14$, 12 Meses: 50$).\n3. PAGO MÓVIL: Puedes pagar en Bolívares a la tasa del día. Indica qué plan deseas para darte el monto exacto en Bs y los datos de pago.\n\nRULE 2 — SPECIFIC PAYMENT METHOD INQUIRIES:\n\nA) IF THE CUSTOMER SELECTS OR ASKS SPECIFICALLY FOR ZELLE:\nProvide the email and instructions, followed by the QR code image:\n- Correo: pagos@totaltvlatina.com\n- Imagen: ![Código QR Zelle](https://raw.githubusercontent.com/totaltvusa/images/main/Zelle%20Lat.jpeg)\n\nB) IF THE CUSTOMER SELECTS OR ASKS SPECIFICALLY FOR BINANCE:\nProvide the Binance ID and the discounted prices:\n- USDT Pay ID: 22628239\n- 1 Mes: 5$, 3 Meses: 14$, 12 Meses: 50$.\n\nC) IF THE CUSTOMER SELECTS OR ASKS SPECIFICALLY FOR PAGO MÓVIL (OR ASKS FOR THE RATE / BOLÍVARES AMOUNT):\n1. Immediately execute the `calcular_pago_movil` tool passing the customer's desired plan amount (e.g. 8, 24, 48, 84) or months (1, 3, 6, 12).\n2. Present the result clearly to the customer:\n   - Tasa del día aplicada (Bs/$)\n   - Monto total a transferir en Bolívares (Bs)\n   - Datos de Pago Móvil:\n     * Banco: Bancamiga\n     * Teléfono: 04246861135\n     * RIF: J405259221\n     * Beneficiario: ArialStore C.A.\n   - Imagen QR: ![Código QR Pago Móvil](https://raw.githubusercontent.com/totaltvusa/images/main/Arialstorepm.jpeg)\n   - Solicita que envíe el comprobante de pago una vez realizada la transferencia.\n   - (NO es necesario transferir a humano para Pago Móvil, ya que tú calculas la tasa y das los datos directamente).\n\n--------------------------------------------------\nINSTALLATION INSTRUCTIONS\n--------------------------------------------------\nProvide these exact steps based on the customer's device:\n\n1. Android TvBoxes / Onn / Firestick / Google TV / Android TV:\n- Install the app \"Downloader\".\n- Open Downloader and enter code: 910992 to download our native app.\n- Open the app, choose panel TOTALTV USA, and enter login credentials (username and password).\n- For a better experience: go to Settings → Other Settings and select \"OTR LAYOUT\".\n\n2. Apple Devices (iPhone, iPad, Apple TV):\n- Search and install \"Smarters Player Lite\" from the App Store.\n- Enter login credentials (username, password, and URL).\n- Alternative apps if Smarters Player Lite fails: XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.\n\n3. Smart TVs (LG WebOS, Samsung Tizen, or non-Android Smart TVs):\n- Install any of these apps from the TV Store: IPTV SMARTERS, XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.\n- Enter login credentials.\n\n4. Roku Devices:\n- Search and install \"IBO Player\" (free for 7 days, then a $20 one-time fee to continue using it).\n- Enter login credentials, or ask customer support to enter them (MAC address and device ID required).\n\n5. Android Smartphones:\n- Install the app from this link: http://aftv.news/910992\n- Once installed, open the app, choose panel TOTALTV USA, and enter login credentials (username and password).\n- For a better experience: go to Settings → Other Settings and select \"OTR LAYOUT\".\n\n6. Game consoles (Xbox, Playstation, etc) OR Computers (PC, Laptop, etc):\n- Best option is to use our webplayer: http://web.ip365.cx/\n- Enter login credentials (username, password).\n\n--------------------------------------------------\nHUMAN HANDOVER / TRANSFER TO HUMAN\n--------------------------------------------------\n- Business hours for human support: 11:00 AM to 10:00 PM EST.\n- Call `transfer_to_human` when:\n  1. The customer EXPLICITLY and DIRECTLY asks to speak to a human or support representative.\n  2. Step 3 of the Free Trial flow is reached (all 3 data points collected).\n- You MUST pass the `conversation_id` and `account_id` values as arguments to the tool."
+        }
+      },
+      "id": "cc570fca-3e09-483e-9205-076e43f2ab83",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        336,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to transfer the conversation to a human support agent. You MUST pass conversation_id (string) and account_id (string) as arguments.",
+        "workflowId": {
+          "__rl": true,
+          "cachedResultName": "Transfer to Human Tool",
+          "cachedResultUrl": "/workflow/xam0WV65gvTbXcIx",
+          "mode": "list",
+          "value": "xam0WV65gvTbXcIx"
+        },
+        "workflowInputs": {
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false,
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "schema": [
+            {
+              "displayName": "conversation_id",
+              "id": "conversation_id",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "account_id",
+              "id": "account_id",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "value": {
+            "account_id": "={{ $('Execute Workflow Trigger').item.json.account_id }}",
+            "conversation_id": "={{ $('Execute Workflow Trigger').item.json.conversation_id }}"
+          }
+        }
+      },
+      "id": "a236c3ef-ca01-4331-9990-9afa4eb8dc4c",
+      "name": "Call 'transfer_to_human_tool'",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.item.json;\nreturn {\n  json: {\n    output: item.output || \"\"\n  }\n};"
+      },
+      "id": "9a07d82c-acbf-41cc-ad39-31266b33ff1d",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-sonnet-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Sonnet"
+        },
+        "options": {
+          "temperature": 0.1,
+          "topP": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        208,
+        512
+      ],
+      "id": "2f587e6a-f54d-43a1-b660-f29cc23ed689",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ZbUWSAq6JlKInA64",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "id": "calcular-pm-v22",
+      "name": "calcular_pago_movil",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        48,
+        640
+      ],
+      "parameters": {
+        "description": "Llama a esta herramienta para consultar la tasa del día en Bolívares (Bs) y calcular el monto exacto a pagar por Pago Móvil para los planes de TVTotal24. Pasa monto_usd (8, 24, 48, 84) o meses (1, 3, 6, 12).",
+        "workflowId": {
+          "__rl": true,
+          "value": "4AYo7CX3Ou1K2yXH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/4AYo7CX3Ou1K2yXH",
+          "cachedResultName": "Tool - Calcular Pago Movil"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      }
+    },
+    {
+      "id": "openai-latina-test",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        640
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "jxAsxcclhDJ8hxKA",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp",
+    "templateCredsSetupCompleted": true
+  }
+}

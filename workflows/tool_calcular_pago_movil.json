@@ -1,0 +1,91 @@
+{
+  "id": "4AYo7CX3Ou1K2yXH",
+  "name": "Tool - Calcular Pago Movil",
+  "active": true,
+  "isArchived": false,
+  "versionId": "15de72f2-d36e-408f-b448-065a00a311c0",
+  "activeVersionId": "15de72f2-d36e-408f-b448-065a00a311c0",
+  "triggerCount": 0,
+  "nodeCount": 2,
+  "createdAt": "2026-08-21T02:11:04.615Z",
+  "updatedAt": "2026-08-21T02:11:04.615Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Obtener Tasa y Calcular",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Workflow Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "971c5084-14e8-4e73-ad71-0edacd35276e",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "5ccea6bc-dc4b-41d8-861c-2d19b805c3bf",
+      "name": "Obtener Tasa y Calcular",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.item.json || {};\nlet usdAmount = parseFloat(item.monto_usd || item.usd || 0);\nconst months = parseInt(item.meses || item.mes || 0);\n\nif (!usdAmount && months) {\n  if (months === 1) usdAmount = 8;\n  else if (months === 3) usdAmount = 24;\n  else if (months === 6) usdAmount = 48;\n  else if (months === 12) usdAmount = 84;\n}\n\nif (!usdAmount) {\n  usdAmount = 8; // Default 1 month\n}\n\n// 1. Fetch Paralelo\nlet paraleloRate = 0;\ntry {\n  const pRes = await this.helpers.httpRequest({\n    method: 'GET',\n    url: 'https://ve.dolarapi.com/v1/dolares/paralelo',\n    headers: { 'User-Agent': 'Mozilla/5.0' },\n    json: true,\n    timeout: 5000\n  });\n  paraleloRate = parseFloat(pRes.promedio || 0);\n} catch (e) {}\n\n// 2. Fetch Binance P2P\nlet binanceRate = 0;\ntry {\n  const bRes = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search',\n    headers: {\n      'User-Agent': 'Mozilla/5.0',\n      'Content-Type': 'application/json'\n    },\n    body: {\n      asset: 'USDT',\n      fiat: 'VES',\n      merchantCheck: false,\n      page: 1,\n      payTypes: ['PagoMovil'],\n      publisherType: null,\n      rows: 5,\n      tradeType: 'BUY'\n    },\n    json: true,\n    timeout: 5000\n  });\n  const prices = (bRes.data || []).map(adv => parseFloat(adv.adv?.price || 0)).filter(p => p > 0);\n  if (prices.length > 0) {\n    binanceRate = prices.reduce((a, b) => a + b, 0) / prices.length;\n  }\n} catch (e) {}\n\nconst effectiveRate = Math.max(paraleloRate, binanceRate, 1);\nconst totalBs = (usdAmount * effectiveRate).toFixed(2);\n\nreturn {\n  json: {\n    tasa_del_dia: effectiveRate.toFixed(2),\n    monto_usd: usdAmount,\n    total_bs: totalBs,\n    banco: 'Bancamiga',\n    telefono: '04246861135',\n    rif: 'J405259221',\n    beneficiario: 'ArialStore C.A.',\n    qr_markdown: '![Código QR Pago Móvil](https://raw.githubusercontent.com/totaltvusa/images/main/Arialstorepm.jpeg)',\n    resumen_precios_bs: {\n      plan_1_mes: (8 * effectiveRate).toFixed(2) + ' Bs ($8)',\n      plan_3_meses: (24 * effectiveRate).toFixed(2) + ' Bs ($24)',\n      plan_6_meses: (48 * effectiveRate).toFixed(2) + ' Bs ($48)',\n      plan_12_meses: (84 * effectiveRate).toFixed(2) + ' Bs ($84)'\n    }\n  }\n};"
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}
