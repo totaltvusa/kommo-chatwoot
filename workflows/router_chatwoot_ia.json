@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "14d5e839-5e9a-45a4-91e9-f8032859d056",
-  "activeVersionId": "14d5e839-5e9a-45a4-91e9-f8032859d056",
+  "versionId": "4c5f33dc-ab1b-4d99-8bea-c33065b100a3",
+  "activeVersionId": "4c5f33dc-ab1b-4d99-8bea-c33065b100a3",
   "triggerCount": 1,
-  "nodeCount": 11,
+  "nodeCount": 9,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-08-23T03:22:47.488Z",
+  "updatedAt": "2026-08-23T23:56:03.838Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -37,6 +37,17 @@
   ],
   "canExecute": true,
   "connections": {
+    "¿Es mensaje entrante?": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Webhook": {
       "main": [
         [
@@ -48,102 +59,67 @@
         ]
       ]
     },
-    "¿Es mensaje entrante?": {
+    "AI Agent": {
       "main": [
         [
           {
-            "node": "Wait 5 Seconds",
+            "node": "Switch",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Wait 5 Seconds": {
-      "main": [
+    "Simple Memory": {
+      "ai_memory": [
         [
           {
-            "node": "Obtener Conversacion Debounce",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_memory",
             "index": 0
           }
         ]
       ]
     },
-    "Obtener Conversacion Debounce": {
-      "main": [
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
         [
           {
-            "node": "Debounce and Combine",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Debounce and Combine": {
-      "main": [
+    "Call 'getpaymentlink'": {
+      "ai_tool": [
         [
           {
-            "node": "Should Respond?",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "Should Respond?": {
-      "main": [
-        [
-          {
-            "node": "Determinar Marca",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Determinar Marca": {
-      "main": [
-        [
-          {
-            "node": "Is TotalTv USA?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Is TotalTv USA?": {
-      "main": [
-        [
-          {
-            "node": "Call Agente TotalTv USA",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Call Agente TVTotal24",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call Agente TotalTv USA": {
+    "Switch": {
       "main": [
         [
           {
             "node": "Responder en Chatwoot",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
     },
-    "Call Agente TVTotal24": {
+    "Code in JavaScript": {
       "main": [
         [
           {
@@ -157,65 +133,68 @@
   },
   "nodes": [
     {
+      "id": "0b18dda2-f34c-4557-980b-ef0bd25c56cc",
+      "name": "¿Es mensaje entrante?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -112
+      ],
       "parameters": {
         "conditions": {
           "options": {
-            "caseSensitive": false,
+            "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "loose",
+            "typeValidation": "strict",
             "version": 1
           },
           "conditions": [
             {
+              "id": "e227df2b-bcbc-4df1-8079-5095eac17fa7",
               "leftValue": "={{ $json.body.event }}",
+              "rightValue": "message_created",
               "operator": {
-                "operation": "equals",
-                "type": "string"
-              },
-              "rightValue": "message_created"
+                "type": "string",
+                "operation": "equals"
+              }
             },
             {
-              "leftValue": "={{ String($json.body.message_type) }}",
+              "id": "22bc99db-73b3-4623-b1d5-bc75dfd46ca7",
+              "leftValue": "={{ $json.body.message_type }}",
+              "rightValue": "incoming",
               "operator": {
-                "operation": "equals",
-                "type": "string"
-              },
-              "rightValue": "incoming"
+                "type": "string",
+                "operation": "equals"
+              }
             },
             {
-              "leftValue": "={{ String($json.body.private) }}",
+              "id": "14f2ea0e-749e-4fdf-9730-802ba695d7eb",
+              "leftValue": "={{ $json.body.private }}",
+              "rightValue": false,
               "operator": {
-                "operation": "notEquals",
-                "type": "string"
-              },
-              "rightValue": "true"
-            },
-            {
-              "leftValue": "={{ ($json.body.conversation?.labels || []).map(l => String(l).toLowerCase()).includes('human') }}",
-              "operator": {
-                "operation": "notEquals",
-                "type": "string"
-              },
-              "rightValue": "true"
+                "type": "boolean",
+                "operation": "false"
+              }
             }
           ],
           "combinator": "and"
         },
         "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        224,
-        -240
-      ],
-      "id": "0b18dda2-f34c-4557-980b-ef0bd25c56cc",
-      "name": "¿Es mensaje entrante?"
+      }
     },
     {
+      "id": "c7641a56-50ae-429d-8ef3-42c2ee5b7a45",
+      "name": "Responder en Chatwoot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        -112
+      ],
       "parameters": {
         "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $('Determinar Marca').first().json.account_id || $('Webhook').first().json.body.account.id || 1 }}/conversations/{{ $('Determinar Marca').first().json.conversation_id || $('Webhook').first().json.body.conversation.id }}/messages",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{$node[\"Webhook\"].json.body.account.id}}/conversations/{{$node[\"Webhook\"].json.body.conversation.id}}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -230,199 +209,208 @@
           ]
         },
         "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ content: $json.output || $json.text || $json.formatted_response || '', message_type: 'outgoing', private: false }) }}",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{$node[\"AI Agent\"].json.output}}"
+            },
+            {
+              "name": "message_type",
+              "value": "outgoing"
+            },
+            {
+              "name": "private",
+              "value": "false"
+            }
+          ]
+        },
         "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        2512,
-        -240
-      ],
-      "id": "c7641a56-50ae-429d-8ef3-42c2ee5b7a45",
-      "name": "Responder en Chatwoot"
+      }
     },
     {
+      "id": "52fa9661-4a0b-4acd-be2b-dddf2a0606f1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        -112
+      ],
       "parameters": {
         "httpMethod": "POST",
         "path": "chatwoot-inbound-webhook",
         "options": {}
       },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1.1,
+      "webhookId": "ea51ccfa-01e8-45dd-891d-e0efc184d626"
+    },
+    {
+      "id": "e9948281-4cf3-4231-9122-664670091855",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        512,
+        -112
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.content }}",
+        "options": {
+          "systemMessage": "CRITICAL LANGUAGE MANDATE (HIGHEST PRIORITY)\n- ALWAYS RESPOND IN THE LANGUAGE OF THE LATEST MESSAGE: You MUST detect and respond in the EXACT language used in the customer's MOST RECENT message (ALWAYS, WITHOUT EXCEPTION).\n- NEUTRALIZING CONVERSATION INERTIA: NEVER stick to a previous language just because the conversation started in that language or because history contains messages in another language.\n\nCOMMUNICATION STYLE & CHARACTER LIMIT\n- CONCISENESS: Keep general responses short and direct (under 400 characters).\n- EXCEPTION FOR PRICING & PAYMENTS: When presenting payment options or pricing breakdowns, EXCEED the 400-character limit as needed to ensure ALL payment methods and their exact fees/discounts are FULLY listed without omitting anything.\n- NO REPETITIVE BOT CLOSINGS: Do NOT end messages with repetitive phrases like \"¿Necesitas algo más?\" or \"Is there anything else I can help you with?\".\n\nMANDATORY UNIQUE PAYMENT LINKS REGULATION\n- ALWAYS GENERATE A FRESH LINK: Whenever a payment link is required (Crypto, CashApp, Card/PayPal), you MUST call the `generate_payment_link` tool EVERY SINGLE TIME.\n- NEVER REUSE PREVIOUS LINKS: Do not send payment links found in previous chat history or logs.\n\nROLE AND IDENTITY\nYou are the official AI Assistant for TotalTv (TotalTvUSA.com). Your mission is to assist potential and current customers with information about our streaming service, subscription pricing, installation steps, payment options, expiring dates, account renewals, and free trials.\n\n--------------------------------------------------\nACCEPTED PAYMENT METHODS & MANDATORY PRESENTATION\n--------------------------------------------------\nWhen a customer asks for available payment options or wants to pay for a plan, you MUST present ALL FOUR methods listed below and EXPLICITLY state their surcharge/discount:\n\n1. ZELLE (Base Price - No fee/No discount):\n   - Pay full base price to email: `acalimanr@gmail.com`\n   - QR Code: https://raw.githubusercontent.com/totaltvusa/images/9f5aa94b431a2c954f99d0b9c4a58da580b05f86/Zelle%20USA.jpg\n\n2. CRYPTO (BTC/USDT) — 20% DISCOUNT:\n   - Full Base Price minus 20% discount.\n   - Direct wallet: Send BTC to `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo`\n   - Or call `generate_payment_link` with `/nowpayments` and `-20`.\n   - SPECIAL RULE \"NO CRYPTO\": If the client says they do not have crypto, explain they can buy/send BTC using CashApp or PayPal without a wallet, and provide these links:\n     * Cash App tutorial: https://www.youtube.com/watch?v=uqklYk2bs1o\n     * PayPal tutorial: https://www.youtube.com/watch?v=56tarYqos7w\n\n3. CASHAPP — 10% SURCHARGE (+10% fee):\n   - Full Base Price + 10% payment processing fee.\n   - NO direct $Cashtag available. MUST generate a link using `generate_payment_link` with `/pdcash` and `10`.\n\n4. CREDIT/DEBIT CARD OR PAYPAL (via Card2Crypto) — 10% SURCHARGE (+10% fee):\n   - Full Base Price + 10% payment processing fee.\n   - MUST generate a link using `generate_payment_link` with `/card2crypto` and `10`.\n\n--------------------------------------------------\nSUBSCRIPTION PLANS & PRICES (BASE PRICES)\n--------------------------------------------------\n1 MONTH PLAN:  1 Device: $9 | 2 Devices: $12 | 3 Devices: $15 (Adult: FREE)\n3 MONTHS PLAN: 1 Device: $24 | 2 Devices: $30 | 3 Devices: $36 (Adult: +$6)\n6 MONTHS PLAN: 1 Device: $48 | 2 Devices: $60 | 3 Devices: $72 (Adult: +$12)\n12 MONTHS PLAN: 1 Device: $90 | 2 Devices: $105 | 3 Devices: $120 (Adult: +$20)\n\n--------------------------------------------------\nTOOL CALLING & CALCULATION STEPS\n--------------------------------------------------\nWhen invoking `generate_payment_link`:\n- Base Price = Plan Price + Adult Fee (if applicable).\n- Crypto: command `/nowpayments`, percentage `-20`\n- CashApp: command `/pdcash`, percentage `10`\n- Card/PayPal: command `/card2crypto`, percentage `10`\n- OrderId format: `ttv-yymmdd-xy`",
+          "maxIterations": 100
+        }
+      }
+    },
+    {
+      "id": "5ec729b5-acff-40a8-93d5-8e7702022f0b",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        112
+      ],
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{$json.body.conversation.id}}",
+        "contextWindowLength": 50
+      }
+    },
+    {
+      "id": "81e41c30-98e0-4e0d-9901-f76980611395",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
       "position": [
         0,
-        -240
+        224
       ],
-      "id": "52fa9661-4a0b-4acd-be2b-dddf2a0606f1",
-      "name": "Webhook",
-      "webhookId": "7bfd04bb-7995-4838-ae0c-263069af03d6"
-    },
-    {
       "parameters": {
-        "amount": 5,
-        "unit": "seconds"
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0,
+          "topP": 0.1
+        }
       },
-      "id": "452978b6-7ede-4ca6-963b-73143ce7d659",
-      "name": "Wait 5 Seconds",
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        448,
-        -240
-      ],
-      "webhookId": "31aee553-2b9e-4f0e-bd61-e7b3bd1c84e4"
+      "credentials": {
+        "openAiApi": {
+          "id": "jxAsxcclhDJ8hxKA",
+          "name": "OpenAi account"
+        }
+      }
     },
     {
+      "id": "9b8f0286-6648-42ff-b797-53ab47667f8b",
+      "name": "Call 'getpaymentlink'",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        112
+      ],
       "parameters": {
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.body?.account?.id || 1 }}/conversations/{{ $json.body?.conversation?.id }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+        "description": "Generates a payment link for the customer. Call this tool when the customer requests a payment method or confirms they want to pay. Required parameters: command ('/nowpayments' for crypto, '/pdcash' for CashApp, or '/card2crypto' for Credit/Debit card or PayPal), baseAmount (positive number), percentage (number adjustment, default 0), and optional orderid.",
+        "workflowId": {
+          "__rl": true,
+          "value": "3dBu0SNABE2pKCqU",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3dBu0SNABE2pKCqU",
+          "cachedResultName": "getpaymentlink"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      }
+    },
+    {
+      "id": "d0afb00e-4cd2-4c7a-b1b5-c40986c0538e",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        912,
+        -128
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
             {
-              "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "36e93051-45b1-4307-a085-d99538dc4c6e",
+                    "leftValue": "={{ $(\"Webhook\").item.json.body.conversation.channel }}",
+                    "rightValue": "Channel::Telegram",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Telegram"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $(\"Webhook\").item.json.body.conversation.channel }}",
+                    "rightValue": "Channel::Whatsapp|Channel::Facebook|Channel::Instagram|Channel::Api",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    },
+                    "id": "7b9fc1c8-b934-41eb-8a99-84dd7ce851e3"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Whats-Insta-Face"
             }
           ]
         },
         "options": {}
-      },
-      "id": "684c3039-44a3-4df6-8163-4950de84f13e",
-      "name": "Obtener Conversacion Debounce",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        672,
-        -240
-      ]
+      }
     },
     {
-      "parameters": {
-        "jsCode": "let triggerMsg = {};\ntry {\n  triggerMsg = $('Webhook').first().json.body || {};\n} catch (e) {\n  try {\n    triggerMsg = $('¿Es mensaje entrante?').first().json.body || {};\n  } catch (e2) {}\n}\n\nconst triggerMsgId = triggerMsg.id;\nconst messagesData = $input.item.json || {};\nconst messages = Array.isArray(messagesData.payload) ? messagesData.payload : (messagesData.messages || []);\n\nconst incomingMessages = messages.filter(m => (m.message_type === 0 || m.message_type === 'incoming') && !m.private);\nif (incomingMessages.length === 0) {\n  return { json: { should_respond: false } };\n}\n\nconst latestMsg = incomingMessages[incomingMessages.length - 1];\n\nif (triggerMsgId && latestMsg.id !== triggerMsgId) {\n  return { json: { should_respond: false } };\n}\n\nlet lastOutgoingIndex = -1;\nfor (let i = messages.length - 1; i >= 0; i--) {\n  if ((messages[i].message_type === 1 || messages[i].message_type === 'outgoing') && !messages[i].private) {\n    lastOutgoingIndex = i;\n    break;\n  }\n}\n\nconst unrespondedIncoming = messages.filter((m, idx) => {\n  const isIncoming = (m.message_type === 0 || m.message_type === 'incoming') && !m.private && m.content && m.content.trim();\n  return idx > lastOutgoingIndex && isIncoming;\n});\n\nif (unrespondedIncoming.length === 0) {\n  return { json: { should_respond: false } };\n}\n\nconst combinedText = unrespondedIncoming.map(m => m.content.trim()).join(' ');\n\nreturn {\n  json: {\n    should_respond: true,\n    combined_message: combinedText,\n    conversation_id: triggerMsg.conversation?.id,\n    account_id: triggerMsg.account?.id || 1,\n    inbox_id: triggerMsg.inbox?.id || triggerMsg.conversation?.inbox_id,\n    inbox_name: triggerMsg.inbox?.name || '',\n    labels: triggerMsg.conversation?.labels || []\n  }\n};"
-      },
-      "id": "2fe96f03-7fe1-417e-9dc8-040a32609ecc",
-      "name": "Debounce and Combine",
+      "id": "b049e2df-0fe8-47f5-a7b1-4d3a2e3edd30",
+      "name": "Code in JavaScript",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        896,
-        -240
-      ]
-    },
-    {
+        1136,
+        -48
+      ],
       "parameters": {
-        "conditions": {
-          "combinator": "and",
-          "conditions": [
-            {
-              "leftValue": "={{ $json.should_respond }}",
-              "operator": {
-                "operation": "true",
-                "type": "boolean"
-              }
-            }
-          ],
-          "options": {
-            "caseSensitive": false,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          }
-        },
-        "options": {}
-      },
-      "id": "2c15e96b-5db4-4c88-b1f3-fb882aef0227",
-      "name": "Should Respond?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        1120,
-        -240
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "const item = $input.item.json;\nconst inbox_id = parseInt(item.inbox_id) || 0;\nconst labels = (item.labels || []).map(l => String(l).toLowerCase());\nconst inbox_name = String(item.inbox_name || \"\").toLowerCase();\n\nlet brand = \"totaltvusa\";\n\n// TVTotal24 (Latina): Inbox 10 (Telegram) or Latina funnel label / name\nif (\n  inbox_id === 10 ||\n  labels.includes(\"funnel-totaltv-latina\") ||\n  labels.includes(\"funnel-total-tv-latina\") ||\n  inbox_name.includes(\"tvtotal24\") ||\n  inbox_name.includes(\"lat\")\n) {\n  brand = \"tvtotal24\";\n} else {\n  // TotalTv USA: Inboxes 4 (WhatsApp), 6 (Telegram), 7 (Telegram), etc.\n  brand = \"totaltvusa\";\n}\n\nreturn {\n  json: {\n    brand,\n    conversation_id: item.conversation_id,\n    account_id: item.account_id,\n    inbox_id: item.inbox_id,\n    inbox_name: item.inbox_name,\n    message: item.combined_message\n  }\n};"
-      },
-      "id": "c0255a26-2cc4-4cbf-86ac-3b803caf59e4",
-      "name": "Determinar Marca",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1312,
-        304
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "combinator": "and",
-          "conditions": [
-            {
-              "leftValue": "={{ $json.brand }}",
-              "operator": {
-                "operation": "equals",
-                "type": "string"
-              },
-              "rightValue": "totaltvusa"
-            }
-          ],
-          "options": {
-            "caseSensitive": false,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          }
-        },
-        "options": {}
-      },
-      "id": "1c37ea6b-cb47-4ad1-8eee-09a9396fdd6b",
-      "name": "Is TotalTv USA?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        1504,
-        304
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "asQhO3WgzQW4gR5P"
-        },
-        "mode": "each",
-        "options": {}
-      },
-      "id": "78b45edf-8fea-4330-a946-1218b0ce5efa",
-      "name": "Call Agente TotalTv USA",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.1,
-      "position": [
-        1712,
-        208
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "Vfweu0rjoTT3FUl1"
-        },
-        "mode": "each",
-        "options": {}
-      },
-      "id": "11bce6ea-0357-4f7d-b417-696f0465024b",
-      "name": "Call Agente TVTotal24",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.1,
-      "position": [
-        1712,
-        400
-      ]
+        "jsCode": "// 1. Obtener la respuesta generada por el agente de IA\n// Busca automáticamente en los campos comunes donde los nodos de IA devuelven texto\nconst aiResponse = $input.item.json.output || $input.item.json.text || $input.item.json.response || \"\";\n\n// 2. Extraer datos clave del mensaje original desde el nodo Webhook\nconst webhookData = $(\"Webhook\").item.json;\nconst conversationId = webhookData.body.conversation.id;\nconst accountId = webhookData.body.account.id;\nconst channel = webhookData.body.conversation.channel;\n\n// 3. Formatear el texto para canales de Meta (WhatsApp, Instagram, Messenger)\nlet formattedText = aiResponse;\n\n// Convertir negritas de Markdown (**texto**) a formato Meta (*texto*)\nformattedText = formattedText.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*');\n\n// Convertir enlaces hipertextuales [Texto](URL) a texto plano \"Texto: URL\"\nformattedText = formattedText.replace(/\\[(.*?)\\]\\((.*?)\\)/g, '$1: $2');\n\n// 4. Retornar los datos listos para el nodo HTTP Request hacia Chatwoot\nreturn {\n  json: {\n    formatted_response: formattedText,\n    conversation_id: conversationId,\n    account_id: accountId,\n    channel: channel\n  }\n};"
+      }
     }
   ],
   "nodeGroups": [],
