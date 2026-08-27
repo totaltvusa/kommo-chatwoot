@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "19270c32-49a5-401b-9756-df89daedef97",
-  "activeVersionId": "f19ebde1-2db2-443b-8039-9433113fc8e5",
+  "versionId": "bce7c653-efac-47d5-afe1-5233b7599975",
+  "activeVersionId": "bce7c653-efac-47d5-afe1-5233b7599975",
   "triggerCount": 1,
   "nodeCount": 13,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-08-27T01:15:11.161Z",
+  "updatedAt": "2026-08-27T01:22:56.591Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -48,39 +48,6 @@
         ]
       ]
     },
-    "Call 'getpaymentlink'": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call 'create_trial_tool'": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call 'transfer_to_human_tool'": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Preparar Mensaje": {
       "main": [
         [
@@ -109,17 +76,6 @@
           {
             "node": "Responder en Chatwoot",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -164,6 +120,50 @@
           {
             "node": "AI Agent",
             "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'getpaymentlink'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'create_trial_tool'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'transfer_to_human_tool'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -441,21 +441,6 @@
     },
     {
       "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $(\"Webhook\").item.json.body.conversation.id }}",
-        "contextWindowLength": 30
-      },
-      "id": "simple-memory-main",
-      "name": "Simple Memory",
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        1256,
-        120
-      ]
-    },
-    {
-      "parameters": {
         "amount": 3
       },
       "id": "wait-3s-debounce",
@@ -503,9 +488,9 @@
       "parameters": {
         "model": {
           "__rl": true,
-          "value": "claude-3-opus-latest",
+          "value": "claude-3-5-sonnet-20241022",
           "mode": "list",
-          "cachedResultName": "claude-3-opus-latest"
+          "cachedResultName": "Claude 3.5 Sonnet"
         },
         "options": {
           "temperature": 0,
@@ -518,496 +503,26 @@
           "name": "Anthropic account"
         }
       }
+    },
+    {
+      "id": "simple-memory-main",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        720
+      ],
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $(\"Webhook\").item.json.body.conversation.id }}",
+        "contextWindowLength": 30
+      }
     }
   ],
   "nodeGroups": [],
   "activeVersion": {
-    "sameAsDraft": false,
-    "nodes": [
-      {
-        "parameters": {
-          "conditions": {
-            "options": {
-              "caseSensitive": true,
-              "leftValue": "",
-              "typeValidation": "strict",
-              "version": 1
-            },
-            "conditions": [
-              {
-                "id": "e227df2b-bcbc-4df1-8079-5095eac17fa7",
-                "leftValue": "={{ $json.body.event }}",
-                "rightValue": "message_created",
-                "operator": {
-                  "type": "string",
-                  "operation": "equals"
-                }
-              },
-              {
-                "id": "22bc99db-73b3-4623-b1d5-bc75dfd46ca7",
-                "leftValue": "={{ $json.body.message_type }}",
-                "rightValue": "incoming",
-                "operator": {
-                  "type": "string",
-                  "operation": "equals"
-                }
-              },
-              {
-                "id": "14f2ea0e-749e-4fdf-9730-802ba695d7eb",
-                "leftValue": "={{ $json.body.private }}",
-                "rightValue": false,
-                "operator": {
-                  "type": "boolean",
-                  "operation": "false"
-                }
-              }
-            ],
-            "combinator": "and"
-          },
-          "options": {}
-        },
-        "id": "0b18dda2-f34c-4557-980b-ef0bd25c56cc",
-        "name": "\u00bfEs mensaje entrante?",
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 2,
-        "position": [
-          224,
-          -112
-        ]
-      },
-      {
-        "parameters": {
-          "method": "POST",
-          "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/messages",
-          "sendHeaders": true,
-          "headerParameters": {
-            "parameters": [
-              {
-                "name": "api_access_token",
-                "value": "nuwRKpG2bBAQBpRFznfvrMpT"
-              },
-              {
-                "name": "Content-Type",
-                "value": "application/json"
-              }
-            ]
-          },
-          "sendBody": true,
-          "bodyParameters": {
-            "parameters": [
-              {
-                "name": "content",
-                "value": "={{ $json.content }}"
-              },
-              {
-                "name": "message_type",
-                "value": "outgoing"
-              },
-              {
-                "name": "private",
-                "value": "false"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "c7641a56-50ae-429d-8ef3-42c2ee5b7a45",
-        "name": "Responder en Chatwoot",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          2064,
-          -112
-        ]
-      },
-      {
-        "parameters": {
-          "httpMethod": "POST",
-          "path": "chatwoot-inbound-webhook",
-          "options": {}
-        },
-        "id": "52fa9661-4a0b-4acd-be2b-dddf2a0606f1",
-        "name": "Webhook",
-        "type": "n8n-nodes-base.webhook",
-        "typeVersion": 1.1,
-        "position": [
-          0,
-          -112
-        ],
-        "webhookId": "ea51ccfa-01e8-45dd-891d-e0efc184d626"
-      },
-      {
-        "parameters": {
-          "promptType": "define",
-          "text": "=Conversation ID: {{ $json.conversation_id }}\nAccount ID: {{ $json.account_id }}\nMessage: {{ $json.message }}",
-          "options": {
-            "systemMessage": "# TotalTv USA \u2014 Master Agent System Prompt\n\n## ROLE & IDENTITY\nYou are the official Customer Support and Sales Assistant for **TotalTv** (TotalTv USA), a premium IPTV and streaming service. You communicate via chat in a helpful, concise, professional, and friendly tone.\n\n--------------------------------------------------\nLANGUAGE RULES (DYNAMIC PER LAST USER MESSAGE)\n--------------------------------------------------\n- ALWAYS respond in the language of the customer's LATEST message (Spanish or English).\n- If the customer switches languages (e.g. asks a question in Spanish, then later asks a question in English, or vice versa), IMMEDIATELY switch and answer in the new language.\n- CRITICAL EXCEPTION (Data & Short Inputs): Do NOT interpret proper names (e.g. \"Elvis Presley\", \"John Smith\"), email addresses, phone numbers, or simple confirmations (\"ok\", \"si\", \"yes\", \"no\") as a language switch. When receiving data or short answers, maintain the language from the previous turn unless the customer wrote a full sentence or question in the other language.\n\n--------------------------------------------------\nKNOWLEDGE BOUNDARY & CONVERSATIONAL CONTEXT\n--------------------------------------------------\n- You are a CLOSED-DOMAIN assistant for TotalTv.\n- NEVER reject short inputs, names, emails, phone numbers, numbers, or confirmations (e.g., \"Elvis Presley\", \"juan@gmail.com\", \"+123456789\", \"3 meses\", \"si\", \"ok\") as being outside of context. These are answers to your questions in the ongoing conversation!\n- ONLY reject clearly off-topic questions (e.g. \"what time is it in Taiwan?\", \"give me a cake recipe\", \"who won the world cup\") by politely stating that you can only assist with TotalTv IPTV services.\n- NEVER invent information, pricing, apps, or links not listed below.\n- NEVER send the customer to a website to request a trial. Trials are processed directly by you in this chat!\n\n--------------------------------------------------\nSERVICE OVERVIEW\n--------------------------------------------------\n- Over 50,000 Movies & TV Shows (Netflix, AppleTV+, Disney+, Paramount+, Prime Video, HBO Max, Hulu, etc.).\n- Over 15,000 Live TV Channels worldwide with full sports, PPV events, kids/family, news, and optional adult content.\n- Compatible devices: Firestick, Android TV, Google TV, Onn Box, Apple TV, iPhone, iPad, Smart TVs (Samsung, LG), Roku, Android phones, PC, Mac.\n\n--------------------------------------------------\nFREE TRIAL POLICY & WORKFLOW\n--------------------------------------------------\n- Duration: 24 hours (starts upon first login).\n- Availability: Processed directly in chat via the `create_trial` tool.\n\nCRITICAL TRIAL PRESENTATION RULE:\n- When a customer asks about a free trial or requests one, simply inform them that we offer a 24-hour free trial for 1 device.\n- NEVER mention or say upfront \"you can have up to 2 trials\" or \"limit of 2 trials per customer\". The 2-trial policy is an INTERNAL rule for your system logic only!\n\nTRIAL DATA COLLECTION STEPS:\nTo generate a trial, you MUST collect all 3 pieces of information:\n1. Full Name (`contact_name`)\n2. Email Address (`email`)\n3. Phone Number (`phone`) \u2014 When asking for the phone number, ALWAYS specify:\n   - In Spanish: \"n\u00famero de tel\u00e9fono (de preferencia con WhatsApp)\"\n   - In English: \"phone number (preferably with WhatsApp)\"\n\nCRITICAL DATA ACCUMULATION RULES:\n- When the customer provides their name (e.g. \"Elvis Presley\" or \"Carlos Perez\"), acknowledge it (e.g. \"Gracias, Elvis\") and DO NOT ask for the name again! Ask ONLY for the missing email address and phone number (de preferencia con WhatsApp).\n- When the customer provides email and/or phone, register them and ask only for whatever is still missing.\n- When the customer provides multiple pieces of information at once (or in consecutive lines), register all provided data at once!\n- Once all 3 data points (name, email, phone) are present in the conversation history, do NOT ask for them again \u2014 IMMEDIATELY call `Call 'create_trial_tool'` passing `contact_name`, `email`, and `phone`.\n\nEXECUTING THE TRIAL TOOL:\n- Call `Call 'create_trial_tool'` passing `contact_name`, `email`, and `phone`.\n- When the tool returns:\n  * If `status == \"created\"`:\n    - If this is their 1st trial: Provide login credentials clearly.\n    - If this is their 2nd trial: Provide login credentials clearly, AND explicitly inform them that this is their second and last permitted free trial (as the maximum limit is 2 trials per customer).\n    Credentials format:\n    Usuario: {username}\n    Contrase\u00f1a: {password}\n    DNS: {dns}\n    DNS Smarters: {dns_smarters}\n    (Provide URLs as plain text, no markdown links).\n  * If `status == \"already_active\"`: Inform the user that they already have an active trial waiting to be used (status \"waiting\"), re-share their credentials, and explain that the 24 hours only begin counting from their first login.\n  * If `status == \"limit_reached\"`: Inform them politely that they have already used their 2 free trials limit and offer our paid subscription plans.\n  * If `status == \"error\"`: Apologize and inform them a human agent will assist them shortly.\n\n--------------------------------------------------\nSUBSCRIPTION PLANS & PRICES (BASE PRICES)\n--------------------------------------------------\n- **1 Month:**  1 Device: $9 | 2 Devices: $12 | 3 Devices: $15 (Adult: FREE)\n- **3 Months:** 1 Device: $24 | 2 Devices: $30 | 3 Devices: $36 (Adult: +$6)\n- **6 Months:** 1 Device: $48 | 2 Devices: $60 | 3 Devices: $72 (Adult: +$12)\n- **12 Months:** 1 Device: $90 | 2 Devices: $105 | 3 Devices: $120 (Adult: +$20)\n\n--------------------------------------------------\nPAYMENT METHODS PRESENTATION RULES\n--------------------------------------------------\nWhen a customer asks generally about accepted payment methods or plans to pay, present ALL FOUR options clearly:\n\n1. **Zelle** (Base Price \u2014 No surcharge / No discount):\n   - Pay to email: `acalimanr@gmail.com`\n   - (CRITICAL: Do NOT mention or display QR code lines in the general list! Only provide the QR image link if the customer specifically asks to pay with Zelle or asks for the QR code).\n\n2. **Crypto (BTC / USDT)** \u2014 20% DISCOUNT:\n   - Base Price with 20% discount.\n   - Can pay directly to BTC wallet `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo` or request a payment link via `getpaymentlink` (`/nowpayments`, `-20`).\n   - If customer does not have crypto, explain they can buy/send BTC using CashApp or PayPal.\n\n3. **CashApp** \u2014 10% SURCHARGE (+10% fee):\n   - Base Price + 10% fee.\n   - Payment link generated via `getpaymentlink` (`/pdcash`, `10`).\n\n4. **Credit / Debit Card or PayPal (via Card2Crypto)** \u2014 10% SURCHARGE (+10% fee):\n   - Base Price + 10% fee.\n   - Payment link generated via `getpaymentlink` (`/card2crypto`, `10`).\n\n--------------------------------------------------\nSPECIFIC ZELLE REQUEST RULE\n--------------------------------------------------\nIf and ONLY IF the customer explicitly chooses Zelle or asks for the Zelle QR code:\n- Instruct them to send payment to `acalimanr@gmail.com`\n- Provide the QR code image: https://raw.githubusercontent.com/totaltvusa/images/9f5aa94b431a2c954f99d0b9c4a58da580b05f86/Zelle%20USA.jpg\n\n--------------------------------------------------\nINSTALLATION INSTRUCTIONS\n--------------------------------------------------\n- Firestick / Android TV / Google TV: Download \"Downloader\", enter code `910992`, install TotalTv USA, choose panel TOTALTV USA, login with credentials.\n- Apple Devices (iPhone, iPad, Apple TV): Install \"IPTV Smarters\" from App Store, enter login credentials.\n- Smart TVs (Samsung / LG): Install IPTV Smarters, XCIPTV, or Smart IPTV from TV Store.\n- Roku: Search \"IBO Player\" (7 days free, then $20 activation).\n- Web Browser / PC / Console: Access http://web.ip365.cx/\n\n--------------------------------------------------\nHUMAN HANDOVER\n--------------------------------------------------\n- Call `Call 'transfer_to_human_tool'` ONLY when customer directly asks to speak to a person, human agent, or representative.\n",
-            "maxIterations": 100
-          }
-        },
-        "id": "e9948281-4cf3-4231-9122-664670091855",
-        "name": "AI Agent",
-        "type": "@n8n/n8n-nodes-langchain.agent",
-        "typeVersion": 1.7,
-        "position": [
-          1312,
-          -112
-        ]
-      },
-      {
-        "parameters": {
-          "description": "Generates a payment link for the customer. Call this tool when the customer requests a payment method or confirms they want to pay. Required parameters: command ('/nowpayments' for crypto, '/pdcash' for CashApp, or '/card2crypto' for Credit/Debit card or PayPal), baseAmount (positive number), percentage (number adjustment, default 0), and optional orderid.",
-          "workflowId": {
-            "__rl": true,
-            "value": "3dBu0SNABE2pKCqU",
-            "mode": "list",
-            "cachedResultUrl": "/workflow/3dBu0SNABE2pKCqU",
-            "cachedResultName": "getpaymentlink"
-          },
-          "workflowInputs": {
-            "mappingMode": "defineBelow",
-            "value": {},
-            "matchingColumns": [],
-            "schema": [],
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": false
-          }
-        },
-        "id": "9b8f0286-6648-42ff-b797-53ab47667f8b",
-        "name": "Call 'getpaymentlink'",
-        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-        "typeVersion": 2.2,
-        "position": [
-          1384,
-          120
-        ]
-      },
-      {
-        "parameters": {
-          "description": "Call this tool to generate a free 24-hour trial subscription for the customer. You MUST collect full_name, email, and phone number from the user before calling this tool. Pass contact_name (string), email (string), and phone (string).",
-          "workflowId": {
-            "__rl": true,
-            "cachedResultName": "Create Mega OTT Trial Tool",
-            "cachedResultUrl": "/workflow/e1R7zQorWBaaqgou",
-            "mode": "list",
-            "value": "e1R7zQorWBaaqgou"
-          },
-          "workflowInputs": {
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": false,
-            "mappingMode": "defineBelow",
-            "matchingColumns": [],
-            "schema": [
-              {
-                "displayName": "contact_name",
-                "id": "contact_name",
-                "required": false,
-                "type": "string"
-              },
-              {
-                "displayName": "email",
-                "id": "email",
-                "required": false,
-                "type": "string"
-              },
-              {
-                "displayName": "phone",
-                "id": "phone",
-                "required": false,
-                "type": "string"
-              }
-            ],
-            "value": {
-              "account_id": "={{ $(\"Webhook\").item.json.body.account.id }}",
-              "conversation_id": "={{ $(\"Webhook\").item.json.body.conversation.id }}",
-              "contact_name": "={{ $parameter.contact_name }}",
-              "email": "={{ $parameter.email }}",
-              "phone": "={{ $parameter.phone }}"
-            }
-          }
-        },
-        "id": "create-trial-tool-main",
-        "name": "Call 'create_trial_tool'",
-        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-        "typeVersion": 2.2,
-        "position": [
-          1512,
-          120
-        ]
-      },
-      {
-        "parameters": {
-          "description": "Call this tool to transfer the conversation to a human support agent when the customer explicitly asks for human support. Takes no arguments.",
-          "workflowId": {
-            "__rl": true,
-            "cachedResultName": "Transfer to Human Tool",
-            "cachedResultUrl": "/workflow/xam0WV65gvTbXcIx",
-            "mode": "list",
-            "value": "xam0WV65gvTbXcIx"
-          },
-          "workflowInputs": {
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": false,
-            "mappingMode": "defineBelow",
-            "matchingColumns": [],
-            "schema": [],
-            "value": {
-              "account_id": "={{ $(\"Webhook\").item.json.body.account.id }}",
-              "conversation_id": "={{ $(\"Webhook\").item.json.body.conversation.id }}"
-            }
-          }
-        },
-        "id": "transfer-human-tool-main",
-        "name": "Call 'transfer_to_human_tool'",
-        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-        "typeVersion": 2.2,
-        "position": [
-          1640,
-          120
-        ]
-      },
-      {
-        "parameters": {
-          "jsCode": "const webhookBody = $('Webhook').item.json.body || {};\nconst currentMsgId = webhookBody.id;\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst channel = conversation.channel || '';\n\nconst payload = $input.item.json.payload || [];\n\n// Check if any newer incoming message exists (newer webhook execution will handle batch)\nconst newerIncoming = payload.filter(m => m.message_type === 0 && m.id > currentMsgId);\nif (newerIncoming.length > 0) {\n  return [];\n}\n\n// Find timestamp of last outgoing bot message\nlet lastOutgoingTime = 0;\nfor (const m of payload) {\n  if (m.message_type === 1 && m.created_at > lastOutgoingTime) {\n    lastOutgoingTime = m.created_at;\n  }\n}\n\n// Collect all unreplied incoming messages\nconst unreplied = payload.filter(m => m.message_type === 0 && m.created_at >= lastOutgoingTime);\n\nlet consolidatedText = '';\nif (unreplied.length > 0) {\n  consolidatedText = unreplied.map(m => m.content).filter(Boolean).join('\\n');\n} else {\n  consolidatedText = webhookBody.content || '';\n}\n\nreturn {\n  json: {\n    conversation_id: conversation.id,\n    account_id: account.id,\n    channel: channel,\n    message: consolidatedText\n  }\n};"
-        },
-        "id": "preparar-mensaje-ia",
-        "name": "Preparar Mensaje",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          896,
-          -112
-        ]
-      },
-      {
-        "parameters": {
-          "jsCode": "// 1. Obtener la respuesta de la IA\nconst aiResponse = $input.item.json.output || $input.item.json.text || $input.item.json.response || \"\";\n\n// 2. Extraer datos del mensaje y canal\nconst webhookData = $(\"Webhook\").item.json.body || {};\nconst conversation = webhookData.conversation || {};\nconst account = webhookData.account || {};\nconst channel = conversation.channel || \"\";\n\nlet formattedText = aiResponse;\n\n// 3. Formatear seg\u00fan canal (Meta / WhatsApp vs Telegram)\nif (channel.includes(\"Whatsapp\") || channel.includes(\"Facebook\") || channel.includes(\"Instagram\")) {\n  formattedText = formattedText.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*');\n  formattedText = formattedText.replace(/\\[(.*?)\\]\\((.*?)\\)/g, '$1: $2');\n}\n\nreturn {\n  json: {\n    content: formattedText,\n    conversation_id: conversation.id,\n    account_id: account.id,\n    channel: channel\n  }\n};"
-        },
-        "id": "formatear-respuesta-chatwoot",
-        "name": "Formatear Respuesta",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          1840,
-          -112
-        ]
-      },
-      {
-        "parameters": {
-          "sessionIdType": "customKey",
-          "sessionKey": "={{ $(\"Webhook\").item.json.body.conversation.id }}",
-          "contextWindowLength": 30
-        },
-        "id": "simple-memory-main",
-        "name": "Simple Memory",
-        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-        "typeVersion": 1.3,
-        "position": [
-          1256,
-          120
-        ]
-      },
-      {
-        "parameters": {
-          "amount": 3
-        },
-        "id": "wait-3s-debounce",
-        "name": "Wait 3s",
-        "type": "n8n-nodes-base.wait",
-        "typeVersion": 1.1,
-        "position": [
-          448,
-          -112
-        ],
-        "webhookId": "54268028-d182-446f-8426-f1417a97b78f"
-      },
-      {
-        "parameters": {
-          "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $('Webhook').item.json.body.account.id }}/conversations/{{ $('Webhook').item.json.body.conversation.id }}/messages",
-          "sendHeaders": true,
-          "headerParameters": {
-            "parameters": [
-              {
-                "name": "api_access_token",
-                "value": "nuwRKpG2bBAQBpRFznfvrMpT"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "id": "get-chatwoot-msgs",
-        "name": "Obtener Mensajes Recientes",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          672,
-          -112
-        ]
-      },
-      {
-        "id": "anthropic-chat-model-main",
-        "name": "Anthropic Chat Model",
-        "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
-        "typeVersion": 1.5,
-        "position": [
-          48,
-          544
-        ],
-        "parameters": {
-          "model": {
-            "__rl": true,
-            "value": "claude-3-5-sonnet-20241022",
-            "mode": "list",
-            "cachedResultName": "Claude 3.5 Sonnet"
-          },
-          "options": {
-            "temperature": 0,
-            "topP": 0.001
-          }
-        },
-        "credentials": {
-          "anthropicApi": {
-            "id": "ZbUWSAq6JlKInA64",
-            "name": "Anthropic account"
-          }
-        }
-      }
-    ],
-    "connections": {
-      "Webhook": {
-        "main": [
-          [
-            {
-              "node": "\u00bfEs mensaje entrante?",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Call 'getpaymentlink'": {
-        "ai_tool": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "ai_tool",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Call 'create_trial_tool'": {
-        "ai_tool": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "ai_tool",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Call 'transfer_to_human_tool'": {
-        "ai_tool": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "ai_tool",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Preparar Mensaje": {
-        "main": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "AI Agent": {
-        "main": [
-          [
-            {
-              "node": "Formatear Respuesta",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Formatear Respuesta": {
-        "main": [
-          [
-            {
-              "node": "Responder en Chatwoot",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Simple Memory": {
-        "ai_memory": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "ai_memory",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "\u00bfEs mensaje entrante?": {
-        "main": [
-          [
-            {
-              "node": "Wait 3s",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Wait 3s": {
-        "main": [
-          [
-            {
-              "node": "Obtener Mensajes Recientes",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Obtener Mensajes Recientes": {
-        "main": [
-          [
-            {
-              "node": "Preparar Mensaje",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Anthropic Chat Model": {
-        "ai_languageModel": [
-          [
-            {
-              "node": "AI Agent",
-              "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      }
-    },
-    "nodeGroups": []
+    "sameAsDraft": true
   },
   "meta": {
     "templateCredsSetupCompleted": true,
