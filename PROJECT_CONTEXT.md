@@ -1,115 +1,65 @@
-# 🧠 PROJECT CONTEXT & PERSISTENCE DOCUMENT
-> **Ecosistema de Automatización Omnicanal: Chatwoot + n8n + OpenAI + APIs**
-> **Baseline Estable:** Versión restaurada al 19 de Agosto de 2026
+# Project Persistence Context: Kommo-Chatwoot & n8n Architecture
+
+> **Master Persistence Document**
+> This file is the single source of truth for the architecture, active workflows, credentials, routing logic, and system prompt policies across development machines.
+> **Daily Routine**: Run `git pull origin main` before starting work; inspect this document to maintain uniform context; commit and `git push origin main` upon any change.
 
 ---
 
-## 📌 1. Propósito y Filosofía del Proyecto
-Este archivo es el **documento único de persistencia y contexto de trabajo**. Debe ser leído al iniciar cualquier sesión de desarrollo o asistencia (con Google Antigravity o cualquier otro entorno) para garantizar continuidad total, uniformidad y evitar regresiones.
+## 1. Core Architecture Overview
 
-### Protocolo Diario de Trabajo (Check-in / Check-out)
-1. **Al iniciar la jornada o cambiar de equipo:**
-   ```bash
-   git pull origin main
-   ```
-   *Leer obligatoriamente este archivo (`PROJECT_CONTEXT.md`) para cargar el contexto actualizado.*
-2. **Durante el desarrollo:**
-   * Respetar las reglas de negocio y los prompts maestros sin alterar el contexto informativo existente.
-   * Probar flujos end-to-end antes de dar por completado un cambio.
-3. **Al finalizar o realizar cambios:**
-   * Actualizar este archivo con cualquier nuevo nodo, webhook, ID o ajuste realizado.
-   * Sincronizar inmediatamente con GitHub:
-     ```bash
-     git add .
-     git commit -m "Descripción clara del cambio"
-     git push origin main
-     ```
+* **Inbound Gateway**: Chatwoot Inboxes (Telegram, WhatsApp/Meta, API).
+* **Webhook Ingestion**: Chatwoot webhook posts `message_created` events to `https://n8n.ac4.club/webhook/chatwoot-inbound-webhook`.
+* **n8n Orchestration Workflow**: `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+* **Debounce & Aggregation**: 3-second non-blocking wait (`Wait 3s`) + Chatwoot message query (`GET /messages`) + deduplication code node (`Preparar Mensaje`) that clusters consecutive lines into a single prompt.
+* **LLM Engine**: **Anthropic Claude 3.5 Sonnet** (`claude-3-5-sonnet-20241022`) via `@n8n/n8n-nodes-langchain.lmChatAnthropic` with credential `Anthropic account` (`ZbUWSAq6JlKInA64`).
+  * **Sampling Parameters**: Deterministic greedy decoding (`temperature: 0`, `topP: 0.001`).
+  * ⚠️ **STRICT MANDATE (NO OPENAI)**: OpenAI is permanently decommissioned. Under NO circumstance will OpenAI models be used. Even if requested in future sessions, the assistant MUST confirm with the user and remind them of this strict directive.
+* **Tools Connected to AI Agent**:
+  1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Generates payment links for Crypto (BTC/USDT -20%), CashApp (+10%), and Credit/Debit/PayPal (+10%).
+  2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Direct Mega OTT demo generation tool for 24-hour trials (1 device).
+  3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation for explicit customer handover requests.
+* **Formatting & Response Pipeline**: Single-pass linear formatting (`Formatear Respuesta`) detecting channel type (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp) $\rightarrow$ `POST /messages` to Chatwoot (`Responder en Chatwoot`).
 
 ---
 
-## 🏗️ 2. Arquitectura General del Sistema
+## 2. Business Rules & Master Prompt Policy
 
-```mermaid
-graph TD
-    User([Cliente: WhatsApp / Telegram]) -->|Mensaje| Chatwoot[Chatwoot Hub]
-    Chatwoot -->|Webhook: message_created| Router[n8n: Chatwoot + IA Agent (n0zgnS1vlOGNcGNY)]
-    
-    subgraph n8n Workflow Autocontenido
-        Router --> IncomingFilter{¿Es mensaje entrante?}
-        IncomingFilter -->|Sí| Agent[LangChain AI Agent]
-        Agent --> Model[OpenAI Chat Model: gpt-4o-mini]
-        Agent --> Memory[Simple Memory: Buffer Window]
-        Agent -.-> ToolPay[Call: getpaymentlink (3dBu0SNABE2pKCqU)]
-        Agent --> Switch[Switch Response Router]
-        Switch --> Code[Code: Formatear Enlaces / Texto]
-    end
-    
-    Switch --> Responder[Responder en Chatwoot]
-    Code --> Responder
-    Responder -->|POST /messages| Chatwoot
-    Chatwoot -->|Salida Nativa| User
-```
+* **Language Rules**: Dynamic per-turn detection (responds in the language of the user's latest message, Spanish or English). Proper names, emails, phone numbers, and short confirmations do NOT trigger a language switch.
+* **Payment Methods**:
+  * **Zelle**: Base price to `acalimanr@gmail.com`. General listing NEVER includes the QR image link; QR code link is only delivered if customer explicitly asks to pay with Zelle or requests the QR.
+  * **Crypto (BTC/USDT)**: -20% discount.
+  * **CashApp**: +10% surcharge.
+  * **Card / PayPal**: +10% surcharge.
+* **Free Trials**:
+  * 24-hour duration (1 device).
+  * Upfront presentation NEVER mentions "up to 2 trials" (internal rule only).
+  * Requires 3 fields: Full Name, Email, Phone number (preferably WhatsApp).
+  * Up to 2 trials per customer: 2nd trial explicitly warns that it is the last allowed trial.
 
 ---
 
-## 📱 3. Mapeo de Canales e Inboxes en Chatwoot (Account ID: 1)
+## 3. Workflow Catalog
 
-| Inbox ID | Nombre del Inbox | Tipo de Canal | Manejo / Rol |
-| :---: | :--- | :--- | :--- |
-| **`4`** | `TTvAlertsMovistar` | `Channel::Api` (WhatsApp) | Atendido por `Chatwoot + IA Agent` |
-| **`6`** | `TvTotalUSAbot` | `Channel::Telegram` | Atendido por `Chatwoot + IA Agent` |
-| **`7`** | `AlvezClawBot` | `Channel::Telegram` | Atendido por `Chatwoot + IA Agent` |
-| **`10`** | `Telegram - TvTotal24` | `Channel::Telegram` | Canal Telegram TvTotal24 |
-| **`8`** | `migracion` | `Channel::Api` | Soporte / Migración |
-
----
-
-## ⚙️ 4. Catálogo de Workflows Activos en n8n
-
-| ID del Workflow | Nombre en n8n | Rol / Función | Estado |
-| :--- | :--- | :--- | :--- |
-| **`n0zgnS1vlOGNcGNY`** | `Chatwoot + IA Agent` | **Workflow Principal:** Recibe el webhook de Chatwoot, procesa la intención con OpenAI LangChain Agent, genera enlaces de pago y responde directamente en Chatwoot. | **Activo** |
-| **`xam0WV65gvTbXcIx`** | `Transfer to Human Tool` | **Herramienta de Traspaso:** Agrega etiqueta `human` y genera notificación interna. | **Activo** |
-| **`3dBu0SNABE2pKCqU`** | `getpaymentlink` | **Herramienta Pagos:** Genera links dinámicos para Crypto (NowPayments), CashApp (PD.cash) y Tarjeta/PayPal (Card2Crypto). | **Activo** |
-| **`p8dS1jx73xvpbrkj`** | `Card2CryptoLink` | Generación de enlaces Card2Crypto. | **Activo** |
-| **`uD5sM2ruGXYSlpY3`** | `NowPayments to me` | Notificación de pagos NowPayments. | **Activo** |
-| **`asQhO3WgzQW4gR5P`** | `Agent - TotalTv USA` | Subagente USA (creado el 20-ago). | *Inactivo / Despublicado* |
-| **`Vfweu0rjoTT3FUl1`** | `Agent - TVTotal24 (Latina)` | Subagente Latina (creado el 20-ago). | *Inactivo / Despublicado* |
-| **`4AYo7CX3Ou1K2yXH`** | `Tool - Calcular Pago Movil` | Herramienta Pago Móvil (creada el 21-ago). | *Inactivo / Despublicado* |
-| **`e1R7zQorWBaaqgou`** | `Create Mega OTT Trial Tool` | Herramienta Demos Mega OTT (creada el 20-ago). | *Inactivo / Despublicado* |
+| Workflow ID | Name | Role / Status |
+| :--- | :--- | :--- |
+| `n0zgnS1vlOGNcGNY` | `Chatwoot + IA Agent` | **Active / Main Gateway** (Anthropic Claude 3.5 Sonnet, 0-temp, 3s debounce, tools) |
+| `3dBu0SNABE2pKCqU` | `getpaymentlink` | **Active Subworkflow / Tool** (Payment link generation) |
+| `e1R7zQorWBaaqgou` | `Create Mega OTT Trial Tool` | **Active Subworkflow / Tool** (Mega OTT Trial generator) |
+| `xam0WV65gvTbXcIx` | `Transfer to Human Tool` | **Active Subworkflow / Tool** (Human agent escalation) |
+| `p8dS1jx73xvpbrkj` | `Telegram to N8N` | Active |
+| `TfILC2hXao6SLQfE` | `Zelle Webhook` | Active |
+| `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
+| `uD5sM2ruGXYSlpY3` | `Chatwoot Webhook` | Active |
+| `OQzmQUISGM6ShdKT` | `AmoCRM Contact Update` | Active |
+| `asQhO3WgzQW4gR5P` | `Agent - TotalTv USA` | Inactive / Deprecated (consolidated into main) |
+| `Vfweu0rjoTT3FUl1` | `Agent - TVTotal24 (Latina)` | Inactive / Deprecated |
+| `4AYo7CX3Ou1K2yXH` | `Tool - Calcular Pago Movil` | Inactive / Deprecated |
 
 ---
 
-## 🤖 5. Configuración de IA y Reglas de Negocio
+## 4. Git Synchronization Protocol
 
-### Configuración del LLM
-* **Modelo:** `gpt-4o-mini` (OpenAI)
-* **Temperature:** `0`
-* **Top P:** `0.1`
-* **Memoria:** `Simple Memory` con clave de sesión `{{$json.body.conversation.id}}` (50 turnos de ventana de contexto).
-
-### Reglas Críticas
-1. **Regla 2.1 (Saludos y Cortesía):**
-   * Saludos casuales (*"hola"*, *"buenas noches"*, *"hello"*, etc.) son **IN-SCOPE**. El agente responde cordialmente sin rechazar el contexto.
-2. **Transferencia a Humano:**
-   * Al transferir a un agente humano, se preservan las etiquetas de la conversación y se marca con `human`, pausando la respuesta automática de la IA mientras mantenga dicha etiqueta.
-
----
-
-## 📁 6. Estructura del Repositorio Local
-
-```text
-/mnt/Data/Projects for Antigravity/kommo-chatwoot/
-├── PROJECT_CONTEXT.md          # 🧠 Documento maestro de persistencia
-├── .gitignore                  # Exclusiones de Git (seguridad y temporales)
-├── requirements.txt            # Dependencias de Python
-├── config.py                   # Configuraciones base
-├── prompts/
-│   ├── agent_prompt.md         # Prompt maestro TotalTv USA
-│   └── tvtotal24_prompt.md     # Prompt maestro TVTotal24 Latina
-├── workflows/                  # Backups JSON versionados de n8n
-│   ├── router_chatwoot_ia.json
-│   ├── tool_transfer_to_human.json
-│   └── ...
-└── core/                       # Módulos Python para Kommo y Chatwoot API
-```
+* **Local Repository**: `/mnt/Data/Projects for Antigravity/kommo-chatwoot`
+* **Remote Repository**: `git@github.com:totaltvusa/kommo-chatwoot.git`
+* **Branch**: `main`
