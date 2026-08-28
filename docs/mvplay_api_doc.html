@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <!-- Theme bootstrap. Runs before any stylesheet so the sign-in never
+             flashes the wrong theme. Dark is the default; `vs-theme` is the same
+             localStorage key the rest of the panel uses, so one choice follows
+             the operator everywhere. -->
+        <script>
+        (function(){
+            var t;
+            try { t = localStorage.getItem('vs-theme'); } catch(e) {}
+            if (t !== 'light' && t !== 'dark') { t = 'dark'; }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+        </script>
+        <title>Xtream-Masters - Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- App favicon --><meta name="image" content="/xm_assets/xm-ott4.png">
+<meta itemprop="image" content="/xm_assets/xm-ott4.png">
+<meta itemprop="name" content="Xtream-Masters OTT Panel">
+<meta name="twitter:card" content="Xtream-Masters OTT Panel">
+<meta name="twitter:title" content="Xtream-Masters OTT Panel">
+<meta name="twitter:description" content="Xtream-Masters OTT Panel All in one solution.">
+<meta name="og:title" content="Xtream-Masters OTT Panel">
+<meta name="og:description" content="Xtream-Masters OTT Panel All in one solution.">
+<meta name="og:image" content="/xm_assets/xm-ott4.png">
+<meta name="og:locale" content="en_US">
+<meta name="og:type" content="website"><link rel="icon" href="xm-icon.png" type="image/x-icon">
+        <!-- App css -->
+<link href="assets/css/icons.css" rel="stylesheet" type="text/css" />
+                <link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="assets/css/app.css" rel="stylesheet" type="text/css" />
+        <style>
+/* ===========================================================================
+   login.css — Xtream-Masters panel sign-in
+   ---------------------------------------------------------------------------
+   Loaded AFTER bootstrap.css + app.css, so equal-specificity rules win.
+
+   Theme: dark by default. The <html data-theme> attribute is set by an inline
+   bootstrap script in login.php before first paint, using the same `vs-theme`
+   localStorage key as view_server.php and faqs.php — one choice follows the
+   operator across the whole product.
+
+   No @font-face and no external font request: this is the critical path, and a
+   blocked CDN call would delay first paint on restricted networks.
+   ========================================================================= */
+
+:root {
+	/* light — the mirror; dark is the default and is defined below */
+	--lg-bg:        #eef1f6;
+	--lg-bg-2:      #e4e9f1;
+	--lg-card:      #ffffff;
+	--lg-inset:     #f4f6fa;
+	--lg-inset-2:   #eaeef5;
+	--lg-line:      #dde3ec;
+	--lg-line-soft: #e2e8f1;
+	--lg-ink:       #16202e;
+	--lg-ink-dim:   #5d6c82;
+	--lg-ink-faint: #8595ab;
+
+	/* the brand mark's own gradient — the one saturated thing on the page */
+	--lg-brand:     #fd790d;
+	--lg-brand-2:   #e43010;
+	--lg-brand-ink: #ffffff;   /* white in both themes, by request — the CTA is orange in both */
+	--lg-cta-a:     #fd8d0e;
+	--lg-cta-b:     #f4680f;
+	--lg-ring:      rgba(253, 121, 13, 0.28);
+
+	--lg-ok:        #1a9e57;
+	--lg-danger:    #d93a3f;
+
+	--lg-shadow:    0 1px 2px rgba(16, 22, 32, .06), 0 18px 50px -20px rgba(16, 22, 32, .30);
+	--lg-halo:      0 0 90px -34px rgba(70, 100, 190, .30);
+	--lg-edge:      inset 0 1px 0 rgba(255, 255, 255, .7);
+
+	/* background light sources */
+	--lg-glow-1:    rgba(120, 150, 235, .16);
+	--lg-glow-2:    rgba(88, 120, 220, .13);
+	--lg-glow-3:    rgba(70, 190, 205, .10);
+
+	--lg-radius:    14px;
+	--lg-radius-sm: 10px;
+
+	--lg-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	/* credentials are keys, not prose — they get the mono face */
+	--lg-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+:root[data-theme="dark"] {
+	--lg-bg:        #0a0e15;
+	--lg-bg-2:      #070a10;
+	--lg-card:      #121a26;
+	--lg-inset:     #0e1520;
+	--lg-inset-2:   #16202e;
+	--lg-line:      #223041;
+	--lg-line-soft: #1a2532;
+	--lg-ink:       #e9eff8;
+	--lg-ink-dim:   #8fa0b8;
+	--lg-ink-faint: #6b7d96;
+
+	--lg-brand:     #fd8d0e;
+	--lg-brand-2:   #f05e0f;
+	--lg-brand-ink: #ffffff;
+	--lg-cta-a:     #fd8d0e;
+	--lg-cta-b:     #f26a12;
+	--lg-ring:      rgba(253, 141, 14, 0.32);
+
+	--lg-ok:        #34d17f;
+	--lg-danger:    #ff6b6f;
+
+	--lg-shadow:    0 1px 2px rgba(0, 0, 0, .5), 0 28px 70px -24px rgba(0, 0, 0, .85);
+	--lg-halo:      0 0 120px -30px rgba(90, 130, 235, .30);
+	--lg-edge:      inset 0 1px 0 rgba(255, 255, 255, .055);
+
+	--lg-glow-1:    rgba(64, 104, 205, .30);
+	--lg-glow-2:    rgba(46, 74, 168, .28);
+	--lg-glow-3:    rgba(28, 150, 175, .16);
+
+	color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- surface */
+
+/* Soft light over a graded field — no pattern, no repeat, no texture: depth comes
+   from light alone. Earlier passes tried a tiled grid (read as boxes) and a film
+   grain (read as dust); both are gone. Smoothness is the whole point here. */
+body.authentication-bg,
+body.authentication-bg.authentication-bg-pattern2 {
+	background-color: var(--lg-bg) !important;
+	background-image:
+		/* key light behind the card — cool and luminous; warm tones at this opacity
+		   over near-black went brown, so the brand orange is spent on the CTA only */
+		radial-gradient(ellipse 62% 58% at 50% 38%, var(--lg-glow-1), transparent 72%),
+		/* a deeper indigo pool low-right, and a soft cyan lift high-left */
+		radial-gradient(ellipse 80% 62% at 96% 104%, var(--lg-glow-2), transparent 70%),
+		radial-gradient(ellipse 60% 50% at 4% -6%, var(--lg-glow-3), transparent 70%),
+		/* long vertical fall-off so the corners settle quietly */
+		linear-gradient(170deg, var(--lg-bg-2) 0%, var(--lg-bg) 45%, var(--lg-bg-2) 100%) !important;
+	background-repeat: no-repeat !important;
+	background-attachment: fixed !important;
+	font-family: var(--lg-font);
+	color: var(--lg-ink);
+	min-height: 100vh;
+	min-height: 100dvh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	position: relative;
+	-webkit-font-smoothing: antialiased;
+}
+
+.account-pages {
+	width: 100%;
+	padding: 24px 16px;
+	position: relative;
+	z-index: 1;
+}
+
+/* ------------------------------------------------------------------- card */
+
+body.authentication-bg .card {
+	position: relative;
+	max-width: 420px;
+	margin: 0 auto;
+	border: 1px solid var(--lg-line) !important;
+	border-radius: var(--lg-radius) !important;
+	background: var(--lg-card) !important;
+	/* depth, a halo picked up from the light behind it, and a lit top edge so the
+	   card reads as a physical surface rather than a flat rectangle */
+	box-shadow: var(--lg-shadow), var(--lg-halo), var(--lg-edge) !important;
+	overflow: hidden;
+	/* the old rule animated a lift on hover — distracting on something you click into */
+	transform: none !important;
+	transition: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+/* SIGNATURE — the carrier signal.
+   Replaces the old flat 10px green bar. A brand-gradient segment tracks across
+   the card's top edge: the page's one piece of motion, and it says "stream". */
+body.authentication-bg .card::before {
+	content: '';
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	height: 2px;
+	background: linear-gradient(90deg,
+		transparent 0%,
+		var(--lg-brand-2) 18%,
+		var(--lg-brand) 34%,
+		var(--lg-brand) 46%,
+		transparent 64%,
+		transparent 100%);
+	background-size: 220% 100%;
+	background-repeat: no-repeat;
+	animation: lgCarrier 4.2s linear infinite;
+}
+
+@keyframes lgCarrier {
+	from { background-position: -120% 0; }
+	to   { background-position: 220% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.authentication-bg .card::before {
+		animation: none;
+		background: linear-gradient(90deg, var(--lg-brand-2), var(--lg-brand));
+		background-size: 100% 100%;
+	}
+}
+
+body.authentication-bg .card-body { padding: 2.25rem 2rem 2rem !important; }
+
+/* -------------------------------------------------------------- masthead */
+
+.login-form-intro { margin: 0 0 .85rem; }
+.login-form-intro img {
+	width: 76px !important;
+	height: auto;
+	display: inline-block;
+}
+
+body.authentication-bg h3 {
+	font-family: var(--lg-font);
+	font-size: 1.32rem;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+	line-height: 1.25;
+	color: var(--lg-ink);
+	text-align: center;
+	margin: 0 0 .35rem;
+}
+
+/* one quiet line of orientation under the product name */
+.lg-sub {
+	display: block;
+	text-align: center;
+	font-family: var(--lg-mono);
+	font-size: .66rem;
+	letter-spacing: .16em;
+	text-transform: uppercase;
+	color: var(--lg-ink-dim);
+	margin: 0 0 1.6rem;
+}
+
+/* ------------------------------------------------------------------ form */
+
+body.authentication-bg .form-group { margin-bottom: 0; position: relative; }
+
+/* Field rhythm — driven by the following group's top margin rather than the
+   previous one's bottom margin, so it holds for every sign-in state (normal,
+   change-password, 2FA) regardless of how those branches group their fields.
+   The descendant selector is kept as a belt-and-braces fallback: the markup used
+   to nest these groups inside #username_group, and any un-migrated copy of
+   login.php still would. */
+body.authentication-bg .form-group + .form-group,
+body.authentication-bg #username_group .form-group { margin-top: 1.15rem; }
+
+/* the action needs a clearer break from the last field than fields need from each other */
+body.authentication-bg .form-group + .form-group.mb-0.text-center,
+body.authentication-bg .card-body .btn_login { margin-top: 1.6rem; }
+body.authentication-bg .form-group.mb-0.text-center .btn_login { margin-top: 0; }
+
+/* labels read as instrument labelling, not prose */
+body.authentication-bg label {
+	display: block;
+	font-family: var(--lg-mono);
+	font-size: .66rem;
+	font-weight: 600;
+	letter-spacing: .12em;
+	text-transform: uppercase;
+	color: var(--lg-ink-dim);
+	margin-bottom: .4rem;
+}
+
+body.authentication-bg .form-control {
+	height: 46px;
+	width: 100%;
+	border-radius: var(--lg-radius-sm);
+	border: 1px solid var(--lg-line);
+	background-color: var(--lg-inset);
+	color: var(--lg-ink);
+	padding: .7rem .85rem;
+	font-family: var(--lg-mono);
+	font-size: .9rem;
+	letter-spacing: .01em;
+	box-shadow: none;
+	transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+body.authentication-bg .form-control::placeholder {
+	color: var(--lg-ink-faint);
+	font-family: var(--lg-font);
+	letter-spacing: 0;
+}
+
+body.authentication-bg .form-control:focus {
+	border-color: var(--lg-brand);
+	background-color: var(--lg-inset-2);
+	box-shadow: 0 0 0 3px var(--lg-ring);
+	outline: none;
+	color: var(--lg-ink);
+}
+
+/* Chrome autofill repaints the well white — pin it back to the theme */
+body.authentication-bg .form-control:-webkit-autofill,
+body.authentication-bg .form-control:-webkit-autofill:hover,
+body.authentication-bg .form-control:-webkit-autofill:focus {
+	-webkit-text-fill-color: var(--lg-ink);
+	-webkit-box-shadow: 0 0 0 1000px var(--lg-inset-2) inset;
+	caret-color: var(--lg-ink);
+}
+
+/* ---- password reveal ---- */
+.lg-field-wrap { position: relative; }
+.lg-field-wrap .form-control { padding-right: 44px; }
+
+.lg-reveal {
+	position: absolute;
+	right: 6px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 34px;
+	height: 34px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	background: transparent;
+	border-radius: 8px;
+	color: var(--lg-ink-faint);
+	cursor: pointer;
+	padding: 0;
+}
+.lg-reveal:hover { color: var(--lg-brand); background: var(--lg-inset-2); }
+.lg-reveal:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--lg-ring); color: var(--lg-brand); }
+.lg-reveal svg { width: 17px; height: 17px; display: block; }
+
+/* ---- captcha ----
+   The input and the code image have to read as ONE control. Previously the image
+   kept its own light plate and square corners, so it met the dark input on a hard
+   seam and its corners poked outside the rounded edge. Now the append wrapper owns
+   the border, the radius and the clipping; the image just fills it, and in dark
+   mode it is inverted so the plate matches the field instead of glaring white. */
+body.authentication-bg .input-group {
+	margin-bottom: 0;
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: stretch;
+}
+
+body.authentication-bg .input-group .form-control {
+	border-top-right-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+	border-right: 0;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+body.authentication-bg .input-group-append {
+	display: flex;
+	flex: 0 0 auto;
+	height: 46px;
+	border: 1px solid var(--lg-line);
+	border-radius: 0 var(--lg-radius-sm) var(--lg-radius-sm) 0;
+	background: var(--lg-inset);
+	overflow: hidden;          /* clips the image to the rounded corner */
+	transition: border-color .15s ease;
+}
+
+body.authentication-bg .input-group-append img {
+	display: block;
+	height: 100%;
+	width: 120px;
+	object-fit: cover;
+	border: 0;
+	border-radius: 0;
+	cursor: pointer;
+	transition: filter .15s ease;
+}
+
+/* invert(1) turns the light plate dark and the grey glyphs light — it reads
+   better here than the original grey-on-white, and it belongs to the card. */
+:root[data-theme="dark"] body.authentication-bg .input-group-append img {
+	/* grayscale kills the brown cast that inverting the plate's warm noise leaves */
+	filter: invert(1) grayscale(1) contrast(1.18) brightness(1.12);
+}
+
+body.authentication-bg .input-group-append:hover { border-color: var(--lg-border-hover, var(--lg-ink-faint)); }
+body.authentication-bg .input-group-append img:hover { filter: brightness(1.06); }
+:root[data-theme="dark"] body.authentication-bg .input-group-append img:hover {
+	filter: invert(1) grayscale(1) contrast(1.18) brightness(1.24);
+}
+body.authentication-bg .input-group-append img:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--lg-ring) inset;
+}
+/* keep the seam a single hairline: the input drops its right border, the append
+   supplies the divider */
+body.authentication-bg .input-group:focus-within .input-group-append { border-color: var(--lg-brand); }
+
+.lg-captcha-hint {
+	display: block;
+	margin-top: .4rem;
+	font-size: .72rem;
+	color: var(--lg-ink-dim);
+}
+
+/* --------------------------------------------------------------- actions */
+
+body.authentication-bg .btn_login {
+	/* flex-centred rather than relying on line-height: Bootstrap's .btn padding
+	   fights a fixed height and pushed the label off-centre */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	line-height: 1;
+	width: 100%;
+	height: 46px;
+	border: 0;
+	border-radius: var(--lg-radius-sm);
+	background: linear-gradient(135deg, var(--lg-cta-a) 0%, var(--lg-cta-b) 100%);
+	color: var(--lg-brand-ink);
+	font-family: var(--lg-font);
+	font-size: .95rem;
+	font-weight: 700;
+	letter-spacing: .01em;
+	text-transform: none;   /* was uppercase — shouty for a daily action */
+	cursor: pointer;
+	transition: filter .15s ease, box-shadow .15s ease;
+	box-shadow: 0 6px 18px -8px var(--lg-ring);
+}
+
+body.authentication-bg .btn_login:hover { filter: brightness(1.06); transform: none; }
+body.authentication-bg .btn_login:active { filter: brightness(.96); }
+body.authentication-bg .btn_login:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--lg-ring), 0 6px 18px -8px var(--lg-ring);
+}
+
+/* ----------------------------------------------------------------- links */
+
+body.authentication-bg a { color: var(--lg-brand); text-decoration: none; transition: color .15s ease; }
+body.authentication-bg a:hover { color: var(--lg-brand-2); text-decoration: underline; }
+body.authentication-bg a:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--lg-ring);
+	border-radius: 4px;
+}
+
+/* the reset/forgot row */
+.lg-foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-top: 1rem;
+	font-size: .82rem;
+}
+.lg-foot:empty { display: none; margin: 0; }
+.lg-foot a { font-weight: 600; }
+
+/* --------------------------------------------------------------- alerts */
+
+body.authentication-bg .alert {
+	max-width: 420px;
+	margin: 0 auto 14px;
+	border: 1px solid var(--lg-line) !important;
+	border-left: 3px solid var(--lg-danger) !important;
+	border-radius: var(--lg-radius-sm) !important;
+	background: var(--lg-card) !important;
+	color: var(--lg-ink) !important;
+	font-size: .86rem;
+	line-height: 1.5;
+	padding: .8rem 2.2rem .8rem .9rem;
+	box-shadow: var(--lg-shadow);
+}
+body.authentication-bg .alert a { color: var(--lg-brand) !important; font-weight: 600; }
+body.authentication-bg .alert .close {
+	color: var(--lg-ink-faint);
+	opacity: 1;
+	text-shadow: none;
+	padding: .55rem .7rem;
+	font-weight: 400;
+}
+body.authentication-bg .alert .close:hover { color: var(--lg-ink); }
+
+/* --------------------------------------------------------------- modals */
+
+body.authentication-bg .modal-content {
+	background: var(--lg-card);
+	border: 1px solid var(--lg-line);
+	border-radius: var(--lg-radius);
+	color: var(--lg-ink);
+	box-shadow: var(--lg-shadow);
+}
+body.authentication-bg .modal-header,
+body.authentication-bg .modal-footer {
+	border-color: var(--lg-line);
+	padding: 1rem 1.25rem;
+}
+body.authentication-bg .modal-title { font-weight: 700; color: var(--lg-ink); font-size: 1rem; }
+body.authentication-bg .modal-body { padding: 1.25rem; }
+body.authentication-bg .modal-header .close { color: var(--lg-ink-faint); text-shadow: none; opacity: 1; }
+body.authentication-bg .modal-header .close:hover { color: var(--lg-ink); }
+body.authentication-bg .modal-backdrop.show { opacity: .72; }
+body.authentication-bg .btn-secondary {
+	background: var(--lg-inset-2);
+	border-color: var(--lg-line);
+	color: var(--lg-ink);
+}
+body.authentication-bg .btn-primary {
+	background: linear-gradient(135deg, var(--lg-cta-a) 0%, var(--lg-cta-b) 100%);
+	border: 0;
+	color: var(--lg-brand-ink);
+	font-weight: 600;
+}
+
+/* ---------------------------------------------------- parsley validation */
+
+body.authentication-bg .parsley-errors-list {
+	list-style: none;
+	padding: 0;
+	margin: .4rem 0 0;
+	font-size: .76rem;
+	color: var(--lg-danger);
+}
+
+/* ---------------------------------------------------------- theme toggle */
+
+.lg-theme-btn {
+	position: fixed;
+	top: 16px;
+	right: 16px;
+	z-index: 1200;
+	width: 38px;
+	height: 38px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	border: 1px solid var(--lg-line);
+	background: var(--lg-card);
+	color: var(--lg-ink-dim);
+	cursor: pointer;
+	padding: 0;
+	transition: color .15s ease, border-color .15s ease;
+}
+.lg-theme-btn:hover { color: var(--lg-brand); border-color: var(--lg-brand); }
+.lg-theme-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--lg-ring); }
+.lg-theme-btn svg { width: 17px; height: 17px; display: block; }
+
+/* ------------------------------------------------------------ recaptcha */
+
+.g-recaptcha { display: inline-block; }
+h5.auth-title { text-align: center; margin: 1rem 0 0; }
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 576px) {
+	.account-pages { padding: 16px 12px; }
+	body.authentication-bg .card-body { padding: 1.6rem 1.25rem 1.5rem !important; }
+	body.authentication-bg h3 { font-size: 1.15rem; }
+	.login-form-intro img { width: 64px !important; }
+	.lg-theme-btn { top: 10px; right: 10px; width: 34px; height: 34px; }
+	body.authentication-bg .input-group-append img { width: 96px; }
+}
+</style>
+    </head>
+    <body class="authentication-bg authentication-bg-pattern2">
+        <button class="lg-theme-btn" id="lgThemeBtn" type="button" aria-label="Toggle light/dark theme" aria-pressed="false" title="Toggle light/dark theme">
+            <svg id="lgThemeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg>
+        </button>
+        <div class="account-pages mt-5 mb-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        
+
+
+<!-- Card chrome (top rule, radius, shadow) lives in the stylesheet now so it
+     can follow the theme; the inline green border/shadow was light-only. -->
+<div class="card">
+                            <div class="card-body p-4">
+                                <form action="./login.php" method="POST" data-parsley-validate="" id="login_form">
+                                    <input type="hidden" name="referrer" value="/xm_api.php" />
+	<input type="hidden" name="access_code" value="" />
+                                    <center><p class="login-form-intro"><img alt="" src="assets/images/iptv.png"></p>
+<h3>ADMIN PANEL</h3>
+<span class="lg-sub">Control panel sign-in</span>
+<!--
+<div class="alert alert-warning" role="alert"><strong>Under Maintenance:</strong> System is under upgrade it may take next few hours, will be active soon.</div>
+-->
+</center><br>                                    <div class="form-group mb-3" id="username_group">
+                                        <label for="username">Username</label>
+                                        <input class="form-control" autocomplete="off" type="text" id="username" name="username" required="" data-parsley-trigger="change" placeholder="Enter Your Username" value="">
+                                    </div>
+                                    <div class="form-group mb-1">
+                                        <label for="password">Password</label>
+                                        <div class="lg-field-wrap">
+                                        <input class="form-control" autocomplete="off" type="password" required data-parsley-trigger="change" id="password" name="password" placeholder="Enter Your Password" value="">
+                                        <button class="lg-reveal" id="lgReveal" type="button" aria-label="Show password" aria-pressed="false" title="Show password"><svg id="lgRevealIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg></button>
+                                        </div>
+                                    </div><input type="hidden" id="lkey" name="lkey" value="BSRqZryi">
+<div class="form-group mb-1">
+          <label for="ucaptcha">Captcha</label>
+          <div class="input-group">
+            <input type="text" class="form-control" autocomplete="off" id="ucaptcha" name="captcha" placeholder="Enter the code">
+            <div class="input-group-append">
+              <img src="captcha.php?a=1" id="lgCaptchaImg" alt="Captcha code" role="button" tabindex="0" title="Get a new code">
+            </div>
+          </div>
+          <span class="lg-captcha-hint">Hard to read? Click the image for a new code.</span>
+</div>
+                                    <div class="form-group mb-0 text-center">
+                                        <button class="btn_login btn-block btn-info" type="submit" id="login_button">Login</button>
+                                  </div><div class="lg-foot"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="assets/js/vendor.min.js"></script>
+        <script src="assets/libs/parsleyjs/parsley.min.js"></script>
+        <script src="assets/js/app.min.js?rid=0"></script>
+        <script>
+        $(document).ready(function() {
+            if (window.location.hash.substring(0,1) == "#") {
+                $("#username_group").hide();
+                $("#username").val(window.location.hash.substring(1));
+                $("#login_form").attr('action', './login.php#' + window.location.hash.substring(1));
+                $("#login_button").html("LOGIN AS " + window.location.hash.substring(1).toUpperCase());
+				window.location.replace("login.php");
+            }
+        });
+        </script>
+<!-- Sign-in behaviour: theme toggle, password reveal, captcha refresh.
+     Plain JS so it does not depend on jQuery having loaded. -->
+<script>
+(function () {
+	var ICON_SUN  = '<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/>'
+	              + '<line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/>'
+	              + '<line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/>'
+	              + '<line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/>'
+	              + '<line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/>';
+	var ICON_MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+	var ICON_EYE  = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+	var ICON_EYE_OFF = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>'
+	                 + '<path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>'
+	                 + '<path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+
+	var root = document.documentElement;
+
+	var tBtn = document.getElementById('lgThemeBtn');
+	var tIcon = document.getElementById('lgThemeIcon');
+	function isDark() { return root.getAttribute('data-theme') !== 'light'; }
+	function reflectTheme() {
+		if (!tBtn || !tIcon) return;
+		var d = isDark();
+		tIcon.innerHTML = d ? ICON_SUN : ICON_MOON;
+		tBtn.setAttribute('aria-pressed', d ? 'true' : 'false');
+		tBtn.title = d ? 'Switch to light theme' : 'Switch to dark theme';
+	}
+	if (tBtn) {
+		tBtn.addEventListener('click', function () {
+			var next = isDark() ? 'light' : 'dark';
+			root.setAttribute('data-theme', next);
+			try { localStorage.setItem('vs-theme', next); } catch (e) {}
+			reflectTheme();
+		});
+		reflectTheme();
+	}
+
+	var pw = document.getElementById('password');
+	var rBtn = document.getElementById('lgReveal');
+	var rIcon = document.getElementById('lgRevealIcon');
+	function reflectReveal() {
+		if (!pw || !rIcon || !rBtn) return;
+		var shown = pw.type === 'text';
+		rIcon.innerHTML = shown ? ICON_EYE_OFF : ICON_EYE;
+		rBtn.setAttribute('aria-pressed', shown ? 'true' : 'false');
+		rBtn.setAttribute('aria-label', shown ? 'Hide password' : 'Show password');
+		rBtn.title = shown ? 'Hide password' : 'Show password';
+	}
+	if (pw && rBtn) {
+		rBtn.addEventListener('click', function () {
+			pw.type = pw.type === 'password' ? 'text' : 'password';
+			reflectReveal();
+			pw.focus();
+		});
+		reflectReveal();
+	}
+
+	var cap = document.getElementById('lgCaptchaImg');
+	function newCaptcha() {
+		if (!cap) return;
+		cap.src = 'captcha.php?a=1&_=' + Date.now();
+		var f = document.getElementById('ucaptcha');
+		if (f) { f.value = ''; f.focus(); }
+	}
+	if (cap) {
+		cap.addEventListener('click', newCaptcha);
+		cap.addEventListener('keydown', function (e) {
+			if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); newCaptcha(); }
+		});
+	}
+
+	var u = document.getElementById('username');
+	if (u && !u.value) { try { u.focus(); } catch (e) {} }
+	else if (pw && !pw.value) { try { pw.focus(); } catch (e) {} }
+})();
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="resetPasswordModalLabel">Reset MaterAdmin Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="remail">Email</label>
+          <input type="email" class="form-control" id="remail" placeholder="Enter your masteradmin email address.">
+        </div>
+        <div class="form-group">
+          <label for="loginKey">Captcha</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="rcaptcha" placeholder="Enter given captcha">
+            <div class="input-group-append">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary resetpass">Reset Password</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="resetPasswordModalUser" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalUserLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="resetPasswordModalLabel">Reset Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+             <form method="POST" action="">
+        <div class="form-group">
+          <label for="uemail">Email</label>
+          <input type="email" class="form-control" id="uemail" name="email" placeholder="Enter your email address.">
+        </div>
+        <div class="form-group"  style="display:none;">
+          <label for="uloginkey">Login Key</label>
+          <input type="password" class="form-control" id="uloginkey" name="loginkey" value="BSRqZryi" placeholder="Enter login key.">
+        </div>
+        <div class="form-group">
+          <label for="ucaptcha">Captcha</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="ucaptcha" name="captcha" placeholder="Enter given captcha">
+            <div class="input-group-append">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary resetpassuser">Reset Password</button>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="chngPassModal" tabindex="-1" role="dialog" aria-labelledby="chngPassModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="chngPassModalLabel">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"5789e39d646d44199429a070bdaea526","r":1}' crossorigin="anonymous"></script>

@@ -12,30 +12,61 @@
 * **Webhook Ingestion**: Chatwoot webhook posts `message_created` events to `https://n8n.ac4.club/webhook/chatwoot-inbound-webhook`.
 * **n8n Orchestration Workflow**: `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
 * **Debounce & Aggregation**: 3-second non-blocking wait (`Wait 3s`) + Chatwoot message query (`GET /messages`) + deduplication code node (`Preparar Mensaje`) that clusters consecutive lines into a single prompt.
-* **LLM Engine**: **Anthropic Claude 3.5 Sonnet** (`claude-3-5-sonnet-20241022`) via `@n8n/n8n-nodes-langchain.lmChatAnthropic` with credential `Anthropic account` (`ZbUWSAq6JlKInA64`).
-  * **Sampling Parameters**: Deterministic greedy decoding (`temperature: 0`, `topP: 0.001`).
-  * ⚠️ **STRICT MANDATE (NO OPENAI)**: OpenAI is permanently decommissioned. Under NO circumstance will OpenAI models be used. Even if requested in future sessions, the assistant MUST confirm with the user and remind them of this strict directive.
-* **Tools Connected to AI Agent**:
-  1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Generates payment links for Crypto (BTC/USDT -20%), CashApp (+10%), and Credit/Debit/PayPal (+10%).
-  2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Direct Mega OTT demo generation tool for 24-hour trials (1 device).
-  3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation for explicit customer handover requests.
+* **LLM Engine**: **Anthropic Claude Haiku 4.5** (`claude-haiku-4-5`) via `@n8n/n8n-nodes-langchain.lmChatAnthropic` with credential `Anthropic account` (`ZbUWSAq6JlKInA64`).
+  * **Sampling Parameters**: Deterministic greedy decoding (`temperature: 0`).
+  * ⚠️ **STRICT MANDATE (NO OPENAI)**: OpenAI is permanently decommissioned. Under NO circumstance will OpenAI models be used.
+* **Multi-Brand Routing (`¿Qué Empresa?`)**:
+  * **Brand A: TotalTv USA** (Default / Inbox 1):
+    * Service: Mega OTT panel.
+    * Audience: USA & International (English / Spanish bilingual auto-detection).
+    * Payment Methods: Zelle (`acalimanr@gmail.com`), Crypto (-20%), CashApp (+10%), Credit/Debit/PayPal (+10%).
+    * Connected Tools:
+      1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
+      2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`).
+      3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation.
+  * **Brand B: TVTotal24 / TOTAL TV Latina** (Inbox 10 - Telegram `@tvtotal24_bot`):
+    * Service: MVPlay (Xtream-Masters) panel.
+    * Audience: Latin America / Venezuela (Spanish).
+    * Payment Methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (`ID: 22628239` - Super Discount), Pago Móvil (Bancamiga, 04246861135, J405259221, ArialStore C.A.).
+    * Connected Tools:
+      1. `calcular_pago_movil` (`4AYo7CX3Ou1K2yXH`): Real-time BCV exchange rate & Bs calculation.
+      2. `crear_prueba_tvtotal24` (`kh10aaenUURvi7Ji`): Automated MVPlay 4h trial generator (tracked via Chatwoot attributes `tvtotal_trial_1_id`, `tvtotal_trial_2_id`).
+      3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation.
 * **Formatting & Response Pipeline**: Single-pass linear formatting (`Formatear Respuesta`) detecting channel type (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp) $\rightarrow$ `POST /messages` to Chatwoot (`Responder en Chatwoot`).
 
 ---
 
-## 2. Business Rules & Master Prompt Policy
+## 2. Business Rules & Operational Policies
 
-* **Language Rules**: Dynamic per-turn detection (responds in the language of the user's latest message, Spanish or English). Proper names, emails, phone numbers, and short confirmations do NOT trigger a language switch.
-* **Payment Methods**:
-  * **Zelle**: Base price to `acalimanr@gmail.com`. General listing NEVER includes the QR image link; QR code link is only delivered if customer explicitly asks to pay with Zelle or requests the QR.
-  * **Crypto (BTC/USDT)**: -20% discount.
-  * **CashApp**: +10% surcharge.
-  * **Card / PayPal**: +10% surcharge.
-* **Free Trials**:
-  * 24-hour duration (1 device).
-  * Upfront presentation NEVER mentions "up to 2 trials" (internal rule only).
-  * Requires 3 fields: Full Name, Email, Phone number (preferably WhatsApp).
-  * Up to 2 trials per customer: 2nd trial explicitly warns that it is the last allowed trial.
+### Free Trial Policies
+* **TotalTv USA (Mega OTT)**:
+  * Duration: 24 hours (1 device).
+  * Panel: Mega OTT.
+  * Attributes: `trial_1_id`, `trial_2_id`.
+* **TVTotal24 (MVPlay / TOTAL TV Latina)**:
+  * Duration: 4 hours (starts upon creation; NEVER state that it starts upon first login).
+  * Panel in TotalTV app: Select **TOTALTV LATINA**.
+  * Attributes: `tvtotal_trial_1_id`, `tvtotal_trial_2_id` (100% isolated from Mega OTT).
+  * Username format: `NombreApellido` (without spaces or accents, e.g. `AlbertoRincon`). If missing, left empty for auto-generation.
+  * Password format: Customer's clean phone number. If rejected by MVPlay, auto-fallback creates line with panel-generated password.
+  * Reseller Notes: ONLY customer's full name (no email, no phone).
+  * Server URLs:
+    * Server / DNS: `http://wk.mvpl.uk:2082`
+    * Smarters DNS: Always label as **`DNS para Smarters: http://cdn01link.uk:2095`**
+* **General Trial Rules**:
+  * Mandatory collection before creation: Full Name (`contact_name`), Email (`email`), Phone (`phone`).
+  * Limit: Up to 2 free trials per customer. (The 2-trial limit is internal and NEVER mentioned upfront; upon delivering the 2nd trial, explicitly state it is the final free trial).
+
+### Payment & QR Code Rules
+* **Pago Móvil**:
+  * Standard response gives clean text only: Total amount in Bs, Bank (Bancamiga), Phone (04246861135), RIF (J405259221), Beneficiary (ArialStore C.A.), request transfer screenshot.
+  * DO NOT mention the daily exchange rate in standard response; only provide the exchange rate if the customer explicitly asks for it.
+  * Deliver QR code link (`Arialstorepm.jpeg`) ONLY if the customer explicitly asks for the QR code.
+* **Zelle**:
+  * TotalTv USA: `acalimanr@gmail.com`. QR delivered only upon explicit request.
+  * TVTotal24: `pagos@totaltvlatina.com`. QR delivered only upon explicit request (`Zelle Lat.jpeg`).
+* **Binance Pay (TVTotal24)**:
+  * Pay ID: `22628239`. Super discount pricing: 1 Month , 3 Months , 12 Months .
 
 ---
 
@@ -43,23 +74,41 @@
 
 | Workflow ID | Name | Role / Status |
 | :--- | :--- | :--- |
-| `n0zgnS1vlOGNcGNY` | `Chatwoot + IA Agent` | **Active / Main Gateway** (Anthropic Claude 3.5 Sonnet, 0-temp, 3s debounce, tools) |
-| `3dBu0SNABE2pKCqU` | `getpaymentlink` | **Active Subworkflow / Tool** (Payment link generation) |
-| `e1R7zQorWBaaqgou` | `Create Mega OTT Trial Tool` | **Active Subworkflow / Tool** (Mega OTT Trial generator) |
+| `n0zgnS1vlOGNcGNY` | `Chatwoot + IA Agent` | **Active / Main Gateway** (Claude Haiku 4.5, 0-temp, 3s debounce, multi-brand router) |
+| `kh10aaenUURvi7Ji` | `Tool - Create MVPlay Trial` | **Active Subworkflow / Tool** (Automated MVPlay Xtream-Masters trial generator for TVTotal24) |
+| `4AYo7CX3Ou1K2yXH` | `Tool - Calcular Pago Movil` | **Active Subworkflow / Tool** (Pago Móvil rate scraping & Bs calculation for TVTotal24) |
+| `e1R7zQorWBaaqgou` | `Create Mega OTT Trial Tool` | **Active Subworkflow / Tool** (Mega OTT Trial generator for TotalTv USA) |
+| `3dBu0SNABE2pKCqU` | `getpaymentlink` | **Active Subworkflow / Tool** (Payment link generator for TotalTv USA) |
 | `xam0WV65gvTbXcIx` | `Transfer to Human Tool` | **Active Subworkflow / Tool** (Human agent escalation) |
 | `p8dS1jx73xvpbrkj` | `Telegram to N8N` | Active |
 | `TfILC2hXao6SLQfE` | `Zelle Webhook` | Active |
 | `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
 | `uD5sM2ruGXYSlpY3` | `Chatwoot Webhook` | Active |
 | `OQzmQUISGM6ShdKT` | `AmoCRM Contact Update` | Active |
-| `asQhO3WgzQW4gR5P` | `Agent - TotalTv USA` | Inactive / Deprecated (consolidated into main) |
-| `4AYo7CX3Ou1K2yXH` | `Tool - Calcular Pago Movil` | **Active Subworkflow / Tool** (Pago Movil rate & calculation for TVTotal24) |
-| `kh10aaenUURvi7Ji` | `Tool - Create MVPlay Trial` | **Active Subworkflow / Tool** (Automated MVPlay Xtream-Masters trial generator for TVTotal24) |
+| `asQhO3WgzQW4gR5P` | `Agent - TotalTv USA` | Inactive / Deprecated |
+| `Vfweu0rjoTT3FUl1` | `Agent - TVTotal24 (Latina)` | Inactive / Deprecated |
 
 ---
 
-## 4. Git Synchronization Protocol
+## 4. API Endpoints & Credentials Reference
 
-* **Local Repository**: `/mnt/Data/Projects for Antigravity/kommo-chatwoot`
+* **MVPlay (Xtream-Masters) API**:
+  * Endpoint: `http://1395.cooteg.ch:2095/pooqkDEG/reseller/index.php`
+  * User: `TtvLat2025`
+  * API Key: `ace3cacdfd48afdec756ec214ec0793f`
+  * Package ID for Demo: `2` (Demo 3 Horas / TVTotal24)
+  * Server DNS: `http://wk.mvpl.uk:2082`, `http://cdn01link.uk:2095`
+* **Chatwoot API**:
+  * Base URL: `https://project1-chatwoot.efebpb.easypanel.host`
+  * Access Token: `nuwRKpG2bBAQBpRFznfvrMpT`
+  * Account ID: `1`
+* **n8n Instance**:
+  * URL: `https://n8n.ac4.club`
+
+---
+
+## 5. Git Synchronization Protocol
+
+* **Local Repository**: `/Users/alvezcaliman/Documents/AntigravityProjects/kommo-chatwoot`
 * **Remote Repository**: `git@github.com:totaltvusa/kommo-chatwoot.git`
 * **Branch**: `main`
