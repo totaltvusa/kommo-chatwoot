@@ -3,12 +3,12 @@
   "name": "Tool - Create MVPlay Trial",
   "active": true,
   "isArchived": false,
-  "versionId": "695f2488-99c0-41a0-8bf2-5e7dbb4e1f4c",
-  "activeVersionId": "695f2488-99c0-41a0-8bf2-5e7dbb4e1f4c",
+  "versionId": "12d0c081-949b-48ff-a733-7ab4abc3964e",
+  "activeVersionId": "12d0c081-949b-48ff-a733-7ab4abc3964e",
   "triggerCount": 0,
   "nodeCount": 11,
   "createdAt": "2026-08-28T16:29:29.425Z",
-  "updatedAt": "2026-08-28T16:39:21.442Z",
+  "updatedAt": "2026-08-28T16:42:41.790Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -166,7 +166,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const item = $input.first().json || {};\nconst contact_name = item.contact_name || item.name || 'Cliente';\nconst email = item.email || '';\nconst raw_phone = (item.phone || '').toString();\nconst clean_phone = raw_phone.replace(/\\D/g, '');\n\nconst account_id = item.account_id || 1;\nconst conversation_id = item.conversation_id;\n\nlet phone_digits = clean_phone.slice(-7);\nif (!phone_digits || phone_digits.length < 5) {\n  phone_digits = Math.floor(1000000 + Math.random() * 9000000).toString();\n}\nconst username = 'ttv' + phone_digits;\nconst password = Math.floor(100000 + Math.random() * 900000).toString();\nconst note = `${contact_name} | ${clean_phone || 'Sin Tel'} | ${email || 'Sin Email'}`;\n\nreturn [{\n  json: {\n    contact_name,\n    email,\n    phone: clean_phone,\n    username,\n    password,\n    note,\n    account_id,\n    conversation_id\n  }\n}];"
+        "jsCode": "let item = {};\ntry {\n  item = $input.first().json || {};\n} catch(e) {\n  try { item = $json || {}; } catch(e2) {}\n}\n\nlet contact_name = item.contact_name || item.name || '';\nlet email = item.email || '';\nlet phone = (item.phone || '').toString();\nconst query = (item.query || '').toString();\n\n// Parse from query string if properties are missing\nif (query) {\n  const nameMatch = query.match(/(?:contact_name|nombre|name)\\s*:\\s*([^,\\n]+)/i);\n  if (nameMatch && !contact_name) contact_name = nameMatch[1].trim();\n  \n  const emailMatch = query.match(/(?:email|correo)\\s*:\\s*([^,\\n\\s]+)/i);\n  if (emailMatch && !email) email = emailMatch[1].trim();\n  \n  const phoneMatch = query.match(/(?:phone|telefono|tel|celular)\\s*:\\s*([0-9+]+)/i);\n  if (phoneMatch && !phone) phone = phoneMatch[1].trim();\n}\n\nif (!contact_name) contact_name = 'Cliente';\nconst clean_phone = phone.replace(/\\D/g, '');\n\nconst account_id = item.account_id || 1;\nconst conversation_id = item.conversation_id;\n\nlet phone_digits = clean_phone.slice(-7);\nif (!phone_digits || phone_digits.length < 5) {\n  phone_digits = Math.floor(1000000 + Math.random() * 9000000).toString();\n}\n\nconst username = 'ttv' + phone_digits;\nconst password = 'Ttv' + Math.floor(100000 + Math.random() * 900000).toString();\nconst note = `${contact_name} | ${clean_phone || 'Sin Tel'} | ${email || 'Sin Email'}`;\n\nreturn [{\n  json: {\n    contact_name,\n    email,\n    phone: clean_phone,\n    username,\n    password,\n    note,\n    account_id,\n    conversation_id\n  }\n}];"
       }
     },
     {
@@ -352,7 +352,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "={{ \"https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/\" + $json.account_id + \"/conversations/\" + $json.conversation_id + \"/messages\" }}",
+        "url": "={{ \"https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/\" + $('Evaluar Historial Trials').item.json.account_id + \"/conversations/\" + $('Evaluar Historial Trials').item.json.conversation_id + \"/messages\" }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -368,7 +368,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { content: \"🤖 TVTotal24 Demo #\" + $json.trial_number + \" Creado\\n• Usuario: \" + $json.username + \"\\n• Contraseña: \" + $json.password + \"\\n• ID Línea: \" + $json.line_id + \"\\n• DNS: http://wk.mvpl.uk:2082\\n• DNS Smart TV: http://cdn01link.uk:2095\", private: true } }}"
+        "jsonBody": "={{ { content: \"🤖 TVTotal24 Demo #\" + $('Procesar Respuesta MVPlay').item.json.trial_number + \" Creado\\n• Usuario: \" + $('Procesar Respuesta MVPlay').item.json.username + \"\\n• Contraseña: \" + $('Procesar Respuesta MVPlay').item.json.password + \"\\n• ID Línea: \" + $('Procesar Respuesta MVPlay').item.json.line_id + \"\\n• DNS: http://wk.mvpl.uk:2082\\n• DNS Smart TV: http://cdn01link.uk:2095\", private: true } }}"
       }
     },
     {
@@ -382,7 +382,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const item = $input.first().json || {};\nconst procData = $('Procesar Respuesta MVPlay').item.json;\n\nreturn [{\n  json: {\n    status: 'created',\n    trial_number: procData.trial_number,\n    username: procData.username,\n    password: procData.password,\n    dns: 'http://wk.mvpl.uk:2082',\n    dns_smart_tv: 'http://cdn01link.uk:2095',\n    m3u_url: `http://wk.mvpl.uk:2082/get.php?username=${procData.username}&password=${procData.password}&type=m3u_plus&output=ts`,\n    instrucciones: 'Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con el DNS http://wk.mvpl.uk:2082'\n  }\n}];"
+        "jsCode": "const procData = $('Procesar Respuesta MVPlay').item.json;\n\nreturn [{\n  json: {\n    status: 'created',\n    trial_number: procData.trial_number,\n    username: procData.username,\n    password: procData.password,\n    dns: 'http://wk.mvpl.uk:2082',\n    dns_smart_tv: 'http://cdn01link.uk:2095',\n    m3u_url: `http://wk.mvpl.uk:2082/get.php?username=${procData.username}&password=${procData.password}&type=m3u_plus&output=ts`,\n    instrucciones: 'Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con el DNS http://wk.mvpl.uk:2082'\n  }\n}];"
       }
     },
     {
