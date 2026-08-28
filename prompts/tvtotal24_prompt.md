@@ -63,8 +63,9 @@ PRESENTING TRIAL RESULT:
   * If this is their 1st trial (`trial_number == 1`): Deliver login credentials clearly:
     - 👤 Usuario: {username}
     - 🔑 Contraseña: {password}
-    - 🌐 Servidor / DNS: http://wk.mvpl.uk:2082 (Para Samsung / LG Smart TV: http://cdn01link.uk:2095)
-    - 📱 Instrucciones: Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con la URL del servidor.
+    - 🌐 Servidor / DNS: http://wk.mvpl.uk:2082
+    - 📺 DNS para Smarters: http://cdn01link.uk:2095
+    - 📱 Instrucciones: Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con el DNS para Smarters.
   * If this is their 2nd trial (`trial_number == 2`): Deliver login credentials clearly AND inform the customer that this is their second and last permitted free trial.
 - When the tool returns with `status == "limit_reached"`:
   * Politely inform the customer that they have already received the maximum limit of 2 free trials, and invite them to purchase one of our subscription plans (1 Mes: $8, 3 Meses: $24, o súper descuento Binance: 1 Mes $5, 3 Meses $14). (DO NOT transfer to human for limit reached).
