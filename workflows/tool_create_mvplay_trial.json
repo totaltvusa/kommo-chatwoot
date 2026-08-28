@@ -3,12 +3,12 @@
   "name": "Tool - Create MVPlay Trial",
   "active": true,
   "isArchived": false,
-  "versionId": "483920d9-25fd-4177-baeb-d3c51ec45f31",
-  "activeVersionId": "483920d9-25fd-4177-baeb-d3c51ec45f31",
+  "versionId": "883c1981-4383-4e43-bb07-f7935397b859",
+  "activeVersionId": "883c1981-4383-4e43-bb07-f7935397b859",
   "triggerCount": 0,
-  "nodeCount": 8,
+  "nodeCount": 10,
   "createdAt": "2026-08-28T16:29:29.425Z",
-  "updatedAt": "2026-08-28T16:54:56.369Z",
+  "updatedAt": "2026-08-28T17:03:26.177Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -36,24 +36,6 @@
   ],
   "canExecute": true,
   "connections": {
-    "¿Puede Crear Demo?": {
-      "main": [
-        [
-          {
-            "node": "Actualizar Contacto Chatwoot",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Formatear Limite Alcanzado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Actualizar Contacto Chatwoot": {
       "main": [
         [
@@ -91,18 +73,58 @@
       "main": [
         [
           {
-            "node": "Evaluar y Crear Linea MVPlay",
+            "node": "Evaluar Historial y Preparar Datos",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Evaluar y Crear Linea MVPlay": {
+    "Evaluar Historial y Preparar Datos": {
       "main": [
         [
           {
-            "node": "¿Puede Crear Demo?",
+            "node": "¿Límite de Pruebas Alcanzado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Límite de Pruebas Alcanzado?": {
+      "main": [
+        [
+          {
+            "node": "Formatear Limite Alcanzado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Linea MVPlay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Linea MVPlay": {
+      "main": [
+        [
+          {
+            "node": "Procesar Respuesta MVPlay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Respuesta MVPlay": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Contacto Chatwoot",
             "type": "main",
             "index": 0
           }
@@ -150,45 +172,6 @@
       }
     },
     {
-      "id": "ecb5fee0-5110-4cfb-8f43-1dc572232cc9",
-      "name": "¿Puede Crear Demo?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        1080,
-        300
-      ],
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{ $json.can_create }}",
-              "value2": true
-            }
-          ],
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          },
-          "conditions": [
-            {
-              "id": "cond-1",
-              "leftValue": "={{ $json.can_create }}",
-              "rightValue": true,
-              "operator": {
-                "type": "boolean",
-                "operation": "equals",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        }
-      }
-    },
-    {
       "id": "13149a8d-6c23-42f3-898e-6702a55b6e29",
       "name": "Actualizar Contacto Chatwoot",
       "type": "n8n-nodes-base.httpRequest",
@@ -229,7 +212,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "={{ \"https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/\" + $(\"Evaluar y Crear Linea MVPlay\").item.json.account_id + \"/conversations/\" + $(\"Evaluar y Crear Linea MVPlay\").item.json.conversation_id + \"/messages\" }}",
+        "url": "={{ \"https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/\" + $('Procesar Respuesta MVPlay').item.json.account_id + \"/conversations/\" + $('Procesar Respuesta MVPlay').item.json.conversation_id + \"/messages\" }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -245,7 +228,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { content: \"🤖 TVTotal24 Demo #\" + $(\"Evaluar y Crear Linea MVPlay\").item.json.trial_number + \" Creado\\n• Usuario: \" + $(\"Evaluar y Crear Linea MVPlay\").item.json.username + \"\\n• Contraseña: \" + $(\"Evaluar y Crear Linea MVPlay\").item.json.password + \"\\n• ID Línea: \" + $(\"Evaluar y Crear Linea MVPlay\").item.json.line_id + \"\\n• DNS: http://wk.mvpl.uk:2082\\n• DNS para Smarters: http://cdn01link.uk:2095\", private: true } }}"
+        "jsonBody": "={{ { content: \"🤖 TVTotal24 Demo #\" + $('Procesar Respuesta MVPlay').item.json.trial_number + \" Creado\\n• Usuario: \" + $('Procesar Respuesta MVPlay').item.json.username + \"\\n• Contraseña: \" + $('Procesar Respuesta MVPlay').item.json.password + \"\\n• ID Línea: \" + $('Procesar Respuesta MVPlay').item.json.line_id + \"\\n• DNS: http://wk.mvpl.uk:2082\\n• DNS para Smarters: http://cdn01link.uk:2095\", private: true } }}"
       }
     },
     {
@@ -259,7 +242,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const item = $input.first().json || {};\nconst procData = $('Evaluar y Crear Linea MVPlay').item.json;\n\nreturn [{\n  json: {\n    status: 'created',\n    trial_number: procData.trial_number,\n    username: procData.username,\n    password: procData.password,\n    dns: procData.dns,\n    dns_smarters: procData.dns_smarters,\n    m3u_url: procData.m3u_url,\n    instrucciones: procData.instrucciones\n  }\n}];"
+        "jsCode": "const procData = $('Procesar Respuesta MVPlay').item.json;\n\nreturn [{\n  json: {\n    status: 'created',\n    trial_number: procData.trial_number,\n    username: procData.username,\n    password: procData.password,\n    dns: procData.dns,\n    dns_smarters: procData.dns_smarters,\n    m3u_url: procData.m3u_url,\n    instrucciones: procData.instrucciones\n  }\n}];"
       }
     },
     {
@@ -277,8 +260,8 @@
       }
     },
     {
-      "id": "96456141-0c19-4fb1-9501-4cffb8445235",
-      "name": "Evaluar y Crear Linea MVPlay",
+      "id": "96e68c41-57e8-42cc-bc3d-de73da23a89a",
+      "name": "Evaluar Historial y Preparar Datos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -287,7 +270,102 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const convData = $input.first().json || {};\nconst contact = convData.meta?.sender || convData.sender || {};\nconst customAttr = contact.custom_attributes || {};\n\n// Trigger input data\nlet triggerItem = {};\ntry {\n  triggerItem = $('Execute Workflow Trigger').first().json || {};\n} catch (e) {\n  try { triggerItem = $input.first().json || {}; } catch(e2) {}\n}\n\nlet contact_name = triggerItem.contact_name || triggerItem.name || contact.name || '';\nlet email = triggerItem.email || contact.email || '';\nlet phone = (triggerItem.phone || contact.phone_number || '').toString();\nconst query = (triggerItem.query || '').toString();\n\nif (query) {\n  const nameMatch = query.match(/(?:contact_name|nombre|name)\\s*:\\s*([^,\\n]+)/i);\n  if (nameMatch && !contact_name) contact_name = nameMatch[1].trim();\n  \n  const emailMatch = query.match(/(?:email|correo)\\s*:\\s*([^,\\n\\s]+)/i);\n  if (emailMatch && !email) email = emailMatch[1].trim();\n  \n  const phoneMatch = query.match(/(?:phone|telefono|tel|celular)\\s*:\\s*([0-9+]+)/i);\n  if (phoneMatch && !phone) phone = phoneMatch[1].trim();\n}\n\nif (!contact_name) contact_name = 'Cliente';\nconst fullName = contact_name.trim();\n\n// 1. Username formatting: NombreApellido without spaces or accents\nlet formattedUsername = '';\nif (fullName && fullName.toLowerCase() !== 'cliente') {\n  // Normalize accents and remove special characters\n  const cleanName = fullName\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-zA-Z0-9\\s]/g, '')\n    .trim();\n  const words = cleanName.split(/\\s+/);\n  if (words.length >= 2) {\n    formattedUsername = words[0] + words[1];\n  } else if (words.length === 1 && words[0].length >= 3) {\n    formattedUsername = words[0];\n  }\n}\n\n// 2. Password formatting: phone number digits\nconst cleanPhone = phone.replace(/\\D/g, '');\nlet formattedPassword = cleanPhone;\n\n// 3. Reseller Notes: ONLY full name (no email, no phone)\nconst resellerNotes = fullName;\n\nconst account_id = triggerItem.account_id || 1;\nconst conversation_id = triggerItem.conversation_id;\n\n// 4. Check trial history\nconst trial1 = customAttr.tvtotal_trial_1_id || customAttr.trial_1_id;\nconst trial2 = customAttr.tvtotal_trial_2_id || customAttr.trial_2_id;\n\nlet trial_number = 1;\nif (!trial1) {\n  trial_number = 1;\n} else if (!trial2) {\n  trial_number = 2;\n} else {\n  // Limit reached\n  return [{\n    json: {\n      can_create: false,\n      trial_number: 3,\n      account_id,\n      conversation_id,\n      status: 'limit_reached',\n      message: 'El cliente ya ha recibido el límite máximo de 2 pruebas gratuitas permitidas.'\n    }\n  }];\n}\n\n// 5. Call MVPlay API with fallback\nconst apiUrl = 'http://1395.cooteg.ch:2095/pooqkDEG/reseller/index.php';\nconst apiKey = 'ace3cacdfd48afdec756ec214ec0793f';\n\nasync function createMvplayLine(u, p, notes) {\n  const bodyParams = new URLSearchParams();\n  bodyParams.append('api_key', apiKey);\n  bodyParams.append('action', 'create_line');\n  bodyParams.append('package', '2'); // Demo 3 Horas TVTotal24\n  bodyParams.append('trial', '1');\n  bodyParams.append('username', u || '');\n  bodyParams.append('password', p || '');\n  bodyParams.append('reseller_notes', notes || '');\n\n  const resp = await fetch(apiUrl, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/x-www-form-urlencoded',\n      'User-Agent': 'Mozilla/5.0'\n    },\n    body: bodyParams.toString()\n  });\n  return await resp.json();\n}\n\nlet apiResult = null;\ntry {\n  apiResult = await createMvplayLine(formattedUsername, formattedPassword, resellerNotes);\n  if (apiResult.status !== 'STATUS_SUCCESS') {\n    // Retry with auto-generated username & password if rejected\n    apiResult = await createMvplayLine('', '', resellerNotes);\n  }\n} catch (err) {\n  // Retry fallback\n  try {\n    apiResult = await createMvplayLine('', '', resellerNotes);\n  } catch (err2) {}\n}\n\nconst isSuccess = apiResult && apiResult.status === 'STATUS_SUCCESS';\nconst lineData = apiResult?.data || {};\n\nconst finalUsername = lineData.username || formattedUsername || 'demo';\nconst finalPassword = lineData.password || formattedPassword || 'demo123';\nconst lineId = lineData.id || 1;\n\n// Prepare updated custom attributes for Chatwoot\nconst updatedCustomAttr = { ...customAttr };\nconst nowIso = new Date().toISOString();\n\nif (trial_number === 1) {\n  updatedCustomAttr.tvtotal_trial_1_id = lineId;\n  updatedCustomAttr.tvtotal_trial_1_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_1_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_1_created_at = nowIso;\n} else {\n  updatedCustomAttr.tvtotal_trial_2_id = lineId;\n  updatedCustomAttr.tvtotal_trial_2_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_2_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_2_created_at = nowIso;\n}\n\nreturn [{\n  json: {\n    can_create: isSuccess,\n    trial_number,\n    username: finalUsername,\n    password: finalPassword,\n    line_id: lineId,\n    account_id,\n    conversation_id,\n    contact_id: contact.id,\n    custom_attributes: updatedCustomAttr,\n    dns: 'http://wk.mvpl.uk:2082',\n    dns_smarters: 'http://cdn01link.uk:2095',\n    m3u_url: `http://wk.mvpl.uk:2082/get.php?username=${finalUsername}&password=${finalPassword}&type=m3u_plus&output=ts`,\n    instrucciones: 'Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con el DNS para Smarters (http://cdn01link.uk:2095)'\n  }\n}];"
+        "jsCode": "const convData = $input.first().json || {};\nconst contact = convData.meta?.sender || convData.sender || {};\nconst customAttr = contact.custom_attributes || {};\n\nlet triggerItem = {};\ntry {\n  triggerItem = $('Execute Workflow Trigger').first().json || {};\n} catch(e) {\n  try { triggerItem = $input.first().json || {}; } catch(e2) {}\n}\n\nlet contact_name = triggerItem.contact_name || triggerItem.name || contact.name || '';\nlet email = triggerItem.email || contact.email || '';\nlet phone = (triggerItem.phone || contact.phone_number || '').toString();\nconst query = (triggerItem.query || '').toString();\n\nif (query) {\n  const nameMatch = query.match(/(?:contact_name|nombre|name)\\s*:\\s*([^,\\n]+)/i);\n  if (nameMatch && !contact_name) contact_name = nameMatch[1].trim();\n  \n  const emailMatch = query.match(/(?:email|correo)\\s*:\\s*([^,\\n\\s]+)/i);\n  if (emailMatch && !email) email = emailMatch[1].trim();\n  \n  const phoneMatch = query.match(/(?:phone|telefono|tel|celular)\\s*:\\s*([0-9+]+)/i);\n  if (phoneMatch && !phone) phone = phoneMatch[1].trim();\n}\n\nif (!contact_name) contact_name = 'Cliente';\nconst fullName = contact_name.trim();\n\n// Username: NombreApellido\nlet formattedUsername = '';\nif (fullName && fullName.toLowerCase() !== 'cliente') {\n  const cleanName = fullName\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[^a-zA-Z0-9\\s]/g, '')\n    .trim();\n  const words = cleanName.split(/\\s+/);\n  if (words.length >= 2) {\n    formattedUsername = words[0] + words[1];\n  } else if (words.length === 1 && words[0].length >= 3) {\n    formattedUsername = words[0];\n  }\n}\n\n// Password: clean phone number\nconst cleanPhone = phone.replace(/\\D/g, '');\nlet formattedPassword = cleanPhone;\n\n// Reseller notes: ONLY full name\nconst resellerNotes = fullName;\n\nconst account_id = triggerItem.account_id || 1;\nconst conversation_id = triggerItem.conversation_id;\n\n// SEPARATE: TVTotal24 uses ONLY tvtotal_trial_1_id and tvtotal_trial_2_id\nconst trial1 = customAttr.tvtotal_trial_1_id;\nconst trial2 = customAttr.tvtotal_trial_2_id;\n\nlet trial_number = 1;\nlet is_limit_reached = false;\n\nif (!trial1) {\n  trial_number = 1;\n} else if (!trial2) {\n  trial_number = 2;\n} else {\n  trial_number = 3;\n  is_limit_reached = true;\n}\n\nreturn [{\n  json: {\n    is_limit_reached,\n    trial_number,\n    username: formattedUsername,\n    password: formattedPassword,\n    reseller_notes: resellerNotes,\n    account_id,\n    conversation_id,\n    contact_id: contact.id,\n    custom_attributes: customAttr\n  }\n}];"
+      }
+    },
+    {
+      "id": "f7bf3a37-06ee-4d82-8b7f-aeb0707f91c3",
+      "name": "¿Límite de Pruebas Alcanzado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        860,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "cond-1",
+              "leftValue": "={{ $json.is_limit_reached }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "c9a2166b-30be-4396-9140-f93edfc505c2",
+      "name": "Crear Linea MVPlay",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        380
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://1395.cooteg.ch:2095/pooqkDEG/reseller/index.php",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "ace3cacdfd48afdec756ec214ec0793f"
+            },
+            {
+              "name": "action",
+              "value": "create_line"
+            },
+            {
+              "name": "package",
+              "value": "2"
+            },
+            {
+              "name": "trial",
+              "value": "1"
+            },
+            {
+              "name": "username",
+              "value": "={{ $json.username }}"
+            },
+            {
+              "name": "password",
+              "value": "={{ $json.password }}"
+            },
+            {
+              "name": "reseller_notes",
+              "value": "={{ $json.reseller_notes }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "af64ab46-7d4a-4eb8-ad9a-4e7d76b6c6d9",
+      "name": "Procesar Respuesta MVPlay",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        380
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const resp = $input.first().json || {};\nconst evalData = $('Evaluar Historial y Preparar Datos').item.json;\n\nconst isSuccess = resp.status === 'STATUS_SUCCESS';\nconst lineData = resp.data || {};\n\nconst finalUsername = lineData.username || evalData.username || 'demo';\nconst finalPassword = lineData.password || evalData.password || 'demo123';\nconst lineId = lineData.id || 1;\n\nconst updatedCustomAttr = { ...(evalData.custom_attributes || {}) };\nconst nowIso = new Date().toISOString();\n\nif (evalData.trial_number === 1) {\n  updatedCustomAttr.tvtotal_trial_1_id = lineId;\n  updatedCustomAttr.tvtotal_trial_1_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_1_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_1_created_at = nowIso;\n} else {\n  updatedCustomAttr.tvtotal_trial_2_id = lineId;\n  updatedCustomAttr.tvtotal_trial_2_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_2_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_2_created_at = nowIso;\n}\n\nreturn [{\n  json: {\n    is_success: isSuccess,\n    trial_number: evalData.trial_number,\n    username: finalUsername,\n    password: finalPassword,\n    line_id: lineId,\n    account_id: evalData.account_id,\n    conversation_id: evalData.conversation_id,\n    contact_id: evalData.contact_id,\n    custom_attributes: updatedCustomAttr,\n    dns: 'http://wk.mvpl.uk:2082',\n    dns_smarters: 'http://cdn01link.uk:2095',\n    m3u_url: `http://wk.mvpl.uk:2082/get.php?username=${finalUsername}&password=${finalPassword}&type=m3u_plus&output=ts`,\n    instrucciones: 'Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con el DNS para Smarters (http://cdn01link.uk:2095)'\n  }\n}];"
       }
     }
   ],
