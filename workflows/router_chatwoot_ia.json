@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "4ec639c4-ef22-44f8-b5c4-853feea8d122",
-  "activeVersionId": "4ec639c4-ef22-44f8-b5c4-853feea8d122",
+  "versionId": "736da5b1-76f5-410d-9176-258c0a79d3fd",
+  "activeVersionId": "736da5b1-76f5-410d-9176-258c0a79d3fd",
   "triggerCount": 1,
   "nodeCount": 16,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-08-28T15:15:16.616Z",
+  "updatedAt": "2026-08-28T15:21:23.223Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -651,9 +651,25 @@
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "monto_usd": "={{ .monto_usd }}",
+            "meses": "={{ .meses }}"
+          },
           "matchingColumns": [],
-          "schema": [],
+          "schema": [
+            {
+              "displayName": "monto_usd",
+              "id": "monto_usd",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "displayName": "meses",
+              "id": "meses",
+              "required": false,
+              "type": "number"
+            }
+          ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         }
