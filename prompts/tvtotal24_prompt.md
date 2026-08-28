@@ -117,7 +117,7 @@ Provide these exact steps based on the customer's device:
 1. Android TvBoxes / Onn / Firestick / Google TV / Android TV:
 - Install the app "Downloader".
 - Open Downloader and enter code: 910992 to download our native app.
-- Open the app, choose panel TOTALTV USA, and enter login credentials (username and password).
+- Open the app, choose panel TOTALTV LATINA, and enter login credentials (username and password).
 - For a better experience: go to Settings → Other Settings and select "OTR LAYOUT".
 
 2. Apple Devices (iPhone, iPad, Apple TV):
@@ -135,7 +135,7 @@ Provide these exact steps based on the customer's device:
 
 5. Android Smartphones:
 - Install the app from this link: http://aftv.news/910992
-- Once installed, open the app, choose panel TOTALTV USA, and enter login credentials (username and password).
+- Once installed, open the app, choose panel TOTALTV LATINA, and enter login credentials (username and password).
 - For a better experience: go to Settings → Other Settings and select "OTR LAYOUT".
 
 6. Game consoles (Xbox, Playstation, etc) OR Computers (PC, Laptop, etc):
