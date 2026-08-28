@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "bce7c653-efac-47d5-afe1-5233b7599975",
-  "activeVersionId": "bce7c653-efac-47d5-afe1-5233b7599975",
+  "versionId": "bf3b353d-df2e-4fef-88e0-d9535b80487e",
+  "activeVersionId": "bf3b353d-df2e-4fef-88e0-d9535b80487e",
   "triggerCount": 1,
-  "nodeCount": 13,
+  "nodeCount": 14,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-08-27T01:22:56.591Z",
+  "updatedAt": "2026-08-28T00:07:04.597Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -42,17 +42,6 @@
         [
           {
             "node": "\u00bfEs mensaje entrante?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Preparar Mensaje": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -164,6 +153,28 @@
           {
             "node": "AI Agent",
             "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Mensaje": {
+      "main": [
+        [
+          {
+            "node": "\u00bfQu\u00e9 Empresa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\u00bfQu\u00e9 Empresa?": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
             "index": 0
           }
         ]
@@ -415,7 +426,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const webhookBody = $('Webhook').item.json.body || {};\nconst currentMsgId = webhookBody.id;\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst channel = conversation.channel || '';\n\nconst payload = $input.item.json.payload || [];\n\n// Check if any newer incoming message exists (newer webhook execution will handle batch)\nconst newerIncoming = payload.filter(m => m.message_type === 0 && m.id > currentMsgId);\nif (newerIncoming.length > 0) {\n  return [];\n}\n\n// Find timestamp of last outgoing bot message\nlet lastOutgoingTime = 0;\nfor (const m of payload) {\n  if (m.message_type === 1 && m.created_at > lastOutgoingTime) {\n    lastOutgoingTime = m.created_at;\n  }\n}\n\n// Collect all unreplied incoming messages\nconst unreplied = payload.filter(m => m.message_type === 0 && m.created_at >= lastOutgoingTime);\n\nlet consolidatedText = '';\nif (unreplied.length > 0) {\n  consolidatedText = unreplied.map(m => m.content).filter(Boolean).join('\\n');\n} else {\n  consolidatedText = webhookBody.content || '';\n}\n\nreturn {\n  json: {\n    conversation_id: conversation.id,\n    account_id: account.id,\n    channel: channel,\n    message: consolidatedText\n  }\n};"
+        "jsCode": "const webhookBody = $('Webhook').item.json.body || {};\nconst currentMsgId = webhookBody.id;\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst inbox = webhookBody.inbox || {};\nconst inboxId = inbox.id || conversation.inbox_id || 0;\nconst channel = conversation.channel || '';\n\nconst payload = $input.item.json.payload || [];\n\n// Check if any newer incoming message exists (newer webhook execution will handle batch)\nconst newerIncoming = payload.filter(m => m.message_type === 0 && m.id > currentMsgId);\nif (newerIncoming.length > 0) {\n  return [];\n}\n\n// Find timestamp of last outgoing bot message\nlet lastOutgoingTime = 0;\nfor (const m of payload) {\n  if (m.message_type === 1 && m.created_at > lastOutgoingTime) {\n    lastOutgoingTime = m.created_at;\n  }\n}\n\n// Collect all unreplied incoming messages\nconst unreplied = payload.filter(m => m.message_type === 0 && m.created_at >= lastOutgoingTime);\n\nlet consolidatedText = '';\nif (unreplied.length > 0) {\n  consolidatedText = unreplied.map(m => m.content).filter(Boolean).join('\\n');\n} else {\n  consolidatedText = webhookBody.content || '';\n}\n\nreturn {\n  json: {\n    conversation_id: conversation.id,\n    account_id: account.id,\n    inbox_id: inboxId,\n    channel: channel,\n    message: consolidatedText\n  }\n};"
       },
       "id": "preparar-mensaje-ia",
       "name": "Preparar Mensaje",
@@ -517,6 +528,74 @@
         "sessionIdType": "customKey",
         "sessionKey": "={{ $(\"Webhook\").item.json.body.conversation.id }}",
         "contextWindowLength": 30
+      }
+    },
+    {
+      "id": "router-inbox-company",
+      "name": "\u00bfQu\u00e9 Empresa?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        900,
+        -112
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-totaltvusa",
+                    "leftValue": "={{ $json.inbox_id }}",
+                    "rightValue": 10,
+                    "operator": {
+                      "type": "number",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TotalTv USA"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-tvtotal24",
+                    "leftValue": "={{ $json.inbox_id }}",
+                    "rightValue": 10,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TVTotal24 (Latina)"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "TotalTv USA"
+        }
       }
     }
   ],
