@@ -1,0 +1,121 @@
+{
+  "id": "XC1jY6Vkbgdu5iIz",
+  "name": "Cron - Followup Stage Fase de Pruebas to Que Te Parecio",
+  "active": true,
+  "isArchived": false,
+  "versionId": "f06ed632-20ba-403f-9456-bf989db4c5ca",
+  "activeVersionId": "f06ed632-20ba-403f-9456-bf989db4c5ca",
+  "triggerCount": 2,
+  "nodeCount": 3,
+  "createdAt": "2026-08-29T01:47:30.527Z",
+  "updatedAt": "2026-08-30T16:04:13.759Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "1d2c6ef3-2f93-4858-bc3a-6cfe9ea4651e",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */2 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "a8086c1b-2da6-4789-b262-c3ed3de7c8a9",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        96
+      ],
+      "parameters": {
+        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\n\nfunction detectLanguage(text, history = []) {\n  if (!text) text = '';\n  const clean = text.toLowerCase();\n\n  const spWords = new Set(['hola','buenos','buenas','dias','tardes','noches','gracias','quiero','prueba','planes','precio','precios','cuanto','como','donde','amigo','por','favor','ayuda','cuenta','dispositivo','dispositivos','informacion','servicio','saludos','pago','tarjeta','movil','bolivares','mes','meses','ano','listo','que','cual','cuando','tengo','tienen','estoy','puedo','el','la','los','las','un','una','unos','unas','de','del','en','con','para','me','te','se','nos','gusto','mucho','excelente','bueno','bien']);\n  const enWords = new Set(['hello','hi','hey','good','morning','afternoon','evening','thanks','thank','you','want','trial','plans','price','prices','how','much','where','please','help','account','device','devices','information','service','greetings','payment','card','month','months','year','ready','what','which','when','have','there','is','are','can','could','the','was','were','amazing','great','sports','channels','awesome','liked','loved','it','this','that','for','with','and','but','or','i','my','we','our']);\n\n  const words = clean.replace(/[^a-záéíóúñ\\s]/gi, ' ').split(/\\s+/).filter(Boolean);\n  let spCount = 0;\n  let enCount = 0;\n  for (const w of words) {\n    if (spWords.has(w)) spCount++;\n    if (enWords.has(w)) enCount++;\n  }\n  if (/[áéíóúñ¿¡]/.test(clean)) spCount += 2;\n\n  if (spCount > enCount) return 'es';\n  if (enCount > spCount) return 'en';\n\n  for (let i = history.length - 1; i >= 0; i--) {\n    const pClean = (history[i] || '').toLowerCase();\n    const pWords = pClean.replace(/[^a-záéíóúñ\\s]/gi, ' ').split(/\\s+/).filter(Boolean);\n    let pSp = 0, pEn = 0;\n    for (const w of pWords) {\n      if (spWords.has(w)) pSp++;\n      if (enWords.has(w)) pEn++;\n    }\n    if (/[áéíóúñ¿¡]/.test(pClean)) pSp += 2;\n    if (pSp > pEn) return 'es';\n    if (pEn > pSp) return 'en';\n  }\n\n  return 'es';\n}\n\nconst results = [];\n\n// 1. Fetch conversations with stage-fase-de-pruebas\nlet stageFasePruebasConvs = [];\ntry {\n  const respFase = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations?labels[]=stage-fase-de-pruebas`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  stageFasePruebasConvs = respFase.data?.payload || [];\n} catch (e) {}\n\n// 2. Fetch conversations with stage-que-te-parecio (to catch newly marked ones)\nlet stageQueTeParecioConvs = [];\ntry {\n  const respQue = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations?labels[]=stage-que-te-parecio`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  stageQueTeParecioConvs = respQue.data?.payload || [];\n} catch (e) {}\n\nconst now = Date.now();\n\n// Process stage-fase-de-pruebas conversations (20-hour elapsed check)\nfor (const conv of stageFasePruebasConvs) {\n  const convId = conv.id;\n  const currentLabels = conv.labels || [];\n  const customAttrs = conv.custom_attributes || {};\n\n  let msgs = [];\n  try {\n    const msgResp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations/${convId}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    msgs = msgResp.payload || [];\n  } catch (e) {\n    continue;\n  }\n\n  const customerMsgs = msgs.filter(m => (m.message_type === 0 || m.message_type === 'incoming') && m.private !== true);\n\n  let lastCustomerTimeMs = 0;\n  let lastCustomerContent = '';\n  const customerHistory = [];\n\n  if (customerMsgs.length > 0) {\n    const lastMsg = customerMsgs[customerMsgs.length - 1];\n    lastCustomerTimeMs = (lastMsg.created_at || lastMsg.created_at_epoch) * 1000;\n    lastCustomerContent = lastMsg.content || '';\n    for (const m of customerMsgs) {\n      if (m.content) customerHistory.push(m.content);\n    }\n  } else {\n    lastCustomerTimeMs = (conv.created_at || conv.last_activity_at) * 1000;\n  }\n\n  const elapsedHours = (now - lastCustomerTimeMs) / (1000 * 3600);\n\n  if (elapsedHours >= 20) {\n    // Transition label: remove stage-fase-de-pruebas, add stage-que-te-parecio\n    const updatedLabels = currentLabels.filter(l => l !== 'stage-fase-de-pruebas');\n    if (!updatedLabels.includes('stage-que-te-parecio')) {\n      updatedLabels.push('stage-que-te-parecio');\n    }\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {}\n\n    // Detect language of last customer message\n    const lang = detectLanguage(lastCustomerContent, customerHistory);\n    let followUpText = '';\n    if (lang === 'en') {\n      followUpText = 'Hello! 👋 We hope you enjoyed the trial we provided. How did you like the service? Would you be interested in subscribing to one of our plans? 😊';\n    } else {\n      followUpText = '¡Hola! 👋 Esperamos que hayas disfrutado la prueba que te dimos. ¿Qué te ha parecido el servicio? ¿Te interesa suscribirte a alguno de nuestros planes? 😊';\n    }\n\n    // Send outgoing message\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: {\n          content: followUpText,\n          message_type: 'outgoing',\n          private: false\n        },\n        json: true\n      });\n    } catch (e) {}\n\n    // Mark custom attribute\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/custom_attributes`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: {\n          custom_attributes: {\n            stage_que_te_parecio_followup_at: new Date().toISOString()\n          }\n        },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      convId,\n      action: 'transitioned_and_sent',\n      elapsedHours: Math.round(elapsedHours * 10) / 10,\n      language: lang\n    });\n  } else {\n    results.push({\n      convId,\n      action: 'waiting',\n      elapsedHours: Math.round(elapsedHours * 10) / 10,\n      neededHours: 20\n    });\n  }\n}\n\n// Process stage-que-te-parecio conversations (newly marked, hasn't received follow-up yet)\nfor (const conv of stageQueTeParecioConvs) {\n  const convId = conv.id;\n  const customAttrs = conv.custom_attributes || {};\n\n  if (customAttrs.stage_que_te_parecio_followup_at) {\n    continue;\n  }\n\n  let msgs = [];\n  try {\n    const msgResp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations/${convId}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    msgs = msgResp.payload || [];\n  } catch (e) {\n    continue;\n  }\n\n  const customerMsgs = msgs.filter(m => (m.message_type === 0 || m.message_type === 'incoming') && m.private !== true);\n  let lastCustomerContent = '';\n  const customerHistory = [];\n  if (customerMsgs.length > 0) {\n    lastCustomerContent = customerMsgs[customerMsgs.length - 1].content || '';\n    for (const m of customerMsgs) {\n      if (m.content) customerHistory.push(m.content);\n    }\n  }\n\n  const lang = detectLanguage(lastCustomerContent, customerHistory);\n  let followUpText = '';\n  if (lang === 'en') {\n    followUpText = 'Hello! 👋 We hope you enjoyed the trial we provided. How did you like the service? Would you be interested in subscribing to one of our plans? 😊';\n  } else {\n    followUpText = '¡Hola! 👋 Esperamos que hayas disfrutado la prueba que te dimos. ¿Qué te ha parecido el servicio? ¿Te interesa suscribirte a alguno de nuestros planes? 😊';\n  }\n\n  try {\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `${chatwootBase}/conversations/${convId}/messages`,\n      headers: {\n        'api_access_token': chatwootToken,\n        'Content-Type': 'application/json'\n      },\n      body: {\n        content: followUpText,\n        message_type: 'outgoing',\n        private: false\n      },\n      json: true\n    });\n  } catch (e) {}\n\n  try {\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `${chatwootBase}/conversations/${convId}/custom_attributes`,\n      headers: {\n        'api_access_token': chatwootToken,\n        'Content-Type': 'application/json'\n      },\n      body: {\n        custom_attributes: {\n          stage_que_te_parecio_followup_at: new Date().toISOString()\n        }\n      },\n      json: true\n    });\n  } catch (e) {}\n\n  results.push({\n    convId,\n    action: 'newly_marked_sent',\n    language: lang\n  });\n}\n\nreturn [{\n  json: {\n    timestamp: new Date().toISOString(),\n    processed_count: results.length,\n    results\n  }\n}];"
+      }
+    },
+    {
+      "id": "7d956176-2046-464f-a3e1-336fd575a4d9",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        192
+      ],
+      "parameters": {
+        "path": "followup-fase-de-pruebas",
+        "responseMode": "onReceived",
+        "httpMethod": "POST"
+      },
+      "webhookId": "260c7862-bf44-40f5-9fe0-346dc09a4449"
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

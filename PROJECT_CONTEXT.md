@@ -23,7 +23,7 @@
     * Connected Tools:
       1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
       2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`).
-      3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation.
+      3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
   * **Brand B: TVTotal24 / TOTAL TV Latina** (Inbox 10 - Telegram `@tvtotal24_bot`):
     * Service: MVPlay (Xtream-Masters) panel.
     * Audience: Latin America / Venezuela (Spanish).
@@ -31,7 +31,7 @@
     * Connected Tools:
       1. `calcular_pago_movil` (`4AYo7CX3Ou1K2yXH`): Real-time BCV exchange rate & Bs calculation.
       2. `crear_prueba_tvtotal24` (`kh10aaenUURvi7Ji`): Automated MVPlay 4h trial generator (tracked via Chatwoot attributes `tvtotal_trial_1_id`, `tvtotal_trial_2_id`).
-      3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation.
+      3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
 * **Formatting & Response Pipeline**: Single-pass linear formatting (`Formatear Respuesta`) detecting channel type (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp) $\rightarrow$ `POST /messages` to Chatwoot (`Responder en Chatwoot`).
 
 ---
@@ -79,7 +79,9 @@
 | `4AYo7CX3Ou1K2yXH` | `Tool - Calcular Pago Movil` | **Active Subworkflow / Tool** (Pago Móvil rate scraping & Bs calculation for TVTotal24) |
 | `e1R7zQorWBaaqgou` | `Create Mega OTT Trial Tool` | **Active Subworkflow / Tool** (Mega OTT Trial generator for TotalTv USA) |
 | `3dBu0SNABE2pKCqU` | `getpaymentlink` | **Active Subworkflow / Tool** (Payment link generator for TotalTv USA) |
-| `xam0WV65gvTbXcIx` | `Transfer to Human Tool` | **Active Subworkflow / Tool** (Human agent escalation) |
+| `xam0WV65gvTbXcIx` | `Transfer to Human Tool` | **Active Subworkflow / Tool** (Human agent escalation - dual Telegram & WhatsApp Evolution API `TTvAlertsMovistar` to `584146130135`) |
+| `XC1jY6Vkbgdu5iIz` | `Cron - Followup Stage Fase de Pruebas to Que Te Parecio` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
+| `KRwjH3njrF4qRdph` | `Cron - Followup Stage Trials to Want to Join` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
 | `p8dS1jx73xvpbrkj` | `Telegram to N8N` | Active |
 | `TfILC2hXao6SLQfE` | `Zelle Webhook` | Active |
 | `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
