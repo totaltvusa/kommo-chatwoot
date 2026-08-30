@@ -32,7 +32,16 @@
       1. `calcular_pago_movil` (`4AYo7CX3Ou1K2yXH`): Real-time BCV exchange rate & Bs calculation.
       2. `crear_prueba_tvtotal24` (`kh10aaenUURvi7Ji`): Automated MVPlay 4h trial generator (tracked via Chatwoot attributes `tvtotal_trial_1_id`, `tvtotal_trial_2_id`).
       3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
-* **Formatting & Response Pipeline**: Single-pass linear formatting (`Formatear Respuesta`) detecting channel type (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp) $\rightarrow$ `POST /messages` to Chatwoot (`Responder en Chatwoot`).
+* **Formatting & Human-Like Delivery Pipeline**:
+  * **Channel Formatter (`Formatear Respuesta`)**: Detects channel type (plain Markdown for Telegram vs `*bold*` & URL flattening for WhatsApp/Instagram/API), resolves WhatsApp metadata (`is_whatsapp`, `instance`, `remoteJid`), and computes dynamic typing delay:
+    $$\text{delay} = \min(5, \max(2, \text{round}(\text{text.length} \times 0.015 + 2)))$$
+  * **Presence Simulation**:
+    * **WhatsApp**: Dispatches `POST /chat/sendPresence/{{instance}}` (`presence: composing`) via Evolution API (`ecGN8GlLnzNz5Lq5`).
+    * **Chatwoot**: Dispatches `POST .../toggle_typing_status` (`typing_status: on`) universally for Chatwoot dashboard and web chat.
+  * **Human Delay**: Non-blocking `Wait Typing Delay` node (2 to 5 seconds scaled by message length).
+  * **Dual Outbound Dispatch**:
+    * **WhatsApp**: Sends formatted message to Evolution API `POST /message/sendText/{{instance}}`.
+    * **Universal Sync**: Posts outgoing message to Chatwoot (`POST .../messages` via `Responder en Chatwoot`) so agents see bot replies in the conversation thread (and delivers natively to Telegram or triggers Zernio for Instagram).
 
 ---
 
@@ -104,6 +113,12 @@
   * Base URL: `https://project1-chatwoot.efebpb.easypanel.host`
   * Access Token: `nuwRKpG2bBAQBpRFznfvrMpT`
   * Account ID: `1`
+* **Evolution API (WhatsApp Gateway)**:
+  * Server URL: `https://evolution.ac4.club`
+  * Credential ID in n8n: `ecGN8GlLnzNz5Lq5` (`Evolution account 2`)
+  * Default Instance: `TTvAlertsMovistar`
+  * Presence Endpoint: `POST /chat/sendPresence/{instance}` (`{"presence": "composing"}`)
+  * Outbound Text Endpoint: `POST /message/sendText/{instance}` (`{"number": "...", "text": "..."}`)
 * **n8n Instance**:
   * URL: `https://n8n.ac4.club`
 
@@ -111,6 +126,23 @@
 
 ## 5. Git Synchronization Protocol
 
-* **Local Repository**: `/Users/alvezcaliman/Documents/AntigravityProjects/kommo-chatwoot`
+* **Local Repository**: `/mnt/Data/Projects for Antigravity/kommo-chatwoot`
 * **Remote Repository**: `git@github.com:totaltvusa/kommo-chatwoot.git`
 * **Branch**: `main`
+
+---
+
+## 6. Detailed Changelog & Implementation History
+
+### August 30, 2026
+* **WhatsApp (Evolution API / Chatwoot API Channel) & Universal Typing Simulation**:
+  * **Human-like simulation**:
+    * Dynamic calculation of typing delay between 2 and 5 seconds based on response length ($delay = \min(5, \max(2, \text{round}(\text{text.length} \times 0.015 + 2)))$).
+    * `Simular Presencia (Evolution API)`: Calls `POST /chat/sendPresence/{{instance}}` with `composing` status for WhatsApp recipients.
+    * `Activar Escribiendo en Chatwoot`: Universally triggers Chatwoot's typing status endpoint (`POST .../toggle_typing_status`) so agents see typing state.
+    * Non-blocking `Wait Typing Delay` node (2 to 5 seconds) before dispatching the response.
+  * **Outbound Message Delivery & Chatwoot Synchronization**:
+    * `Enviar WhatsApp (Evolution API)`: Dispatches text message to WhatsApp via Evolution API `POST /message/sendText/{{instance}}`.
+    * `Responder en Chatwoot`: Outgoing message syncs back to Chatwoot conversation thread (`POST .../messages`) so human agents see full chat history in real-time, and native channels (Telegram / Instagram via Zernio) deliver seamlessly.
+  * Updated live workflow in n8n (`n0zgnS1vlOGNcGNY`) to 27 nodes and synced JSON to `workflows/router_chatwoot_ia.json`.
+
