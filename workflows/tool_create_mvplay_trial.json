@@ -3,12 +3,12 @@
   "name": "Tool - Create MVPlay Trial",
   "active": true,
   "isArchived": false,
-  "versionId": "883c1981-4383-4e43-bb07-f7935397b859",
-  "activeVersionId": "883c1981-4383-4e43-bb07-f7935397b859",
+  "versionId": "ca8b91fa-417f-404a-a3b1-e094bf274a63",
+  "activeVersionId": "ca8b91fa-417f-404a-a3b1-e094bf274a63",
   "triggerCount": 0,
-  "nodeCount": 10,
+  "nodeCount": 13,
   "createdAt": "2026-08-28T16:29:29.425Z",
-  "updatedAt": "2026-08-28T17:03:26.177Z",
+  "updatedAt": "2026-08-29T02:53:55.938Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -41,17 +41,6 @@
         [
           {
             "node": "Nota Privada Chatwoot",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Nota Privada Chatwoot": {
-      "main": [
-        [
-          {
-            "node": "Formatear Respuesta Exito",
             "type": "main",
             "index": 0
           }
@@ -125,6 +114,50 @@
         [
           {
             "node": "Actualizar Contacto Chatwoot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nota Privada Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Agregar Etiqueta Stage Fase de Pruebas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Etiqueta Stage Fase de Pruebas": {
+      "main": [
+        [
+          {
+            "node": "Preparar Fila Google Sheets Demos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Fila Google Sheets Demos": {
+      "main": [
+        [
+          {
+            "node": "Registrar en Google Sheets Demos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar en Google Sheets Demos": {
+      "main": [
+        [
+          {
+            "node": "Formatear Respuesta Exito",
             "type": "main",
             "index": 0
           }
@@ -237,7 +270,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2200,
+        2860,
         200
       ],
       "parameters": {
@@ -332,7 +365,7 @@
             },
             {
               "name": "package",
-              "value": "2"
+              "value": "28"
             },
             {
               "name": "trial",
@@ -366,6 +399,67 @@
       "parameters": {
         "mode": "runOnceForAllItems",
         "jsCode": "const resp = $input.first().json || {};\nconst evalData = $('Evaluar Historial y Preparar Datos').item.json;\n\nconst isSuccess = resp.status === 'STATUS_SUCCESS';\nconst lineData = resp.data || {};\n\nconst finalUsername = lineData.username || evalData.username || 'demo';\nconst finalPassword = lineData.password || evalData.password || 'demo123';\nconst lineId = lineData.id || 1;\n\nconst updatedCustomAttr = { ...(evalData.custom_attributes || {}) };\nconst nowIso = new Date().toISOString();\n\nif (evalData.trial_number === 1) {\n  updatedCustomAttr.tvtotal_trial_1_id = lineId;\n  updatedCustomAttr.tvtotal_trial_1_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_1_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_1_created_at = nowIso;\n} else {\n  updatedCustomAttr.tvtotal_trial_2_id = lineId;\n  updatedCustomAttr.tvtotal_trial_2_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_2_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_2_created_at = nowIso;\n}\n\nreturn [{\n  json: {\n    is_success: isSuccess,\n    trial_number: evalData.trial_number,\n    username: finalUsername,\n    password: finalPassword,\n    line_id: lineId,\n    account_id: evalData.account_id,\n    conversation_id: evalData.conversation_id,\n    contact_id: evalData.contact_id,\n    custom_attributes: updatedCustomAttr,\n    dns: 'http://wk.mvpl.uk:2082',\n    dns_smarters: 'http://cdn01link.uk:2095',\n    m3u_url: `http://wk.mvpl.uk:2082/get.php?username=${finalUsername}&password=${finalPassword}&type=m3u_plus&output=ts`,\n    instrucciones: 'Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con el DNS para Smarters (http://cdn01link.uk:2095)'\n  }\n}];"
+      }
+    },
+    {
+      "id": "add-stage-fase-pruebas-label",
+      "name": "Agregar Etiqueta Stage Fase de Pruebas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1350,
+        480
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const procData = $('Procesar Respuesta MVPlay').item.json;\nconst conversation_id = procData.conversation_id;\nconst account_id = procData.account_id || 1;\nconst chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}`;\n\ntry {\n  const getRes = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  const currentLabels = getRes.payload || [];\n  if (!currentLabels.includes('stage-fase-de-pruebas')) {\n    currentLabels.push('stage-fase-de-pruebas');\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n      headers: {\n        'api_access_token': chatwootToken,\n        'Content-Type': 'application/json'\n      },\n      body: { labels: currentLabels },\n      json: true\n    });\n  }\n} catch (e) {}\n\nreturn $input.all();"
+      }
+    },
+    {
+      "id": "3fd87fd4-9867-4e6d-bd89-05300b6487bc",
+      "name": "Preparar Fila Google Sheets Demos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        200
+      ],
+      "parameters": {
+        "jsCode": "\nconst triggerItem = $('Execute Workflow Trigger').first().json || {};\nconst convData = $('Obtener Conversacion Chatwoot').first().json || {};\nconst contact = convData.meta?.sender || convData.sender || {};\n\nlet fullName = triggerItem.contact_name || triggerItem.name || contact.name || 'Cliente';\nfullName = fullName.trim();\nconst words = fullName.split(/\\s+/).filter(Boolean);\nconst nombre = words.length > 0 ? words[0] : 'Cliente';\nconst apellidos = words.length > 1 ? words.slice(1).join(' ') : '';\n\nconst email = triggerItem.email || contact.email || '';\nconst phone = (triggerItem.phone || contact.phone_number || '').toString().replace(/\\D/g, '');\nconst contacto = contact.name || fullName;\nconst conversation_id = String(triggerItem.conversation_id || $('Procesar Respuesta MVPlay').first().json.conversation_id || '');\n\nconst now = new Date();\nconst timestamp = now.toISOString().replace('T', ' ').substring(0, 19);\n\nreturn [{\n  json: {\n    Nombre: nombre,\n    Apellidos: apellidos,\n    Email: email,\n    Telefono: phone,\n    Timestamp: timestamp,\n    Contacto: contacto,\n    'Conversation ID': conversation_id\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "1beff6ec-8302-4a93-a90d-db8ed0ed63d4",
+      "name": "Registrar en Google Sheets Demos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2640,
+        200
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 892191676,
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData"
+        },
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
       }
     }
   ],

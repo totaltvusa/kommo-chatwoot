@@ -3,12 +3,12 @@
   "name": "Create Mega OTT Trial Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "3e450459-4383-44b1-aee3-57c4e312adeb",
-  "activeVersionId": "3e450459-4383-44b1-aee3-57c4e312adeb",
+  "versionId": "312ab6e4-0a9d-455a-98ef-c0c61b558b98",
+  "activeVersionId": "312ab6e4-0a9d-455a-98ef-c0c61b558b98",
   "triggerCount": 0,
-  "nodeCount": 31,
+  "nodeCount": 34,
   "createdAt": "2026-08-20T01:59:31.383Z",
-  "updatedAt": "2026-08-20T01:59:34.630Z",
+  "updatedAt": "2026-08-29T02:54:03.505Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -161,17 +161,6 @@
         [
           {
             "node": "Nota privada Chatwoot",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Nota privada Chatwoot": {
-      "main": [
-        [
-          {
-            "node": "Notificar Administrador",
             "type": "main",
             "index": 0
           }
@@ -397,6 +386,50 @@
         [
           {
             "node": "Crear Linea - Teléfono",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nota privada Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Agregar Etiqueta Stage Trials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Etiqueta Stage Trials": {
+      "main": [
+        [
+          {
+            "node": "Preparar Fila Google Sheets Trials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Fila Google Sheets Trials": {
+      "main": [
+        [
+          {
+            "node": "Registrar en Google Sheets Trials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar en Google Sheets Trials": {
+      "main": [
+        [
+          {
+            "node": "Notificar Administrador",
             "type": "main",
             "index": 0
           }
@@ -700,8 +733,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3250,
-        200
+        2490,
+        480
       ],
       "parameters": {
         "resource": "message",
@@ -1239,6 +1272,67 @@
       "parameters": {
         "mode": "runOnceForAllItems",
         "jsCode": "return {\n  json: {\n    status: \"limit_reached\",\n    success: false,\n    message: \"The customer has already reached the maximum limit of 2 free trials. Invite them to purchase a paid subscription.\"\n  }\n};"
+      }
+    },
+    {
+      "id": "add-stage-trials-label",
+      "name": "Agregar Etiqueta Stage Trials",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1820,
+        20
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const conversation_id = $('Generar Credenciales').item.json.conversation_id;\nconst account_id = $('Generar Credenciales').item.json.account_id || 1;\nconst chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}`;\n\ntry {\n  const getRes = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  const currentLabels = getRes.payload || [];\n  if (!currentLabels.includes('stage-trials')) {\n    currentLabels.push('stage-trials');\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n      headers: {\n        'api_access_token': chatwootToken,\n        'Content-Type': 'application/json'\n      },\n      body: { labels: currentLabels },\n      json: true\n    });\n  }\n} catch (e) {}\n\nreturn $input.all();"
+      }
+    },
+    {
+      "id": "129f2fe6-a5e6-46e9-9f77-4da62cc6bf1d",
+      "name": "Preparar Fila Google Sheets Trials",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2050,
+        480
+      ],
+      "parameters": {
+        "jsCode": "\nconst genCreds = $('Generar Credenciales').first().json || {};\nconst convData = $('Obtener Datos Conversación Chatwoot').first().json || {};\nconst contact = convData.meta?.sender || convData.sender || {};\n\nlet fullName = genCreds.contact_name || contact.name || 'Cliente';\nfullName = fullName.trim();\nconst words = fullName.split(/\\s+/).filter(Boolean);\nconst nombre = words.length > 0 ? words[0] : 'Cliente';\nconst apellidos = words.length > 1 ? words.slice(1).join(' ') : '';\n\nconst email = genCreds.email || contact.email || '';\nconst phone = (genCreds.phone || contact.phone_number || '').toString().replace(/\\D/g, '');\nconst contacto = contact.name || fullName;\nconst conversation_id = String(genCreds.conversation_id || '');\n\nconst now = new Date();\nconst timestamp = now.toISOString().replace('T', ' ').substring(0, 19);\n\nreturn [{\n  json: {\n    Nombre: nombre,\n    Apellidos: apellidos,\n    Email: email,\n    Telefono: phone,\n    Timestamp: timestamp,\n    Contacto: contacto,\n    'Conversation ID': conversation_id\n  }\n}];\n"
+      }
+    },
+    {
+      "id": "3a72884a-147c-4f36-80f7-ac800cd35137",
+      "name": "Registrar en Google Sheets Trials",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2270,
+        480
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 132241054,
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData"
+        },
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
       }
     }
   ],
