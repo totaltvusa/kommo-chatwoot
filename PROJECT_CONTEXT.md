@@ -18,7 +18,7 @@
 * **Multi-Brand Routing (`¿Qué Empresa?`)**:
   * **Brand A: TotalTv USA**:
     * Inboxes:
-      * **Inbox 6**: Telegram (`@TvTotalUSAbot`).
+      * **Inbox 6**: Telegram (`@TotalTvUSAbot`).
       * **Inbox 14**: Instagram (`@tvtotalusa`) via Zernio API.
       * **Inbox 17**: Facebook Messenger (`Facebook - TotalTv USA`) via Zernio API.
       * **Inbox 4**: WhatsApp (`TTvAlertsMovistar`).
@@ -225,5 +225,10 @@
   * Updated `Enviar a Zernio Instagram` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
     * Added handler for Inbox 17 to dispatch outgoing messages via Zernio API `POST /v1/inbox/conversations/${participantId}/messages` with idempotency key `chatwoot_msg_${chatwootMsgId}`.
   * Exported updated workflow to `workflows/router_chatwoot_ia.json`.
+* **Telegram TotalTv USA Bot Migration**:
+  * Switched Telegram bot on Chatwoot Inbox **ID 6** from `@TvTotalUSAbot` to `@TotalTvUSAbot` with token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`.
+  * Updated Inbox name to `TotalTvUSAbot`.
+  * Verified Chatwoot webhook registration via Telegram API (`https://project1-chatwoot.efebpb.easypanel.host/webhooks/telegram/6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`). All routing, rules, and AI behaviors remain identical.
+
 
 
