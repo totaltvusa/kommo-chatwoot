@@ -4,12 +4,12 @@
     "name": "Chatwoot + IA Agent",
     "active": true,
     "isArchived": false,
-    "versionId": "19ddfbd0-3ac9-4c42-901d-312ce5e54859",
+    "versionId": "39e19989-249e-45df-b1b5-2dcfe3fe6e77",
     "activeVersionId": "813ca8d3-c5a8-4d49-ba05-0ee47ee68393",
     "triggerCount": 2,
     "nodeCount": 27,
     "createdAt": "2026-08-10T00:47:38.454Z",
-    "updatedAt": "2026-09-01T01:01:24.693Z",
+    "updatedAt": "2026-09-01T02:20:46.336Z",
     "settings": {
       "executionOrder": "v1",
       "availableInMCP": true,
@@ -685,15 +685,6 @@
                         "type": "number"
                       },
                       "rightValue": 13
-                    },
-                    {
-                      "id": "cond-totaltvusa-not-15",
-                      "leftValue": "={{ $json.inbox_id }}",
-                      "operator": {
-                        "operation": "notEquals",
-                        "type": "number"
-                      },
-                      "rightValue": 15
                     }
                   ],
                   "options": {
@@ -727,15 +718,6 @@
                         "type": "number"
                       },
                       "rightValue": 13
-                    },
-                    {
-                      "id": "cond-tvtotal24-15",
-                      "leftValue": "={{ $json.inbox_id }}",
-                      "operator": {
-                        "operation": "equals",
-                        "type": "number"
-                      },
-                      "rightValue": 15
                     }
                   ],
                   "options": {
