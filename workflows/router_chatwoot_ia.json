@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "392f9388-b78d-47da-a4de-cca556c83e8a",
-  "activeVersionId": "392f9388-b78d-47da-a4de-cca556c83e8a",
+  "versionId": "c021f25e-c7c9-4683-8a9a-ab13627ac1f3",
+  "activeVersionId": "c021f25e-c7c9-4683-8a9a-ab13627ac1f3",
   "triggerCount": 2,
-  "nodeCount": 22,
+  "nodeCount": 20,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-09-01T14:34:24.560Z",
+  "updatedAt": "2026-09-01T14:45:01.472Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -55,17 +55,6 @@
         [
           {
             "node": "Formatear Respuesta",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait 3s": {
-      "main": [
-        [
-          {
-            "node": "Obtener Mensajes Recientes",
             "type": "main",
             "index": 0
           }
@@ -322,7 +311,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ .first().json.account_id }}/conversations/{{ .first().json.conversation_id }}/messages",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $('Formatear Respuesta').first().json.account_id }}/conversations/{{ $('Formatear Respuesta').first().json.conversation_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -355,7 +344,7 @@
         },
         "options": {},
         "specifyBody": "json",
-        "jsonBody": "={\"content\": {{ JSON.stringify(.first().json.content) }}, \"message_type\": \"outgoing\", \"private\": false}"
+        "jsonBody": "={\"content\": {{ JSON.stringify($('Formatear Respuesta').first().json.content) }}, \"message_type\": \"outgoing\", \"private\": false}"
       },
       "id": "c7641a56-50ae-429d-8ef3-42c2ee5b7a45",
       "name": "Responder en Chatwoot",
@@ -515,7 +504,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const webhookBody = $('Webhook').item.json.body || {};\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst inbox = webhookBody.inbox || {};\nconst inboxId = Number(inbox.id || conversation.inbox_id || 0);\nconst channel = conversation.channel || inbox.channel_type || '';\nconst labels = Array.isArray(conversation.labels) ? conversation.labels : [];\nconst conversationId = conversation.id || 13;\nconst accountId = account.id || 1;\n\n// 1. If conversation is marked as human, do NOT let AI agent intervene!\nif (labels.includes('human')) {\n  return [];\n}\n\n// 2. Auto-labeling for lat-whatscol (Inbox 16) or WhatsApp Latina\nif (inboxId === 16) {\n  let updatedLabels = [...labels];\n  let needsUpdate = false;\n\n  if (!updatedLabels.includes('funnel-totaltv-latina')) {\n    updatedLabels.push('funnel-totaltv-latina');\n    needsUpdate = true;\n  }\n  if (!updatedLabels.includes('channel-whatsapp')) {\n    updatedLabels.push('channel-whatsapp');\n    needsUpdate = true;\n  }\n\n  if (needsUpdate) {\n    try {\n      const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\n      const chatwootBase = `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${accountId}`;\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {\n      // Non-blocking\n    }\n  }\n}\n\nreturn {\n  json: {\n    conversation_id: conversationId,\n    account_id: accountId,\n    inbox_id: inboxId,\n    channel: channel,\n    message: webhookBody.content || ''\n  }\n};"
+        "jsCode": "const webhookRaw = $('Webhook').item.json || {};\nconst webhookBody = webhookRaw.body ? webhookRaw.body : webhookRaw;\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst inbox = webhookBody.inbox || {};\nconst inboxId = Number(inbox.id || conversation.inbox_id || 0);\nconst channel = conversation.channel || inbox.channel_type || '';\nconst labels = Array.isArray(conversation.labels) ? conversation.labels : [];\nconst conversationId = conversation.id || 13;\nconst accountId = account.id || 1;\nconst content = webhookBody.content || '';\n\n// 1. If conversation is marked as human, do NOT let AI agent intervene!\nif (labels.includes('human')) {\n  return [];\n}\n\n// 2. Auto-labeling for lat-whatscol (Inbox 16) or WhatsApp Latina\nif (inboxId === 16) {\n  let updatedLabels = [...labels];\n  let needsUpdate = false;\n\n  if (!updatedLabels.includes('funnel-totaltv-latina')) {\n    updatedLabels.push('funnel-totaltv-latina');\n    needsUpdate = true;\n  }\n  if (!updatedLabels.includes('channel-whatsapp')) {\n    updatedLabels.push('channel-whatsapp');\n    needsUpdate = true;\n  }\n\n  if (needsUpdate) {\n    try {\n      const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\n      const chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/' + accountId;\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: chatwootBase + '/conversations/' + conversationId + '/labels',\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {\n      // Non-blocking\n    }\n  }\n}\n\nreturn [{\n  json: {\n    conversation_id: conversationId,\n    account_id: accountId,\n    inbox_id: inboxId,\n    channel: channel,\n    message: content,\n    content: content\n  }\n}];"
       },
       "id": "preparar-mensaje-ia",
       "name": "Preparar Mensaje",
@@ -528,7 +517,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Obtener la respuesta de la IA\nconst aiResponse = $input.item.json.output || $input.item.json.text || $input.item.json.response || \"\";\n\n// 2. Extraer datos del webhook de forma segura (.first() en vez de .item)\nlet webhookData = {};\ntry {\n  webhookData = $('Webhook').first().json.body || {};\n} catch (e) {\n  webhookData = {};\n}\n\nconst conversation = webhookData.conversation || {};\nconst account = webhookData.account || {};\nconst inbox = webhookData.inbox || {};\nconst conversationId = conversation.id || 13;\nconst accountId = account.id || 1;\nconst inboxId = Number(inbox.id || conversation.inbox_id || 0);\nconst channel = conversation.channel || inbox.channel_type || \"\";\n\nlet formattedText = aiResponse;\n\n// 3. Formatear según canal (Meta / WhatsApp / Instagram vs Telegram)\nif (channel.includes(\"Whatsapp\") || channel.includes(\"Facebook\") || channel.includes(\"Instagram\") || channel.includes(\"Api\") || inboxId === 16 || inboxId === 13 || inboxId === 14) {\n  formattedText = formattedText.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*');\n  formattedText = formattedText.replace(/\\[(.*?)\\]\\((.*?)\\)/g, '$1: $2');\n}\n\n// 4. Random delay entre 2 y 5 segundos (para simulación de escritura humana)\nconst randomDelaySeconds = Math.floor(Math.random() * 4) + 2; // 2, 3, 4 o 5 segundos\n\nreturn {\n  json: {\n    content: formattedText,\n    conversation_id: conversationId,\n    account_id: accountId,\n    inbox_id: inboxId,\n    channel: channel,\n    delay_seconds: randomDelaySeconds\n  }\n};"
+        "jsCode": "// 1. Obtener la respuesta de la IA\nconst aiResponse = $input.item.json.output || $input.item.json.text || $input.item.json.response || \"\";\n\n// 2. Extraer datos del webhook de forma segura (.first() en vez de .item)\nlet webhookRaw = {};\nlet webhookBody = {};\ntry {\n  webhookRaw = $('Webhook').first().json || {};\n  webhookBody = webhookRaw.body ? webhookRaw.body : webhookRaw;\n} catch (e) {\n  webhookBody = {};\n}\n\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst inbox = webhookBody.inbox || {};\nconst conversationId = conversation.id || 13;\nconst accountId = account.id || 1;\nconst inboxId = Number(inbox.id || conversation.inbox_id || 0);\nconst channel = conversation.channel || inbox.channel_type || \"\";\n\nlet formattedText = aiResponse;\n\n// 3. Formatear según canal (Meta / WhatsApp / Instagram vs Telegram)\nif (channel.includes(\"Whatsapp\") || channel.includes(\"Facebook\") || channel.includes(\"Instagram\") || channel.includes(\"Api\") || inboxId === 16 || inboxId === 13 || inboxId === 14) {\n  formattedText = formattedText.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*');\n  formattedText = formattedText.replace(/\\[(.*?)\\]\\((.*?)\\)/g, '$1: $2');\n}\n\n// 4. Random delay entre 2 y 5 segundos (para simulación de escritura humana)\nconst randomDelaySeconds = Math.floor(Math.random() * 4) + 2; // 2, 3, 4 o 5 segundos\n\nreturn [{\n  json: {\n    content: formattedText,\n    conversation_id: conversationId,\n    account_id: accountId,\n    inbox_id: inboxId,\n    channel: channel,\n    delay_seconds: randomDelaySeconds\n  }\n}];"
       },
       "id": "formatear-respuesta-chatwoot",
       "name": "Formatear Respuesta",
@@ -536,43 +525,6 @@
       "typeVersion": 2,
       "position": [
         1840,
-        -112
-      ]
-    },
-    {
-      "parameters": {
-        "amount": 3
-      },
-      "id": "wait-3s-debounce",
-      "name": "Wait 3s",
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        448,
-        -112
-      ],
-      "webhookId": "54268028-d182-446f-8426-f1417a97b78f"
-    },
-    {
-      "parameters": {
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1/conversations/{{ $json.body.conversation.id }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "get-chatwoot-msgs",
-      "name": "Obtener Mensajes Recientes",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        672,
         -112
       ]
     },
