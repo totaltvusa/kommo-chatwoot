@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "c021f25e-c7c9-4683-8a9a-ab13627ac1f3",
-  "activeVersionId": "c021f25e-c7c9-4683-8a9a-ab13627ac1f3",
+  "versionId": "aae5463a-d327-4487-a708-08b033d2345f",
+  "activeVersionId": "aae5463a-d327-4487-a708-08b033d2345f",
   "triggerCount": 2,
   "nodeCount": 20,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-09-01T14:45:01.472Z",
+  "updatedAt": "2026-09-01T14:47:36.702Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -311,7 +311,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $('Formatear Respuesta').first().json.account_id }}/conversations/{{ $('Formatear Respuesta').first().json.conversation_id }}/messages",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -344,7 +344,7 @@
         },
         "options": {},
         "specifyBody": "json",
-        "jsonBody": "={\"content\": {{ JSON.stringify($('Formatear Respuesta').first().json.content) }}, \"message_type\": \"outgoing\", \"private\": false}"
+        "jsonBody": "={\"content\": {{ JSON.stringify($json.content) }}, \"message_type\": \"outgoing\", \"private\": false}"
       },
       "id": "c7641a56-50ae-429d-8ef3-42c2ee5b7a45",
       "name": "Responder en Chatwoot",
@@ -504,7 +504,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const webhookRaw = $('Webhook').item.json || {};\nconst webhookBody = webhookRaw.body ? webhookRaw.body : webhookRaw;\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst inbox = webhookBody.inbox || {};\nconst inboxId = Number(inbox.id || conversation.inbox_id || 0);\nconst channel = conversation.channel || inbox.channel_type || '';\nconst labels = Array.isArray(conversation.labels) ? conversation.labels : [];\nconst conversationId = conversation.id || 13;\nconst accountId = account.id || 1;\nconst content = webhookBody.content || '';\n\n// 1. If conversation is marked as human, do NOT let AI agent intervene!\nif (labels.includes('human')) {\n  return [];\n}\n\n// 2. Auto-labeling for lat-whatscol (Inbox 16) or WhatsApp Latina\nif (inboxId === 16) {\n  let updatedLabels = [...labels];\n  let needsUpdate = false;\n\n  if (!updatedLabels.includes('funnel-totaltv-latina')) {\n    updatedLabels.push('funnel-totaltv-latina');\n    needsUpdate = true;\n  }\n  if (!updatedLabels.includes('channel-whatsapp')) {\n    updatedLabels.push('channel-whatsapp');\n    needsUpdate = true;\n  }\n\n  if (needsUpdate) {\n    try {\n      const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\n      const chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/' + accountId;\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: chatwootBase + '/conversations/' + conversationId + '/labels',\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {\n      // Non-blocking\n    }\n  }\n}\n\nreturn [{\n  json: {\n    conversation_id: conversationId,\n    account_id: accountId,\n    inbox_id: inboxId,\n    channel: channel,\n    message: content,\n    content: content\n  }\n}];"
+        "jsCode": "const webhookRaw = $('Webhook').item.json || {};\nconst webhookBody = webhookRaw.body ? webhookRaw.body : webhookRaw;\nconst conversation = webhookBody.conversation || {};\nconst account = webhookBody.account || {};\nconst inbox = webhookBody.inbox || {};\nconst inboxId = Number(inbox.id || conversation.inbox_id || 0);\nconst channel = conversation.channel || inbox.channel_type || '';\nconst labels = Array.isArray(conversation.labels) ? conversation.labels : [];\nconst conversationId = conversation.id || 13;\nconst accountId = account.id || 1;\nconst content = webhookBody.content || '';\n\n// 1. If conversation is marked as human, do NOT let AI agent intervene!\nif (labels.includes('human')) {\n  return [];\n}\n\n// 2. Auto-labeling for lat-whatscol (Inbox 16) or WhatsApp Latina\nif (inboxId === 16) {\n  let updatedLabels = labels.filter(l => l !== 'channel-whatsapp');\n  let needsUpdate = false;\n\n  if (!updatedLabels.includes('funnel-totaltv-latina')) {\n    updatedLabels.push('funnel-totaltv-latina');\n    needsUpdate = true;\n  }\n  if (!updatedLabels.includes('channel-whatsapp-lite')) {\n    updatedLabels.push('channel-whatsapp-lite');\n    needsUpdate = true;\n  }\n\n  if (needsUpdate) {\n    try {\n      const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\n      const chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/' + accountId;\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: chatwootBase + '/conversations/' + conversationId + '/labels',\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {\n      // Non-blocking\n    }\n  }\n}\n\nreturn [{\n  json: {\n    conversation_id: conversationId,\n    account_id: accountId,\n    inbox_id: inboxId,\n    channel: channel,\n    message: content,\n    content: content\n  }\n}];"
       },
       "id": "preparar-mensaje-ia",
       "name": "Preparar Mensaje",
