@@ -24,7 +24,13 @@
       1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
       2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`).
       3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
-  * **Brand B: TVTotal24 / TOTAL TV Latina** (Inbox 10 - Telegram `@tvtotal24_bot`):
+  * **Brand B: TVTotal24 / TOTAL TV Latina**:
+    * Inboxes:
+      * **Inbox 10**: Telegram (`@tvtotal24_bot`).
+      * **Inbox 13**: Instagram (`@tvtotal24`) via Zernio API.
+      * **Inbox 15**: TikTok (`@tvtotal24`) via API Channel (`Channel::Api`).
+        * Auto-labels: Automatically tagged with `funnel-totaltv-latina` and `channel-tiktok` (Chatwoot Automation Rule ID 8).
+        * Agent Routing: Routed directly to `AI Agent - TVTotal24` in `¿Qué Empresa?`.
     * Service: MVPlay (Xtream-Masters) panel.
     * Audience: Latin America / Venezuela (Spanish).
     * Payment Methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (`ID: 22628239` - Super Discount), Pago Móvil (Bancamiga, 04246861135, J405259221, ArialStore C.A.).
@@ -144,5 +150,13 @@
   * **Outbound Message Delivery & Chatwoot Synchronization**:
     * `Enviar WhatsApp (Evolution API)`: Dispatches text message to WhatsApp via Evolution API `POST /message/sendText/{{instance}}`.
     * `Responder en Chatwoot`: Outgoing message syncs back to Chatwoot conversation thread (`POST .../messages`) so human agents see full chat history in real-time, and native channels (Telegram / Instagram via Zernio) deliver seamlessly.
-  * Updated live workflow in n8n (`n0zgnS1vlOGNcGNY`) to 27 nodes and synced JSON to `workflows/router_chatwoot_ia.json`.
+### August 31, 2026
+* **TikTok (@tvtotal24) Channel Setup & Routing**:
+  * Created Chatwoot Inbox **ID 15**: `TikTok - TvTotal24` (type `Channel::Api`, identifier `iRSzyHJxMbVuAu7zDXtEAfYZ`).
+  * Assigned all support agents (1, 2, 3, 4) to Inbox 15.
+  * Created Chatwoot Automation Rule **ID 8** (`TikTok TVTotal24 Auto Labels`): Automatically tags new conversations with `funnel-totaltv-latina` and `channel-tiktok`.
+  * Updated n8n router switch node `¿Qué Empresa?` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+    * Excluded inbox 15 from TotalTv USA.
+    * Routed inbox 15 directly to `AI Agent - TVTotal24` with full TVTotal24 operational rules and tools.
+  * Synchronized updated workflow JSON to `workflows/router_chatwoot_ia.json`.
 

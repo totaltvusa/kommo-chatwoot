@@ -4,12 +4,12 @@
     "name": "Chatwoot + IA Agent",
     "active": true,
     "isArchived": false,
-    "versionId": "2a820b93-3fdd-4789-8842-ea4c4da75469",
+    "versionId": "19ddfbd0-3ac9-4c42-901d-312ce5e54859",
     "activeVersionId": "813ca8d3-c5a8-4d49-ba05-0ee47ee68393",
     "triggerCount": 2,
     "nodeCount": 27,
     "createdAt": "2026-08-10T00:47:38.454Z",
-    "updatedAt": "2026-08-30T23:58:41.389Z",
+    "updatedAt": "2026-09-01T01:01:24.693Z",
     "settings": {
       "executionOrder": "v1",
       "availableInMCP": true,
@@ -666,69 +666,87 @@
             "values": [
               {
                 "conditions": {
-                  "options": {
-                    "caseSensitive": true,
-                    "leftValue": "",
-                    "typeValidation": "strict",
-                    "version": 2
-                  },
+                  "combinator": "and",
                   "conditions": [
                     {
                       "id": "cond-totaltvusa-not-10",
                       "leftValue": "={{ $json.inbox_id }}",
-                      "rightValue": 10,
                       "operator": {
-                        "type": "number",
-                        "operation": "notEquals"
-                      }
+                        "operation": "notEquals",
+                        "type": "number"
+                      },
+                      "rightValue": 10
                     },
                     {
                       "id": "cond-totaltvusa-not-13",
                       "leftValue": "={{ $json.inbox_id }}",
-                      "rightValue": 13,
                       "operator": {
-                        "type": "number",
-                        "operation": "notEquals"
-                      }
+                        "operation": "notEquals",
+                        "type": "number"
+                      },
+                      "rightValue": 13
+                    },
+                    {
+                      "id": "cond-totaltvusa-not-15",
+                      "leftValue": "={{ $json.inbox_id }}",
+                      "operator": {
+                        "operation": "notEquals",
+                        "type": "number"
+                      },
+                      "rightValue": 15
                     }
                   ],
-                  "combinator": "and"
-                },
-                "renameOutput": true,
-                "outputKey": "TotalTv USA"
-              },
-              {
-                "conditions": {
                   "options": {
                     "caseSensitive": true,
                     "leftValue": "",
                     "typeValidation": "strict",
                     "version": 2
-                  },
+                  }
+                },
+                "outputKey": "TotalTv USA",
+                "renameOutput": true
+              },
+              {
+                "conditions": {
+                  "combinator": "or",
                   "conditions": [
                     {
                       "id": "cond-tvtotal24-10",
                       "leftValue": "={{ $json.inbox_id }}",
-                      "rightValue": 10,
                       "operator": {
-                        "type": "number",
-                        "operation": "equals"
-                      }
+                        "operation": "equals",
+                        "type": "number"
+                      },
+                      "rightValue": 10
                     },
                     {
                       "id": "cond-tvtotal24-13",
                       "leftValue": "={{ $json.inbox_id }}",
-                      "rightValue": 13,
                       "operator": {
-                        "type": "number",
-                        "operation": "equals"
-                      }
+                        "operation": "equals",
+                        "type": "number"
+                      },
+                      "rightValue": 13
+                    },
+                    {
+                      "id": "cond-tvtotal24-15",
+                      "leftValue": "={{ $json.inbox_id }}",
+                      "operator": {
+                        "operation": "equals",
+                        "type": "number"
+                      },
+                      "rightValue": 15
                     }
                   ],
-                  "combinator": "or"
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  }
                 },
-                "renameOutput": true,
-                "outputKey": "TVTotal24 (Latina)"
+                "outputKey": "TVTotal24 (Latina)",
+                "renameOutput": true
               }
             ]
           },
