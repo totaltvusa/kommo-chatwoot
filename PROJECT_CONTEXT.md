@@ -128,11 +128,14 @@
   * Access Token: `nuwRKpG2bBAQBpRFznfvrMpT`
   * Account ID: `1`
 * **Evolution API (WhatsApp Gateway)**:
-  * Server URL: `https://evolution.ac4.club`
+  * Server URL: `https://project1-evolution-api.efebpb.easypanel.host`
+  * Global API Key: `429683C4C977415CAAFCCE10F7D57E11`
   * Credential ID in n8n: `ecGN8GlLnzNz5Lq5` (`Evolution account 2`)
-  * Default Instance: `TTvAlertsMovistar`
+  * Instances:
+    * `lat-whatscol` (TVTotal24 WhatsApp Colombia: `+57 300 9476271` -> Chatwoot Inbox ID 16).
+    * `TTvAlertsMovistar` (Administrative / Human Handover Alerts -> Chatwoot Inbox ID 4).
+  * Chatwoot Webhook URL: `https://project1-evolution-api.efebpb.easypanel.host/chatwoot/webhook/{instance}`
   * Presence Endpoint: `POST /chat/sendPresence/{instance}` (`{"presence": "composing"}`)
-  * Outbound Text Endpoint: `POST /message/sendText/{instance}` (`{"number": "...", "text": "..."}`)
 * **n8n Instance**:
   * URL: `https://n8n.ac4.club`
 
