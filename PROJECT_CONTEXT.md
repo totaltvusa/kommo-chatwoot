@@ -16,10 +16,15 @@
   * **Sampling Parameters**: Deterministic greedy decoding (`temperature: 0`).
   * ⚠️ **STRICT MANDATE (NO OPENAI)**: OpenAI is permanently decommissioned. Under NO circumstance will OpenAI models be used.
 * **Multi-Brand Routing (`¿Qué Empresa?`)**:
-  * **Brand A: TotalTv USA** (Default / Inbox 1):
+  * **Brand A: TotalTv USA**:
+    * Inboxes:
+      * **Inbox 6**: Telegram (`@TvTotalUSAbot`).
+      * **Inbox 14**: Instagram (`@tvtotalusa`) via Zernio API.
+      * **Inbox 17**: Facebook Messenger (`Facebook - TotalTv USA`) via Zernio API.
+      * **Inbox 4**: WhatsApp (`TTvAlertsMovistar`).
     * Service: Mega OTT panel.
     * Audience: USA & International (English / Spanish bilingual auto-detection).
-    * Auto-Labeling: Automatically tagged with `funnel-totaltv-usa`, channel labels (`channel-instagram`, `channel-telegram`, etc.), and initial stage `stage-incoming-leads`.
+    * Auto-Labeling: Automatically tagged with `funnel-totaltv-usa`, channel labels (`channel-facebook`, `channel-instagram`, `channel-telegram`, `channel-whatsapp`), and initial stage `stage-incoming-leads`.
     * Connected Tools:
       1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
       2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`).
