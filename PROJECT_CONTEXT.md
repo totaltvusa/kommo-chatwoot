@@ -19,7 +19,7 @@
   * **Brand A: TotalTv USA** (Default / Inbox 1):
     * Service: Mega OTT panel.
     * Audience: USA & International (English / Spanish bilingual auto-detection).
-    * Payment Methods: Zelle (`acalimanr@gmail.com`), Crypto (-20%), CashApp (+10%), Credit/Debit/PayPal (+10%).
+    * Auto-Labeling: Automatically tagged with `funnel-totaltv-usa`, channel labels (`channel-instagram`, `channel-telegram`, etc.), and initial stage `stage-incoming-leads`.
     * Connected Tools:
       1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
       2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`).
@@ -30,7 +30,7 @@
       * **Inbox 13**: Instagram (`@tvtotal24`) via Zernio API.
       * **Inbox 15**: TikTok (`@tvtotal24`) via API Channel.
       * **Inbox 16**: WhatsApp (`lat-whatscol`) via Evolution API.
-        * Auto-labels: Automatically tagged with `funnel-totaltv-latina` and `channel-whatsapp-lite`.
+    * Auto-labels: Automatically tagged with `funnel-totaltv-latina`, channel labels (`channel-whatsapp-lite`, `channel-instagram`, `channel-telegram`, etc.), and initial stage `stage-lead-entrantes`.
     * Service: MVPlay (Xtream-Masters) panel.
     * Audience: Latin America / Venezuela (Spanish).
     * Payment Methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (`ID: 22628239` - Super Discount), Pago Móvil (Bancamiga, 04246861135, J405259221, ArialStore C.A.).
@@ -92,6 +92,7 @@
 | `xam0WV65gvTbXcIx` | `Transfer to Human Tool` | **Active Subworkflow / Tool** (Human agent escalation - dual Telegram & WhatsApp Evolution API `TTvAlertsMovistar` to `584146130135`) |
 | `XC1jY6Vkbgdu5iIz` | `Cron - Followup Stage Fase de Pruebas to Que Te Parecio` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
 | `KRwjH3njrF4qRdph` | `Cron - Followup Stage Trials to Want to Join` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
+| `1IlXjaNv0rc9laJy` | `Cron - Followup Stage Incoming Leads to Contacted` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
 | `p8dS1jx73xvpbrkj` | `Telegram to N8N` | Active |
 | `TfILC2hXao6SLQfE` | `Zelle Webhook` | Active |
 | `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
