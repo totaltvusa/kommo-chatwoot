@@ -44,10 +44,24 @@
       2. `crear_prueba_tvtotal24` (`kh10aaenUURvi7Ji`): Automated MVPlay 4h trial generator (tracked via Chatwoot attributes `tvtotal_trial_1_id`, `tvtotal_trial_2_id`).
       3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
 * **Formatting, Composing Presence & Response Pipeline**:
-  1. `Formatear Respuesta`: Formats text (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp/Instagram) and computes a human typing delay (random 2 to 5 seconds).
-  2. `Activar Escribiendo en Chatwoot`: Sends `POST /toggle_typing_status` (`typing_status: "on"`) to simulate active typing across all channels.
-  3. `Wait Typing Delay`: Waits 2 to 5 seconds.
-  4. `Responder en Chatwoot`: Sends `POST /messages` to Chatwoot, which broadcasts the response to Evolution API (WhatsApp), Telegram, or Zernio (Instagram).
+  1. `Formatear Respuesta`: Formats text (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp/Instagram/Facebook) and computes a human typing delay (random 2 to 5 seconds).
+  2. `Activar Escribiendo en Chatwoot`: Inlined asynchronous call to Chatwoot's typing status endpoint (`POST .../toggle_typing_status`, `typing_status: "on"`) so agents and channels see typing state.
+  3. `Wait Typing Delay`: Waits 2 to 5 seconds before dispatching.
+  4. `Responder en Chatwoot`: Sends `POST /messages` to Chatwoot, which broadcasts the response to Evolution API (WhatsApp), Telegram, or triggers the outbound Zernio handler for Instagram and Facebook Messenger.
+* **Zernio Meta Social Bridge (Instagram & Facebook Messenger)**:
+  * **Inbound (`Zernio Inbound Webhook` -> `Procesar Inbound Zernio`)**:
+    * Endpoint: `POST https://n8n.ac4.club/webhook/zernio-instagram-inbound` (subscribed to `message.received` in Zernio).
+    * Handles both `platform: "instagram"` and `platform: "facebook"`.
+    * Manages contacts (`ig_<id>` or `fb_<id>`) and open conversations in Chatwoot.
+    * Inboxes & Auto-labels:
+      * Instagram `@tvtotal24` (Account `6a8667d577555aae0139eca3`) -> Inbox 13 (`funnel-totaltv-latina`, `channel-instagram`, `stage-lead-entrantes`).
+      * Instagram `@tvtotalusa` (Account `6a86600b77555aae01387fc7`) -> Inbox 14 (`funnel-totaltv-usa`, `channel-instagram`, `stage-incoming-leads`).
+      * Facebook Messenger `@TotalTv2025` (Account `6a87b56c77555aae01ddcf1c`) -> Inbox 17 (`funnel-totaltv-usa`, `channel-facebook`, `stage-incoming-leads`).
+  * **Outbound (`Enviar a Zernio Instagram`)**:
+    * Intercepts Chatwoot outgoing non-private messages for Inboxes 13, 14, and 17.
+    * Calls `POST https://api.zernio.com/v1/inbox/conversations/${participantId}/messages` using the respective API key and account ID.
+    * Employs idempotency key `chatwoot_msg_${chatwootMsgId}` to guarantee zero duplicate deliveries.
+
 
 ---
 
@@ -129,6 +143,16 @@
     * `TTvAlertsMovistar` (Administrative / Human Handover Alerts -> Chatwoot Inbox ID 4).
   * Chatwoot Webhook URL: `https://project1-evolution-api.efebpb.easypanel.host/chatwoot/webhook/{instance}`
   * Presence Endpoint: `POST /chat/sendPresence/{instance}` (`{"presence": "composing"}`)
+* **Zernio API (Meta / Social Bridge)**:
+  * Base URL: `https://zernio.com/api/v1`
+  * Global Webhook Endpoint: `https://n8n.ac4.club/webhook/zernio-instagram-inbound` (Event: `message.received`)
+  * TotalTv USA Account:
+    * API Key: `sk_997f75cb81b8ed42a9764a99aab59b5a1389a3a91c29b1311fe8d31e4e337135`
+    * Instagram: Account ID `6a86600b77555aae01387fc7` (`@tvtotalusa` -> Chatwoot Inbox 14)
+    * Facebook Messenger: Account ID `6a87b56c77555aae01ddcf1c` (Page: `TotalTv USA` / `@TotalTv2025`, Page ID: `634477526407306` -> Chatwoot Inbox 17)
+  * TVTotal24 Latina Account:
+    * API Key: `sk_ad87ef37da3670603641edd90966dfa359fe77f6c4a23d10f807b707c1b5cbf1`
+    * Instagram: Account ID `6a8667d577555aae0139eca3` (`@tvtotal24` -> Chatwoot Inbox 13)
 * **n8n Instance**:
   * URL: `https://n8n.ac4.club`
 
@@ -136,7 +160,9 @@
 
 ## 5. Git Synchronization Protocol
 
-* **Local Repository**: `/mnt/Data/Projects for Antigravity/kommo-chatwoot`
+* **Local Repositories**:
+  * macOS: `/Users/alvezcaliman/Documents/AntigravityProjects/kommo-chatwoot`
+  * Linux: `/mnt/Data/Projects for Antigravity/kommo-chatwoot`
 * **Remote Repository**: `git@github.com:totaltvusa/kommo-chatwoot.git`
 * **Branch**: `main`
 
@@ -154,6 +180,7 @@
   * **Outbound Message Delivery & Chatwoot Synchronization**:
     * `Enviar WhatsApp (Evolution API)`: Dispatches text message to WhatsApp via Evolution API `POST /message/sendText/{{instance}}`.
     * `Responder en Chatwoot`: Outgoing message syncs back to Chatwoot conversation thread (`POST .../messages`) so human agents see full chat history in real-time, and native channels (Telegram / Instagram via Zernio) deliver seamlessly.
+
 ### August 31, 2026
 * **TikTok (@tvtotal24) Channel Setup & Routing**:
   * Created Chatwoot Inbox **ID 15**: `TikTok - TvTotal24` (type `Channel::Api`, identifier `iRSzyHJxMbVuAu7zDXtEAfYZ`).
@@ -163,4 +190,40 @@
     * Excluded inbox 15 from TotalTv USA.
     * Routed inbox 15 directly to `AI Agent - TVTotal24` with full TVTotal24 operational rules and tools.
   * Synchronized updated workflow JSON to `workflows/router_chatwoot_ia.json`.
+
+### September 1, 2026
+* **WhatsApp Colombia Instance Setup (`lat-whatscol`)**:
+  * Registered Evolution API instance `lat-whatscol` (`+57 300 9476271`) connected to Chatwoot Inbox **ID 16** (`lat-whatscol`, `Channel::Api`).
+  * Webhook configured: `https://project1-evolution-api.efebpb.easypanel.host/chatwoot/webhook/lat-whatscol`.
+  * Configured auto-labeling in `Preparar Mensaje`: `funnel-totaltv-latina` and `channel-whatsapp-lite`.
+* **Inlined Composing State & Human-like Typing Simulation Pipeline**:
+  * Fixed payload propagation by inlining `toggle_typing_status: on` directly inside `Formatear Respuesta` as an asynchronous non-blocking request, preventing node data overwrite.
+  * Preserved 2 to 5 second random human delay before `Responder en Chatwoot`.
+* **Dynamic Initial Stage Labeling on Conversation Entry**:
+  * Updated `Preparar Mensaje` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+    * TVTotal24 Latina (Inboxes 10, 13, 15, 16): automatically assigns `stage-lead-entrantes` if no stage exists.
+    * TotalTv USA (Inboxes 1, 4, 6, 14, 17): automatically assigns `stage-incoming-leads` if no stage exists.
+    * Preserves any existing stages without overwriting.
+* **New 20-Hour Followup Cron Workflow (`1IlXjaNv0rc9laJy`)**:
+  * Created and published `Cron - Followup Stage Incoming Leads to Contacted` in n8n (`active: true`, scheduled `0 */2 * * *`).
+  * Fetches open conversations tagged with `stage-lead-entrantes` or `stage-incoming-leads`.
+  * If 20+ hours elapsed since last customer message:
+    * Automatically detects conversation language (English vs Spanish).
+    * Sends a courteous closing & availability message matching the brand and customer language.
+    * Transitions stage: `stage-lead-entrantes` -> `stage-contactado` (TVTotal24) or `stage-incoming-leads` -> `stage-contacted` (TotalTv USA).
+    * Preserves all other labels (`funnel-*`, `channel-*`).
+    * Sets custom attribute `stage_contacted_followup_at` to prevent repeated executions.
+  * Exported to `workflows/cron_followup_incoming_leads.json`.
+* **Facebook Messenger (@TotalTv2025) Integration via Zernio**:
+  * Created Chatwoot Inbox **ID 17**: `Facebook - TotalTv USA` (type `Channel::Api`, identifier `w9RpnGQPi2rZWC7ATsw4ixX4`).
+  * Updated `Preparar Mensaje` to tag incoming Facebook messages with `funnel-totaltv-usa`, `channel-facebook`, and `stage-incoming-leads`.
+  * Updated `Formatear Respuesta` to apply Meta markdown formatting (`*bold*`, flat links) for Inbox 17.
+  * Updated `Procesar Inbound Zernio` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+    * Enabled platform `facebook` alongside `instagram`.
+    * Maps Page `@TotalTv2025` (Account `6a87b56c77555aae01ddcf1c`) to Inbox 17.
+    * Contact identifier prefix `fb_<participantId>`.
+  * Updated `Enviar a Zernio Instagram` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+    * Added handler for Inbox 17 to dispatch outgoing messages via Zernio API `POST /v1/inbox/conversations/${participantId}/messages` with idempotency key `chatwoot_msg_${chatwootMsgId}`.
+  * Exported updated workflow to `workflows/router_chatwoot_ia.json`.
+
 
