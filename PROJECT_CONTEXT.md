@@ -28,9 +28,9 @@
     * Inboxes:
       * **Inbox 10**: Telegram (`@tvtotal24_bot`).
       * **Inbox 13**: Instagram (`@tvtotal24`) via Zernio API.
-      * **Inbox 15**: TikTok (`@tvtotal24`) via API Channel (`Channel::Api`).
-        * Auto-labels: Automatically tagged with `funnel-totaltv-latina` and `channel-tiktok` (Chatwoot Automation Rule ID 8).
-        * Agent Routing: Routed directly to `AI Agent - TVTotal24` in `¿Qué Empresa?`.
+      * **Inbox 15**: TikTok (`@tvtotal24`) via API Channel.
+      * **Inbox 16**: WhatsApp (`lat-whatscol`) via Evolution API.
+        * Auto-labels: Automatically tagged with `funnel-totaltv-latina` and `channel-whatsapp`.
     * Service: MVPlay (Xtream-Masters) panel.
     * Audience: Latin America / Venezuela (Spanish).
     * Payment Methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (`ID: 22628239` - Super Discount), Pago Móvil (Bancamiga, 04246861135, J405259221, ArialStore C.A.).
@@ -38,6 +38,7 @@
       1. `calcular_pago_movil` (`4AYo7CX3Ou1K2yXH`): Real-time BCV exchange rate & Bs calculation.
       2. `crear_prueba_tvtotal24` (`kh10aaenUURvi7Ji`): Automated MVPlay 4h trial generator (tracked via Chatwoot attributes `tvtotal_trial_1_id`, `tvtotal_trial_2_id`).
       3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
+<<<<<<< HEAD
 * **Formatting & Human-Like Delivery Pipeline**:
   * **Channel Formatter (`Formatear Respuesta`)**: Detects channel type (plain Markdown for Telegram vs `*bold*` & URL flattening for WhatsApp/Instagram/API), resolves WhatsApp metadata (`is_whatsapp`, `instance`, `remoteJid`), and computes dynamic typing delay:
     $$\text{delay} = \min(5, \max(2, \text{round}(\text{text.length} \times 0.015 + 2)))$$
@@ -48,6 +49,13 @@
   * **Dual Outbound Dispatch**:
     * **WhatsApp**: Sends formatted message to Evolution API `POST /message/sendText/{{instance}}`.
     * **Universal Sync**: Posts outgoing message to Chatwoot (`POST .../messages` via `Responder en Chatwoot`) so agents see bot replies in the conversation thread (and delivers natively to Telegram or triggers Zernio for Instagram).
+=======
+* **Formatting, Composing Presence & Response Pipeline**:
+  1. `Formatear Respuesta`: Formats text (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp/Instagram) and computes a human typing delay (random 2 to 5 seconds).
+  2. `Activar Escribiendo en Chatwoot`: Sends `POST /toggle_typing_status` (`typing_status: "on"`) to simulate active typing across all channels.
+  3. `Wait Typing Delay`: Waits 2 to 5 seconds.
+  4. `Responder en Chatwoot`: Sends `POST /messages` to Chatwoot, which broadcasts the response to Evolution API (WhatsApp), Telegram, or Zernio (Instagram).
+>>>>>>> 180bb28 (feat: add lat-whatscol inbox 16, auto-labeling, composing typing state, and 2-5s delay across all inboxes)
 
 ---
 
