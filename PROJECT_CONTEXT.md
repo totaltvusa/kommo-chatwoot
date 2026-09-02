@@ -18,30 +18,29 @@
 * **Multi-Brand Routing (`¿Qué Empresa?`)**:
   * **Brand A: TotalTv USA**:
     * Inboxes:
-      * **Inbox 6**: Telegram (`@TotalTvUSAbot`).
+      * **Inbox 6**: Telegram (`@TotalTvUSAbot`, Bot Token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`).
       * **Inbox 14**: Instagram (`@tvtotalusa`) via Zernio API.
       * **Inbox 17**: Facebook Messenger (`Facebook - TotalTv USA`) via Zernio API.
-      * **Inbox 4**: WhatsApp (`TTvAlertsMovistar`).
+      * **Inbox 4**: WhatsApp / Admin (`TTvAlertsMovistar`).
     * Service: Mega OTT panel.
     * Audience: USA & International (English / Spanish bilingual auto-detection).
     * Auto-Labeling: Automatically tagged with `funnel-totaltv-usa`, channel labels (`channel-facebook`, `channel-instagram`, `channel-telegram`, `channel-whatsapp`), and initial stage `stage-incoming-leads`.
     * Connected Tools:
       1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
-      2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`; uses `$fromAI` parameter mapping with Chatwoot regex fallback; dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
+      2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_count`, `trial_1_id`, `trial_2_id`; uses `$fromAI` parameter mapping with Chatwoot regex fallback; dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
       3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
   * **Brand B: TVTotal24 / TOTAL TV Latina**:
     * Inboxes:
       * **Inbox 10**: Telegram (`@tvtotal24_bot`).
       * **Inbox 13**: Instagram (`@tvtotal24`) via Zernio API.
-      * **Inbox 15**: TikTok (`@tvtotal24`) via API Channel.
       * **Inbox 16**: WhatsApp (`lat-whatscol`) via Evolution API.
-    * Auto-labels: Automatically tagged with `funnel-totaltv-latina`, channel labels (`channel-whatsapp-lite`, `channel-instagram`, `channel-telegram`, etc.), and initial stage `stage-lead-entrantes`.
+    * Auto-labels: Automatically tagged with `funnel-totaltv-latina`, channel labels (`channel-whatsapp-lite`, `channel-instagram`, `channel-telegram`), and initial stage `stage-lead-entrantes`.
     * Service: MVPlay (Xtream-Masters) panel.
     * Audience: Latin America / Venezuela (Spanish).
     * Payment Methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (`ID: 22628239` - Super Discount), Pago Móvil (Bancamiga, 04246861135, J405259221, ArialStore C.A.).
     * Connected Tools:
-      1. `calcular_pago_movil` (`4AYo7CX3Ou1K2yXH`): Real-time BCV exchange rate & Bs calculation.
-      2. `crear_prueba_tvtotal24` (`kh10aaenUURvi7Ji`): Automated MVPlay 4h trial generator (tracked via Chatwoot attributes `tvtotal_trial_1_id`, `tvtotal_trial_2_id`).
+      1. `calcular_pago_movil` (`4AYo7CX3Ou1K2yXH`): Real-time live Binance P2P exchange rate & Bs calculation.
+      2. `crear_prueba_tvtotal24` (`kh10aaenUURvi7Ji`): Automated MVPlay 4h trial generator (tracked via Chatwoot attributes `tvtotal_trial_count`, `tvtotal_trial_1_id`, `tvtotal_trial_2_id`; dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
       3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
 * **Formatting, Composing Presence & Response Pipeline**:
   1. `Formatear Respuesta`: Formats text (plain Markdown for Telegram vs `*bold*` & URL flattening for Meta/WhatsApp/Instagram/Facebook) and computes a human typing delay (random 2 to 5 seconds).
@@ -71,25 +70,29 @@
 * **TotalTv USA (Mega OTT)**:
   * Duration: 24 hours (1 device).
   * Panel: Mega OTT.
-  * Attributes: `trial_1_id`, `trial_2_id`.
+  * Attributes: `trial_count`, `trial_1_id`, `trial_2_id`.
+  * Admin Notifications: Simultaneous Telegram (Chat ID `40371837`) and WhatsApp (`TTvAlertsMovistar` to `584146130135`).
 * **TVTotal24 (MVPlay / TOTAL TV Latina)**:
   * Duration: 4 hours (starts upon creation; NEVER state that it starts upon first login).
   * Panel in TotalTV app: Select **TOTALTV LATINA**.
-  * Attributes: `tvtotal_trial_1_id`, `tvtotal_trial_2_id` (100% isolated from Mega OTT).
-  * Username format: `NombreApellido` (without spaces or accents, e.g. `AlbertoRincon`). If missing, left empty for auto-generation.
-  * Password format: Customer's clean phone number. If rejected by MVPlay, auto-fallback creates line with panel-generated password.
+  * Attributes: `tvtotal_trial_count`, `tvtotal_trial_1_id`, `tvtotal_trial_2_id`, `tvtotal_trial_1_username`, `tvtotal_trial_2_username` (100% isolated from Mega OTT; officially registered in Chatwoot UI).
+  * Username format: `NombreApellido` for trial 1, `NombreApellido2` for trial 2 (without spaces or accents, e.g. `AlbertoRincon`). If already exists in MVPlay, automatically falls back to empty username/password for unique panel auto-generation.
+  * Password format: Customer's clean phone number. If auto-fallback triggered, panel generates unique password.
   * Reseller Notes: ONLY customer's full name (no email, no phone).
   * Server URLs:
     * Server / DNS: `http://wk.mvpl.uk:2082`
     * Smarters DNS: Always label as **`DNS para Smarters: http://cdn01link.uk:2095`**
-* **General Trial Rules**:
+  * Admin Notifications: Simultaneous Telegram (Chat ID `40371837`) and WhatsApp (`TTvAlertsMovistar` to `584146130135`).
+* **General Trial Rules & AI Guardrails**:
   * Mandatory collection before creation: Full Name (`contact_name`), Email (`email`), Phone (`phone`).
   * Limit: Up to 2 free trials per customer. (The 2-trial limit is internal and NEVER mentioned upfront; upon delivering the 2nd trial, explicitly state it is the final free trial).
+  * **Mandatory Tool Delegation (Zero Memory-Based Checks)**: The AI Agent is strictly forbidden from evaluating trial count, active status, or limits from chat history. Whenever a customer asks for a trial or another trial, the AI MUST execute the respective trial tool, which reads the CRM custom attributes as the sole authority.
   * **Stage Transition & Label Cleanup**: Upon trial generation, the conversation is automatically tagged with `stage-trials` (TotalTv USA) or `stage-fase-de-pruebas` (TVTotal24), and ANY previous `stage-*` label (e.g. `stage-incoming-leads`, `stage-lead-entrantes`, `stage-contacted`, `stage-contactado`) is strictly removed while preserving all other labels (`funnel-*`, `channel-*`, `human`).
 
 ### Payment & QR Code Rules
 * **Pago Móvil**:
   * Standard response gives clean text only: Total amount in Bs, Bank (Bancamiga), Phone (04246861135), RIF (J405259221), Beneficiary (ArialStore C.A.), request transfer screenshot.
+  * Real-time exchange rate: Automatically scraped from live Binance P2P USDT/VES orders via `this.helpers.httpRequest` (with automatic fallback to DolarAPI Paralelo and Oficial).
   * DO NOT mention the daily exchange rate in standard response; only provide the exchange rate if the customer explicitly asks for it.
   * Deliver QR code link (`Arialstorepm.jpeg`) ONLY if the customer explicitly asks for the QR code.
 * **Zelle**:
@@ -226,6 +229,8 @@
   * Updated `Enviar a Zernio Instagram` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
     * Added handler for Inbox 17 to dispatch outgoing messages via Zernio API `POST /v1/inbox/conversations/${participantId}/messages` with idempotency key `chatwoot_msg_${chatwootMsgId}`.
   * Exported updated workflow to `workflows/router_chatwoot_ia.json`.
+
+### September 1-2, 2026
 * **Telegram TotalTv USA Bot Migration**:
   * Switched Telegram bot on Chatwoot Inbox **ID 6** from `@TvTotalUSAbot` to `@TotalTvUSAbot` with token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`.
   * Updated Inbox name to `TotalTvUSAbot`.
