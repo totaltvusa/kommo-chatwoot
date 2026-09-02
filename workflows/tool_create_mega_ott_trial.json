@@ -4,12 +4,12 @@
     "name": "Create Mega OTT Trial Tool",
     "active": true,
     "isArchived": false,
-    "versionId": "b4ee9617-efdf-4cdf-b3af-29afd87a8b08",
+    "versionId": "68d3948e-5e02-410e-bd76-682f27d5b133",
     "activeVersionId": "312ab6e4-0a9d-455a-98ef-c0c61b558b98",
     "triggerCount": 0,
     "nodeCount": 35,
     "createdAt": "2026-08-20T01:59:31.383Z",
-    "updatedAt": "2026-09-02T00:03:16.578Z",
+    "updatedAt": "2026-09-02T00:06:37.618Z",
     "settings": {
       "executionOrder": "v1",
       "availableInMCP": true
@@ -1292,7 +1292,7 @@
         ],
         "parameters": {
           "mode": "runOnceForAllItems",
-          "jsCode": "const conversation_id = $('Generar Credenciales').item.json.conversation_id;\nconst account_id = $('Generar Credenciales').item.json.account_id || 1;\nconst chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}`;\n\ntry {\n  const getRes = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  const currentLabels = getRes.payload || [];\n  if (!currentLabels.includes('stage-trials')) {\n    currentLabels.push('stage-trials');\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n      headers: {\n        'api_access_token': chatwootToken,\n        'Content-Type': 'application/json'\n      },\n      body: { labels: currentLabels },\n      json: true\n    });\n  }\n} catch (e) {}\n\nreturn $input.all();"
+          "jsCode": "const conversation_id = $('Generar Credenciales').item.json.conversation_id;\nconst account_id = $('Generar Credenciales').item.json.account_id || 1;\nconst chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}`;\n\ntry {\n  const getRes = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  const currentLabels = getRes.payload || [];\n  // Remove any prior stage-* label (e.g. stage-incoming-leads, stage-contacted, etc.)\n  const cleanedLabels = currentLabels.filter(label => !label.startsWith('stage-'));\n  cleanedLabels.push('stage-trials');\n\n  await this.helpers.httpRequest({\n    method: 'POST',\n    url: `${chatwootBase}/conversations/${conversation_id}/labels`,\n    headers: {\n      'api_access_token': chatwootToken,\n      'Content-Type': 'application/json'\n    },\n    body: { labels: cleanedLabels },\n    json: true\n  });\n} catch (e) {}\n\nreturn $input.all();"
         }
       },
       {

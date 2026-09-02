@@ -85,6 +85,7 @@
 * **General Trial Rules**:
   * Mandatory collection before creation: Full Name (`contact_name`), Email (`email`), Phone (`phone`).
   * Limit: Up to 2 free trials per customer. (The 2-trial limit is internal and NEVER mentioned upfront; upon delivering the 2nd trial, explicitly state it is the final free trial).
+  * **Stage Transition & Label Cleanup**: Upon trial generation, the conversation is automatically tagged with `stage-trials` (TotalTv USA) or `stage-fase-de-pruebas` (TVTotal24), and ANY previous `stage-*` label (e.g. `stage-incoming-leads`, `stage-lead-entrantes`, `stage-contacted`, `stage-contactado`) is strictly removed while preserving all other labels (`funnel-*`, `channel-*`, `human`).
 
 ### Payment & QR Code Rules
 * **Pago Móvil**:
@@ -237,6 +238,11 @@
     * Dispatches trial details to `584146130135` using instance `TTvAlertsMovistar` via Evolution API (`ecGN8GlLnzNz5Lq5`).
     * Configured with `onError: continueRegularOutput` alongside Telegram `Notificar Administrador`.
   * Synchronized updated workflow JSONs to `workflows/router_chatwoot_ia.json` and `workflows/tool_create_mega_ott_trial.json`.
+* **Automatic Prior Stage Cleanup on Trial Generation**:
+  * Updated `Agregar Etiqueta Stage Trials` in `Create Mega OTT Trial Tool` (`e1R7zQorWBaaqgou`): Filters out any existing `stage-*` labels (e.g. `stage-incoming-leads`, `stage-contacted`) before applying `stage-trials`.
+  * Updated `Agregar Etiqueta Stage Fase de Pruebas` in `Tool - Create MVPlay Trial` (`kh10aaenUURvi7Ji`): Filters out any existing `stage-*` labels (e.g. `stage-lead-entrantes`, `stage-contactado`) before applying `stage-fase-de-pruebas`.
+  * Preserves all other labels (`funnel-*`, `channel-*`, `human`) and keeps conversations strictly in a single active stage.
+
 
 
 
