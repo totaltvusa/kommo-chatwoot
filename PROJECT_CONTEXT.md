@@ -242,11 +242,14 @@
   * Updated `Agregar Etiqueta Stage Trials` in `Create Mega OTT Trial Tool` (`e1R7zQorWBaaqgou`): Filters out any existing `stage-*` labels (e.g. `stage-incoming-leads`, `stage-contacted`) before applying `stage-trials`.
   * Updated `Agregar Etiqueta Stage Fase de Pruebas` in `Tool - Create MVPlay Trial` (`kh10aaenUURvi7Ji`): Filters out any existing `stage-*` labels (e.g. `stage-lead-entrantes`, `stage-contactado`) before applying `stage-fase-de-pruebas`.
   * Preserves all other labels (`funnel-*`, `channel-*`, `human`) and keeps conversations strictly in a single active stage.
-* **Strict Monolingual Response & Explicit English Plan Templates**:
+* **Strict Monolingual Response & Dual-Layer Language Defense**:
   * Fixed language mixing in `AI Agent` (TotalTv USA) and `AI Agent - TVTotal24` (Latina):
     * Provided separate, fully localized subscription plans templates for English (`1 Month: 1 Device: $9... Optional Adult Content: FREE`) and Spanish (`1 Mes: 1 Dispositivo: $9... Contenido Adulto opcional: GRATIS`).
-    * Added strict monolingual mandates to system prompts: models must NEVER mix English and Spanish in a single response, guaranteeing that English inquiries receive 100% English responses across all plans, prices, device options, and courtesy text.
+    * Added strict negative constraints (`STRICT PROHIBITION IN ENGLISH RESPONSES`) forbidding Spanish words like `Mes`, `Dispositivo`, `Contenido Adulto opcional`, `GRATIS`, `Año` when replying in English.
+    * Added `HISTORICAL CHAT MEMORY OVERRIDE` to explicitly instruct the model to ignore and never copy previous contaminated assistant messages from chat memory.
+    * Integrated a deterministic bilingual sanitizer in `Formatear Respuesta` that automatically detects English contexts and translates any leaked Spanish plan tokens into 100% pure English before dispatch to Chatwoot/Telegram/WhatsApp/Meta.
   * Synchronized updated workflow to `workflows/router_chatwoot_ia.json`.
+
 
 
 
