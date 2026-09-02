@@ -27,7 +27,7 @@
     * Auto-Labeling: Automatically tagged with `funnel-totaltv-usa`, channel labels (`channel-facebook`, `channel-instagram`, `channel-telegram`, `channel-whatsapp`), and initial stage `stage-incoming-leads`.
     * Connected Tools:
       1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
-      2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`).
+      2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_1_id`, `trial_2_id`; uses `$fromAI` parameter mapping with Chatwoot regex fallback; dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
       3. `Call 'transfer_to_human_tool'` (`xam0WV65gvTbXcIx`): Human support escalation (applies 'human' label, adds private note, dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
   * **Brand B: TVTotal24 / TOTAL TV Latina**:
     * Inboxes:
@@ -229,6 +229,15 @@
   * Switched Telegram bot on Chatwoot Inbox **ID 6** from `@TvTotalUSAbot` to `@TotalTvUSAbot` with token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`.
   * Updated Inbox name to `TotalTvUSAbot`.
   * Verified Chatwoot webhook registration via Telegram API (`https://project1-chatwoot.efebpb.easypanel.host/webhooks/telegram/6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`). All routing, rules, and AI behaviors remain identical.
+* **Mega OTT Trial Customer Data Mapping & WhatsApp Alert**:
+  * Fixed missing customer data (`contact_name`, `email`, `phone`) in Mega OTT trial generator (`e1R7zQorWBaaqgou`):
+    * Replaced `$parameter.*` expressions with `$fromAI(...)` in `Call 'create_trial_tool'` (and `crear_prueba_tvtotal24`) within `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+    * Enhanced `Generar Credenciales` with multi-tier fallback: direct parameters -> trigger query -> Chatwoot conversation `meta.sender` -> Chatwoot recent messages regex scanner.
+  * Added node `Notificar WhatsApp (Evolution API)` in `Create Mega OTT Trial Tool`:
+    * Dispatches trial details to `584146130135` using instance `TTvAlertsMovistar` via Evolution API (`ecGN8GlLnzNz5Lq5`).
+    * Configured with `onError: continueRegularOutput` alongside Telegram `Notificar Administrador`.
+  * Synchronized updated workflow JSONs to `workflows/router_chatwoot_ia.json` and `workflows/tool_create_mega_ott_trial.json`.
+
 
 
 
