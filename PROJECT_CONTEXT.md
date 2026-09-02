@@ -269,6 +269,17 @@
     * Added IF node `¿Es Éxito Línea?` and fallback HTTP node `Crear Linea Auto MVPlay` (empty username/password) to ensure 100% success even if a custom username collides in MVPlay.
     * Hardened `Procesar Respuesta MVPlay` to strictly validate `resp.status === 'STATUS_SUCCESS'` and actual line credentials returned by MVPlay API, eliminating dummy fallback data.
     * Published workflow to active production and synchronized to `workflows/tool_create_mvplay_trial.json`.
+* **Real-time Live Binance P2P Rate & Transfer to Human Tool Fix**:
+  * Fixed Pago Móvil exchange rate calculation in `Tool - Calcular Pago Movil` (`4AYo7CX3Ou1K2yXH`):
+    * Replaced sandbox-blocked `fetch` with `this.helpers.httpRequest` to fetch live Binance P2P rates (currently 963+ Bs) instead of falling back to hardcoded 938.30 Bs.
+    * Added tiered fallback: Binance P2P -> DolarAPI Paralelo -> DolarAPI Oficial -> 963.00 Bs base.
+  * Fixed `Transfer to Human Tool` (`xam0WV65gvTbXcIx`) 404 failure:
+    * Defined `account_id` and `conversation_id` in `Call 'transfer_to_human_tool'` workflowInputs schema so parameters are passed by LangChain agent.
+    * Added `Preparar Datos Transferencia` node to resolve conversation and account IDs (with fallback regex parsing and Chatwoot open conversation query).
+    * Added `onError: continueRegularOutput` on Chatwoot API calls to prevent failure.
+  * Reset TVTotal24 trial custom attributes for contact 1246 in Chatwoot via API.
+  * Published all updated workflows and synced JSONs.
+
 
 
 

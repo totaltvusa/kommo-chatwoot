@@ -1,86 +1,89 @@
 {
-  "id": "4AYo7CX3Ou1K2yXH",
-  "name": "Tool - Calcular Pago Movil",
-  "active": true,
-  "isArchived": false,
-  "versionId": "e8fa87e1-17e5-496c-9374-600b9b30e53a",
-  "activeVersionId": "e8fa87e1-17e5-496c-9374-600b9b30e53a",
-  "triggerCount": 0,
-  "nodeCount": 2,
-  "createdAt": "2026-08-21T02:11:04.615Z",
-  "updatedAt": "2026-08-28T23:39:39.039Z",
-  "settings": {
-    "executionOrder": "v1",
-    "availableInMCP": true
-  },
-  "tags": [],
-  "parentFolderId": null,
-  "scopes": [
-    "execution:reveal",
-    "workflow:create",
-    "workflow:delete",
-    "workflow:disableRedaction",
-    "workflow:enableRedaction",
-    "workflow:execute",
-    "workflow:execute-chat",
-    "workflow:export",
-    "workflow:import",
-    "workflow:list",
-    "workflow:move",
-    "workflow:publish",
-    "workflow:read",
-    "workflow:share",
-    "workflow:unpublish",
-    "workflow:unshare",
-    "workflow:update"
-  ],
-  "canExecute": true,
-  "connections": {
-    "Execute Workflow Trigger": {
-      "main": [
-        [
-          {
-            "node": "Obtener Tasa y Calcular",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "nodes": [
-    {
-      "id": "971c5084-14e8-4e73-ad71-0edacd35276e",
-      "name": "Execute Workflow Trigger",
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1,
-      "position": [
-        100,
-        300
-      ],
-      "parameters": {}
+  "workflow": {
+    "id": "4AYo7CX3Ou1K2yXH",
+    "name": "Tool - Calcular Pago Movil",
+    "active": true,
+    "isArchived": false,
+    "versionId": "e394bb4b-427e-482f-b60c-029d457515de",
+    "activeVersionId": "e394bb4b-427e-482f-b60c-029d457515de",
+    "triggerCount": 0,
+    "nodeCount": 2,
+    "createdAt": "2026-08-21T02:11:04.615Z",
+    "updatedAt": "2026-09-02T01:02:03.253Z",
+    "settings": {
+      "executionOrder": "v1",
+      "availableInMCP": true
     },
-    {
-      "id": "5ccea6bc-dc4b-41d8-861c-2d19b805c3bf",
-      "name": "Obtener Tasa y Calcular",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        300,
-        300
-      ],
-      "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "let item = {};\ntry {\n  item = $input.first().json || {};\n} catch (e) {\n  try {\n    item = $json || {};\n  } catch (e2) {}\n}\n\nlet usdAmount = parseFloat(item.monto_usd || item.usd || 0);\nlet months = parseInt(item.meses || item.mes || 0);\n\n// If query string is passed (e.g. \"3 meses\", \"3\", \"24\", \"1 mes\", \"12 meses\")\nconst query = (item.query || '').toString().toLowerCase();\nif (!months && query) {\n  if (query.includes('12') || query.includes('año') || query.includes('ano') || query.includes('84')) {\n    months = 12;\n  } else if (query.includes('6') || query.includes('48')) {\n    months = 6;\n  } else if (query.includes('3') || query.includes('24')) {\n    months = 3;\n  } else if (query.includes('1') || query.includes('8')) {\n    months = 1;\n  }\n}\n\nif (!usdAmount && months) {\n  if (months === 1) usdAmount = 8;\n  else if (months === 3) usdAmount = 24;\n  else if (months === 6) usdAmount = 48;\n  else if (months === 12) usdAmount = 84;\n}\n\nif (!usdAmount) {\n  usdAmount = 8; // Default 1 month\n}\n\n// 1. Fetch Binance P2P (Live benchmark rate for USDT to Bolívares / Pago Móvil)\n// We query tradeType: 'BUY' to capture the active market price in Binance P2P (~938+ Bs)\nlet binanceRate = 0;\ntry {\n  const bRes = await fetch('https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search', {\n    method: 'POST',\n    headers: {\n      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      asset: 'USDT',\n      fiat: 'VES',\n      merchantCheck: false,\n      page: 1,\n      payTypes: ['PagoMovil'],\n      publisherType: null,\n      rows: 20,\n      tradeType: 'BUY'\n    })\n  });\n  const bData = await bRes.json();\n  const ads = bData.data || [];\n  \n  // Filter out any abnormal outliers (must be > 800)\n  const validPrices = ads\n    .map(a => parseFloat(a.adv?.price || 0))\n    .filter(p => p > 800);\n  \n  if (validPrices.length > 0) {\n    // In tradeType: 'BUY', top ads list the active best market price (~938.30 Bs)\n    binanceRate = validPrices[0];\n  }\n} catch (e) {}\n\n// Fallback: If BUY failed, try SELL or DolarAPI\nif (!binanceRate) {\n  try {\n    const bRes2 = await fetch('https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search', {\n      method: 'POST',\n      headers: {\n        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',\n        'Content-Type': 'application/json'\n      },\n      body: JSON.stringify({\n        asset: 'USDT',\n        fiat: 'VES',\n        merchantCheck: false,\n        page: 1,\n        payTypes: ['PagoMovil'],\n        publisherType: null,\n        rows: 10,\n        tradeType: 'SELL'\n      })\n    });\n    const bData2 = await bRes2.json();\n    const ads2 = bData2.data || [];\n    const validPrices2 = ads2.map(a => parseFloat(a.adv?.price || 0)).filter(p => p > 800);\n    if (validPrices2.length > 0) {\n      binanceRate = Math.max(...validPrices2);\n    }\n  } catch (e) {}\n}\n\nlet paraleloRate = 0;\nif (!binanceRate) {\n  try {\n    const pRes = await fetch('https://ve.dolarapi.com/v1/dolares/paralelo', {\n      headers: { 'User-Agent': 'Mozilla/5.0' }\n    });\n    const pData = await pRes.json();\n    paraleloRate = parseFloat(pData.promedio || 0);\n  } catch (e) {}\n}\n\nconst effectiveRate = binanceRate || paraleloRate || 938.30;\nconst totalBs = (usdAmount * effectiveRate).toFixed(2);\n\nreturn [{\n  json: {\n    tasa_del_dia: effectiveRate.toFixed(2),\n    monto_usd: usdAmount,\n    meses: months || 1,\n    total_bs: totalBs,\n    fuente_tasa: binanceRate ? 'Binance P2P Pago Móvil' : 'DolarAPI Paralelo',\n    banco: 'Bancamiga',\n    telefono: '04246861135',\n    rif: 'J405259221',\n    beneficiario: 'ArialStore C.A.',\n    qr_url: 'https://raw.githubusercontent.com/totaltvusa/images/main/Arialstorepm.jpeg',\n    resumen_precios_bs: {\n      plan_1_mes: (8 * effectiveRate).toFixed(2) + ' Bs ($8)',\n      plan_3_meses: (24 * effectiveRate).toFixed(2) + ' Bs ($24)',\n      plan_6_meses: (48 * effectiveRate).toFixed(2) + ' Bs ($48)',\n      plan_12_meses: (84 * effectiveRate).toFixed(2) + ' Bs ($84)'\n    }\n  }\n}];"
+    "tags": [],
+    "parentFolderId": null,
+    "scopes": [
+      "execution:reveal",
+      "workflow:create",
+      "workflow:delete",
+      "workflow:disableRedaction",
+      "workflow:enableRedaction",
+      "workflow:execute",
+      "workflow:execute-chat",
+      "workflow:export",
+      "workflow:import",
+      "workflow:list",
+      "workflow:move",
+      "workflow:publish",
+      "workflow:read",
+      "workflow:share",
+      "workflow:unpublish",
+      "workflow:unshare",
+      "workflow:update"
+    ],
+    "canExecute": true,
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Obtener Tasa y Calcular",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
+    },
+    "nodes": [
+      {
+        "id": "971c5084-14e8-4e73-ad71-0edacd35276e",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "5ccea6bc-dc4b-41d8-861c-2d19b805c3bf",
+        "name": "Obtener Tasa y Calcular",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          300,
+          300
+        ],
+        "parameters": {
+          "mode": "runOnceForAllItems",
+          "jsCode": "let item = {};\ntry {\n  item = $input.first().json || {};\n} catch (e) {\n  try { item = $json || {}; } catch (e2) {}\n}\n\nlet usdAmount = parseFloat(item.monto_usd || item.usd || 0);\nlet months = parseInt(item.meses || item.mes || 0);\n\nconst query = (item.query || '').toString().toLowerCase();\nif (!months && query) {\n  if (query.includes('12') || query.includes('año') || query.includes('ano') || query.includes('84')) {\n    months = 12;\n  } else if (query.includes('6') || query.includes('48')) {\n    months = 6;\n  } else if (query.includes('3') || query.includes('24')) {\n    months = 3;\n  } else if (query.includes('1') || query.includes('8')) {\n    months = 1;\n  }\n}\n\nif (!usdAmount && months) {\n  if (months === 1) usdAmount = 8;\n  else if (months === 3) usdAmount = 24;\n  else if (months === 6) usdAmount = 48;\n  else if (months === 12) usdAmount = 84;\n}\n\nif (!usdAmount) {\n  usdAmount = 8;\n}\n\nlet binanceRate = 0;\n\n// 1. Fetch live Binance P2P rate via this.helpers.httpRequest\ntry {\n  const bRes = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search',\n    headers: {\n      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',\n      'Content-Type': 'application/json'\n    },\n    body: {\n      asset: 'USDT',\n      fiat: 'VES',\n      merchantCheck: false,\n      page: 1,\n      payTypes: ['PagoMovil'],\n      publisherType: null,\n      rows: 10,\n      tradeType: 'BUY'\n    },\n    json: true\n  });\n  const ads = bRes?.data || [];\n  const validPrices = ads\n    .map(a => parseFloat(a.adv?.price || 0))\n    .filter(p => p > 800);\n  if (validPrices.length > 0) {\n    binanceRate = validPrices[0];\n  }\n} catch (e) {}\n\n// 2. Fallback: DolarAPI Paralelo\nlet paraleloRate = 0;\nif (!binanceRate) {\n  try {\n    const pRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: 'https://ve.dolarapi.com/v1/dolares/paralelo',\n      headers: { 'User-Agent': 'Mozilla/5.0' },\n      json: true\n    });\n    paraleloRate = parseFloat(pRes?.promedio || 0);\n  } catch (e) {}\n}\n\n// 3. Fallback: DolarAPI Oficial\nlet oficialRate = 0;\nif (!binanceRate && !paraleloRate) {\n  try {\n    const oRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: 'https://ve.dolarapi.com/v1/dolares/oficial',\n      headers: { 'User-Agent': 'Mozilla/5.0' },\n      json: true\n    });\n    oficialRate = parseFloat(oRes?.promedio || 0);\n  } catch (e) {}\n}\n\nconst effectiveRate = binanceRate || paraleloRate || oficialRate || 963.00;\nconst totalBs = (usdAmount * effectiveRate).toFixed(2);\n\nreturn [{\n  json: {\n    tasa_del_dia: effectiveRate.toFixed(2),\n    monto_usd: usdAmount,\n    meses: months || 1,\n    total_bs: totalBs,\n    fuente_tasa: binanceRate ? 'Binance P2P Pago Móvil' : (paraleloRate ? 'DolarAPI Paralelo' : 'Tasa Base'),\n    banco: 'Bancamiga',\n    telefono: '04246861135',\n    rif: 'J405259221',\n    beneficiario: 'ArialStore C.A.',\n    qr_url: 'https://raw.githubusercontent.com/totaltvusa/images/main/Arialstorepm.jpeg',\n    resumen_precios_bs: {\n      plan_1_mes: (8 * effectiveRate).toFixed(2) + ' Bs ($8)',\n      plan_3_meses: (24 * effectiveRate).toFixed(2) + ' Bs ($24)',\n      plan_6_meses: (48 * effectiveRate).toFixed(2) + ' Bs ($48)',\n      plan_12_meses: (84 * effectiveRate).toFixed(2) + ' Bs ($84)'\n    }\n  }\n}];"
+        }
+      }
+    ],
+    "nodeGroups": [],
+    "activeVersion": {
+      "sameAsDraft": true
+    },
+    "meta": {
+      "aiBuilderAssisted": true,
+      "builderVariant": "mcp"
     }
-  ],
-  "nodeGroups": [],
-  "activeVersion": {
-    "sameAsDraft": true
   },
-  "meta": {
-    "aiBuilderAssisted": true,
-    "builderVariant": "mcp"
-  }
+  "triggerInfo": "This workflow's trigger(s) are not supported for direct execution through MCP: Execute Workflow Trigger. Only Schedule, Webhook, Form, and Chat triggers can be executed directly through MCP, so this workflow cannot be executed through MCP. Its trigger(s) still run normally when the workflow is active."
 }

@@ -1,282 +1,342 @@
 {
-  "id": "xam0WV65gvTbXcIx",
-  "name": "Transfer to Human Tool",
-  "active": true,
-  "isArchived": false,
-  "versionId": "d400e1ad-1b24-4968-8934-0b5dfaabc552",
-  "activeVersionId": "d400e1ad-1b24-4968-8934-0b5dfaabc552",
-  "triggerCount": 0,
-  "nodeCount": 7,
-  "createdAt": "2026-08-19T03:20:29.252Z",
-  "updatedAt": "2026-08-21T01:54:27.540Z",
-  "settings": {
-    "executionOrder": "v1",
-    "availableInMCP": true,
-    "binaryMode": "separate"
-  },
-  "tags": [],
-  "parentFolderId": null,
-  "scopes": [
-    "execution:reveal",
-    "workflow:create",
-    "workflow:delete",
-    "workflow:disableRedaction",
-    "workflow:enableRedaction",
-    "workflow:execute",
-    "workflow:execute-chat",
-    "workflow:export",
-    "workflow:import",
-    "workflow:list",
-    "workflow:move",
-    "workflow:publish",
-    "workflow:read",
-    "workflow:share",
-    "workflow:unpublish",
-    "workflow:unshare",
-    "workflow:update"
-  ],
-  "canExecute": true,
-  "connections": {
-    "Execute Workflow Trigger": {
-      "main": [
-        [
-          {
-            "node": "Obtener datos conversacion",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+  "workflow": {
+    "id": "xam0WV65gvTbXcIx",
+    "name": "Transfer to Human Tool",
+    "active": true,
+    "isArchived": false,
+    "versionId": "6ca59650-8b41-4c51-92ff-822e12eed953",
+    "activeVersionId": "6ca59650-8b41-4c51-92ff-822e12eed953",
+    "triggerCount": 0,
+    "nodeCount": 9,
+    "createdAt": "2026-08-19T03:20:29.252Z",
+    "updatedAt": "2026-09-02T01:02:20.221Z",
+    "settings": {
+      "executionOrder": "v1",
+      "availableInMCP": true,
+      "binaryMode": "separate"
     },
-    "Obtener datos conversacion": {
-      "main": [
-        [
-          {
-            "node": "Obtener etiquetas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Obtener etiquetas": {
-      "main": [
-        [
-          {
-            "node": "Agregar etiqueta human",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Agregar etiqueta human": {
-      "main": [
-        [
-          {
-            "node": "Marcar como humano",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Marcar como humano": {
-      "main": [
-        [
-          {
-            "node": "Notificar Administrador",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Notificar Administrador": {
-      "main": [
-        [
-          {
-            "node": "Nota privada Chatwoot",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "nodes": [
-    {
-      "parameters": {},
-      "id": "6042f7ae-bb85-4bbf-9cdf-1143974da264",
-      "name": "Execute Workflow Trigger",
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1,
-      "position": [
-        112,
-        304
-      ]
-    },
-    {
-      "parameters": {
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+    "tags": [],
+    "parentFolderId": null,
+    "scopes": [
+      "execution:reveal",
+      "workflow:create",
+      "workflow:delete",
+      "workflow:disableRedaction",
+      "workflow:enableRedaction",
+      "workflow:execute",
+      "workflow:execute-chat",
+      "workflow:export",
+      "workflow:import",
+      "workflow:list",
+      "workflow:move",
+      "workflow:publish",
+      "workflow:read",
+      "workflow:share",
+      "workflow:unpublish",
+      "workflow:unshare",
+      "workflow:update"
+    ],
+    "canExecute": true,
+    "connections": {
+      "Obtener datos conversacion": {
+        "main": [
+          [
             {
-              "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
+              "node": "Obtener etiquetas",
+              "type": "main",
+              "index": 0
             }
           ]
-        },
-        "options": {}
+        ]
       },
-      "id": "f04954e9-3dbf-4594-9a60-c5d9e080721c",
-      "name": "Obtener datos conversacion",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        256,
-        304
-      ]
-    },
-    {
-      "parameters": {
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $node[\"Execute Workflow Trigger\"].json.account_id }}/conversations/{{ $node[\"Execute Workflow Trigger\"].json.conversation_id }}/labels",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+      "Obtener etiquetas": {
+        "main": [
+          [
             {
-              "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
+              "node": "Agregar etiqueta human",
+              "type": "main",
+              "index": 0
             }
           ]
-        },
-        "options": {}
+        ]
       },
-      "id": "ae3f2920-24aa-4e24-adc1-b55d20bc12ba",
-      "name": "Obtener etiquetas",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        400,
-        304
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Execute Workflow Trigger').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst contact_name = convData.meta?.sender?.name || 'Desconocido';\n\n// Safely preserve all current labels\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\n\nif (!currentLabels.includes('human')) {\n  currentLabels.push('human');\n}\n\nreturn {\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    labels: currentLabels\n  }\n};"
-      },
-      "id": "151ac1fd-0838-4da8-aa91-39480eab552b",
-      "name": "Agregar etiqueta human",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        560,
-        304
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/labels",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+      "Agregar etiqueta human": {
+        "main": [
+          [
             {
-              "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
+              "node": "Marcar como humano",
+              "type": "main",
+              "index": 0
             }
           ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\"labels\": {{ JSON.stringify($json.labels) }}}",
-        "options": {}
+        ]
       },
-      "id": "afdde5a2-6cad-485f-8140-1ac10ab2260d",
-      "name": "Marcar como humano",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        704,
-        304
-      ]
-    },
-    {
-      "parameters": {
-        "chatId": "40371837",
-        "text": "=🔔 <b>Transferencia a Humano</b>\n👤 Contacto: <b>{{ $node[\"Agregar etiqueta human\"].json.contact_name }}</b>\n💬 Conversación: #{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "HTML"
-        }
+      "Marcar como humano": {
+        "main": [
+          [
+            {
+              "node": "Notificar Administrador",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       },
-      "id": "d8d3d3ea-44cd-4a59-83e1-c699c41cc5c6",
-      "name": "Notificar Administrador",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        864,
-        304
-      ],
-      "webhookId": "0e47c219-95bd-4a54-8adc-1ebf18a96a97",
-      "credentials": {
-        "telegramApi": {
-          "id": "IWiCwNsfWPaJGIsw",
-          "name": "Telegram Push"
-        }
+      "Notificar Administrador": {
+        "main": [
+          [
+            {
+              "node": "Nota privada Chatwoot",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Notificar WhatsApp (Evolution API)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Preparar Datos Transferencia",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Preparar Datos Transferencia": {
+        "main": [
+          [
+            {
+              "node": "Obtener datos conversacion",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $node[\"Agregar etiqueta human\"].json.account_id }}/conversations/{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\"content\": \"⚠️ Esta conversación ha sido transferida a soporte humano por el Agente de IA.\", \"private\": true}",
-        "options": {}
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "6042f7ae-bb85-4bbf-9cdf-1143974da264",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          112,
+          304
+        ]
       },
-      "id": "ddeb035b-d186-412d-9c49-771cc307c1bf",
-      "name": "Nota privada Chatwoot",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1008,
-        304
-      ]
+      {
+        "parameters": {
+          "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "f04954e9-3dbf-4594-9a60-c5d9e080721c",
+        "name": "Obtener datos conversacion",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          440,
+          304
+        ],
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $node[\"Execute Workflow Trigger\"].json.account_id }}/conversations/{{ $node[\"Execute Workflow Trigger\"].json.conversation_id }}/labels",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "ae3f2920-24aa-4e24-adc1-b55d20bc12ba",
+        "name": "Obtener etiquetas",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          400,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Execute Workflow Trigger').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst contact_name = convData.meta?.sender?.name || 'Desconocido';\n\n// Safely preserve all current labels\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\n\nif (!currentLabels.includes('human')) {\n  currentLabels.push('human');\n}\n\nreturn {\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    labels: currentLabels\n  }\n};"
+        },
+        "id": "151ac1fd-0838-4da8-aa91-39480eab552b",
+        "name": "Agregar etiqueta human",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          560,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/labels",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\"labels\": {{ JSON.stringify($json.labels) }}}",
+          "options": {}
+        },
+        "id": "afdde5a2-6cad-485f-8140-1ac10ab2260d",
+        "name": "Marcar como humano",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          704,
+          304
+        ],
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "chatId": "40371837",
+          "text": "=🔔 <b>Transferencia a Humano</b>\n👤 Contacto: <b>{{ $node[\"Agregar etiqueta human\"].json.contact_name }}</b>\n💬 Conversación: #{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}",
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "id": "d8d3d3ea-44cd-4a59-83e1-c699c41cc5c6",
+        "name": "Notificar Administrador",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          864,
+          304
+        ],
+        "webhookId": "0e47c219-95bd-4a54-8adc-1ebf18a96a97",
+        "credentials": {
+          "telegramApi": {
+            "id": "IWiCwNsfWPaJGIsw",
+            "name": "Telegram Push"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $node[\"Agregar etiqueta human\"].json.account_id }}/conversations/{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}/messages",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\"content\": \"⚠️ Esta conversación ha sido transferida a soporte humano por el Agente de IA.\", \"private\": true}",
+          "options": {}
+        },
+        "id": "ddeb035b-d186-412d-9c49-771cc307c1bf",
+        "name": "Nota privada Chatwoot",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1008,
+          304
+        ],
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "172c12ce-419c-4307-8760-44c25658d863",
+        "name": "Notificar WhatsApp (Evolution API)",
+        "type": "n8n-nodes-evolution-api.evolutionApi",
+        "typeVersion": 1,
+        "position": [
+          1008,
+          440
+        ],
+        "parameters": {
+          "resource": "messages-api",
+          "instanceName": "TTvAlertsMovistar",
+          "remoteJid": "584146130135",
+          "messageText": "={{ \"🔔 *Transferencia a Humano*\n👤 *Contacto:* \" + $(\"Agregar etiqueta human\").first().json.contact_name + \"\n💬 *Conversación:* #\" + $(\"Agregar etiqueta human\").first().json.conversation_id }}",
+          "options_message": {}
+        },
+        "onError": "continueRegularOutput",
+        "credentials": {
+          "evolutionApi": {
+            "id": "ecGN8GlLnzNz5Lq5",
+            "name": "Evolution account 2"
+          }
+        }
+      },
+      {
+        "id": "275f7637-4b25-463d-8299-85b4fdd38271",
+        "name": "Preparar Datos Transferencia",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          250,
+          304
+        ],
+        "parameters": {
+          "mode": "runOnceForAllItems",
+          "jsCode": "const trigger = $input.first().json || {};\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst query = (trigger.query || '').toString();\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'nuwRKpG2bBAQBpRFznfvrMpT',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 1291,\n    query: query\n  }\n}];"
+        }
+      }
+    ],
+    "nodeGroups": [],
+    "activeVersion": {
+      "sameAsDraft": true
+    },
+    "meta": {
+      "aiBuilderAssisted": true,
+      "builderVariant": "mcp"
     }
-  ],
-  "nodeGroups": [],
-  "activeVersion": {
-    "sameAsDraft": true
   },
-  "meta": {
-    "aiBuilderAssisted": true,
-    "builderVariant": "mcp"
-  }
+  "triggerInfo": "This workflow's trigger(s) are not supported for direct execution through MCP: Execute Workflow Trigger. Only Schedule, Webhook, Form, and Chat triggers can be executed directly through MCP, so this workflow cannot be executed through MCP. Its trigger(s) still run normally when the workflow is active."
 }
