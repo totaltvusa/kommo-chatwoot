@@ -279,6 +279,18 @@
     * Added `onError: continueRegularOutput` on Chatwoot API calls to prevent failure.
   * Reset TVTotal24 trial custom attributes for contact 1246 in Chatwoot via API.
   * Published all updated workflows and synced JSONs.
+* **Registered TVTotal24 Custom Attributes in Chatwoot UI**:
+  * Created official Custom Attribute Definitions in Chatwoot via API for account 1:
+    * `TVTotal24 Trial Count` (`tvtotal_trial_count`, number): tracks number of trials (0, 1, 2).
+    * `TVTotal24 Trial 1 ID` (`tvtotal_trial_1_id`, text)
+    * `TVTotal24 Trial 1 Username` (`tvtotal_trial_1_username`, text)
+    * `TVTotal24 Trial 2 ID` (`tvtotal_trial_2_id`, text)
+    * `TVTotal24 Trial 2 Username` (`tvtotal_trial_2_username`, text)
+  * Updated `Tool - Create MVPlay Trial` (`kh10aaenUURvi7Ji`):
+    * Reads `tvtotal_trial_count` (if 0 or cleared, resets to trial 1).
+    * Writes `tvtotal_trial_count` alongside line IDs on trial generation.
+  * Published workflow to active production and synchronized to `workflows/tool_create_mvplay_trial.json`.
+
 
 
 
