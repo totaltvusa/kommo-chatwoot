@@ -263,6 +263,13 @@
   * Configured both notification nodes with `onError: continueRegularOutput` so trial generation output to the AI agent is never blocked.
   * Updated `Evaluar Historial y Preparar Datos` to output `contact_name`, `email`, and `phone` for notification payloads.
   * Published workflow to active production and synchronized to `workflows/tool_create_mvplay_trial.json`.
+* **MVPlay Username Conflict Prevention & Auto-Generation Fallback**:
+  * Fixed issue where MVPlay trial 2 attempted to reuse trial 1 username (`AlvezCaliman`), causing `STATUS_EXISTS_USERNAME`:
+    * Updated username generator in `Evaluar Historial y Preparar Datos` to create unique usernames per trial (`NombreApellido` for trial 1, `NombreApellido2` for trial 2).
+    * Added IF node `¿Es Éxito Línea?` and fallback HTTP node `Crear Linea Auto MVPlay` (empty username/password) to ensure 100% success even if a custom username collides in MVPlay.
+    * Hardened `Procesar Respuesta MVPlay` to strictly validate `resp.status === 'STATUS_SUCCESS'` and actual line credentials returned by MVPlay API, eliminating dummy fallback data.
+    * Published workflow to active production and synchronized to `workflows/tool_create_mvplay_trial.json`.
+
 
 
 
