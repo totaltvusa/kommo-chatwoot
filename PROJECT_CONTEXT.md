@@ -255,6 +255,15 @@
     * Whenever a customer requests a trial, asks for another trial, or asks to test again, the AI is mandated to execute `create_trial_tool` (or `crear_prueba_tvtotal24`).
     * Updated tool descriptions in n8n langchain tool nodes to clarify that the CRM database is the sole authority on trial eligibility.
     * Published workflow `n0zgnS1vlOGNcGNY` to active production.
+* **Dual Admin Notifications (Telegram & WhatsApp) in TVTotal24 MVPlay Trial Tool**:
+  * Added `Notificar Administrador` (Telegram) to `Tool - Create MVPlay Trial` (`kh10aaenUURvi7Ji`):
+    * Dispatches trial info to Telegram chat `40371837` with customer name, email, phone, credentials, and DNS URLs.
+  * Added `Notificar WhatsApp (Evolution API)` to `Tool - Create MVPlay Trial` (`kh10aaenUURvi7Ji`):
+    * Dispatches trial alert via Evolution API instance `TTvAlertsMovistar` to `584146130135`.
+  * Configured both notification nodes with `onError: continueRegularOutput` so trial generation output to the AI agent is never blocked.
+  * Updated `Evaluar Historial y Preparar Datos` to output `contact_name`, `email`, and `phone` for notification payloads.
+  * Published workflow to active production and synchronized to `workflows/tool_create_mvplay_trial.json`.
+
 
 
 
