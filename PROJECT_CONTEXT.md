@@ -249,6 +249,13 @@
     * Added `HISTORICAL CHAT MEMORY OVERRIDE` to explicitly instruct the model to ignore and never copy previous contaminated assistant messages from chat memory.
     * Integrated a deterministic bilingual sanitizer in `Formatear Respuesta` that automatically detects English contexts and translates any leaked Spanish plan tokens into 100% pure English before dispatch to Chatwoot/Telegram/WhatsApp/Meta.
   * Synchronized updated workflow to `workflows/router_chatwoot_ia.json`.
+* **Mandatory Tool Delegation for Free Trials (Zero Memory-Based Verification)**:
+  * Fixed issue where AI Agent hallucinated active trial or limit reached from chat memory instead of consulting Chatwoot:
+    * Enforced `CRITICAL MANDATE — TOOL DELEGATION (ZERO MEMORY-BASED ELIGIBILITY CHECKS)` in both `AI Agent` (TotalTv USA) and `AI Agent - TVTotal24`: AI is strictly forbidden from evaluating trial count, active status, or limits from chat history.
+    * Whenever a customer requests a trial, asks for another trial, or asks to test again, the AI is mandated to execute `create_trial_tool` (or `crear_prueba_tvtotal24`).
+    * Updated tool descriptions in n8n langchain tool nodes to clarify that the CRM database is the sole authority on trial eligibility.
+    * Published workflow `n0zgnS1vlOGNcGNY` to active production.
+
 
 
 
