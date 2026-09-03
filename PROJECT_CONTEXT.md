@@ -303,6 +303,18 @@
   * Added automated prior stage label cleanup when applying new stage labels (`stage-contactado`, `stage-contacted`, `stage-want-to-join`, `stage-que-te-parecio`).
   * Published all updated workflows to active production and synchronized local workflow JSON files.
 
+### September 3, 2026
+* **Canned Responses / Quick Replies Formatting Remediation (ProseMirror / WhatsApp `\` Cleanup)**:
+  * Resolved issue where canned responses imported from Kommo CRM rendered with trailing backslashes `\` at the end of each line when dispatched to WhatsApp (Evolution API), Meta, or Telegram.
+  * Root Cause: Chatwoot's ProseMirror WYSIWYG editor treats single isolated newlines (`\n`) within a text block as hard line breaks (`<br>`), which are serialized to standard Markdown as `\\\n`. Downstream channels (such as WhatsApp Baileys in Evolution API) do not parse backslashes as line breaks, rendering literal `\` characters.
+  * Remediation: Executed an automated batch migration script across all 132 canned responses via Chatwoot API (`PATCH /api/v1/accounts/1/canned_responses/{id}`), converting single isolated newlines into distinct paragraph blocks (`\n\n`) and removing all residual backslashes.
+  * Verified that canned responses (e.g. `/meses`) now serialize cleanly as paragraphs with zero trailing backslashes across all delivery channels.
+* **Telegram Channel Verification & Webhook Refresh**:
+  * Inspected Telegram integration for TotalTv USA bot (`@TotalTvUSAbot`, token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`) on Chatwoot Inbox **ID 6**.
+  * Verified and refreshed Telegram webhook pointing to `https://project1-chatwoot.efebpb.easypanel.host/webhooks/telegram/6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`.
+  * Flushed pending updates queue in Telegram API (`pending_update_count: 0`).
+
+
 
 
 
