@@ -295,6 +295,13 @@
     * Reads `tvtotal_trial_count` (if 0 or cleared, resets to trial 1).
     * Writes `tvtotal_trial_count` alongside line IDs on trial generation.
   * Published workflow to active production and synchronized to `workflows/tool_create_mvplay_trial.json`.
+* **Harden 20-Hour Followup Crons & Prevent Duplicate Sends**:
+  * Fixed custom attributes overwrite bug in Chatwoot API (`POST /conversations/{id}/custom_attributes` wipes unprovided keys) by merging existing custom attributes before persisting tracking timestamps (`stage_contacted_followup_at`, `stage_want_to_join_followup_at`, `stage_que_te_parecio_followup_at`).
+  * Enforced strict repeat prevention guards in `Cron - Followup Stage Trials to Want to Join` (`KRwjH3njrF4qRdph`) and `Cron - Followup Stage Fase de Pruebas to Que Te Parecio` (`XC1jY6Vkbgdu5iIz`), preventing infinite 2-hour repeat loops on active or trial stages.
+  * Added brand and inbox isolation across all crons (TotalTv USA inboxes 1, 4, 6, 14, 17 vs TVTotal24 inboxes 10, 13, 15, 16).
+  * Expanded `Cron - Followup Stage Incoming Leads to Contacted` (`1IlXjaNv0rc9laJy`) to support plural label `stage-leads-entrantes`, singular `stage-lead-entrantes`, `stage-incoming-leads`, and open conversations without stage labels.
+  * Added automated prior stage label cleanup when applying new stage labels (`stage-contactado`, `stage-contacted`, `stage-want-to-join`, `stage-que-te-parecio`).
+  * Published all updated workflows to active production and synchronized local workflow JSON files.
 
 
 
