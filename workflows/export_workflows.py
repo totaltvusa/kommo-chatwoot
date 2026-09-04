@@ -35,7 +35,8 @@ wfs = {
     'tool_create_mvplay_trial': 'kh10aaenUURvi7Ji',
     'tool_create_mega_ott_trial': 'e1R7zQorWBaaqgou',
     'tool_transfer_to_human': 'xam0WV65gvTbXcIx',
-    'latin_vence_hoy_y_vence4': 'TfILC2hXao6SLQfE'
+    'latin_vence_hoy_y_vence4': 'TfILC2hXao6SLQfE',
+    'cron_autoclose_inactive_conversations': 'asQhO3WgzQW4gR5P'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))

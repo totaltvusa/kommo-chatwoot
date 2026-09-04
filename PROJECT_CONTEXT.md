@@ -125,7 +125,7 @@
 | `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
 | `uD5sM2ruGXYSlpY3` | `Chatwoot Webhook` | Active |
 | `OQzmQUISGM6ShdKT` | `AmoCRM Contact Update` | Active |
-| `asQhO3WgzQW4gR5P` | `Agent - TotalTv USA` | Inactive / Deprecated |
+| `asQhO3WgzQW4gR5P` | `Cron - Autoclose Inactive Conversations (48h)` | **Active Cron** (Executes hourly `0 * * * *`; resolves conversations after 48h customer inactivity, strips `human` tag, applies `autoclosed`) |
 | `Vfweu0rjoTT3FUl1` | `Agent - TVTotal24 (Latina)` | Inactive / Deprecated |
 
 ---
@@ -409,3 +409,19 @@
   * **Router Workflow Assignment Verification**:
     * Added auto-assignment fallback in `Preparar Mensaje` (`Chatwoot + IA Agent` - `n0zgnS1vlOGNcGNY`): if incoming conversation lacks assignment to Team 1 or Agent 3, it calls `POST /conversations/{id}/assignments` (`assignee_id: 3`, `team_id: 1`).
     * Deployed and published updated workflow in n8n production.
+
+* **48-Hour Inactivity Autoclose & Human Label Stripping Workflow**:
+  * **New Active Cron Workflow (`asQhO3WgzQW4gR5P`)**:
+    * Workflow Name: `Cron - Autoclose Inactive Conversations (48h)`.
+    * Schedule: Executes hourly (`0 * * * *`).
+    * Evaluates all open Chatwoot conversations (`status=open`).
+    * Inactivity threshold: $\ge 48$ hours since the last non-private incoming message from the customer (or since conversation creation if no customer message).
+    * Autoclose Actions:
+      1. **Label Updates**: Strips `human` tag (guaranteeing that if the customer messages back in the future, the AI agent can reply immediately), applies `autoclosed` tag, and preserves all other labels (`funnel-*`, `channel-*`, `stage-*`).
+      2. **Status Resolution**: Dispatches `POST /conversations/{id}/toggle_status` (`status: "resolved"`).
+  * **Router Reopening Remediation**:
+    * Updated `Preparar Mensaje` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`): when an autoclosed conversation reopens upon receiving a new customer message, it automatically removes the `autoclosed` tag and resumes AI assistance seamlessly.
+  * **Production Deployment**:
+    * Deployed and published active production version in n8n.
+    * Synchronized local workflow export to `workflows/cron_autoclose_inactive_conversations.json` and registered in `workflows/export_workflows.py`.
+
