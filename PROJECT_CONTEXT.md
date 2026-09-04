@@ -125,7 +125,7 @@
 | `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
 | `uD5sM2ruGXYSlpY3` | `Chatwoot Webhook` | Active |
 | `OQzmQUISGM6ShdKT` | `AmoCRM Contact Update` | Active |
-| `asQhO3WgzQW4gR5P` | `Cron - Autoclose Inactive Conversations (48h)` | **Active Cron** (Executes hourly `0 * * * *`; resolves conversations after 48h customer inactivity, strips `human` tag, applies `autoclosed`) |
+| `asQhO3WgzQW4gR5P` | `Cron - Autoclose Inactive Conversations (48h)` | **Active Cron** (Executes at 0, 6, 12, 18h `0 0,6,12,18 * * *`; resolves conversations after 48h customer inactivity, strips `human` tag, applies `autoclosed`) |
 | `Vfweu0rjoTT3FUl1` | `Agent - TVTotal24 (Latina)` | Inactive / Deprecated |
 
 ---
@@ -413,7 +413,7 @@
 * **48-Hour Inactivity Autoclose & Human Label Stripping Workflow**:
   * **New Active Cron Workflow (`asQhO3WgzQW4gR5P`)**:
     * Workflow Name: `Cron - Autoclose Inactive Conversations (48h)`.
-    * Schedule: Executes hourly (`0 * * * *`).
+    * Schedule: Executes at hours 0, 6, 12, 18 (`0 0,6,12,18 * * *`).
     * Evaluates all open Chatwoot conversations (`status=open`).
     * Inactivity threshold: $\ge 48$ hours since the last non-private incoming message from the customer (or since conversation creation if no customer message).
     * Autoclose Actions:

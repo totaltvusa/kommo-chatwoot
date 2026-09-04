@@ -6,6 +6,12 @@ import time
 token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyY2E4ZWVmMi1hOWVjLTRiYTktOWVmMy02MDA1OTJlYzY1ZWYiLCJpc3MiOiJuOG4iLCJhdWQiOiJtY3Atc2VydmVyLWFwaSIsImp0aSI6ImUzZmZlNjkwLWNmYTMtNDNkNC05YTM0LThjNGViMjA1NjM4YSIsImlhdCI6MTc4NzA5NDk3Mn0.1C2sTahMnvbG6_H6Q4s2Fhq_cgKR8KlqGlmkG5s34bE'
 url = 'https://n8n.ac4.club/mcp-server/http'
 
+import ssl
+
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
 def call_mcp(method_name, args):
     body = {'jsonrpc': '2.0', 'id': int(time.time()), 'method': 'tools/call', 'params': {'name': method_name, 'arguments': args}}
     req = urllib.request.Request(
@@ -15,11 +21,11 @@ def call_mcp(method_name, args):
             'Authorization': f'Bearer {token}',
             'Content-Type': 'application/json',
             'Accept': 'application/json, text/event-stream',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+            'User-Agent': 'Mozilla/5.0'
         },
         method='POST'
     )
-    with urllib.request.urlopen(req, timeout=10) as resp:
+    with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
         for _ in range(50):
             line = resp.readline().decode('utf-8')
             if line.startswith('data: '):
