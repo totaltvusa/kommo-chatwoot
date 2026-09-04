@@ -382,16 +382,18 @@
   * **Repository Synchronization**:
     * Updated workflow exports in `/workflows/` and committed to branch `main`.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+* **AI Agents System Prompt Updates: TotalTv USA (Toto) & Leads Ganados Policy**:
+  * **TotalTv USA Agent Identity (`Toto`)**:
+    * Assigned official assistant name **Toto**.
+    * Configured initial greeting and identity mandate: Introduces itself as **Toto, AI Agent for Total TV** in English (*"Hello! I'm Toto, AI Agent for Total TV..."*) and Spanish (*"¡Hola! Soy Toto, AI Agent for Total TV..."*).
+  * **Won Leads (`leads-ganados`) Free Trial Policy**:
+    * Enforced strict rule across both agents (**Toto** for TotalTv USA & **Tivi** for TVTotal24):
+      * If a conversation or contact has the label `leads-ganados` (or `stage-leads-ganados`), the AI agent is strictly forbidden from proactively offering or suggesting free trials during greetings, queries, or subscription plans presentation.
+      * If and ONLY IF the customer explicitly asks for a free trial (e.g. *"dame una prueba"*, *"can I get a trial?"*), the AI agent processes and delivers the trial using the standard verification tool flow.
+  * **Context Ingestion Pipeline in `Preparar Mensaje`**:
+    * Updated `Preparar Mensaje` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+      * Evaluates if conversation labels contain `leads-ganados` / `stage-leads-ganados`.
+      * Automatically injects `[CLIENT CONTEXT: Label leads-ganados = ACTIVE ...]` tag into the prompt input for LLM awareness.
+  * **n8n Production Deployment**:
+    * Promoted and published updated workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production.
+    * Synchronized local workflow JSON and markdown prompt documentation (`prompts/agent_prompt.md`, `prompts/tvtotal24_prompt.md`).
