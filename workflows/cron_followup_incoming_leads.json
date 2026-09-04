@@ -4,7 +4,7 @@
   "active": true,
   "isArchived": false,
   "versionId": "8cd1ea6e-a5e0-4d2b-b3a5-15b84b50d608",
-  "activeVersionId": "393139c7-3115-4eab-b077-c7f9b8d14a65",
+  "activeVersionId": "8cd1ea6e-a5e0-4d2b-b3a5-15b84b50d608",
   "triggerCount": 2,
   "nodeCount": 3,
   "createdAt": "2026-09-01T15:13:55.225Z",
@@ -112,83 +112,7 @@
   ],
   "nodeGroups": [],
   "activeVersion": {
-    "sameAsDraft": false,
-    "nodes": [
-      {
-        "id": "e47b9fe8-3bf2-4263-9445-ca095969607c",
-        "name": "Schedule Trigger",
-        "type": "n8n-nodes-base.scheduleTrigger",
-        "typeVersion": 1.2,
-        "position": [
-          0,
-          0
-        ],
-        "parameters": {
-          "rule": {
-            "interval": [
-              {
-                "field": "cronExpression",
-                "expression": "0 */2 * * *"
-              }
-            ]
-          }
-        }
-      },
-      {
-        "id": "123bb58f-cbe4-422d-9fe6-b9782c14b3ca",
-        "name": "Code",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          224,
-          0
-        ],
-        "parameters": {
-          "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\n\nfunction detectLanguage(text, history = []) {\n  if (!text) text = '';\n  const clean = text.toLowerCase();\n\n  const spWords = new Set(['hola','buenos','buenas','dias','tardes','noches','gracias','quiero','prueba','planes','precio','precios','cuanto','como','donde','amigo','por','favor','ayuda','cuenta','dispositivo','dispositivos','informacion','servicio','saludos','pago','tarjeta','movil','bolivares','mes','meses','ano','listo','que','cual','cuando','tengo','tienen','estoy','puedo','el','la','los','las','un','una','unos','unas','de','del','en','con','para','me','te','se','nos','gusto','mucho','excelente','bueno','bien']);\n  const enWords = new Set(['hello','hi','hey','good','morning','afternoon','evening','thanks','thank','you','want','trial','plans','price','prices','how','much','where','please','help','account','device','devices','information','service','greetings','payment','card','month','months','year','ready','what','which','when','have','there','is','are','can','could','the','was','were','amazing','great','sports','channels','awesome','liked','loved','it','this','that','for','with','and','but','or','i','my','we','our']);\n\n  const words = clean.replace(/[^a-záéíóúñ\\s]/gi, ' ').split(/\\s+/).filter(Boolean);\n  let spCount = 0;\n  let enCount = 0;\n  for (const w of words) {\n    if (spWords.has(w)) spCount++;\n    if (enWords.has(w)) enCount++;\n  }\n  if (/[áéíóúñ¿¡]/.test(clean)) spCount += 2;\n\n  if (spCount > enCount) return 'es';\n  if (enCount > spCount) return 'en';\n\n  for (let i = history.length - 1; i >= 0; i--) {\n    const pClean = (history[i] || '').toLowerCase();\n    const pWords = pClean.replace(/[^a-záéíóúñ\\s]/gi, ' ').split(/\\s+/).filter(Boolean);\n    let pSp = 0, pEn = 0;\n    for (const w of pWords) {\n      if (spWords.has(w)) pSp++;\n      if (enWords.has(w)) pEn++;\n    }\n    if (/[áéíóúñ¿¡]/.test(pClean)) pSp += 2;\n    if (pSp > pEn) return 'es';\n    if (pEn > pSp) return 'en';\n  }\n\n  return 'es';\n}\n\nconst results = [];\nconst now = Date.now();\n\n// Fetch all open conversations (supporting pagination)\nlet allOpenConvs = [];\ntry {\n  let page = 1;\n  while (page <= 5) {\n    const resp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations?status=open&page=${page}`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const payload = resp.data?.payload || [];\n    if (payload.length === 0) break;\n    allOpenConvs.push(...payload);\n    if (payload.length < 25) break;\n    page++;\n  }\n} catch (e) {}\n\n// Deduplicate conversations by ID\nconst convMap = new Map();\nfor (const c of allOpenConvs) {\n  if (c && c.id) convMap.set(c.id, c);\n}\n\nfor (const [convId, conv] of convMap.entries()) {\n  const currentLabels = Array.isArray(conv.labels) ? conv.labels : [];\n  const customAttrs = conv.custom_attributes || {};\n  const inboxId = Number(conv.inbox_id || 0);\n\n  // 1. Safety check: Ignore human agent or terminal stage conversations\n  if (currentLabels.includes('human') || currentLabels.includes('stage-leads-ganados') || currentLabels.includes('stage-leads-perdidos')) {\n    continue;\n  }\n\n  // 2. Identify brand\n  const isTVTotal24 = (inboxId === 10 || inboxId === 13 || inboxId === 15 || inboxId === 16 || currentLabels.includes('funnel-totaltv-latina') || currentLabels.includes('funnel-total-tv-latina'));\n  const brand = isTVTotal24 ? 'tvtotal24' : 'totaltvusa';\n\n  // 3. Check stage: must be incoming leads stage or unassigned\n  const hasIncomingStage = currentLabels.includes('stage-lead-entrantes') || currentLabels.includes('stage-leads-entrantes') || currentLabels.includes('stage-incoming-leads');\n  const hasAnyOtherStage = currentLabels.some(l => l.startsWith('stage-') && !['stage-lead-entrantes', 'stage-leads-entrantes', 'stage-incoming-leads'].includes(l));\n  \n  if (hasAnyOtherStage) {\n    continue;\n  }\n\n  // 4. Check if already followed up\n  if (customAttrs.stage_contacted_followup_at || customAttrs.stage_contactado_followup_at) {\n    continue;\n  }\n\n  // 5. Fetch messages\n  let msgs = [];\n  try {\n    const msgResp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations/${convId}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    msgs = msgResp.payload || [];\n  } catch (e) {\n    continue;\n  }\n\n  const customerMsgs = msgs.filter(m => (m.message_type === 0 || m.message_type === 'incoming') && m.private !== true);\n\n  let lastCustomerTimeMs = 0;\n  let lastCustomerContent = '';\n  const customerHistory = [];\n\n  if (customerMsgs.length > 0) {\n    const lastMsg = customerMsgs[customerMsgs.length - 1];\n    lastCustomerTimeMs = (lastMsg.created_at || lastMsg.created_at_epoch) * 1000;\n    lastCustomerContent = lastMsg.content || '';\n    for (const m of customerMsgs) {\n      if (m.content) customerHistory.push(m.content);\n    }\n  } else {\n    lastCustomerTimeMs = (conv.created_at || conv.last_activity_at) * 1000;\n  }\n\n  const elapsedHours = (now - lastCustomerTimeMs) / (1000 * 3600);\n\n  if (elapsedHours >= 20) {\n    const targetStageAdd = isTVTotal24 ? 'stage-contactado' : 'stage-contacted';\n    const lang = detectLanguage(lastCustomerContent, customerHistory);\n    let followUpText = '';\n\n    if (isTVTotal24) {\n      if (lang === 'en') {\n        followUpText = 'Hello! 👋 It was a pleasure assisting you at **TVTotal24**. We remain at your disposal for any further questions or whenever you wish to test or activate our service. Have a wonderful day! 😊';\n      } else {\n        followUpText = '¡Hola! 👋 Ha sido un verdadero gusto atenderte en **TVTotal24**. Quedamos a tu entera disposición para cualquier consulta o cuando desees probar o activar el servicio. ¡Que tengas un excelente día! 😊';\n      }\n    } else {\n      if (lang === 'en') {\n        followUpText = 'Hello! 👋 It was a pleasure assisting you at **TotalTv**. We remain at your disposal for any further questions or whenever you wish to test or activate our service. Have a great day! 😊';\n      } else {\n        followUpText = '¡Hola! 👋 Ha sido un gusto atenderte en **TotalTv**. Quedamos a tu entera disposición para nuevas consultas o cuando desees probar o activar tu servicio. ¡Que tengas un excelente día! 😊';\n      }\n    }\n\n    // Format for Meta channels (WhatsApp / Instagram / Facebook)\n    if (inboxId === 16 || inboxId === 13 || inboxId === 14 || inboxId === 17 || inboxId === 18 || inboxId === 4) {\n      followUpText = followUpText.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*');\n      followUpText = followUpText.replace(/\\[(.*?)\\]\\((.*?)\\)/g, '$1: $2');\n    }\n\n    // Clean prior stage labels and assign target stage\n    const updatedLabels = currentLabels.filter(l => !l.startsWith('stage-'));\n    updatedLabels.push(targetStageAdd);\n\n    // Update labels\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {}\n\n    // Send outgoing message\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: {\n          content: followUpText,\n          message_type: 'outgoing',\n          private: false\n        },\n        json: true\n      });\n    } catch (e) {}\n\n    // Mark custom attribute MERGED with existing attributes\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/custom_attributes`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: {\n          custom_attributes: {\n            ...customAttrs,\n            stage_contacted_followup_at: new Date().toISOString()\n          }\n        },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      convId,\n      brand,\n      action: 'transitioned_and_sent',\n      newStage: targetStageAdd,\n      elapsedHours: Math.round(elapsedHours * 10) / 10,\n      language: lang\n    });\n  } else {\n    results.push({\n      convId,\n      brand,\n      action: 'waiting',\n      elapsedHours: Math.round(elapsedHours * 10) / 10,\n      neededHours: 20\n    });\n  }\n}\n\nreturn [{\n  json: {\n    timestamp: new Date().toISOString(),\n    processed_count: results.length,\n    results\n  }\n}];"
-        }
-      },
-      {
-        "id": "trigger-webhook",
-        "name": "Webhook",
-        "type": "n8n-nodes-base.webhook",
-        "typeVersion": 2,
-        "position": [
-          0,
-          192
-        ],
-        "parameters": {
-          "path": "followup-incoming-leads",
-          "responseMode": "onReceived",
-          "httpMethod": "POST"
-        },
-        "webhookId": "7e051cfd-4e95-45a9-ac80-ecc75442dc17"
-      }
-    ],
-    "connections": {
-      "Schedule Trigger": {
-        "main": [
-          [
-            {
-              "node": "Code",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Webhook": {
-        "main": [
-          [
-            {
-              "node": "Code",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      }
-    },
-    "nodeGroups": []
+    "sameAsDraft": true
   },
   "meta": {
     "aiBuilderAssisted": true,
