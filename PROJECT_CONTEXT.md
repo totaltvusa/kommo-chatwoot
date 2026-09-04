@@ -397,3 +397,15 @@
   * **n8n Production Deployment**:
     * Promoted and published updated workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production.
     * Synchronized local workflow JSON and markdown prompt documentation (`prompts/agent_prompt.md`, `prompts/tvtotal24_prompt.md`).
+
+* **Conversation Auto-Assignment: Team "General Support" & Agent "Total TV" (`acalimanr@gmail.com`)**:
+  * **Chatwoot Automation Rule #4 Update**:
+    * Updated Rule ID 4 (`Asignar nuevas conversaciones a General Support y Total TV`) triggered on `conversation_created`.
+    * Configured dual actions:
+      * `assign_team`: `[1]` (*General Support*).
+      * `assign_agent`: `[3]` (*Total TV* - `acalimanr@gmail.com`).
+  * **Cross-Channel Inbox Members Provisioning**:
+    * Enrolled Agent 3 (`Total TV` - `acalimanr@gmail.com`) and support agents across all account inboxes (4, 6, 7, 8, 10, 13, 14, 16, 17, 18, 19) to ensure Chatwoot permits agent assignment on any channel.
+  * **Router Workflow Assignment Verification**:
+    * Added auto-assignment fallback in `Preparar Mensaje` (`Chatwoot + IA Agent` - `n0zgnS1vlOGNcGNY`): if incoming conversation lacks assignment to Team 1 or Agent 3, it calls `POST /conversations/{id}/assignments` (`assignee_id: 3`, `team_id: 1`).
+    * Deployed and published updated workflow in n8n production.
