@@ -35,7 +35,8 @@
       * **Inbox 10**: Telegram (`@tvtotal24_bot`).
       * **Inbox 13**: Instagram (`@tvtotal24`) via Zernio API.
       * **Inbox 16**: WhatsApp (`lat-whatscol`) via Evolution API.
-    * Auto-labels: Automatically tagged with `funnel-totaltv-latina`, channel labels (`channel-whatsapp-lite`, `channel-instagram`, `channel-telegram`), and initial stage `stage-lead-entrantes`.
+      * **Inbox 19**: WhatsApp Cloud (`WhatsApp Cloud TVTotal24` / `+1 305 422 9099` / Phone ID `1106422772565024`) via Meta WhatsApp Cloud API.
+    * Auto-labels: Automatically tagged with `funnel-totaltv-latina`, channel labels (`channel-whatsapp-lite`, `channel-whatsapp`, `channel-instagram`, `channel-telegram`), and initial stage `stage-lead-entrantes`.
     * Service: MVPlay (Xtream-Masters) panel.
     * Audience: Latin America / Venezuela (Spanish).
     * Payment Methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (`ID: 22628239` - Super Discount), Pago Móvil (Bancamiga, 04246861135, J405259221, ArialStore C.A.).
@@ -117,8 +118,10 @@
 | `XC1jY6Vkbgdu5iIz` | `Cron - Followup Stage Fase de Pruebas to Que Te Parecio` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
 | `KRwjH3njrF4qRdph` | `Cron - Followup Stage Trials to Want to Join` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
 | `1IlXjaNv0rc9laJy` | `Cron - Followup Stage Incoming Leads to Contacted` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
+| `TfILC2hXao6SLQfE` | `Latin vence hoy y vence4` | **Active Outbound Notifier** (Daily 9 AM expiration WhatsApp templates via Meta Cloud API + Chatwoot Contact/Conversation/Private Note Sync) |
+| `943Yu3CZMD4dzRCI` | `Mega expires TODAY (Vence HOY)` | **Active Outbound Notifier** (Mega OTT Daily 9 AM expiration notifier) |
+| `F7M6sLe1lo4zUObT` | `Mega expires SOON (Vence 4 días)` | **Active Outbound Notifier** (Mega OTT 4-day expiration notifier) |
 | `p8dS1jx73xvpbrkj` | `Telegram to N8N` | Active |
-| `TfILC2hXao6SLQfE` | `Zelle Webhook` | Active |
 | `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
 | `uD5sM2ruGXYSlpY3` | `Chatwoot Webhook` | Active |
 | `OQzmQUISGM6ShdKT` | `AmoCRM Contact Update` | Active |
@@ -129,6 +132,16 @@
 
 ## 4. API Endpoints & Credentials Reference
 
+* **Meta WhatsApp Cloud API (WhatsApp Cloud TVTotal24)**:
+  * Phone Number ID: `1106422772565024`
+  * Display Phone Number: `+1 305-422-9099` (E.164: `+13054229099`, Verified Name: `TTV Mensajes`)
+  * WABA ID: `3483325768503437`
+  * App ID: `27469809309376250`
+  * Business ID: `1323943205921780`
+  * Credential ID in n8n: `5mdJEz0fPigGF7Wc` (`WhatsApp 3054229099`)
+  * Chatwoot Inbox ID: **19** (`WhatsApp Cloud TVTotal24`, `Channel::Whatsapp`)
+  * Chatwoot Webhook Callback URL: `https://project1-chatwoot.efebpb.easypanel.host/webhooks/whatsapp/+13054229099`
+  * Chatwoot Webhook Verify Token: `62f0684bf292fe9dd1e87dbd924044c6`
 * **MVPlay (Xtream-Masters) API**:
   * Endpoint: `http://1395.cooteg.ch:2095/pooqkDEG/reseller/index.php`
   * User: `TtvLat2025`
@@ -325,6 +338,22 @@
     * `Formatear Respuesta`: Applies Meta markdown formatting (`*bold*`, flat links) and typing status for Inbox 18.
   * Updated 20-Hour follow-up crons (`1IlXjaNv0rc9laJy`, `KRwjH3njrF4qRdph`, `XC1jY6Vkbgdu5iIz`) to support Inbox 18 under TotalTv USA policies.
   * Published all updated workflows to active production and synchronized local workflow JSON files.
+
+### September 4, 2026
+* **WhatsApp Cloud API Channel Integration & Outbound Template Tracking in Chatwoot**:
+  * **Chatwoot WhatsApp Cloud Channel Setup**:
+    * Created native WhatsApp Cloud Inbox **ID 19**: `WhatsApp Cloud TVTotal24` (`Channel::Whatsapp`).
+    * Configured credentials: Phone Number ID `1106422772565024`, WABA ID `3483325768503437`, Phone `+13054229099`.
+    * Assigned support agents (1, 2, 3, 4) to Inbox 19.
+    * Webhook Callback URL: `https://project1-chatwoot.efebpb.easypanel.host/webhooks/whatsapp/+13054229099`
+    * Webhook Verify Token: `62f0684bf292fe9dd1e87dbd924044c6`
+  * **Outbound WhatsApp Sync Logic in n8n**:
+    * Updated workflow `Latin vence hoy y vence4` (`TfILC2hXao6SLQfE`):
+      * Added `SyncChatwootVenceHoy` after node `VenceHoy`: searches/creates contact in Chatwoot, ensures conversation exists in Inbox 19, and injects private note with outbound template name (`vencehoy`) and exact text.
+      * Added `SyncChatwootVence4dias` after node `Vence4dias`: searches/creates contact in Chatwoot, ensures conversation exists in Inbox 19, and injects private note with outbound template name (`vencepronto`) and exact text.
+      * Configured both nodes with `onError: continueRegularOutput` for fail-safe non-blocking execution.
+    * Exported workflow JSON to `workflows/latin_vence_hoy_y_vence4.json`.
+
 
 
 
