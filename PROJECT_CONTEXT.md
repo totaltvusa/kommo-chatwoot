@@ -21,7 +21,7 @@
       * **Inbox 6**: Telegram (`@TotalTvUSAbot`, Bot Token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`).
       * **Inbox 14**: Instagram (`@tvtotalusa`) via Zernio API.
       * **Inbox 17**: Facebook Messenger (`Facebook - TotalTv USA`) via Zernio API.
-      * **Inbox 18**: WhatsApp (`3059861096` / `+1 305 986 1096`) via Evolution API.
+      * **Inbox 18**: WhatsApp (`WhatsAppUSA - 3059861096` / `+1 305 986 1096`) via Evolution API.
       * **Inbox 4**: WhatsApp / Admin (`TTvAlertsMovistar`).
     * Service: Mega OTT panel.
     * Audience: USA & International (English / Spanish bilingual auto-detection).
@@ -316,7 +316,7 @@
   * Verified and refreshed Telegram webhook pointing to `https://project1-chatwoot.efebpb.easypanel.host/webhooks/telegram/6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`.
   * Flushed pending updates queue in Telegram API (`pending_update_count: 0`).
 * **TotalTv USA WhatsApp Instance Setup (`3059861096` -> Inbox ID 18)**:
-  * Registered Evolution API instance `3059861096` (`+1 305 986 1096`) connected to Chatwoot Inbox **ID 18** (`3059861096`, `Channel::Api`).
+  * Registered Evolution API instance `3059861096` (`+1 305 986 1096`) connected to Chatwoot Inbox **ID 18** (`WhatsAppUSA - 3059861096`, `Channel::Api`).
   * Configured webhook in Evolution API: `https://project1-evolution-api.efebpb.easypanel.host/chatwoot/webhook/3059861096`.
   * Assigned agents 1, 2, 3, 4 to Inbox 18 in Chatwoot.
   * Updated n8n router workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
