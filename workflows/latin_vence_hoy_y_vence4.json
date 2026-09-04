@@ -36,7 +36,7 @@
   ],
   "canExecute": true,
   "connections": {
-    "Ejecutar todos los d\u00edas a las 9 AM": {
+    "Ejecutar todos los días a las 9 AM": {
       "main": [
         [
           {
@@ -140,12 +140,12 @@
         176
       ],
       "id": "2e10f5c7-39c1-4146-ba19-e63890d26d17",
-      "name": "Ejecutar todos los d\u00edas a las 9 AM"
+      "name": "Ejecutar todos los días a las 9 AM"
     },
     {
       "parameters": {
         "phoneNumberId": "1106422772565024",
-        "recipientPhoneNumber": "=  {{ String($json.Tel\u00e9fono).replace(/\\D/g, '') }}",
+        "recipientPhoneNumber": "=  {{ String($json.Teléfono).replace(/\\D/g, '') }}",
         "template": "vencehoy|es",
         "components": {
           "component": [
@@ -183,7 +183,7 @@
     {
       "parameters": {
         "phoneNumberId": "1106422772565024",
-        "recipientPhoneNumber": "=  {{ String($json.Tel\u00e9fono).replace(/\\D/g, '') }}",
+        "recipientPhoneNumber": "=  {{ String($json.Teléfono).replace(/\\D/g, '') }}",
         "template": "vencepronto|es",
         "components": {
           "component": [
@@ -289,7 +289,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "Vence en 4 d\u00edas"
+              "outputKey": "Vence en 4 días"
             },
             {
               "conditions": {
@@ -386,8 +386,8 @@
               "removed": true
             },
             {
-              "id": "Tel\u00e9fono",
-              "displayName": "Tel\u00e9fono",
+              "id": "Teléfono",
+              "displayName": "Teléfono",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -456,8 +456,8 @@
               "removed": true
             },
             {
-              "id": "Observaci\u00f3n",
-              "displayName": "Observaci\u00f3n",
+              "id": "Observación",
+              "displayName": "Observación",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -577,8 +577,8 @@
               "removed": true
             },
             {
-              "id": "Tel\u00e9fono",
-              "displayName": "Tel\u00e9fono",
+              "id": "Teléfono",
+              "displayName": "Teléfono",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -647,8 +647,8 @@
               "removed": true
             },
             {
-              "id": "Observaci\u00f3n",
-              "displayName": "Observaci\u00f3n",
+              "id": "Observación",
+              "displayName": "Observación",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -799,8 +799,8 @@
               "removed": true
             },
             {
-              "id": "Tel\u00e9fono",
-              "displayName": "Tel\u00e9fono",
+              "id": "Teléfono",
+              "displayName": "Teléfono",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -869,8 +869,8 @@
               "removed": true
             },
             {
-              "id": "Observaci\u00f3n",
-              "displayName": "Observaci\u00f3n",
+              "id": "Observación",
+              "displayName": "Observación",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -977,7 +977,7 @@
         -208
       ],
       "parameters": {
-        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\nconst inboxId = 19;\n\nconst results = [];\nconst items = $input.all();\n\nfor (const item of items) {\n  try {\n    const rawPhone = String(item.json.Tel\u00e9fono || item.json.Telefono || item.json.phone || '').replace(/\\D/g, '');\n    const cleanPhone = rawPhone.length > 0 ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : '';\n    const name = String(item.json.Nombre || item.json.name || 'Cliente').trim();\n\n    if (!cleanPhone) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'skipped_no_phone' } });\n      continue;\n    }\n\n    let contactId = null;\n    try {\n      const searchRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(rawPhone)}`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      if (searchRes.payload && searchRes.payload.length > 0) {\n        contactId = searchRes.payload[0].id;\n      }\n    } catch (e) {}\n\n    if (!contactId) {\n      try {\n        const createRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/contacts`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { name, phone_number: cleanPhone },\n          json: true\n        });\n        contactId = createRes.payload?.contact?.id;\n      } catch (e) {}\n    }\n\n    if (!contactId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'contact_failed' } });\n      continue;\n    }\n\n    let conversationId = null;\n    try {\n      const convListRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/${contactId}/conversations`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      const convs = convListRes.payload || [];\n      const match = convs.find(c => Number(c.inbox_id) === inboxId && c.status !== 'resolved') || convs.find(c => Number(c.inbox_id) === inboxId);\n      if (match) conversationId = match.id;\n    } catch (e) {}\n\n    if (!conversationId) {\n      try {\n        const createConvRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/conversations`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { inbox_id: inboxId, contact_id: contactId },\n          json: true\n        });\n        conversationId = createConvRes.id;\n      } catch (e) {}\n    }\n\n    if (!conversationId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'conv_failed' } });\n      continue;\n    }\n\n    const templateText = `*MENSAJE URGENTE*\\n\\n\u2600\ufe0fBuenos d\u00edas ${name},\\n\\n\ud83d\udcfaTu suscripci\u00f3n a Total TV *VENCE el d\u00eda de HOY*\\n\\n\ud83d\udcb5Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin L\u00edmites!\\n\\n\u00a1Gracias por preferirnos!`;\n\n    const noteContent = `\ud83d\udccc *Plantilla WhatsApp Enviada (Outbound)*\\n\u2022 Plantilla: \\`vencehoy\\` (es)\\n\u2022 Destinatario: ${cleanPhone}\\n\u2022 Fecha/Hora: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\\n\\n\ud83d\udcdd *Mensaje:*\\n${templateText}`;\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { content: noteContent, private: true },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      json: {\n        ...item.json,\n        chatwoot_contact_id: contactId,\n        chatwoot_conversation_id: conversationId,\n        chatwoot_sync: 'success'\n      }\n    });\n  } catch (err) {\n    results.push({ json: { ...item.json, chatwoot_sync: 'error', error: err.message } });\n  }\n}\n\nreturn results;"
+        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\nconst inboxId = 19;\n\nconst results = [];\nconst items = $input.all();\n\nfor (const item of items) {\n  try {\n    const rawPhone = String(item.json.Teléfono || item.json.Telefono || item.json.phone || '').replace(/\\D/g, '');\n    const cleanPhone = rawPhone.length > 0 ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : '';\n    const name = String(item.json.Nombre || item.json.name || 'Cliente').trim();\n\n    if (!cleanPhone) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'skipped_no_phone' } });\n      continue;\n    }\n\n    let contactId = null;\n    try {\n      const searchRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(rawPhone)}`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      if (searchRes.payload && searchRes.payload.length > 0) {\n        contactId = searchRes.payload[0].id;\n      }\n    } catch (e) {}\n\n    if (!contactId) {\n      try {\n        const createRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/contacts`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { name, phone_number: cleanPhone },\n          json: true\n        });\n        contactId = createRes.payload?.contact?.id;\n      } catch (e) {}\n    }\n\n    if (!contactId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'contact_failed' } });\n      continue;\n    }\n\n    let conversationId = null;\n    try {\n      const convListRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/${contactId}/conversations`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      const convs = convListRes.payload || [];\n      const match = convs.find(c => Number(c.inbox_id) === inboxId && c.status !== 'resolved') || convs.find(c => Number(c.inbox_id) === inboxId);\n      if (match) conversationId = match.id;\n    } catch (e) {}\n\n    if (!conversationId) {\n      try {\n        const createConvRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/conversations`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { inbox_id: inboxId, contact_id: contactId },\n          json: true\n        });\n        conversationId = createConvRes.id;\n      } catch (e) {}\n    }\n\n    if (!conversationId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'conv_failed' } });\n      continue;\n    }\n\n    const templateText = `*MENSAJE URGENTE*\\n\\n☀️Buenos días ${name},\\n\\n📺Tu suscripción a Total TV *VENCE el día de HOY*\\n\\n💵Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin Límites!\\n\\n¡Gracias por preferirnos!`;\n\n    const noteContent = `📌 *Plantilla WhatsApp Enviada (Outbound)*\\n• Plantilla: \\`vencehoy\\` (es)\\n• Destinatario: ${cleanPhone}\\n• Fecha/Hora: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\\n\\n📝 *Mensaje:*\\n${templateText}`;\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { content: noteContent, private: true },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      json: {\n        ...item.json,\n        chatwoot_contact_id: contactId,\n        chatwoot_conversation_id: conversationId,\n        chatwoot_sync: 'success'\n      }\n    });\n  } catch (err) {\n    results.push({ json: { ...item.json, chatwoot_sync: 'error', error: err.message } });\n  }\n}\n\nreturn results;"
       },
       "onError": "continueRegularOutput"
     },
@@ -991,7 +991,7 @@
         176
       ],
       "parameters": {
-        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\nconst inboxId = 19;\n\nconst results = [];\nconst items = $input.all();\n\nfor (const item of items) {\n  try {\n    const rawPhone = String(item.json.Tel\u00e9fono || item.json.Telefono || item.json.phone || '').replace(/\\D/g, '');\n    const cleanPhone = rawPhone.length > 0 ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : '';\n    const name = String(item.json.Nombre || item.json.name || 'Cliente').trim();\n\n    let venceDateFormatted = '';\n    try {\n      if (item.json.Vence) {\n        const rawV = String(item.json.Vence).trim().split(' ')[0].split('T')[0];\n        const parts = rawV.split(/[\\/\\-]/);\n        const monthsEs = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];\n        if (parts.length === 3) {\n          const day = parseInt(parts[2], 10);\n          const monthIdx = parseInt(parts[1], 10) - 1;\n          venceDateFormatted = `${day} de ${monthsEs[monthIdx] || parts[1]}`;\n        } else {\n          venceDateFormatted = rawV;\n        }\n      }\n    } catch (e) {\n      venceDateFormatted = String(item.json.Vence || '');\n    }\n\n    if (!cleanPhone) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'skipped_no_phone' } });\n      continue;\n    }\n\n    let contactId = null;\n    try {\n      const searchRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(rawPhone)}`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      if (searchRes.payload && searchRes.payload.length > 0) {\n        contactId = searchRes.payload[0].id;\n      }\n    } catch (e) {}\n\n    if (!contactId) {\n      try {\n        const createRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/contacts`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { name, phone_number: cleanPhone },\n          json: true\n        });\n        contactId = createRes.payload?.contact?.id;\n      } catch (e) {}\n    }\n\n    if (!contactId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'contact_failed' } });\n      continue;\n    }\n\n    let conversationId = null;\n    try {\n      const convListRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/${contactId}/conversations`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      const convs = convListRes.payload || [];\n      const match = convs.find(c => Number(c.inbox_id) === inboxId && c.status !== 'resolved') || convs.find(c => Number(c.inbox_id) === inboxId);\n      if (match) conversationId = match.id;\n    } catch (e) {}\n\n    if (!conversationId) {\n      try {\n        const createConvRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/conversations`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { inbox_id: inboxId, contact_id: contactId },\n          json: true\n        });\n        conversationId = createConvRes.id;\n      } catch (e) {}\n    }\n\n    if (!conversationId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'conv_failed' } });\n      continue;\n    }\n\n    const templateText = `\u2600\ufe0fBuenos d\u00edas ${name},\\n\\n\ud83d\udcfaTu suscripci\u00f3n a Total TV est\u00e1 pr\u00f3xima a vencer el ${venceDateFormatted}.\\n\\n\ud83d\udcb5Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin L\u00edmites!\\n\\n\u00a1Gracias por preferirnos!`;\n\n    const noteContent = `\ud83d\udccc *Plantilla WhatsApp Enviada (Outbound)*\\n\u2022 Plantilla: \\`vencepronto\\` (es)\\n\u2022 Destinatario: ${cleanPhone}\\n\u2022 Fecha/Hora: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\\n\\n\ud83d\udcdd *Mensaje:*\\n${templateText}`;\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { content: noteContent, private: true },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      json: {\n        ...item.json,\n        chatwoot_contact_id: contactId,\n        chatwoot_conversation_id: conversationId,\n        chatwoot_sync: 'success'\n      }\n    });\n  } catch (err) {\n    results.push({ json: { ...item.json, chatwoot_sync: 'error', error: err.message } });\n  }\n}\n\nreturn results;"
+        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\nconst inboxId = 19;\n\nconst results = [];\nconst items = $input.all();\n\nfor (const item of items) {\n  try {\n    const rawPhone = String(item.json.Teléfono || item.json.Telefono || item.json.phone || '').replace(/\\D/g, '');\n    const cleanPhone = rawPhone.length > 0 ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : '';\n    const name = String(item.json.Nombre || item.json.name || 'Cliente').trim();\n\n    let venceDateFormatted = '';\n    try {\n      if (item.json.Vence) {\n        const rawV = String(item.json.Vence).trim().split(' ')[0].split('T')[0];\n        const parts = rawV.split(/[\\/\\-]/);\n        const monthsEs = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];\n        if (parts.length === 3) {\n          const day = parseInt(parts[2], 10);\n          const monthIdx = parseInt(parts[1], 10) - 1;\n          venceDateFormatted = `${day} de ${monthsEs[monthIdx] || parts[1]}`;\n        } else {\n          venceDateFormatted = rawV;\n        }\n      }\n    } catch (e) {\n      venceDateFormatted = String(item.json.Vence || '');\n    }\n\n    if (!cleanPhone) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'skipped_no_phone' } });\n      continue;\n    }\n\n    let contactId = null;\n    try {\n      const searchRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(rawPhone)}`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      if (searchRes.payload && searchRes.payload.length > 0) {\n        contactId = searchRes.payload[0].id;\n      }\n    } catch (e) {}\n\n    if (!contactId) {\n      try {\n        const createRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/contacts`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { name, phone_number: cleanPhone },\n          json: true\n        });\n        contactId = createRes.payload?.contact?.id;\n      } catch (e) {}\n    }\n\n    if (!contactId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'contact_failed' } });\n      continue;\n    }\n\n    let conversationId = null;\n    try {\n      const convListRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/${contactId}/conversations`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      const convs = convListRes.payload || [];\n      const match = convs.find(c => Number(c.inbox_id) === inboxId && c.status !== 'resolved') || convs.find(c => Number(c.inbox_id) === inboxId);\n      if (match) conversationId = match.id;\n    } catch (e) {}\n\n    if (!conversationId) {\n      try {\n        const createConvRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/conversations`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { inbox_id: inboxId, contact_id: contactId },\n          json: true\n        });\n        conversationId = createConvRes.id;\n      } catch (e) {}\n    }\n\n    if (!conversationId) {\n      results.push({ json: { ...item.json, chatwoot_sync: 'conv_failed' } });\n      continue;\n    }\n\n    const templateText = `☀️Buenos días ${name},\\n\\n📺Tu suscripción a Total TV está próxima a vencer el ${venceDateFormatted}.\\n\\n💵Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin Límites!\\n\\n¡Gracias por preferirnos!`;\n\n    const noteContent = `📌 *Plantilla WhatsApp Enviada (Outbound)*\\n• Plantilla: \\`vencepronto\\` (es)\\n• Destinatario: ${cleanPhone}\\n• Fecha/Hora: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\\n\\n📝 *Mensaje:*\\n${templateText}`;\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { content: noteContent, private: true },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      json: {\n        ...item.json,\n        chatwoot_contact_id: contactId,\n        chatwoot_conversation_id: conversationId,\n        chatwoot_sync: 'success'\n      }\n    });\n  } catch (err) {\n    results.push({ json: { ...item.json, chatwoot_sync: 'error', error: err.message } });\n  }\n}\n\nreturn results;"
       },
       "onError": "continueRegularOutput"
     }
@@ -1018,12 +1018,12 @@
           176
         ],
         "id": "2e10f5c7-39c1-4146-ba19-e63890d26d17",
-        "name": "Ejecutar todos los d\u00edas a las 9 AM"
+        "name": "Ejecutar todos los días a las 9 AM"
       },
       {
         "parameters": {
           "phoneNumberId": "1106422772565024",
-          "recipientPhoneNumber": "=  {{ String($json.Tel\u00e9fono).replace(/\\D/g, '') }}",
+          "recipientPhoneNumber": "=  {{ String($json.Teléfono).replace(/\\D/g, '') }}",
           "template": "vencehoy|es",
           "components": {
             "component": [
@@ -1061,7 +1061,7 @@
       {
         "parameters": {
           "phoneNumberId": "1106422772565024",
-          "recipientPhoneNumber": "=  {{ String($json.Tel\u00e9fono).replace(/\\D/g, '') }}",
+          "recipientPhoneNumber": "=  {{ String($json.Teléfono).replace(/\\D/g, '') }}",
           "template": "vencepronto|es",
           "components": {
             "component": [
@@ -1167,7 +1167,7 @@
                   "combinator": "and"
                 },
                 "renameOutput": true,
-                "outputKey": "Vence en 4 d\u00edas"
+                "outputKey": "Vence en 4 días"
               },
               {
                 "conditions": {
@@ -1264,8 +1264,8 @@
                 "removed": true
               },
               {
-                "id": "Tel\u00e9fono",
-                "displayName": "Tel\u00e9fono",
+                "id": "Teléfono",
+                "displayName": "Teléfono",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -1334,8 +1334,8 @@
                 "removed": true
               },
               {
-                "id": "Observaci\u00f3n",
-                "displayName": "Observaci\u00f3n",
+                "id": "Observación",
+                "displayName": "Observación",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -1455,8 +1455,8 @@
                 "removed": true
               },
               {
-                "id": "Tel\u00e9fono",
-                "displayName": "Tel\u00e9fono",
+                "id": "Teléfono",
+                "displayName": "Teléfono",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -1525,8 +1525,8 @@
                 "removed": true
               },
               {
-                "id": "Observaci\u00f3n",
-                "displayName": "Observaci\u00f3n",
+                "id": "Observación",
+                "displayName": "Observación",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -1677,8 +1677,8 @@
                 "removed": true
               },
               {
-                "id": "Tel\u00e9fono",
-                "displayName": "Tel\u00e9fono",
+                "id": "Teléfono",
+                "displayName": "Teléfono",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -1747,8 +1747,8 @@
                 "removed": true
               },
               {
-                "id": "Observaci\u00f3n",
-                "displayName": "Observaci\u00f3n",
+                "id": "Observación",
+                "displayName": "Observación",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -1820,7 +1820,7 @@
       }
     ],
     "connections": {
-      "Ejecutar todos los d\u00edas a las 9 AM": {
+      "Ejecutar todos los días a las 9 AM": {
         "main": [
           [
             {

@@ -28,18 +28,24 @@ def call_mcp(method_name, args):
 
 wfs = {
     'router_chatwoot_ia': 'n0zgnS1vlOGNcGNY',
-    'agent_totaltv_usa': 'asQhO3WgzQW4gR5P',
-    'agent_tvtotal24_latina': 'Vfweu0rjoTT3FUl1',
+    'cron_followup_incoming_leads': '1IlXjaNv0rc9laJy',
+    'cron_followup_fase_pruebas': 'XC1jY6Vkbgdu5iIz',
+    'cron_followup_trials': 'KRwjH3njrF4qRdph',
     'tool_calcular_pago_movil': '4AYo7CX3Ou1K2yXH',
-    'tool_transfer_to_human': 'xam0WV65gvTbXcIx'
+    'tool_create_mvplay_trial': 'kh10aaenUURvi7Ji',
+    'tool_create_mega_ott_trial': 'e1R7zQorWBaaqgou',
+    'tool_transfer_to_human': 'xam0WV65gvTbXcIx',
+    'latin_vence_hoy_y_vence4': 'TfILC2hXao6SLQfE'
 }
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
 for name, wid in wfs.items():
     try:
         res = call_mcp('get_workflow_details', {'workflowId': wid})
         if res:
             wf_data = json.loads(res.get('result', {}).get('content', [{}])[0].get('text', '{}')).get('workflow', {})
-            filepath = f'/mnt/Data/kommo-chatwoot/workflows/{name}.json'
+            filepath = os.path.join(base_dir, f'{name}.json')
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(wf_data, f, indent=2, ensure_ascii=False)
             print(f'Exported {name} -> {filepath}')
