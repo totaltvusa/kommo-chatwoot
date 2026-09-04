@@ -36,7 +36,7 @@
       * **Inbox 13**: Instagram (`@tvtotal24`) via Zernio API.
       * **Inbox 16**: WhatsApp (`lat-whatscol`) via Evolution API.
       * **Inbox 19**: WhatsApp Cloud (`WhatsApp Cloud TVTotal24` / `+1 305 422 9099` / Phone ID `1106422772565024`) via Meta WhatsApp Cloud API.
-    * Auto-labels: Automatically tagged with `funnel-totaltv-latina`, channel labels (`channel-whatsapp-lite`, `channel-whatsapp`, `channel-instagram`, `channel-telegram`), and initial stage `stage-lead-entrantes`.
+    * Auto-labels: Automatically tagged with `funnel-totaltv-latina`, channel labels (`channel-officialwhatsapp` for Inbox 19, `channel-whatsapp-lite` for Inbox 16, `channel-instagram` for Inbox 13, `channel-telegram` for Inbox 10), and initial stage `stage-leads-entrantes`.
     * Service: MVPlay (Xtream-Masters) panel.
     * Audience: Latin America / Venezuela (Spanish).
     * Payment Methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (`ID: 22628239` - Super Discount), Pago Móvil (Bancamiga, 04246861135, J405259221, ArialStore C.A.).
@@ -347,12 +347,40 @@
     * Assigned support agents (1, 2, 3, 4) to Inbox 19.
     * Webhook Callback URL: `https://project1-chatwoot.efebpb.easypanel.host/webhooks/whatsapp/+13054229099`
     * Webhook Verify Token: `62f0684bf292fe9dd1e87dbd924044c6`
+    * **HMAC Inbound Webhook Signature Remediation**: Configured Meta App Secret `e0246891a6e9598fba78f42c28bdca6f` in Chatwoot Inbox 19 `provider_config.app_secret`. Prior to this configuration, Chatwoot returned `200 OK` but silently discarded payloads due to missing HMAC-SHA256 signature verification on the `X-Hub-Signature-256` header.
+  * **Kommo CRM Disconnection & Meta Subscribed Apps Verification**:
+    * Disconnected phone `+1 305 422 9099` from Kommo CRM and removed Kommo partner integration in Meta Business Manager.
+    * Re-subscribed N8N Meta App (`27469809309376250`) to WABA `3483325768503437` webhook subscriptions (`POST /v21.0/3483325768503437/subscribed_apps`).
   * **Outbound WhatsApp Sync Logic in n8n**:
     * Updated workflow `Latin vence hoy y vence4` (`TfILC2hXao6SLQfE`):
       * Added `SyncChatwootVenceHoy` after node `VenceHoy`: searches/creates contact in Chatwoot, ensures conversation exists in Inbox 19, and injects private note with outbound template name (`vencehoy`) and exact text.
       * Added `SyncChatwootVence4dias` after node `Vence4dias`: searches/creates contact in Chatwoot, ensures conversation exists in Inbox 19, and injects private note with outbound template name (`vencepronto`) and exact text.
       * Configured both nodes with `onError: continueRegularOutput` for fail-safe non-blocking execution.
     * Exported workflow JSON to `workflows/latin_vence_hoy_y_vence4.json`.
+* **Inbound AI Routing to TVTotal24 (Latina) & Labeling Remediation**:
+  * **Chatwoot Automation Rule #9**:
+    * Created rule `WhatsApp Cloud TVTotal24 Auto Labels` (Rule ID `9`) triggered on `conversation_created` for `inbox_id == 19`.
+    * Applies exact tags: `funnel-totaltv-latina`, `channel-officialwhatsapp`, `stage-leads-entrantes`.
+  * **Router Workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) Remediation**:
+    * `Preparar Mensaje`:
+      * Fixed webhook body parsing to robustly extract payload from `$('Webhook').first().json` with direct Chatwoot API fallback (`GET /conversations/{id}`) if `inbox_id` is missing.
+      * Added Inbox 19 to TVTotal24 brand evaluation (`isTVTotal24` = inboxes 10, 13, 15, 16, 19).
+      * Configured exact labels: removes USA labels, adds `funnel-totaltv-latina`, `channel-officialwhatsapp` (specifically for Inbox 19), and initial stage `stage-leads-entrantes`.
+      * Configured node mode to `runOnceForAllItems` to ensure complete batch execution without empty `$json` proxies.
+    * `¿Qué Empresa?` (Switch Node):
+      * Cleaned output rules with `fallbackOutput: "none"` (eliminating orphaned 3rd output).
+      * Output 0: `TotalTv USA` (`brand == "totaltvusa"`) $\to$ Connected to `AI Agent` (TotalTv USA).
+      * Output 1: `TVTotal24 (Latina)` (`brand == "tvtotal24"`) $\to$ Connected to `AI Agent - TVTotal24` (Tivi).
+  * **n8n Production Workflow Publication**:
+    * Identified root cause of persistent staging behavior: n8n was maintaining modifications in draft state (`versionId`) while executing previous frozen production versions (`activeVersionId`).
+    * Executed `publish_workflow` to promote draft versions to active production on:
+      * `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) $\to$ `activeVersionId: e80fc4a0-daa9-49cb-8e10-f909180bad63`
+      * `Cron - Followup Stage Fase de Pruebas to Que Te Parecio` (`XC1jY6Vkbgdu5iIz`) $\to$ `activeVersionId: aec991bf-855d-464e-bb8e-6bf8c59420ff`
+      * `Cron - Followup Stage Incoming Leads to Contacted` (`1IlXjaNv0rc9laJy`) $\to$ `activeVersionId: 8cd1ea6e-a5e0-4d2b-b3a5-15b84b50d608`
+  * **Follow-up Crons Support**:
+    * Updated 20-hour follow-up crons (`XC1jY6Vkbgdu5iIz` and `1IlXjaNv0rc9laJy`) to include Inbox 19 under TVTotal24 Latina policies and Meta Markdown formatting.
+  * **Repository Synchronization**:
+    * Updated workflow exports in `/workflows/` and committed to branch `main`.
 
 
 
