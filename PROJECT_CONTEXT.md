@@ -21,10 +21,11 @@
       * **Inbox 6**: Telegram (`@TotalTvUSAbot`, Bot Token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`).
       * **Inbox 14**: Instagram (`@tvtotalusa`) via Zernio API.
       * **Inbox 17**: Facebook Messenger (`Facebook - TotalTv USA`) via Zernio API.
+      * **Inbox 18**: WhatsApp (`3059861096` / `+1 305 986 1096`) via Evolution API.
       * **Inbox 4**: WhatsApp / Admin (`TTvAlertsMovistar`).
     * Service: Mega OTT panel.
     * Audience: USA & International (English / Spanish bilingual auto-detection).
-    * Auto-Labeling: Automatically tagged with `funnel-totaltv-usa`, channel labels (`channel-facebook`, `channel-instagram`, `channel-telegram`, `channel-whatsapp`), and initial stage `stage-incoming-leads`.
+    * Auto-Labeling: Automatically tagged with `funnel-totaltv-usa`, channel labels (`channel-facebook`, `channel-instagram`, `channel-telegram`, `channel-whatsapp`, `channel-whatsapp-lite`), and initial stage `stage-incoming-leads`.
     * Connected Tools:
       1. `Call 'getpaymentlink'` (`3dBu0SNABE2pKCqU`): Payment link generator.
       2. `Call 'create_trial_tool'` (`e1R7zQorWBaaqgou`): Mega OTT 24h trial generator (tracked via Chatwoot attributes `trial_count`, `trial_1_id`, `trial_2_id`; uses `$fromAI` parameter mapping with Chatwoot regex fallback; dual Telegram & WhatsApp Evolution API notifications to `584146130135`).
@@ -143,6 +144,7 @@
   * Global API Key: `429683C4C977415CAAFCCE10F7D57E11`
   * Credential ID in n8n: `ecGN8GlLnzNz5Lq5` (`Evolution account 2`)
   * Instances:
+    * `3059861096` (TotalTv USA WhatsApp: `+1 305 986 1096` -> Chatwoot Inbox ID 18).
     * `lat-whatscol` (TVTotal24 WhatsApp Colombia: `+57 300 9476271` -> Chatwoot Inbox ID 16).
     * `TTvAlertsMovistar` (Administrative / Human Handover Alerts -> Chatwoot Inbox ID 4).
   * Chatwoot Webhook URL: `https://project1-evolution-api.efebpb.easypanel.host/chatwoot/webhook/{instance}`
@@ -206,7 +208,7 @@
 * **Dynamic Initial Stage Labeling on Conversation Entry**:
   * Updated `Preparar Mensaje` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
     * TVTotal24 Latina (Inboxes 10, 13, 15, 16): automatically assigns `stage-lead-entrantes` if no stage exists.
-    * TotalTv USA (Inboxes 1, 4, 6, 14, 17): automatically assigns `stage-incoming-leads` if no stage exists.
+    * TotalTv USA (Inboxes 1, 4, 6, 14, 17, 18): automatically assigns `stage-incoming-leads` if no stage exists.
     * Preserves any existing stages without overwriting.
 * **New 20-Hour Followup Cron Workflow (`1IlXjaNv0rc9laJy`)**:
   * Created and published `Cron - Followup Stage Incoming Leads to Contacted` in n8n (`active: true`, scheduled `0 */2 * * *`).
@@ -313,6 +315,16 @@
   * Inspected Telegram integration for TotalTv USA bot (`@TotalTvUSAbot`, token `6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`) on Chatwoot Inbox **ID 6**.
   * Verified and refreshed Telegram webhook pointing to `https://project1-chatwoot.efebpb.easypanel.host/webhooks/telegram/6744012482:AAH5zvUet_-A1R4tPFUsblDkZi-37uaxUTY`.
   * Flushed pending updates queue in Telegram API (`pending_update_count: 0`).
+* **TotalTv USA WhatsApp Instance Setup (`3059861096` -> Inbox ID 18)**:
+  * Registered Evolution API instance `3059861096` (`+1 305 986 1096`) connected to Chatwoot Inbox **ID 18** (`3059861096`, `Channel::Api`).
+  * Configured webhook in Evolution API: `https://project1-evolution-api.efebpb.easypanel.host/chatwoot/webhook/3059861096`.
+  * Assigned agents 1, 2, 3, 4 to Inbox 18 in Chatwoot.
+  * Updated n8n router workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+    * `Preparar Mensaje`: Automatically tags incoming messages on Inbox 18 with `funnel-totaltv-usa`, `channel-whatsapp-lite`, and initial stage `stage-incoming-leads`.
+    * `¿Qué Empresa?`: Automatically routes Inbox 18 to TotalTv USA `AI Agent`.
+    * `Formatear Respuesta`: Applies Meta markdown formatting (`*bold*`, flat links) and typing status for Inbox 18.
+  * Updated 20-Hour follow-up crons (`1IlXjaNv0rc9laJy`, `KRwjH3njrF4qRdph`, `XC1jY6Vkbgdu5iIz`) to support Inbox 18 under TotalTv USA policies.
+  * Published all updated workflows to active production and synchronized local workflow JSON files.
 
 
 
