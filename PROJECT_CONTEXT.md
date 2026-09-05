@@ -425,3 +425,13 @@
     * Deployed and published active production version in n8n.
     * Synchronized local workflow export to `workflows/cron_autoclose_inactive_conversations.json` and registered in `workflows/export_workflows.py`.
 
+* **Downloader App Code & Android Smartphone URL Update (`5533902`)**:
+  * Updated Downloader code from `910992` to `5533902` across both AI agents (**Toto** for TotalTv USA and **Tivi** for TVTotal24 Latina).
+  * Updated Android smartphone installation URL from `http://aftv.news/910992` to `http://aftv.news/5533902`.
+  * Synchronized prompts (`prompts/agent_prompt.md`, `prompts/tvtotal24_prompt.md`).
+  * Updated and published active production versions in n8n for:
+    * `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `9cd241fc-ecd1-40fd-9d69-018009193ad6`)
+    * `Agent - TotalTv USA` (`asQhO3WgzQW4gR5P` / activeVersionId `c05db94e-22ca-4798-854b-6075619c1828`)
+    * `Agent - TVTotal24 (Latina)` (`Vfweu0rjoTT3FUl1` / activeVersionId `2c137504-db8a-43a6-8d61-b5a34c997708`)
+  * Updated and exported local workflow definitions.
+

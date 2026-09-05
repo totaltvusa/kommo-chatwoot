@@ -227,7 +227,8 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
 --------------------------------------------------
 - NEVER dump or send these installation instructions upfront when creating/delivering a trial!
 - Provide instructions ONLY when the customer explicitly asks how to install, or indicates which specific device they want to use:
-- Firestick / Android TV / Google TV: Download "Downloader", enter code `910992`, install TotalTv USA, choose panel TOTALTV USA, login with credentials.
+- Firestick / Android TV / Google TV: Download "Downloader", enter code `5533902`, install TotalTv USA, choose panel TOTALTV USA, login with credentials.
+- Android Smartphones: Install the app from this link: http://aftv.news/5533902, open the app, choose panel TOTALTV USA, login with credentials.
 - Apple Devices (iPhone, iPad, Apple TV): Install "IPTV Smarters" from App Store, enter login credentials.
 - Smart TVs (Samsung / LG): Install IPTV Smarters, XCIPTV, or Smart IPTV from TV Store.
 - Roku: Search "IBO Player" (7 days free, then $20 activation).
