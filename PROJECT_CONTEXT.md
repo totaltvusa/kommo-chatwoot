@@ -109,7 +109,7 @@
 
 | Workflow ID | Name | Role / Status |
 | :--- | :--- | :--- |
-| `n0zgnS1vlOGNcGNY` | `Chatwoot + IA Agent` | **Active / Main Gateway** (Claude Haiku 4.5, 0-temp, 3s debounce, multi-brand router) |
+| `n0zgnS1vlOGNcGNY` | `Chatwoot + IA Agent` | **Active / Main Gateway** (Claude Haiku 4.5, 0-temp, 3s debounce, multi-brand router, Google Sheets Customer DB check) |
 | `kh10aaenUURvi7Ji` | `Tool - Create MVPlay Trial` | **Active Subworkflow / Tool** (Automated MVPlay Xtream-Masters trial generator for TVTotal24) |
 | `4AYo7CX3Ou1K2yXH` | `Tool - Calcular Pago Movil` | **Active Subworkflow / Tool** (Pago Móvil rate scraping & Bs calculation for TVTotal24) |
 | `e1R7zQorWBaaqgou` | `Create Mega OTT Trial Tool` | **Active Subworkflow / Tool** (Mega OTT Trial generator for TotalTv USA) |
@@ -442,7 +442,14 @@
   * **New Client Actions (No Match Found)**:
     - Standard new lead flow proceeds normally (assigns `stage-incoming-leads` or `stage-leads-entrantes` if no stage is present, and collects 3 data points upon trial request).
   * **Production Deployment**:
-    - Updated `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `2e584f23-93d3-4682-a0b8-c3baee9c8ba2`) with nodes `¿Requiere Buscar en Sheet?`, `Leer Sheet DnSpace`, `Leer Sheet Mega`, `Evaluar Cliente DnSpace`, and `Evaluar Cliente Mega`.
+    - Updated `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `36f6d68c-e902-475b-9906-14a2dbddd6c0`) with nodes `¿Requiere Buscar en Sheet?`, `Leer Sheet DnSpace`, `Leer Sheet Mega`, `Evaluar Cliente DnSpace`, and `Evaluar Cliente Mega`.
     - Synchronized prompts (`prompts/agent_prompt.md`, `prompts/tvtotal24_prompt.md`).
     - Local workflow definitions exported and verified.
+
+* **Audit & Autoclose of $\ge 48\text{h}$ Inactive Conversations**:
+  * **Chatwoot Audit**: Analyzed all 23 open conversations. Identified 10 conversations with $\ge 48$ hours of customer inactivity (IDs: 1323, 1324, 1314, 1309, 1310, 1313, 14, 1295, 1306, 13).
+  * **Resolution Executed**: Stripped `human` tag, applied `autoclosed` tag, and changed status to `resolved` on all 10 inactive conversations.
+  * **Remaining Active Queue**: Confirmed exactly 13 active conversations remain open in Chatwoot, all having $< 48$ hours of recent interaction.
+  * **Active Cron Deployment**: Workflow `Cron - Autoclose Inactive Conversations (48h)` (`asQhO3WgzQW4gR5P` / activeVersionId `e54ef1cb-f576-4b13-964a-8169d839073b`) published and active in n8n on schedule `0 0,6,12,18 * * *`.
+
 
