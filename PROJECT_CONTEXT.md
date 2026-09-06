@@ -452,4 +452,20 @@
   * **Remaining Active Queue**: Confirmed exactly 13 active conversations remain open in Chatwoot, all having $< 48$ hours of recent interaction.
   * **Active Cron Deployment**: Workflow `Cron - Autoclose Inactive Conversations (48h)` (`asQhO3WgzQW4gR5P` / activeVersionId `e54ef1cb-f576-4b13-964a-8169d839073b`) published and active in n8n on schedule `0 0,6,12,18 * * *`.
 
+* **Fix: Latin vence hoy y vence4 (`TfILC2hXao6SLQfE`) - Red Text on Expired Rows in `DnSpace`**:
+  * **Root Cause**:
+    1. Previous switch node had rule 2 ("Limpiar registros pasados") conditioned on `PLAY === 'SENT'`. Expired rows with `PLAY === ""` or `PLAY === 'SENT4'` were ignored and never sent to the red text formatting node.
+    2. Date parsing using rigid `toDateTime()` failed when Google Sheet date cells were formatted as `DD/MM/YYYY` or `DD-MM-YYYY`.
+    3. HTTP Request node was executing individual per-item `batchUpdate` requests instead of a consolidated batch payload.
+  * **Solution & Architecture**:
+    1. Replaced rigid Switch logic with Code Node `Evaluar Vencimiento y Categorizar` normalizing dates across `YYYY-MM-DD`, `DD/MM/YYYY`, `DD-MM-YYYY`, `MM/DD/YYYY` in America/Caracas timezone.
+    2. Categorizes all clients with `venceIso < todayStr` into `vencidos_pasados` regardless of `PLAY` column value.
+    3. Added `PrepararBatchRojo` Code Node that clusters all expired rows into a single `batchUpdate` `repeatCell` payload targeting `sheetId: 1823373862`, startColumnIndex 5 to endColumnIndex 6 (Column F: "Vence"), applying red foreground text color (`{ red: 0.85, green: 0.1, blue: 0.1 }`).
+    4. Concurrently cleans `PLAY` to `" "` via `LimpiarSENTVencidos` node.
+  * **Production Deployment & Verification**:
+    - Deployed and published active production version `653dbc16-4bb5-49ca-ad17-46bcb5b00d52` in n8n.
+    - Executed live test (Execution ID `4973`) with status `success`.
+    - Synchronized local workflow file `workflows/latin_vence_hoy_y_vence4.json`.
+
+
 
