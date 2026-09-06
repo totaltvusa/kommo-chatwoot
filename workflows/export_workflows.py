@@ -25,9 +25,9 @@ def call_mcp(method_name, args):
         },
         method='POST'
     )
-    with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
-        for _ in range(50):
-            line = resp.readline().decode('utf-8')
+    with urllib.request.urlopen(req, timeout=20, context=ctx) as resp:
+        raw = resp.read().decode('utf-8')
+        for line in raw.split('\n'):
             if line.startswith('data: '):
                 return json.loads(line[6:])
     return None

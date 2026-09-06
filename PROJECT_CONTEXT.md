@@ -425,13 +425,24 @@
     * Deployed and published active production version in n8n.
     * Synchronized local workflow export to `workflows/cron_autoclose_inactive_conversations.json` and registered in `workflows/export_workflows.py`.
 
-* **Downloader App Code & Android Smartphone URL Update (`5533902`)**:
-  * Updated Downloader code from `910992` to `5533902` across both AI agents (**Toto** for TotalTv USA and **Tivi** for TVTotal24 Latina).
-  * Updated Android smartphone installation URL from `http://aftv.news/910992` to `http://aftv.news/5533902`.
-  * Synchronized prompts (`prompts/agent_prompt.md`, `prompts/tvtotal24_prompt.md`).
-  * Updated and published active production versions in n8n for:
-    * `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `9cd241fc-ecd1-40fd-9d69-018009193ad6`)
-    * `Agent - TotalTv USA` (`asQhO3WgzQW4gR5P` / activeVersionId `c05db94e-22ca-4798-854b-6075619c1828`)
-    * `Agent - TVTotal24 (Latina)` (`Vfweu0rjoTT3FUl1` / activeVersionId `2c137504-db8a-43a6-8d61-b5a34c997708`)
-  * Updated and exported local workflow definitions.
+* **Google Sheets Customer Database Check & Won Leads Handling**:
+  * **Spreadsheet Document**: `Clientes TotalTV` (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`, Credential: `Pw5wN2L5UopOruaj`).
+    * **TotalTv USA Inboxes** (4, 6, 14, 17, 18): Sheet **`Mega`** (GID `51202947`).
+    * **TVTotal24 Inboxes** (10, 13, 15, 16, 19): Sheet **`DnSpace`** (GID `1823373862`).
+  * **Search & Match Criteria**:
+    * Match by **`Teléfono`** (normalized numeric comparison, suffix match $\ge 7$ digits / 10 digits) or **`Email`** (case-insensitive).
+  * **Existing Client Actions (Match Found)**:
+    1. **Contact Bio Update**: Updates Chatwoot Contact's Bio (`additional_attributes.description`) with the value of column **`1ra compra`**.
+    2. **Contact Name Sync**: Forms full name from **`Nombre`** + **`Apellido`** and updates contact name if unnamed.
+    3. **Conversation Stage Labels**: Strips ALL stage labels (`stage-*`) and applies **`stage-leads-ganados`** (preserving all `funnel-*`, `channel-*`, `autoclosed`, etc. labels).
+    4. **AI Agent Behavior (Toto & Tivi)**:
+       - Injects `[CLIENT CONTEXT: Existing customer in database (stage-leads-ganados)...]` with registered Name, Email, Phone, and 1ra Compra.
+       - **Zero Proactive Trial Rule**: AI agent never proactively offers free trials to existing clients.
+       - **Zero Data Collection Rule**: If an existing client explicitly asks for a free trial or asks to speak with a human agent, the AI agent **DOES NOT ASK FOR NAME, PHONE, OR EMAIL** because their data is already registered. The AI agent immediately invokes the respective tool (`create_trial_tool` / `crear_prueba_tvtotal24` / `transfer_to_human_tool`) using their known registered data.
+  * **New Client Actions (No Match Found)**:
+    - Standard new lead flow proceeds normally (assigns `stage-incoming-leads` or `stage-leads-entrantes` if no stage is present, and collects 3 data points upon trial request).
+  * **Production Deployment**:
+    - Updated `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `2e584f23-93d3-4682-a0b8-c3baee9c8ba2`) with nodes `¿Requiere Buscar en Sheet?`, `Leer Sheet DnSpace`, `Leer Sheet Mega`, `Evaluar Cliente DnSpace`, and `Evaluar Cliente Mega`.
+    - Synchronized prompts (`prompts/agent_prompt.md`, `prompts/tvtotal24_prompt.md`).
+    - Local workflow definitions exported and verified.
 
