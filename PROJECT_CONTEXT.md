@@ -490,3 +490,25 @@
   * **Production Deployment**:
     * Published workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production (`activeVersionId: b3278fdf-ae5e-46d5-8796-f0038981779f`).
     * Exported workflow to `workflows/router_chatwoot_ia.json` via `python3 workflows/export_workflows.py`.
+
+* **AI Agent Data Collection Rules Refinement (Trials vs. Human Transfer vs. Greetings vs. Existing Clients)**:
+  * **Objective & Business Rules**:
+    1. **Free Trial Requests (`pidiendo una prueba`)**: The AI Agent MUST imperatively and obligatorily require all 3 data points: **Full Name** (at least 2 words: first and last name), valid **Email**, and **Phone** with country code (with explicit international format guidance: `codpais+telefono`). In TVTotal24 Latina, time availability for 4 continuous hours must also be confirmed. Only for free trial requests are all 3 data points required.
+    2. **Human Agent Transfer (`pidiendo hablar con un humano`)**: Transferring to a human agent does NOT require email or phone number! Knowing at least the customer's name suffices. If the customer's name is already known (via context, profile, or previous messages), `Call 'transfer_to_human_tool'` is called immediately. If the name is unknown, the AI asks solely for their name (e.g. "¿Con quién tengo el gusto para comunicarte con un asesor?"), never email or phone, and transfers immediately upon receiving it.
+    3. **Greetings & Courtesy (`saludando`)**: Knowing at least the name suffices. The AI must NEVER ask for email or phone during greetings or polite conversations.
+    4. **Existing Clients (`si el cliente ya existe` / `stage-leads-ganados`)**: Under NO circumstance are full name, email, or phone asked from existing clients because their data is already registered in the system. The respective tools (`create_trial_tool` / `crear_prueba_tvtotal24` or `Call 'transfer_to_human_tool'`) are executed directly using their known registered data.
+  * **Implementation Across Components**:
+    * `prompts/agent_prompt.md` (TotalTv USA - Toto):
+      * Updated `GREETING & INITIAL INTERACTION` with strict prohibition on requesting email or phone during greetings.
+      * Updated `FREE TRIAL POLICY & WORKFLOW` with `CRITICAL MANDATE — DATA COLLECTION SCOPE`.
+      * Updated `HUMAN HANDOVER / TRANSFER TO HUMAN`: knowing at least the name suffices, strictly forbidden from asking email/phone, immediate tool execution if name or existing client is known.
+    * `prompts/tvtotal24_prompt.md` (TVTotal24 Latina - Tivi):
+      * Updated `RULE 2.1 — GREETINGS AND COURTESY`.
+      * Updated `FREE TRIAL POLICY & FLOW` with `REGLA GENERAL OBLIGATORIA DE RECOLECCIÓN DE DATOS`.
+      * Updated `HUMAN HANDOVER / TRANSFER TO HUMAN`: tool invocation via `Call 'transfer_to_human_tool'`, name-only requirement, zero email/phone requirement.
+    * `workflows/router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`):
+      * Updated nodes `Preparar Mensaje`, `Evaluar Cliente DnSpace`, and `Evaluar Cliente Mega` to supply `[CLIENT CONTEXT: Known Contact Name: ...]` when valid person names are detected on non-existing leads, allowing immediate transfer or personalized greeting without redundant questioning.
+      * Injected updated prompts into node parameters for `AI Agent` and `AI Agent - TVTotal24`.
+  * **Production Deployment**:
+    * Published workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production (`activeVersionId: 82c0aeec-f93e-4baf-832b-0ce57a8b89b1`).
+    * Synchronized local workflow files via `python3 workflows/export_workflows.py`.
