@@ -525,3 +525,35 @@
     - `prompts/tvtotal24_prompt.md`: Updated `GESTIÓN FLEXIBLE DE PRUEBAS PARA CLIENTES EXISTENTES (PARA SÍ MISMO O PARA UN TERCERO / FAMILIAR / AMIGO)`.
     - `workflows/router_chatwoot_ia.json`: Updated `Preparar Mensaje`, `Evaluar Cliente DnSpace`, and `Evaluar Cliente Mega` context tags.
     - n8n workflow published to production (`activeVersionId: 7dbd7bf9-d120-4458-8fbd-f0507443b5cb`).
+
+* **Ecwid Order Parser & Notification Fallbacks Update (`Ecwid to Client & me 2.0` - `hAHmBsRVDc4Hyt6g`)**:
+  * **Objective & Problem Statement**:
+    * When orders are placed in Ecwid for TotalTv USA, order confirmation and payment notification messages are dispatched across Email (Gmail), SMS (Telnyx), and WhatsApp (Meta Cloud API / Evolution API).
+    * Previously, when parsing customer data from the Ecwid notification email in node `TomaDatosDelEmail`, missing fields defaulted to `"No encontrado"`.
+    * This produced undesirable outputs such as greeting the customer with `"Dear No encontrado"`, email subjects reading `"No, your TotalTv Order..."` (due to `.split(' ')[0]`), and missing connections, amounts, or adult content reading `"No encontrado"`.
+  * **Business Rules Implemented**:
+    1. **Customer Name Fallback**:
+       * If the customer's name cannot be extracted from the email subject/body, it must strictly default to **`"Customer"`** (greeting reads `"Dear Customer"` and email subject reads `"Customer, your TotalTv Order..."`).
+    2. **Connections, Amount & Adult Content Fallbacks**:
+       * If the number of connections (`Conns`), total amount (`TotalAmount`), or adult programming (`Adult`) cannot be extracted, they must strictly default to a single dot **`"."`** instead of `"No encontrado"`.
+  * **Implementation Across Workflow Nodes**:
+    * `TomaDatosDelEmail` (`4dadaf29-3fad-48f6-9552-f684451d67dd`):
+      * Rewrote extraction helper `extract(regex, text, index, fallback)` with default fallback `"."`.
+      * `CustomerName`: Fallback set to `"Customer"`. Added guard: `(rawCustomerName && rawCustomerName !== "No encontrado" && rawCustomerName !== ".") ? rawCustomerName : "Customer"`.
+      * `Conns`: Fallback set to `"."`.
+      * `Adult`: Fallback set to `"."`.
+      * `TotalAmount`: If missing or non-numeric, fallback set to `"."`.
+    * Downstream Notification & Formatting Nodes:
+      * `Formatear Mensaje Zelle`: Cleanly handles `Adult: .` and `Total Amount: .` (or `$X`), defaults customer name to `"Customer"`.
+      * `Formatear Mensaje` (Whop / Pay by link): Cleanly handles `Adult: .` and `Total: .` (or `$X`), defaults customer name to `"Customer"`.
+      * `Formatear Mensaje Crypto`: Cleanly handles `Adult: .` and `Total: .` (or `$X`), defaults customer name to `"Customer"`.
+      * `Email Zelle a Cliente` (Gmail): Updated subject to use `Customer` when name is missing; updated HTML message to display `.` for missing amount and `Dear Customer`.
+      * `Email Link a Cliente`, `Email Link a Cliente1`, `Email NowPayLink a Cliente`: Updated HTML templates to prevent `$NaN` when `TotalAmount` is `.` (displaying `.` for missing amounts), and cleanly rendering `Adult: .` when adult info is absent.
+      * `WhatsMeZelle`, `Notificarme Link Cashapp`, `Notificarme Link NowPay`, `Whatsme Link NowPay`, `Whatsme Link PdCash`: Updated formatting expressions to use `Customer` and `.` fallbacks.
+  * **Production Deployment**:
+    * Enabled MCP access on workflow `hAHmBsRVDc4Hyt6g`.
+    * Applied all 13 node operations atomically in n8n.
+    * Published workflow `Ecwid to Client & me 2.0` (`activeVersionId: cd4d61f1-2fbb-4a9a-b279-a7c7172f1136`).
+    * Added `ecwid_to_client_and_me_2` to `workflows/export_workflows.py`.
+    * Exported workflow JSON to `workflows/ecwid_to_client_and_me_2.json`.
+

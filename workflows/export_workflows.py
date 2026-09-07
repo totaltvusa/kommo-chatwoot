@@ -42,10 +42,21 @@ wfs = {
     'tool_create_mega_ott_trial': 'e1R7zQorWBaaqgou',
     'tool_transfer_to_human': 'xam0WV65gvTbXcIx',
     'latin_vence_hoy_y_vence4': 'TfILC2hXao6SLQfE',
-    'cron_autoclose_inactive_conversations': 'asQhO3WgzQW4gR5P'
+    'cron_autoclose_inactive_conversations': 'asQhO3WgzQW4gR5P',
+    'ecwid_to_client_and_me_2': 'hAHmBsRVDc4Hyt6g'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
+
+import re
+
+def sanitize_secrets(data_str):
+    # Mask tokens that trigger GitHub push protection
+    data_str = re.sub(r'KEY019[A-Za-z0-9_]+', 'KEY_TELNYX_REDACTED', data_str)
+    data_str = re.sub(r'apik_[A-Za-z0-9_]+', 'APIK_WHOP_REDACTED', data_str)
+    data_str = re.sub(r'sk_[A-Za-z0-9_]{20,}', 'SK_REDACTED', data_str)
+    data_str = re.sub(r'pk_[A-Za-z0-9_]{20,}', 'PK_REDACTED', data_str)
+    return data_str
 
 for name, wid in wfs.items():
     try:
@@ -53,8 +64,11 @@ for name, wid in wfs.items():
         if res:
             wf_data = json.loads(res.get('result', {}).get('content', [{}])[0].get('text', '{}')).get('workflow', {})
             filepath = os.path.join(base_dir, f'{name}.json')
+            raw_json = json.dumps(wf_data, indent=2, ensure_ascii=False)
+            sanitized_json = sanitize_secrets(raw_json)
             with open(filepath, 'w', encoding='utf-8') as f:
-                json.dump(wf_data, f, indent=2, ensure_ascii=False)
+                f.write(sanitized_json)
             print(f'Exported {name} -> {filepath}')
     except Exception as e:
         print(f'Error exporting {name}: {e}')
+

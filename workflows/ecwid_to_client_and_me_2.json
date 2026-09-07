@@ -1,0 +1,1722 @@
+{
+  "id": "hAHmBsRVDc4Hyt6g",
+  "name": "Ecwid to Client & me 2.0",
+  "active": true,
+  "isArchived": false,
+  "versionId": "cd4d61f1-2fbb-4a9a-b279-a7c7172f1136",
+  "activeVersionId": "cd4d61f1-2fbb-4a9a-b279-a7c7172f1136",
+  "triggerCount": 1,
+  "nodeCount": 36,
+  "createdAt": "2026-07-27T01:52:27.063Z",
+  "updatedAt": "2026-09-07T01:18:04.730Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "TomaDatosDelEmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TomaDatosDelEmail": {
+      "main": [
+        [
+          {
+            "node": "Switch según método de pago",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BuscarLinkdePago": {
+      "main": [
+        [
+          {
+            "node": "WhopLink",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Notificarme Link Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Link a Cliente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificarme Link Whats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Mensaje Zelle": {
+      "main": [
+        [
+          {
+            "node": "Notificarme Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Zelle a Cliente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark a message as read": {
+      "main": [
+        []
+      ]
+    },
+    "Email Zelle a Cliente": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificarme Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "Email Link a Cliente": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificarme Link Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "Notificarme Link Whats": {
+      "main": [
+        []
+      ]
+    },
+    "Switch según método de pago": {
+      "main": [
+        [
+          {
+            "node": "Formatear Mensaje Zelle",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "BuscarLinkdePago",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NowPaymentsLink",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "pdCashLink",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Mensaje Crypto": {
+      "main": [
+        [
+          {
+            "node": "Notificarme Link Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificarme Link Whats1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificarme Link Whats1": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhopLink": {
+      "main": [
+        [
+          {
+            "node": "Formatear Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "NotifyClient",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NotifyMe",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviarTextoZelle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pdCashLink": {
+      "main": [
+        [
+          {
+            "node": "pdCashlink",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NotifyClientPdCash": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "Email Link a Cliente1": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NotifyClient": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "EnviarTextoCashapp": {
+      "main": [
+        [
+          {
+            "node": "Email Link a Cliente1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificarme Link Cashapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NotifyMe": {
+      "main": [
+        [],
+        [
+          {
+            "node": "WhatsMeZelle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificarme Link Cashapp": {
+      "main": [
+        []
+      ]
+    },
+    "pdCashlink": {
+      "main": [
+        [
+          {
+            "node": "NotifyClientPdCash",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "EnviarTextoCashapp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NotifyMePdCash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NowPaymentsLink": {
+      "main": [
+        [
+          {
+            "node": "EnviarTextoNowPay",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email NowPayLink a Cliente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NotifyClientNowPay",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NotifyMeNowPay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email NowPayLink a Cliente": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EnviarTextoNowPay": {
+      "main": [
+        [
+          {
+            "node": "Notificarme Link NowPay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificarme Link NowPay": {
+      "main": [
+        []
+      ]
+    },
+    "NotifyMeNowPay": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Whatsme Link NowPay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NotifyMePdCash": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Whatsme Link PdCash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 5,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "\"TotalTv USA: New order\" ",
+          "readStatus": "unread",
+          "sender": "notifications@ecwid.com"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        1392
+      ],
+      "id": "0c5446f1-50af-4600-a0f6-4d2fb45e2800",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const html = item.json.html || \"\";\n  const subject = item.json.headers.subject || \"\";\n\n  // 1. Limpieza de HTML para convertirlo en texto plano manejable\n  const cleanText = html\n    .replace(/<style([\\s\\S]*?)<\\/style>/gi, '') // Quita CSS\n    .replace(/<[^>]+>/g, ' ')                   // Quita etiquetas HTML\n    .replace(/&nbsp;/g, ' ')                    // Quita espacios HTML\n    .replace(/\\s+/g, ' ')                       // Normaliza espacios\n    .trim();\n\n  // Función de extracción segura con fallback personalizable\n  const extract = (regex, text, index = 1, fallback = \".\") => {\n    const match = text.match(regex);\n    return (match && match[index] && match[index].trim()) ? match[index].trim() : fallback;\n  };\n\n  // --- EXTRACCIÓN DE VARIABLES ---\n\n  // OrderID y Customer desde el Subject\n  const orderID = extract(/#([A-Z0-9]+)/, subject, 1, \".\");\n  \n  // Si el nombre no logra extraerse, debe decir \"Customer\"\n  const rawCustomerName = extract(/from\\s+([^!$]+)/i, subject, 1, \"Customer\");\n  const customerName = (rawCustomerName && rawCustomerName !== \"No encontrado\" && rawCustomerName !== \".\") ? rawCustomerName : \"Customer\";\n\n  // Email y Teléfono\n  const email = extract(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/, cleanText, 1, \".\");\n  const phone = extract(/Phone\\s+([\\+\\d\\s-]{7,20})/, cleanText, 1, \".\");\n\n  // Datos Financieros: de no conseguir la información, colocar un punto \".\"\n  const rawAmount = extract(/Total\\s+\\$([\\d.]+)/, cleanText, 1, \".\");\n  const totalAmount = (rawAmount !== \".\" && rawAmount !== \"No encontrado\" && !isNaN(parseFloat(rawAmount))) \n    ? Math.round(parseFloat(rawAmount)).toString() \n    : \".\";\n  \n  // El pattern (\\d+)\\s*Months? permite que la \"s\" sea opcional\n  const months = extract(/(\\d+)\\s*Months?/i, cleanText, 1, \".\");\n\n  // Conexiones: de no conseguir la información, colocar un punto \".\"\n  const conns = extract(/Conns:\\s*(\\d+)/i, cleanText, 1, \".\");\n\n  // Programación Adultos: de no conseguir la información, colocar un punto \".\"\n  const adult = extract(/Adult:\\s*(Yes|No)/i, cleanText, 1, \".\");\n\n  // Método de Pago\n  const paymentPart = extract(/Payment method\\s+(.+?)(?:View order details|$)/i, cleanText, 1, \".\");\n\n  return {\n    json: {\n      OrderID: orderID,\n      TotalAmount: totalAmount,\n      CustomerName: customerName,\n      Email: email,\n      Phone: phone,\n      PaymentMethod: paymentPart,\n      Months: months,\n      Conns: conns,\n      Adult: adult\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        1392
+      ],
+      "id": "4dadaf29-3fad-48f6-9552-f684451d67dd",
+      "name": "TomaDatosDelEmail"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FiAVv86vtv6UCcYaJAz8HswF6U6zwaqGcXGeZoB19mw",
+          "mode": "list",
+          "cachedResultName": "Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FiAVv86vtv6UCcYaJAz8HswF6U6zwaqGcXGeZoB19mw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Links",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FiAVv86vtv6UCcYaJAz8HswF6U6zwaqGcXGeZoB19mw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Monto",
+              "lookupValue": "={{ $json.TotalAmount }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        1152
+      ],
+      "id": "1676c1c1-c67f-4c63-9e14-9e62b48a0b5b",
+      "name": "BuscarLinkdePago",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const emailData = $(\"TomaDatosDelEmail\").first().json;\nconst linkData = $(\"BuscarLinkdePago\").first().json;\n\nconst adultStr = emailData.Adult === \"Yes\" ? \"Sí\" : (emailData.Adult === \"No\" ? \"No\" : \".\");\nconst totalStr = emailData.TotalAmount === \".\" ? \".\" : `$${emailData.TotalAmount}`;\n\nconst mensaje = `\n🚀 *NUEVO PEDIDO RECIBIDO* (#${emailData.OrderID})\n----------------------------------\n👤 **Cliente:** ${emailData.CustomerName || \"Customer\"}\n📧 **Email:** ${emailData.Email}\n📱 **Tel:** ${emailData.Phone}\n📦 **Plan:** ${emailData.Months} Mes(es)\n🖥️ **Conexiones:** ${emailData.Conns}\n🔞 **Adulto:** ${adultStr}\n💰 **Total:** ${totalStr}\n💳 **Método:** ${emailData.PaymentMethod}\n🔗 **LINK DE PAGO:** ${linkData?.link || '.'}\n`.trim();\n\nreturn {\n  TelegramMessage: mensaje,\n  OrderID: emailData.OrderID,\n  CustomerEmail: emailData.Email\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        1152
+      ],
+      "id": "b78dc532-d010-4f61-8a78-4bb1fce1fb0d",
+      "name": "Formatear Mensaje"
+    },
+    {
+      "parameters": {
+        "jsCode": "const emailData = $(\"TomaDatosDelEmail\").first().json;\n\nconst adultContent = emailData.Adult === \"Yes\" ? \"Yes\" : (emailData.Adult === \"No\" ? \"No\" : \".\");\nconst totalAmountDisplay = emailData.TotalAmount === \".\" ? \".\" : `$${emailData.TotalAmount}`;\n\nconst mensaje = `\nDear ${emailData.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order #${emailData.OrderID}\nMonths: ${emailData.Months}\nConnections: ${emailData.Conns}\nAdult: ${adultContent}\nTotal Amount: ${totalAmountDisplay}\n\nPlease complete your Zelle Payment by sending ${totalAmountDisplay} to:\nacalimanr@gmail.com\n`.trim();\n\nreturn {\n  TelegramMessage: mensaje,\n  OrderID: emailData.OrderID,\n  CustomerEmail: emailData.Email,\n  ZelleQrUrl: \"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhYNsjlj7aS4gYmUbe9LK-2GQV_2sABG13IGho-euclerWMkOCAYTuaNaFaZZ7J0-sdpdNmAyUyhjJxkO9MKrE9ieG2OqkrteZ6c1Bb4_4mU5DYWqmfM_qOc6r1oVn6Jrs07J_einHyYmJIqabLEUHuBxKF4gnTphb39nUfqwBdJx8Rj9IiYW3sKyoBYzI/s320/Zelle%20USA.jpg\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        576
+      ],
+      "id": "c6eb464d-7447-4398-ab69-9d317a3768ba",
+      "name": "Formatear Mensaje Zelle"
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        1568
+      ],
+      "id": "9b0c3caa-6720-4314-9e24-09f934ba3288",
+      "name": "Mark a message as read",
+      "webhookId": "ff9909e6-c2b6-46c5-b07f-2047d8e2ec46",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        768
+      ],
+      "id": "e846fad6-1446-4d05-a75e-b58c157f6f3a",
+      "name": "Mark a message as read1",
+      "webhookId": "181754d3-f693-43e7-96d1-fb1ec60adf1f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('TomaDatosDelEmail').item.json.Email }}",
+        "subject": "={{ ($('TomaDatosDelEmail').item.json.CustomerName || 'Customer').split(' ')[0] }}, your TotalTv Order #{{ $('TomaDatosDelEmail').item.json.OrderID }} - Zelle Payment Instructions",
+        "message": "=<p>Dear {{ $('TomaDatosDelEmail').item.json.CustomerName || \"Customer\" }},</p>\n\n<p>Thank you for your TotalTv Order #{{ $('TomaDatosDelEmail').item.json.OrderID }}<br>\nMonths: {{ $('TomaDatosDelEmail').item.json.Months }}<br>\nConnections: {{ $('TomaDatosDelEmail').item.json.Conns }}<br>\nAdult: {{ $('TomaDatosDelEmail').item.json.Adult }}<br>\nTotal Amount: {{ $('TomaDatosDelEmail').item.json.TotalAmount === '.' ? '.' : '$' + $('TomaDatosDelEmail').item.json.TotalAmount }}</p>\n\n<p>Please complete your Zelle Payment by sending {{ $('TomaDatosDelEmail').item.json.TotalAmount === '.' ? '.' : '$' + $('TomaDatosDelEmail').item.json.TotalAmount }} to:<br>\n<strong>acalimanr@gmail.com</strong></p>\n\n<br>\n<img src=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhYNsjlj7aS4gYmUbe9LK-2GQV_2sABG13IGho-euclerWMkOCAYTuaNaFaZZ7J0-sdpdNmAyUyhjJxkO9MKrE9ieG2OqkrteZ6c1Bb4_4mU5DYWqmfM_qOc6r1oVn6Jrs07J_einHyYmJIqabLEUHuBxKF4gnTphb39nUfqwBdJx8Rj9IiYW3sKyoBYzI/s320/Zelle%20USA.jpg\" alt=\"Zelle Payment\" width=\"350\" style=\"display: block; max-width: 100%; height: auto;\" border=\"0\" />\n\n<br><br>\n<img src=\"https://raw.githubusercontent.com/totaltvusa/images/9f5aa94b431a2c954f99d0b9c4a58da580b05f86/Logo_TotalTv_1\" alt=\"TotalTv Logo\" width=\"200\" style=\"display: block; max-width: 100%; height: auto;\" border=\"0\" />",
+        "options": {
+          "appendAttribution": false,
+          "bccList": "totaltvusa@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        768
+      ],
+      "id": "8ab3872d-46d8-464f-bac3-33eb0f134081",
+      "name": "Email Zelle a Cliente",
+      "webhookId": "61cdbcfe-41f9-468d-ac0e-147e1e0c647d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ $json.TelegramMessage }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        960
+      ],
+      "id": "8f0dd453-3df4-4958-87c7-7a01da544c10",
+      "name": "Notificarme Telegram",
+      "webhookId": "d3dc4b90-d597-4438-8f3d-29ced1c13899",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.CustomerEmail }}",
+        "subject": "=Your TotalTv Payment Link - Order #{{ $json.OrderID }}",
+        "message": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},<br>\n<br>\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}<br>\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}<br>\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}<br>\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}<br>\n<br>\n<strong>Payment Summary:</strong><br>\n&nbsp;&nbsp;Order Amount: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}<br>\n&nbsp;&nbsp;Payment Processing Fee (7%): &nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.07).toFixed(2) : '.'}<br>\n&nbsp;&nbsp;<strong>Total to Pay: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 1.07).toFixed(2) : '.'}</strong><br>\n<br>\nPlease complete payment using the following link:<br>\n<a href=\"${$(\"BuscarLinkdePago\").first().json.link}\">Click here to pay your order</a><br>\n<br>\nThank you for choosing us!<br>\n<img src=\"https://raw.githubusercontent.com/totaltvusa/images/9f5aa94b431a2c954f99d0b9c4a58da580b05f86/Logo_TotalTv_1\" width=\"200\" style=\"display: block; max-width: 100%; height: auto;\" border=\"0\" />` }}",
+        "options": {
+          "appendAttribution": false,
+          "bccList": "totaltvusa@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        864
+      ],
+      "id": "a91cdf0e-ba3c-4b5f-b388-167fec1aee36",
+      "name": "Email Link a Cliente",
+      "webhookId": "ae2d7ec0-2335-4c0b-944e-34f1375f0897",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ $json.TelegramMessage }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        1056
+      ],
+      "id": "5c28a46a-cc3e-40af-ad16-068f7e19b448",
+      "name": "Notificarme Link Telegram",
+      "webhookId": "4145f127-bad1-4324-9814-9a288f532aff",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ $('Formatear Mensaje').item.json.TelegramMessage }}",
+        "options_message": {
+          "delay": 5000
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        1248
+      ],
+      "id": "1f9af71b-f99e-4054-bbda-afd062aace76",
+      "name": "Notificarme Link Whats",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "executeOnce": true,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.PaymentMethod }}",
+                    "rightValue": "Zelle",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "55af80b9-6227-487c-a432-b1db11716bc0"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "34f821ed-5b72-4269-8e61-41d91e0d946e",
+                    "leftValue": "={{ $json.PaymentMethod }}",
+                    "rightValue": "Credit/Debit Cards (Pay by link)",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e4df88d5-5fa2-4a20-b04a-a316262d08ce",
+                    "leftValue": "={{ $json.PaymentMethod }}",
+                    "rightValue": "Crypto 20% OFF",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0f164e0f-b14e-421c-ada6-116e72da2dec",
+                    "leftValue": "={{ $json.PaymentMethod }}",
+                    "rightValue": "CashApp (Pay by link)",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        1360
+      ],
+      "id": "6f5aa29d-2d3d-4d4b-90f1-a37e2c51f21c",
+      "name": "Switch según método de pago"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ $json.TelegramMessage }}",
+        "options_message": {
+          "delay": 5000
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        1440
+      ],
+      "id": "59d0893a-0bdf-4a64-84c0-a5a36df93741",
+      "name": "Notificarme Link Whats1",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "executeOnce": true,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const emailData = $(\"TomaDatosDelEmail\").first().json;\n\nconst adultStr = emailData.Adult === \"Yes\" ? \"Sí\" : (emailData.Adult === \"No\" ? \"No\" : \".\");\nconst totalStr = emailData.TotalAmount === \".\" ? \".\" : `$${emailData.TotalAmount}`;\n\nconst mensaje = `\n🚀 *NUEVO PEDIDO RECIBIDO* (#${emailData.OrderID})\n----------------------------------\n👤 **Cliente:** ${emailData.CustomerName || \"Customer\"}\n📧 **Email:** ${emailData.Email}\n📱 **Tel:** ${emailData.Phone}\n\n📦 **Plan:** ${emailData.Months} Mes(es)\n🖥️ **Conexiones:** ${emailData.Conns}\n🔞 **Adulto:** ${adultStr}\n\n💰 **Total:** ${totalStr}\n💳 **Método:** ${emailData.PaymentMethod}\n`;\n\nreturn {\n  TelegramMessage: mensaje,\n  OrderID: emailData.OrderID,\n  CustomerEmail: emailData.Email\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        1392
+      ],
+      "id": "44076f88-2872-4104-b93d-3a675920b890",
+      "name": "Formatear Mensaje Crypto"
+    },
+    {
+      "parameters": {
+        "jsCode": "const amount = $input.first().json.amount ?? 100.00;\nconst description = $input.first().json.description ?? \"Pago\";\n\nconst response = await this.helpers.httpRequest({\n  method: \"POST\",\n  url: \"https://api.whop.com/api/v1/checkout_configurations\",\n  headers: {\n    \"Authorization\": \"Bearer APIK_WHOP_REDACTED\",\n    \"Content-Type\": \"application/json\",\n  },\n  body: {\n    plan: {\n      company_id: \"biz_E5RuimiDLeySL2\",\n      currency: \"usd\",\n      initial_price: $input.first().json.Monto * 1.07,\n      plan_type: \"one_time\",\n      product_id: \"prod_KE7dnDSyRuyjI\",\n      title: $input.first().json.Monto + \"+ Payment Processor Fee\",\n    },\n    metadata: {\n      source: \"n8n\",\n      description: description,\n    },\n  },\n});\n\nreturn [{\n  json: {\n    checkout_url: response.purchase_url,\n    session_id: response.id,\n    plan_id: response.plan?.id,\n    amount: amount,\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        1152
+      ],
+      "id": "52660fa4-a9b6-4550-8dfe-a8e4089879e0",
+      "name": "WhopLink",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "1132324583304460",
+        "recipientPhoneNumber": "={{ $json.phone }}",
+        "template": "clientzellepayment|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $json.customer }}"
+                  },
+                  {
+                    "text": "={{ $json.order }}"
+                  },
+                  {
+                    "text": "={{ $json.months }}"
+                  },
+                  {
+                    "text": "={{ $json.conns }}"
+                  },
+                  {
+                    "text": "={{ $json.adult }}"
+                  },
+                  {
+                    "text": "={{ $json.amount }}"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "header",
+              "headerParameters": {
+                "parameter": [
+                  {
+                    "type": "image",
+                    "imageLink": "https://raw.githubusercontent.com/totaltvusa/images/main/Zelle%20USA.jpg"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        384
+      ],
+      "id": "92c97579-5696-4491-babf-21b8663b458b",
+      "name": "NotifyClient",
+      "webhookId": "b0b62f2d-5cb6-4af8-abfc-861955bf8c41",
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "SS1CIclsUQZMU1Bk",
+          "name": "WhatsApp +17865486856"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "606b3d8c-e1bc-4519-9eb4-6288df90ac84",
+              "name": "customer",
+              "value": "={{ $('Switch según método de pago').item.json.CustomerName }}",
+              "type": "string"
+            },
+            {
+              "id": "5b82902e-0126-40ae-9fd1-6443795558a6",
+              "name": "order",
+              "value": "={{ $('Switch según método de pago').item.json.OrderID }}",
+              "type": "string"
+            },
+            {
+              "id": "bbd158dc-603e-4a27-b7a3-a8ac2c214512",
+              "name": "months",
+              "value": "={{ $('Switch según método de pago').item.json.Months }}",
+              "type": "string"
+            },
+            {
+              "id": "c994e12d-f049-4a7c-a80b-42233875acd8",
+              "name": "conns",
+              "value": "={{ $('Switch según método de pago').item.json.Conns }}",
+              "type": "string"
+            },
+            {
+              "id": "a0bce4b4-b7e2-43c3-b6df-5087c384c33e",
+              "name": "adult",
+              "value": "={{ $('Switch según método de pago').item.json.Adult }}",
+              "type": "string"
+            },
+            {
+              "id": "19183663-a4f5-48d3-8891-382fc6f8d91a",
+              "name": "amount",
+              "value": "={{ $('Switch según método de pago').item.json.TotalAmount }}",
+              "type": "string"
+            },
+            {
+              "id": "770e5b91-14a4-4368-9dfb-19d92ceaa020",
+              "name": "phone",
+              "value": "={{ $('Switch según método de pago').item.json.Phone.toString().replace(/[^0-9]/g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "711119e4-6e0c-45b0-b98d-40b6e2bd8df8",
+              "name": "email",
+              "value": "={{ $('Switch según método de pago').item.json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        288
+      ],
+      "id": "5521bee1-0c86-48b2-9f11-780766724ccb",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "1132324583304460",
+        "recipientPhoneNumber": "=584146130135",
+        "template": "clientzellepayment|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $json.customer }}"
+                  },
+                  {
+                    "text": "={{ $json.order }}"
+                  },
+                  {
+                    "text": "={{ $json.months }}"
+                  },
+                  {
+                    "text": "={{ $json.conns }}"
+                  },
+                  {
+                    "text": "={{ $json.adult }}"
+                  },
+                  {
+                    "text": "={{ $json.amount }}"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "header",
+              "headerParameters": {
+                "parameter": [
+                  {
+                    "type": "image",
+                    "imageLink": "https://raw.githubusercontent.com/totaltvusa/images/main/Zelle%20USA.jpg"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        576
+      ],
+      "id": "a294992a-b31b-444b-97db-4a829d4e4d32",
+      "name": "NotifyMe",
+      "webhookId": "aab35a55-e9bf-438c-a43e-4db564c0ae49",
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "SS1CIclsUQZMU1Bk",
+          "name": "WhatsApp +17865486856"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $('TomaDatosDelEmail').first().json;\n\nconst totalAmount = parseFloat(item.TotalAmount);\n\nif (isNaN(totalAmount)) {\n  throw new Error('TotalAmount is not a valid number: ' + item.TotalAmount);\n}\n\n// Multiplicación directa sin redondeo\nconst finalAmount = totalAmount * 1.10;\n\nreturn [{\n  json: {\n    amount: finalAmount,\n    brand_slug: 'TTvUSA',\n    title: 'TotalTv',\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        2496
+      ],
+      "id": "9ff9037b-4b2e-4851-b77a-903becd6bfc7",
+      "name": "pdCashLink",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "1132324583304460",
+        "recipientPhoneNumber": "={{ $('Switch según método de pago').item.json.Phone.replace(/\\D/g, '') }}",
+        "template": "notifyclientlinkpercent|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.CustomerName }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.OrderID }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Months }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Conns }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Adult }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.TotalAmount }}"
+                  },
+                  {
+                    "text": "=10%"
+                  },
+                  {
+                    "text": "={{ ($json.data.payment_link.amount - $('Switch según método de pago').item.json.TotalAmount).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ parseFloat($json.data.payment_link.amount) % 1 === 0 ? parseFloat($json.data.payment_link.amount) : parseFloat($json.data.payment_link.amount).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ $json.data.urls.payment_page }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        2496
+      ],
+      "id": "0952b1a6-2e17-492f-9d94-5f3b2edf6f24",
+      "name": "NotifyClientPdCash",
+      "webhookId": "aab35a55-e9bf-438c-a43e-4db564c0ae49",
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "SS1CIclsUQZMU1Bk",
+          "name": "WhatsApp +17865486856"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('TomaDatosDelEmail').item.json.Email }}",
+        "subject": "={{ ($('TomaDatosDelEmail').first().json.CustomerName || 'Customer').split(' ')[0] }}, Your TotalTv Payment Link - Order #{{ $('TomaDatosDelEmail').item.json.OrderID }}",
+        "message": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},<br>\n<br>\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}<br>\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}<br>\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}<br>\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}<br>\n<br>\n<strong>Payment Summary:</strong><br>\n&nbsp;&nbsp;Order Amount: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}<br>\n&nbsp;&nbsp;Payment Processing Fee (10%): &nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.10).toFixed(2) : '.'}<br>\n&nbsp;&nbsp;<strong>Total to Pay: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 1.10).toFixed(2) : '.'}</strong><br>\n<br>\nPlease complete payment using the following link:<br>\n<a href=\"${$('pdCashlink').item.json.data.urls.payment_page}\">Click here to pay your order</a><br>\n<br>\nThank you for choosing us!<br>\n<img src=\"https://raw.githubusercontent.com/totaltvusa/images/9f5aa94b431a2c954f99d0b9c4a58da580b05f86/Logo_TotalTv_1\" width=\"200\" style=\"display: block; max-width: 100%; height: auto;\" border=\"0\" />` }}",
+        "options": {
+          "appendAttribution": false,
+          "bccList": "totaltvusa@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        2208
+      ],
+      "id": "7bd652b6-6c25-482e-9859-ada92768a519",
+      "name": "Email Link a Cliente1",
+      "webhookId": "ae2d7ec0-2335-4c0b-944e-34f1375f0897",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telnyx.com/v2/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer KEY_TELNYX_REDACTED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "+18884064744"
+            },
+            {
+              "name": "to",
+              "value": "={{ '+' + $json.phone.replace(/\\D/g, '') }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName},\n\nZelle payment info for TotalTv Order #${$json.order} was sent to ${$json.email}\n\nPlease check spam/junk folders too.` }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1120,
+        192
+      ],
+      "id": "919aea41-e03b-40af-8f68-177c1af03c2e",
+      "name": "EnviarTextoZelle",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telnyx.com/v2/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer KEY_TELNYX_REDACTED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "+18884064744"
+            },
+            {
+              "name": "to",
+              "value": "={{ '+' + $(\"TomaDatosDelEmail\").first().json.Phone.replace(/[^0-9]/g, '') }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName},\n\nPayment link for TotalTv Order #${$(\"TomaDatosDelEmail\").first().json.OrderID} was sent to ${$(\"TomaDatosDelEmail\").first().json.Email}\n\nPlease check spam/junk folders too.` }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1120,
+        2304
+      ],
+      "id": "3fe7810a-be77-43d2-8c75-205eb90ddb85",
+      "name": "EnviarTextoCashapp",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "=584146130135",
+        "messageText": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\nThank you for your TTV USA Order #${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\nPlease complete your payment by sending ${$(\"TomaDatosDelEmail\").first().json.TotalAmount === \".\" ? \".\" : \"$\" + $(\"TomaDatosDelEmail\").first().json.TotalAmount} to our Zelle:\nacalimanr@gmail.com\nThank you for choosing us!` }}",
+        "options_message": {
+          "delay": 5000
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        576
+      ],
+      "id": "2142b393-b70b-434a-8a47-37b1441e7f3c",
+      "name": "WhatsMeZelle",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "executeOnce": true,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n<b>Payment Summary:</b>\n• Order Amount: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}\n• Payment Processing Fee (10%): ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.10).toFixed(2) : '.'}\n<b>• Total to Pay: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 1.10).toFixed(2) : '.'}</b>\n\nPlease complete payment using the following link:\n${$('pdCashlink').first().json.data.urls.payment_page}\n\nThank you for choosing us!` }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        2400
+      ],
+      "id": "2fa9caa4-d670-4fb9-b0bd-2e13f984f8e1",
+      "name": "Notificarme Link Cashapp",
+      "webhookId": "4145f127-bad1-4324-9814-9a288f532aff",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "1132324583304460",
+        "recipientPhoneNumber": "=584146130135",
+        "template": "notifyclientlinkpercent|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.CustomerName }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.OrderID }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Months }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Conns }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Adult }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.TotalAmount }}"
+                  },
+                  {
+                    "text": "=10%"
+                  },
+                  {
+                    "text": "={{ ($json.data.payment_link.amount - $('Switch según método de pago').item.json.TotalAmount).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ parseFloat($json.data.payment_link.amount) % 1 === 0 ? parseFloat($json.data.payment_link.amount) : parseFloat($json.data.payment_link.amount).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ $json.data.urls.payment_page }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        2688
+      ],
+      "id": "c1c24492-606f-48c1-a274-ada90dfe224c",
+      "name": "NotifyMePdCash",
+      "webhookId": "aab35a55-e9bf-438c-a43e-4db564c0ae49",
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "SS1CIclsUQZMU1Bk",
+          "name": "WhatsApp +17865486856"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.nowpayments.io/v1/invoice",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "08Y432W-7BA4G0X-KEZ4GWR-5S82WP2"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"price_amount\": {{ Number($(\"Switch según método de pago\").item.json.TotalAmount) * 0.8 }},\n  \"price_currency\": \"usd\",\n  \"order_id\": \"{{ $(\"Switch según método de pago\").item.json.OrderID }}\",\n  \"order_description\": \"Total TV Order #{{ $(\"Switch según método de pago\").item.json.OrderID }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        656,
+        1664
+      ],
+      "id": "ae0ef79a-8321-4292-a5e4-8468388e841f",
+      "name": "NowPaymentsLink"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pd.cash/api/create-payment-link",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "PK_REDACTED"
+            },
+            {
+              "name": "X-API-Secret",
+              "value": "SK_REDACTED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"amount\": {{ $json.amount }},\n  \"brand_slug\": \"{{ $json.brand_slug }}\",\n  \"title\": \"{{ $json.title }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        896,
+        2496
+      ],
+      "id": "c1ce1ad3-90a4-410b-bf42-2f6eb374ae3b",
+      "name": "pdCashlink"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telnyx.com/v2/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer KEY_TELNYX_REDACTED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "+18884064744"
+            },
+            {
+              "name": "to",
+              "value": "={{ '+' + $(\"TomaDatosDelEmail\").first().json.Phone.replace(/[^0-9]/g, '') }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName},\n\nPayment link for TotalTv Order #${$(\"TomaDatosDelEmail\").first().json.OrderID} was sent to ${$(\"TomaDatosDelEmail\").first().json.Email}\n\nPlease check spam/junk folders too.` }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        976,
+        1728
+      ],
+      "id": "87e817b5-5aa1-428d-8b37-5a5f5711e9e8",
+      "name": "EnviarTextoNowPay",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('TomaDatosDelEmail').item.json.Email }}",
+        "subject": "={{ ($('TomaDatosDelEmail').first().json.CustomerName || 'Customer').split(' ')[0] }}, Your TotalTv Payment Link - Order #{{ $('TomaDatosDelEmail').item.json.OrderID }}",
+        "message": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},<br>\n<br>\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}<br>\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}<br>\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}<br>\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}<br>\n<br>\n<strong>Payment Summary:</strong><br>\n<table style=\"border-collapse: collapse; margin-top: 5px; margin-bottom: 5px;\">\n  <tr>\n    <td style=\"padding-right: 20px;\">Order Amount:</td>\n    <td>${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}</td>\n  </tr>\n  <tr>\n    <td style=\"padding-right: 20px;\">Discount (20%):</td>\n    <td>${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '-$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.20).toFixed(2) : '.'}</td>\n  </tr>\n  <tr>\n    <td style=\"padding-right: 20px;\"><strong>Total to Pay:</strong></td>\n    <td><strong>${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.80).toFixed(2) : '.'}</strong></td>\n  </tr>\n</table>\n<br>\nPlease complete payment using the following link:<br>\n<a href=\"${$('NowPaymentsLink').item.json.invoice_url}\">Click here to pay your order</a><br>\n<br>\nThank you for choosing us!<br>\n<img src=\"https://raw.githubusercontent.com/totaltvusa/images/9f5aa94b431a2c954f99d0b9c4a58da580b05f86/Logo_TotalTv_1\" width=\"200\" style=\"display: block; max-width: 100%; height: auto;\" border=\"0\" />` }}",
+        "options": {
+          "appendAttribution": false,
+          "bccList": "totaltvusa@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        1552
+      ],
+      "id": "daca587e-aeff-40ee-afb0-ad41a9757ab0",
+      "name": "Email NowPayLink a Cliente",
+      "webhookId": "ae2d7ec0-2335-4c0b-944e-34f1375f0897",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n<b>Payment Summary:</b>\n• Order Amount: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}\n• Discount (20%): -${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.20).toFixed(2) : '.'}\n<b>• Total to Pay: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.80).toFixed(2) : '.'}</b>\n\nPlease complete payment using the following link:\n${$('NowPaymentsLink').first().json.invoice_url}\n\nThank you for choosing us!` }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1168,
+        1728
+      ],
+      "id": "f9a56187-038e-4c63-9843-4e82dce7b029",
+      "name": "Notificarme Link NowPay",
+      "webhookId": "4145f127-bad1-4324-9814-9a288f532aff",
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "1132324583304460",
+        "recipientPhoneNumber": "={{ $('Switch según método de pago').item.json.Phone.replace(/\\D/g, '') }}",
+        "template": "discountlink|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.CustomerName }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.OrderID }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Months }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Conns }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Adult }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.TotalAmount }}"
+                  },
+                  {
+                    "text": "=20%"
+                  },
+                  {
+                    "text": "={{ ($('Switch según método de pago').item.json.TotalAmount * 0.2).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ ($('Switch según método de pago').item.json.TotalAmount * 0.8).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ $('NowPaymentsLink').first().json.invoice_url }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        976,
+        1920
+      ],
+      "id": "8a41453f-70b9-46f5-aad5-367c1d4bb31e",
+      "name": "NotifyClientNowPay",
+      "webhookId": "aab35a55-e9bf-438c-a43e-4db564c0ae49",
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "SS1CIclsUQZMU1Bk",
+          "name": "WhatsApp +17865486856"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n*Payment Summary:*\n• Order Amount: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}\n• Discount (20%): -${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.20).toFixed(2) : '.'}\n*• Total to Pay: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.80).toFixed(2) : '.'}*\n\nPlease complete payment using the following link:\n${$('NowPaymentsLink').first().json.invoice_url}\n\nThank you for choosing us!` }}",
+        "options_message": {
+          "delay": 5000
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        2080
+      ],
+      "id": "b43cc227-e542-4bc6-8884-e912389cd3b6",
+      "name": "Whatsme Link NowPay",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "executeOnce": true,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "1132324583304460",
+        "recipientPhoneNumber": "=584146130135",
+        "template": "discountlink|en",
+        "components": {
+          "component": [
+            {
+              "bodyParameters": {
+                "parameter": [
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.CustomerName }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.OrderID }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Months }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Conns }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.Adult }}"
+                  },
+                  {
+                    "text": "={{ $('Switch según método de pago').item.json.TotalAmount }}"
+                  },
+                  {
+                    "text": "=20%"
+                  },
+                  {
+                    "text": "={{ ($('Switch según método de pago').item.json.TotalAmount * 0.2).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ ($('Switch según método de pago').item.json.TotalAmount * 0.8).toFixed(2) }}"
+                  },
+                  {
+                    "text": "={{ $('NowPaymentsLink').first().json.invoice_url }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1024,
+        2080
+      ],
+      "id": "cdb5d938-23df-46e4-9dff-6059296942c1",
+      "name": "NotifyMeNowPay",
+      "webhookId": "aab35a55-e9bf-438c-a43e-4db564c0ae49",
+      "alwaysOutputData": true,
+      "retryOnFail": false,
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "SS1CIclsUQZMU1Bk",
+          "name": "WhatsApp +17865486856"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n*Payment Summary:*\n• Order Amount: ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()).toFixed(2) : '.'}\n• Payment Processing Fee (10%): ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + (parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()) * 0.10).toFixed(2) : '.'}\n*• Total to Pay: ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + (parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()) * 1.10).toFixed(2) : '.'}*\n\nPlease complete payment using the following link:\n${$('pdCashlink').first().json.data.urls.payment_page}\n\nThank you for choosing us!` }}",
+        "options_message": {
+          "delay": 5000
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        2688
+      ],
+      "id": "269cb9b4-9580-4187-bfa8-36af6bffc5bd",
+      "name": "Whatsme Link PdCash",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "executeOnce": true,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}
