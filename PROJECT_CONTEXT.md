@@ -101,7 +101,7 @@
   * TotalTv USA: `acalimanr@gmail.com`. QR delivered only upon explicit request.
   * TVTotal24: `pagos@totaltvlatina.com`. QR delivered only upon explicit request (`Zelle Lat.jpeg`).
 * **Binance Pay (TVTotal24)**:
-  * Pay ID: `22628239`. Super discount pricing: 1 Month , 3 Months , 12 Months .
+  * Pay ID: `22628239`. Super discount pricing: 1 Month $5, 3 Months $14, 12 Months $50.
 
 ---
 
@@ -109,16 +109,16 @@
 
 | Workflow ID | Name | Role / Status |
 | :--- | :--- | :--- |
-| `n0zgnS1vlOGNcGNY` | `Chatwoot + IA Agent` | **Active / Main Gateway** (Claude Haiku 4.5, 0-temp, 3s debounce, multi-brand router, Google Sheets Customer DB check) |
+| `n0zgnS1vlOGNcGNY` | `Chatwoot + IA Agent` | **Active / Main Gateway** (Claude Haiku 4.5, 0-temp, 3s debounce, multi-brand router, Google Sheets Customer DB check, strict no-credential-hallucination & human transfer rules) |
 | `kh10aaenUURvi7Ji` | `Tool - Create MVPlay Trial` | **Active Subworkflow / Tool** (Automated MVPlay Xtream-Masters trial generator for TVTotal24) |
 | `4AYo7CX3Ou1K2yXH` | `Tool - Calcular Pago Movil` | **Active Subworkflow / Tool** (Pago Móvil rate scraping & Bs calculation for TVTotal24) |
 | `e1R7zQorWBaaqgou` | `Create Mega OTT Trial Tool` | **Active Subworkflow / Tool** (Mega OTT Trial generator for TotalTv USA) |
 | `3dBu0SNABE2pKCqU` | `getpaymentlink` | **Active Subworkflow / Tool** (Payment link generator for TotalTv USA) |
-| `xam0WV65gvTbXcIx` | `Transfer to Human Tool` | **Active Subworkflow / Tool** (Human agent escalation - dual Telegram & WhatsApp Evolution API `TTvAlertsMovistar` to `584146130135`) |
+| `xam0WV65gvTbXcIx` | `Transfer to Human Tool` | **Active Subworkflow / Tool** (Human agent escalation - dual Telegram & WhatsApp Evolution API `TTvAlertsMovistar` to `584146130135`, clean JSON tool response) |
 | `XC1jY6Vkbgdu5iIz` | `Cron - Followup Stage Fase de Pruebas to Que Te Parecio` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
 | `KRwjH3njrF4qRdph` | `Cron - Followup Stage Trials to Want to Join` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
 | `1IlXjaNv0rc9laJy` | `Cron - Followup Stage Incoming Leads to Contacted` | **Active Cron** (Executes every 2 hours on even hours: `0 */2 * * *`) |
-| `TfILC2hXao6SLQfE` | `Latin vence hoy y vence4` | **Active Outbound Notifier** (Daily 9 AM expiration WhatsApp templates via Meta Cloud API + Chatwoot Contact/Conversation/Private Note Sync) |
+| `TfILC2hXao6SLQfE` | `Latin vence hoy y vence4` | **Active Outbound Notifier** (Daily 9 AM expiration WhatsApp templates via Meta Cloud API + batchUpdate red text on expired DnSpace rows + Chatwoot Contact/Conversation/Private Note Sync) |
 | `943Yu3CZMD4dzRCI` | `Mega expires TODAY (Vence HOY)` | **Active Outbound Notifier** (Mega OTT Daily 9 AM expiration notifier) |
 | `F7M6sLe1lo4zUObT` | `Mega expires SOON (Vence 4 días)` | **Active Outbound Notifier** (Mega OTT 4-day expiration notifier) |
 | `p8dS1jx73xvpbrkj` | `Card2CryptoLink` | **Active Subworkflow / Tool** |
@@ -128,6 +128,7 @@
 | `hAHmBsRVDc4Hyt6g` | `Ecwid to Client & me 2.0` | **Active Ingestion / Outbound Notifier** (Ecwid Gmail order trigger -> payment notifications via Email, Telnyx SMS & WhatsApp with 'Customer' and '.' fallbacks) |
 | `asQhO3WgzQW4gR5P` | `Cron - Autoclose Inactive Conversations (48h)` | **Active Cron** (Executes at 0, 6, 12, 18h `0 0,6,12,18 * * *`; resolves conversations after 48h customer inactivity, strips `human` tag, applies `autoclosed`) |
 | `Vfweu0rjoTT3FUl1` | `Agent - TVTotal24 (Latina)` | Inactive / Deprecated |
+
 
 ---
 
