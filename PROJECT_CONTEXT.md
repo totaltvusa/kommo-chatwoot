@@ -467,5 +467,26 @@
     - Executed live test (Execution ID `4973`) with status `success`.
     - Synchronized local workflow file `workflows/latin_vence_hoy_y_vence4.json`.
 
-
-
+### September 6, 2026
+* **Customer Name & Channel Username Sync to Chatwoot Contact**:
+  * **Objective & Context**: When an incoming message matches an existing customer in Google Sheets (`Clientes TotalTV` - sheet `Mega` for TotalTv USA or `DnSpace` for TVTotal24):
+    1. The contact's default name recorded by the channel integration (WhatsApp push name, Instagram handle, Facebook username, Telegram username) is preserved and stored into Chatwoot's **Company Name** field (`additional_attributes.company_name`).
+    2. The contact's primary display name (`name`) in Chatwoot is substituted with the customer's full name formed by columns **`Nombre`** and **`Apellido`** from the Google Sheet.
+    3. The contact's Bio (`additional_attributes.description`) retains the **`1ra compra`** date.
+    4. Conversation stage is tagged with **`stage-leads-ganados`** and the AI agent is provided full customer context (Zero proactive trial & zero data collection rules).
+  * **Root Cause of Previous Failure**:
+    * Restrictive regex guard `if (fullName && (!contactName || /^\+?\d+$/.test(contactName) || contactName.toLowerCase().includes('user')))` prevented updating names when the channel name contained characters, spaces, or words other than purely digits or 'user' (e.g., "Alvez Movistar", "€| R€¥").
+    * Contact update was additionally enclosed in `if (contactId && firstPurchase)`, blocking updates if `1ra compra` was missing.
+    * The default channel username was not being mapped to `company_name`.
+  * **Remediation Implemented in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`)**:
+    * `Preparar Mensaje`:
+      * Extracts `contact_additional_attributes` and `contact_company_name`.
+      * Configured `already_leads_ganados: canBypassSheet` where `canBypassSheet = isAlreadyLeadsGanados && Boolean(contactCompanyName)`, ensuring existing customers previously tagged with `stage-leads-ganados` but lacking `company_name` and full name are routed to the sheet to self-heal.
+    * `Evaluar Cliente DnSpace` & `Evaluar Cliente Mega`:
+      * Extracts sheet `Nombre` + `Apellido` as `fullName`.
+      * Preserves existing company name if already stored; otherwise maps the default channel push name/handle (`contactName`) to `updatePayload.additional_attributes.company_name`.
+      * Sets `updatePayload.name = fullName` and `updatePayload.additional_attributes.description = firstPurchase`.
+      * Updates downstream variables `client_name` and `contact_name` so AI prompts immediately reflect the customer's verified real name.
+  * **Production Deployment**:
+    * Published workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production (`activeVersionId: b3278fdf-ae5e-46d5-8796-f0038981779f`).
+    * Exported workflow to `workflows/router_chatwoot_ia.json` via `python3 workflows/export_workflows.py`.
