@@ -606,4 +606,17 @@
     * Added dedicated sections in `prompts/agent_prompt.md` (*EXISTING CLIENT CREDENTIALS & LOGIN SUPPORT (STRICT ZERO HALLUCINATION RULE)*) and `prompts/tvtotal24_prompt.md` (*SOPORTE DE CREDENCIALES Y ACCESOS PARA CLIENTES EXISTENTES (PROHIBICIÓN ESTRICTA DE INVENTAR CREDENCIALES)*).
     * Deployed and published in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
 
+* **Fix: Facebook TotalTv USA (Inbox 17 / Zernio) "Failed to Send" Messages**:
+  * **Problem Statement**:
+    * In conversation #1338 (and other conversations in Inbox 17: Facebook - TotalTv USA via Zernio), messages were successfully dispatched to Zernio API and delivered to Facebook, but Chatwoot displayed red "failed to send" badges (`status: "failed"`).
+  * **Root Cause**:
+    * In Chatwoot, Inbox 17 is configured as an API Channel (`Channel::Api`).
+    * The channel's `webhook_url` attribute was stored as the literal string `"null"` (4 characters: `'n','u','l','l'`) instead of empty string `""`.
+    * Whenever Chatwoot's background worker processed messages in this channel, it attempted to open an HTTP callback connection to host `null:80` (`Failed to open TCP connection to null:80 (getaddrinfo(3): Name does not resolve)`). Because DNS resolution on `"null"` failed, Chatwoot marked all messages in the inbox as `failed`.
+  * **Remediation**:
+    * Updated Inbox 17 channel configuration via Chatwoot API (`PATCH /api/v1/accounts/1/inboxes/17`, `channel: { webhook_url: "" }`).
+    * Audited all other inboxes (13, 14, 16, 18, 4, 19, 6, 10, 7, 8) to verify that none contain `"null"` or invalid callback URLs.
+    * Verified resolution with test message in conversation #1338, confirming message status is now immediately recorded as `sent`.
+
+
 
