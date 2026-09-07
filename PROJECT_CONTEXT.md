@@ -121,10 +121,11 @@
 | `TfILC2hXao6SLQfE` | `Latin vence hoy y vence4` | **Active Outbound Notifier** (Daily 9 AM expiration WhatsApp templates via Meta Cloud API + Chatwoot Contact/Conversation/Private Note Sync) |
 | `943Yu3CZMD4dzRCI` | `Mega expires TODAY (Vence HOY)` | **Active Outbound Notifier** (Mega OTT Daily 9 AM expiration notifier) |
 | `F7M6sLe1lo4zUObT` | `Mega expires SOON (Vence 4 días)` | **Active Outbound Notifier** (Mega OTT 4-day expiration notifier) |
-| `p8dS1jx73xvpbrkj` | `Telegram to N8N` | Active |
-| `OrUMncnYf5wezbpU` | `AmoCRM Webhook` | Active |
-| `uD5sM2ruGXYSlpY3` | `Chatwoot Webhook` | Active |
-| `OQzmQUISGM6ShdKT` | `AmoCRM Contact Update` | Active |
+| `p8dS1jx73xvpbrkj` | `Card2CryptoLink` | **Active Subworkflow / Tool** |
+| `OrUMncnYf5wezbpU` | `Card2Crypto to ME` | **Active Outbound Notifier** |
+| `uD5sM2ruGXYSlpY3` | `NowPayments to me` | **Active Outbound Notifier** (Telegram alert upon finished crypto payments) |
+| `OQzmQUISGM6ShdKT` | `Telnyx to ME` | **Active Outbound Notifier** |
+| `hAHmBsRVDc4Hyt6g` | `Ecwid to Client & me 2.0` | **Active Ingestion / Outbound Notifier** (Ecwid Gmail order trigger -> payment notifications via Email, Telnyx SMS & WhatsApp with 'Customer' and '.' fallbacks) |
 | `asQhO3WgzQW4gR5P` | `Cron - Autoclose Inactive Conversations (48h)` | **Active Cron** (Executes at 0, 6, 12, 18h `0 0,6,12,18 * * *`; resolves conversations after 48h customer inactivity, strips `human` tag, applies `autoclosed`) |
 | `Vfweu0rjoTT3FUl1` | `Agent - TVTotal24 (Latina)` | Inactive / Deprecated |
 
@@ -468,6 +469,23 @@
     - Synchronized local workflow file `workflows/latin_vence_hoy_y_vence4.json`.
 
 ### September 6, 2026
+* **Downloader Code and App Download URL Update Across AI Agents**:
+  * **Objective & Context**: Updated the Downloader installation instructions for the TotalTv application across both brand agents (TotalTv USA - Toto and TVTotal24 Latina - Tivi).
+  * **Values Updated**:
+    * Downloader code updated from `910992` to **`5533902`** for Firestick, Android TV, and Google TV devices.
+    * Android Smartphone direct download link updated from `http://aftv.news/910992` to **`http://aftv.news/5533902`**.
+  * **Components Updated**:
+    * `prompts/agent_prompt.md` (TotalTv USA).
+    * `prompts/tvtotal24_prompt.md` (TVTotal24 Latina).
+    * Synchronized and injected into live n8n router workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+    * Synchronized local files and exported to `workflows/router_chatwoot_ia.json`.
+
+* **Channel Labels & Stage Leads Entrantes Backfill in Chatwoot**:
+  * **Context**: Conversations handled by TVTotal24 Latina on WhatsApp Cloud (`+1 305 422 9099`, Inbox 19) were receiving `funnel-totaltv-latina`, but required `channel-officialwhatsapp` and `stage-leads-entrantes`.
+  * **Remediation**:
+    * Verified and updated routing logic in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) node `Asignar Etiquetas Latina` to guarantee `channel-officialwhatsapp` and `stage-leads-entrantes` tags on Inbox 19 conversations.
+    * Executed retroactive script across recent active Chatwoot conversations ensuring all appropriate channel and stage labels are properly attached.
+
 * **Customer Name & Channel Username Sync to Chatwoot Contact**:
   * **Objective & Context**: When an incoming message matches an existing customer in Google Sheets (`Clientes TotalTV` - sheet `Mega` for TotalTv USA or `DnSpace` for TVTotal24):
     1. The contact's default name recorded by the channel integration (WhatsApp push name, Instagram handle, Facebook username, Telegram username) is preserved and stored into Chatwoot's **Company Name** field (`additional_attributes.company_name`).
