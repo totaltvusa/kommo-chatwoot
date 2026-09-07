@@ -510,5 +510,18 @@
       * Updated nodes `Preparar Mensaje`, `Evaluar Cliente DnSpace`, and `Evaluar Cliente Mega` to supply `[CLIENT CONTEXT: Known Contact Name: ...]` when valid person names are detected on non-existing leads, allowing immediate transfer or personalized greeting without redundant questioning.
       * Injected updated prompts into node parameters for `AI Agent` and `AI Agent - TVTotal24`.
   * **Production Deployment**:
-    * Published workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production (`activeVersionId: 82c0aeec-f93e-4baf-832b-0ce57a8b89b1`).
+    * Published workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production (`activeVersionId: 7dbd7bf9-d120-4458-8fbd-f0507443b5cb`).
     * Synchronized local workflow files via `python3 workflows/export_workflows.py`.
+
+* **Flexible Trial Handling for Existing Clients (Self vs. Family/Friend)**:
+  * **Objective & Context**: When an existing client (`stage-leads-ganados`) requests a free trial, they might be requesting it for themselves or for a family member or friend (e.g. "tengo un hermano, Jason, que quiere probar").
+  * **Business Logic**:
+    1. **Check Chat History**: If the client already specified who the trial is for and provided their details (e.g., recipient's name, email, phone), use those details directly.
+    2. **Confirm Recipient if Not Specified**: If the client asks generically for a trial, confirm whether they want it under their own registered details or if it is for a family member or friend and they want to provide the recipient's details.
+    3. **If for Themselves**: Do not ask for their data again; execute the trial tool immediately with their registered data from context.
+    4. **If for a Family Member/Friend**: Collect the recipient's required data (full name with at least 2 words, valid email, and phone with country code) and generate the trial under that person's data.
+  * **Components Updated**:
+    - `prompts/agent_prompt.md`: Updated `FLEXIBLE TRIAL HANDLING (SELF vs. FAMILY / FRIEND)`.
+    - `prompts/tvtotal24_prompt.md`: Updated `GESTIÓN FLEXIBLE DE PRUEBAS PARA CLIENTES EXISTENTES (PARA SÍ MISMO O PARA UN TERCERO / FAMILIAR / AMIGO)`.
+    - `workflows/router_chatwoot_ia.json`: Updated `Preparar Mensaje`, `Evaluar Cliente DnSpace`, and `Evaluar Cliente Mega` context tags.
+    - n8n workflow published to production (`activeVersionId: 7dbd7bf9-d120-4458-8fbd-f0507443b5cb`).
