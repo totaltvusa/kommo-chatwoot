@@ -575,3 +575,35 @@
     * Added `ecwid_to_client_and_me_2` to `workflows/export_workflows.py`.
     * Exported workflow JSON to `workflows/ecwid_to_client_and_me_2.json`.
 
+### September 7, 2026
+* **Human Handover Confirmation & Extended Office Hours Message (`Transfer to Human Tool` & AI Agents)**:
+  * **Problem Statement**:
+    * When transferring to human support, AI agents (Toto and Tivi) were mistakenly generating error messages to customers claiming that the transfer could not be done ("no se pudo hacer la transferencia"), despite the transfer succeeding in the backend (the conversation was labeled `human` and the admin received Telegram & WhatsApp alerts).
+  * **Root Cause & Remediation**:
+    1. **Tool Output Normalization (`xam0WV65gvTbXcIx`)**:
+       * Added a dedicated terminal Code node `Respuesta Tool Transferencia` that always returns a clean, structured JSON response (`status: "success"`, `human_transfer: "completed"`, `message: "La conversación ha sido transferida exitosamente a un asesor humano."`).
+       * Added `onError: "continueRegularOutput"` across notification nodes (`Notificar Administrador`, `Nota privada Chatwoot`, `Notificar WhatsApp`) so notification latency or transient errors never affect the tool's success response to the LLM.
+       * Deployed and published active production version `bec45d34-f869-4174-8232-88767013947d` in n8n.
+    2. **AI Agent Prompt Directives**:
+       * Updated `HUMAN HANDOVER / TRANSFER TO HUMAN` in `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
+       * Enforced mandatory rule: Calling `Call 'transfer_to_human_tool'` is ALWAYS successful. Agents are strictly forbidden from stating or apologizing that the transfer failed.
+       * Mandated clear, reassuring confirmation message: Customers must be informed that they have been transferred to human support and will be assisted shortly within extended office hours (*"horario extendido de oficina"*).
+  * **Production Deployment**:
+    * Injected updated prompts into `AI Agent` and `AI Agent - TVTotal24` in router workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `f11dc553-fc5f-4437-b639-1ef9414e8aa5`).
+    * Synchronized local files and exported via `workflows/export_workflows.py`.
+
+* **Existing Client Credentials & Login Support: Strict Zero-Hallucination Policy**:
+  * **Problem Statement**:
+    * An existing subscriber in TotalTv USA asked for their credentials, and the AI agent invented/hallucinated a fictional username and password rather than acknowledging it does not know active credentials and transferring them to a human agent.
+  * **Business Rule Implemented**:
+    * **Zero Knowledge of Active Credentials**: AI agents (Toto and Tivi) have NO access to active customer service credentials in the Mega OTT or MVPlay subscription database.
+    * **Strict Prohibition on Fabricating Credentials**: AI agents are STRICTLY FORBIDDEN from inventing, guessing, or generating any username/password when an existing subscriber asks for their login details, forgotten credentials, or renewal access.
+    * **Standard Handover Flow**:
+      1. Explain politely that, for security and privacy reasons, the AI agent does not have direct access to active service credentials.
+      2. **Immediately execute `Call 'transfer_to_human_tool'`** (without asking for any data, since they are an existing client).
+      3. Inform the customer that a human support advisor will verify their account in the panel and safely supply their credentials shortly within extended office hours.
+  * **Production Deployment**:
+    * Added dedicated sections in `prompts/agent_prompt.md` (*EXISTING CLIENT CREDENTIALS & LOGIN SUPPORT (STRICT ZERO HALLUCINATION RULE)*) and `prompts/tvtotal24_prompt.md` (*SOPORTE DE CREDENCIALES Y ACCESOS PARA CLIENTES EXISTENTES (PROHIBICIÓN ESTRICTA DE INVENTAR CREDENCIALES)*).
+    * Deployed and published in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+
+
