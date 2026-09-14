@@ -660,6 +660,34 @@
       * El workflow de n8n nunca agrega la etiqueta `human` por su propia cuenta; solo reemplaza etiquetas que comienzan por `stage-*` por `stage-leads-ganados`. Si una conversación ya poseía `human`, se respeta y conserva; si no la tenía, jamás se le coloca. (La aparición temporal de dicha etiqueta en las pruebas provino de los scripts de simulación webhook y fue removida de inmediato).
     * Exported workflow to `workflows/router_chatwoot_ia.json`.
 
+* **WhatsApp Trailing Backslashes (`\`) Fix via Webhook Sanitizing Proxy (`Proxy - Chatwoot to Evolution API`)**:
+  * **Problem Statement**:
+    * Messages sent from Chatwoot to WhatsApp across Evolution API channels (such as TVTotal24 Latina `lat-whatscol` - Inbox 16 and TotalTv USA `3059861096` - Inbox 18) were arriving on customers' phones with literal backslash characters (`\`) at the end of each line (e.g. `http://smrts.wxn.ch:2095\`).
+    * Customers copying URLs or credentials inadvertently copied the trailing backslash, causing login and playlist connection errors (e.g. Conversation #1382 with Guillermo Montero).
+  * **Root Cause**:
+    1. **Chatwoot ProseMirror Serialization**:
+       * In the Chatwoot web interface, the message input editor uses ProseMirror. Whenever a human agent inserts a line break (`<br>`), presses `Shift+Enter`, or pastes multiline text, Chatwoot's Markdown serializer translates the line break into Markdown hard-break syntax: `\\\n` (a backslash followed by a newline).
+    2. **Evolution API Bug in Outgoing Message Webhook**:
+       * In Evolution API (`src/api/integrations/chatbot/chatwoot/services/chatwoot.service.ts` line 1339 & 1454), the handler for `body.message_type === 'outgoing'` replaces bold/italic symbols, but fails to strip `\\\n` before passing the text to Baileys (`textMessage`). (By contrast, the developers did include `.replace(/\\\r\n|\\\n|\n/g, '\n')` for template messages at line 1592, but missed normal outgoing messages).
+       * Baileys dispatches the text verbatim to WhatsApp, which renders the backslash as a literal visible character.
+  * **Solution & Architecture**:
+    1. **n8n Sanitizing Webhook Proxy (`Proxy - Chatwoot to Evolution API` - `ecfTEElylV4snTHG`)**:
+       * Created and published an active webhook proxy in n8n (`https://n8n.ac4.club/webhook/chatwoot-evolution-proxy?instance={instance}`).
+       * Intercepts Chatwoot's outgoing channel webhook before it reaches Evolution API.
+       * Cleans trailing backslashes before newlines (`/\\+(\r?\n|$)/g`) and standalone backslash lines (`/^[ \t]*\\+[ \t]*$/gm`) in `body.content` and `body.conversation.messages`.
+       * Forwards the clean JSON payload to Evolution API: `POST https://project1-evolution-api.efebpb.easypanel.host/chatwoot/webhook/{instance}`.
+       * Relays Evolution API's HTTP 200 `{ message: "bot" }` response back to Chatwoot.
+    2. **Chatwoot Inboxes Routing Update**:
+       * Reconfigured `webhook_url` across all Evolution API inboxes:
+         * **Inbox 16** (`lat-whatscol`): `https://n8n.ac4.club/webhook/chatwoot-evolution-proxy?instance=lat-whatscol`
+         * **Inbox 18** (`WhatsAppUSA - 3059861096`): `https://n8n.ac4.club/webhook/chatwoot-evolution-proxy?instance=3059861096`
+         * **Inbox 4** (`TTvAlertsMovistar`): `https://n8n.ac4.club/webhook/chatwoot-evolution-proxy?instance=TTvAlertsMovistar`
+    3. **Canned Responses Sanitization**:
+       * Batch cleaned backslashes from canned responses `zelle` (#25) and `zelle_usa` (#97).
+  * **Production Deployment**:
+    * Workflow `ecfTEElylV4snTHG` published to active production (`activeVersionId: c15e5bcd-f50a-4f4b-8b40-89d49b99972c`).
+    * Registered in `workflows/export_workflows.py` and exported to `workflows/proxy_chatwoot_evolution.json`.
+
 
 
 

@@ -43,7 +43,8 @@ wfs = {
     'tool_transfer_to_human': 'xam0WV65gvTbXcIx',
     'latin_vence_hoy_y_vence4': 'TfILC2hXao6SLQfE',
     'cron_autoclose_inactive_conversations': 'asQhO3WgzQW4gR5P',
-    'ecwid_to_client_and_me_2': 'hAHmBsRVDc4Hyt6g'
+    'ecwid_to_client_and_me_2': 'hAHmBsRVDc4Hyt6g',
+    'proxy_chatwoot_evolution': 'ecfTEElylV4snTHG'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
