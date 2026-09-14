@@ -653,9 +653,11 @@
   * **Production Deployment & Live Verification**:
     * Published workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production (`activeVersionId: 46b3c455-e75d-46e8-80c6-3b33b668e958`).
     * Verified live on Chatwoot contacts:
-      * **Guillermo Montero** (Conv #1381, Contact #1230): Bio set to `2022-06-20`, labeled `stage-leads-ganados`.
-      * **Lazaro Figueredo** (Conv #1372, Contact #1173): Channel handle `"EFGroning"` preserved in `company_name`, name updated to `"Lazaro Figueredo"`, bio set to `2026-08-17`, labeled `stage-leads-ganados`.
-      * **Luis Villar** (Conv #1365, Contact #1240): Bio set to `2025-11-16`, labeled `stage-leads-ganados`.
+      * **Guillermo Montero** (Conv #1381, Contact #1230): Bio set to `2022-06-20`, labeled `stage-leads-ganados` (without `human`).
+      * **Lazaro Figueredo** (Conv #1372, Contact #1173): Channel handle `"EFGroning"` preserved in `company_name`, name updated to `"Lazaro Figueredo"`, bio set to `2026-08-17`, labeled `stage-leads-ganados` (without `human`).
+      * **Luis Villar** (Conv #1365, Contact #1240): Bio set to `2025-11-16`, labeled `stage-leads-ganados` (without `human`).
+    * **Preservación de la Etiqueta `human`**:
+      * El workflow de n8n nunca agrega la etiqueta `human` por su propia cuenta; solo reemplaza etiquetas que comienzan por `stage-*` por `stage-leads-ganados`. Si una conversación ya poseía `human`, se respeta y conserva; si no la tenía, jamás se le coloca. (La aparición temporal de dicha etiqueta en las pruebas provino de los scripts de simulación webhook y fue removida de inmediato).
     * Exported workflow to `workflows/router_chatwoot_ia.json`.
 
 
