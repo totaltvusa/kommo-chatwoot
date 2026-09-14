@@ -723,13 +723,31 @@
        - **Payment Receipt / Reference**: Reference number, transaction ID, or screenshot/capture.
        - **Service Username / Registered Email**: For account renewal/reactivation.
      * Agent escalates to billing human support only after collecting payment details.
+  5. **Inclusion of Collected Case Info in Internal Notes & Admin Alerts**:
+     * When transferring to human, all collected case details MUST be included in the Chatwoot private note and the admin alerts.
+     * **Tool Parameter Mapping**: `Call 'transfer_to_human_tool'` in `n0zgnS1vlOGNcGNY` defines `workflowInputs` with `reason` and `case_details` via `$fromAI`, allowing the LLM to pass a structured triage summary.
+     * **`Transfer to Human Tool` (`xam0WV65gvTbXcIx`)**:
+       - Extracts `reason` and `case_details` from trigger arguments.
+       - Fallback: If `case_details` is omitted, queries Chatwoot API (`GET /conversations/{id}/messages`) for recent incoming client messages.
+       - Generates structured, rich payloads:
+         1. **Chatwoot Private Note** (Markdown): Includes Motivo, Contacto, Teléfono, Email, Canal/Inbox, Conversación ID, and complete **INFORMACIÓN RECOPILADA DEL CASO**.
+         2. **Telegram Admin Alert** (HTML, escaped): Dispatched to chatId `40371837`.
+         3. **WhatsApp Evolution API Alert** (WhatsApp Markdown): Dispatched to instance `TTvAlertsMovistar` (`584146130135`).
 * **Nodes & Files Synchronized**:
-  * `prompts/agent_prompt.md`: TotalTv USA prompt updated with bilingual triage protocol and handover rules.
-  * `prompts/tvtotal24_prompt.md`: TVTotal24 prompt updated with Spanish triage protocol and handover rules.
+  * `prompts/agent_prompt.md`: Updated with mandatory tool parameters (`reason` and `case_details`).
+  * `prompts/tvtotal24_prompt.md`: Updated with mandatory tool parameters (`reason` y `case_details`).
   * n8n Workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
     - Node `AI Agent`: `options.systemMessage` updated.
     - Node `AI Agent - TVTotal24`: `options.systemMessage` updated.
-    - Node `Call 'transfer_to_human_tool'`: `description` updated with strict triage constraints.
+    - Node `Call 'transfer_to_human_tool'`: `description` and `workflowInputs` updated with `reason` and `case_details` mapped via `$fromAI`.
     - Nodes `Preparar Mensaje`, `Evaluar Cliente Mega`, `Evaluar DnSpace (Fallback)`, `Evaluar Cliente DnSpace`, and `Evaluar Mega (Fallback)`: `clientContextPrefix` updated with triage instructions.
-  * Live version published: `64a12a85-d221-48cd-9fdf-dc8d3d267e31`.
-  * Exported and verified: `workflows/router_chatwoot_ia.json`.
+    - Live version published: `8d839f25-eaae-490c-b9a3-e0df14c0a1a4`.
+  * n8n Workflow `Transfer to Human Tool` (`xam0WV65gvTbXcIx`):
+    - Node `Preparar Datos Transferencia`: extracts `reason` and `case_details`.
+    - Node `Agregar etiqueta human`: builds `private_note_content`, `telegram_text`, and `whatsapp_text` with collected case info.
+    - Node `Nota privada Chatwoot`: sends structured private note.
+    - Node `Notificar Administrador`: sends HTML Telegram alert.
+    - Node `Notificar WhatsApp (Evolution API)`: sends WhatsApp alert.
+    - Node `Respuesta Tool Transferencia`: returns success payload with reason and confirmation.
+    - Live version published: `feaf5cdc-3bf4-47b3-b9d3-851d0a0568f5`.
+  * Exported and verified: `workflows/router_chatwoot_ia.json` and `workflows/tool_transfer_to_human.json`.

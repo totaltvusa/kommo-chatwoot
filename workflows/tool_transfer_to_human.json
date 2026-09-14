@@ -3,12 +3,12 @@
   "name": "Transfer to Human Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "bec45d34-f869-4174-8232-88767013947d",
-  "activeVersionId": "bec45d34-f869-4174-8232-88767013947d",
+  "versionId": "feaf5cdc-3bf4-47b3-b9d3-851d0a0568f5",
+  "activeVersionId": "feaf5cdc-3bf4-47b3-b9d3-851d0a0568f5",
   "triggerCount": 0,
   "nodeCount": 9,
   "createdAt": "2026-08-19T03:20:29.252Z",
-  "updatedAt": "2026-09-07T14:00:35.851Z",
+  "updatedAt": "2026-09-14T02:01:58.371Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -153,7 +153,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const trigger = $input.first().json || {};\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst query = (trigger.query || '').toString();\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'nuwRKpG2bBAQBpRFznfvrMpT',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 13,\n    query: query\n  }\n}];",
+        "jsCode": "const trigger = $input.first().json || {};\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst reason = String(trigger.reason || trigger.motivo || '').trim();\nconst case_details = String(trigger.case_details || trigger.details || trigger.summary || trigger.informacion_caso || trigger.info || '').trim();\nconst query = (trigger.query || '').toString();\n\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'nuwRKpG2bBAQBpRFznfvrMpT',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 13,\n    reason: reason,\n    case_details: case_details,\n    query: query\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     },
@@ -194,7 +194,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Preparar Datos Transferencia').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id || 13;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst contact_name = convData.meta?.sender?.name || 'Cliente';\n\n// Safely preserve all current labels\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\n\nif (!currentLabels.includes('human')) {\n  currentLabels.push('human');\n}\n\nreturn [{\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    labels: currentLabels\n  }\n}];",
+        "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Preparar Datos Transferencia').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id || 13;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst sender = convData.meta?.sender || {};\nconst contact_name = sender.name || 'Cliente';\nconst contact_phone = sender.phone_number || (sender.identifier && /^\\+?\\d[\\d\\s-]{6,}$/.test(sender.identifier) ? sender.identifier : 'No registrado');\nconst contact_email = sender.email || 'No registrado';\nconst inbox_id = Number(convData.inbox_id || 0);\n\n// Identificar marca según inbox\nconst isTVTotal24 = (inbox_id === 10 || inbox_id === 13 || inbox_id === 15 || inbox_id === 16 || inbox_id === 19);\nconst brandName = isTVTotal24 ? 'TVTotal24 (Latina)' : 'TotalTv USA';\n\n// Motivo de la transferencia\nlet reason = String(triggerData.reason || '').trim();\nif (!reason) {\n  reason = 'Atención / Soporte requerido';\n}\n\n// Información recopilada del caso\nlet rawDetails = String(triggerData.case_details || '').trim();\n\n// Fallback: Si no se pasó case_details por el tool, consultar los últimos mensajes entrantes del cliente en Chatwoot\nif (!rawDetails) {\n  try {\n    const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\n    const msgRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations/${conversation_id}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const msgs = (msgRes.payload || []).filter(m => m.message_type === 0 || m.message_type === 'incoming');\n    if (msgs.length > 0) {\n      const recentIncoming = msgs.slice(-4).map(m => `• \"${m.content}\"`).join('\\n');\n      rawDetails = `Mensajes recientes del cliente:\\n${recentIncoming}`;\n    }\n  } catch (e) {}\n}\n\nif (!rawDetails) {\n  rawDetails = 'No se registraron detalles adicionales previo a la transferencia.';\n}\n\n// 1. Formato para Nota Privada en Chatwoot (Markdown)\nconst privateNote = `⚠️ **TRANSFERENCIA A SOPORTE HUMANO**\n\n📌 **Motivo:** ${reason}\n👤 **Contacto:** ${contact_name}\n📱 **Teléfono:** ${contact_phone}\n📧 **Email:** ${contact_email}\n🏷️ **Canal / Inbox:** ${brandName} (Inbox #${inbox_id})\n💬 **Conversación:** #${conversation_id}\n\n📋 **INFORMACIÓN RECOPILADA DEL CASO:**\n${rawDetails}`;\n\n// Helper para escapar HTML en Telegram\nconst escapeHtml = (str) => String(str || '')\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;');\n\n// 2. Formato para Telegram (HTML)\nconst telegramText = `🔔 <b>Transferencia a Soporte Humano</b>\n\n👤 <b>Contacto:</b> ${escapeHtml(contact_name)}\n📱 <b>Teléfono:</b> ${escapeHtml(contact_phone)}\n📧 <b>Email:</b> ${escapeHtml(contact_email)}\n🏷️ <b>Canal:</b> ${escapeHtml(brandName)} (Inbox #${inbox_id})\n💬 <b>Conversación:</b> #${conversation_id}\n📌 <b>Motivo:</b> ${escapeHtml(reason)}\n\n📋 <b>Información Recopilada:</b>\n${escapeHtml(rawDetails)}`;\n\n// 3. Formato para WhatsApp Evolution API (WhatsApp Markdown)\nconst whatsappText = `🔔 *Transferencia a Soporte Humano*\n\n👤 *Contacto:* ${contact_name}\n📱 *Teléfono:* ${contact_phone}\n📧 *Email:* ${contact_email}\n🏷️ *Canal:* ${brandName} (Inbox #${inbox_id})\n💬 *Conversación:* #${conversation_id}\n📌 *Motivo:* ${reason}\n\n📋 *Información Recopilada:*\n${rawDetails}`;\n\n// Preservar etiquetas y agregar 'human'\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\nif (!currentLabels.includes('human')) {\n  currentLabels.push('human');\n}\n\nreturn [{\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    contact_phone,\n    contact_email,\n    inbox_id,\n    brand_name: brandName,\n    reason,\n    case_details: rawDetails,\n    private_note_content: privateNote,\n    telegram_text: telegramText,\n    whatsapp_text: whatsappText,\n    labels: currentLabels\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     },
@@ -240,7 +240,7 @@
       ],
       "parameters": {
         "chatId": "40371837",
-        "text": "=🔔 <b>Transferencia a Humano</b>\n👤 Contacto: <b>{{ $node[\"Agregar etiqueta human\"].json.contact_name }}</b>\n💬 Conversación: #{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}",
+        "text": "={{ $node[\"Agregar etiqueta human\"].json.telegram_text }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -281,7 +281,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\"content\": \"⚠️ Esta conversación ha sido transferida a soporte humano por el Agente de IA.\", \"private\": true}",
+        "jsonBody": "={\\n  \\\"content\\\": {{ JSON.stringify($node[\\\"Agregar etiqueta human\\\"].json.private_note_content) }},\\n  \\\"private\\\": true\\n}",
         "options": {}
       }
     },
@@ -298,7 +298,7 @@
         "resource": "messages-api",
         "instanceName": "TTvAlertsMovistar",
         "remoteJid": "584146130135",
-        "messageText": "={{ \"🔔 *Transferencia a Humano*\n👤 *Contacto:* \" + $(\"Agregar etiqueta human\").first().json.contact_name + \"\n💬 *Conversación:* #\" + $(\"Agregar etiqueta human\").first().json.conversation_id }}",
+        "messageText": "={{ $node[\"Agregar etiqueta human\"].json.whatsapp_text }}",
         "options_message": {}
       },
       "credentials": {
@@ -318,7 +318,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    message: \"La conversación ha sido transferida exitosamente a un asesor humano.\",\n    instructions_for_ai: \"Informa de inmediato al cliente que la transferencia a soporte humano ha sido realizada exitosamente y que pronto será atendido dentro del horario extendido de oficina de los agentes humanos.\"\n  }\n}];",
+        "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    reason: humanData.reason,\n    message: \"La conversación ha sido transferida exitosamente a un asesor humano con la información recopilada.\",\n    instructions_for_ai: \"Informa de inmediato al cliente que la transferencia a soporte humano ha sido realizada exitosamente con todos los datos suministrados y que pronto será atendido dentro del horario extendido de oficina de los agentes humanos.\"\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     }
