@@ -127,6 +127,7 @@
 | `OQzmQUISGM6ShdKT` | `Telnyx to ME` | **Active Outbound Notifier** |
 | `hAHmBsRVDc4Hyt6g` | `Ecwid to Client & me 2.0` | **Active Ingestion / Outbound Notifier** (Ecwid Gmail order trigger -> payment notifications via Email, Telnyx SMS & WhatsApp with 'Customer' and '.' fallbacks) |
 | `asQhO3WgzQW4gR5P` | `Cron - Autoclose Inactive Conversations (48h)` | **Active Cron** (Executes at 0, 6, 12, 18h `0 0,6,12,18 * * *`; resolves conversations after 48h customer inactivity, strips `human` tag, applies `autoclosed`) |
+| `Lcyro95g4yg39bdD` | `Sync Mega to MegaData` | **Active / Standalone Ingestion** (Syncs Mega sheet + MegaOTT API properties and creates/dumps to `MegaData` tab in Google Sheets) |
 | `Vfweu0rjoTT3FUl1` | `Agent - TVTotal24 (Latina)` | Inactive / Deprecated |
 
 
@@ -840,7 +841,16 @@
      * Parameter `action=user&sub=list` belongs to the standard Xtream UI reseller panel specification.
      * Host `http://xvgtfqif.sljur.com/panel_api.php` was confirmed operational with custom User-Agent, returning `{"user_info":{"auth":0}}` when missing reseller web password.
      * The environment holds the API Bearer Token for `megaott.net`, but not the plain-text web panel password for user `TotalTvUSA`.
-  3. **Integration Strategy Formulated**:
-     * **Option A**: Direct bulk fetch via `panel_api.php?username=TotalTvUSA&password={pass}&action=user&sub=list` once panel password is provided.
-     * **Option B**: Programmatic iterative sync via REST API `GET https://megaott.net/api/v1/subscriptions/{id}` using known customer IDs from the existing `"Mega"` sheet in `Clientes TotalTv`.
-     * **Google Sheets Connectivity**: n8n OAuth credential `Pw5wN2L5UopOruaj` validated for creating and populating tab `"MegaData"` in spreadsheet `1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`.
+  3. **Implementation & Successful Execution**:
+     * Built and deployed n8n workflow **`Sync Mega to MegaData`** (`Lcyro95g4yg39bdD`):
+       - Trigger: Manual Trigger + Webhook Trigger (`POST https://n8n.ac4.club/webhook/sync-mega-megadata`).
+       - Step 1: Reads all records from tab `"Mega"` in Google Sheets `Clientes TotalTv` (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`) using credential `Pw5wN2L5UopOruaj`.
+       - Step 2: Extracts identifiers and iteratively enriches records via MegaOTT REST API (`GET https://megaott.net/api/v1/subscriptions/{id}`) using Bearer Token `1655|Uk2GI2EUH0v8NIcUFjGwLeKLlp14bVmEi2rcGSuJ48ec8236`.
+       - Step 3: Dynamically accumulates 100% of keys into unique column headers and serializes complex data structures.
+       - Step 4: Ensures tab **`MegaData`** exists in Google Sheets via `batchUpdate` (`addSheet`), with non-blocking error handling.
+       - Step 5: Dumps 100% of tabular records into `MegaData!A1` via Google Sheets REST API (`PUT /values/MegaData!A1?valueInputOption=USER_ENTERED`).
+       - Step 6: Emits structured sync summary.
+     * **Live Production Run**:
+       - Workflow published with `activeVersionId: 2cd416ab-c67e-40fc-89df-2b5bb3dab5b4`.
+       - Webhook triggered and execution `6382` completed with `status: success`.
+       - Tab **`MegaData`** created and fully populated in Google Sheet `Clientes TotalTv`.
