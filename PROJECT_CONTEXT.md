@@ -688,6 +688,48 @@
     * Workflow `ecfTEElylV4snTHG` published to active production (`activeVersionId: c15e5bcd-f50a-4f4b-8b40-89d49b99972c`).
     * Registered in `workflows/export_workflows.py` and exported to `workflows/proxy_chatwoot_evolution.json`.
 
+---
 
+## 18. Mandatory Technical & Administrative Triage Protocol (Prohibition on Premature Human Handover)
 
-
+* **Problem & Root Cause**:
+  * The AI agents for TotalTv USA (`Toto`) and TVTotal24 (`Tivi`) were prematurely transferring conversations to human support (`Call 'transfer_to_human_tool'` / adding the `human` label) without giving customer attention or diagnostic triage.
+  * Triggers as simple as "tengo problemas de señal", "la tv se queda colgada", "no se ven las series", "mi cuenta está vencida", or "ya hice el pago" caused immediate handover even though the customer had never asked to speak with a human.
+  * Root causes identified:
+    1. System prompts previously instructed: "...OR when an existing customer requests their active service credentials / technical human support." The LLMs interpreted any technical complaint as "technical human support" warranting immediate tool execution.
+    2. Earlier prompt versions strictly prohibited asking for phone on human handover, meaning agents transferred without ensuring support had customer contact information.
+    3. `clientContextPrefix` in n8n code nodes previously contained: "3. If asking for a human, transfer immediately!", which combined with vague issue detection triggered impulsive transfers.
+* **Architecture & Business Rules Implemented**:
+  1. **Strict Prohibition on Premature Handover**:
+     * The AI agent must NEVER transfer conversations to human support upon initial issue reports, complaints, signal failures, playback errors, expired accounts, or payment announcements.
+     * Handover is strictly gated to:
+       a) Explicit, unambiguous customer request to speak to a person / human support ("quiero hablar con un humano", "pásame a una persona", "un asesor por favor", "talk to human", "speak with someone").
+       b) Retrieval of forgotten active account credentials (which the AI does not have access to in panels).
+       c) After completing mandatory technical or administrative triage when human panel intervention is required.
+  2. **Customer Identification Before Handover**:
+     * Customer Name and Phone number MUST be known before executing `Call 'transfer_to_human_tool'`.
+     * If the customer is an existing client (`stage-leads-ganados`) or if name and phone are already known in context or previous messages, DO NOT ask again.
+     * If the customer is new or name/phone are unknown, the AI MUST politely request Name and Phone number before transferring.
+  3. **Technical Triage Protocol**:
+     * Mandatory diagnostic data collected before any technical escalation:
+       - **Detailed description of failure**: Specific channel, movie, or series failing, and exact error code or message on screen.
+       - **Service Username**: Account username (`nombre de usuario`).
+       - **Application & Device**: Exact app used (TotalTv native app, Smarters, XCIPTV, Downloader, etc.) and device (Firestick, Smart TV, Android Box, Smartphone, Roku, etc.).
+     * Agent suggests basic troubleshooting (restarting app/router) or escalates with full diagnostic data.
+  4. **Administrative & Billing Triage Protocol**:
+     * Mandatory payment data collected before any billing escalation:
+       - **Payment Method**: Method used (Zelle, Crypto, CashApp, Card/PayPal for USA; Pago Móvil, Zelle, Binance for Latina).
+       - **Exact Amount**: Exact amount paid/transferred.
+       - **Payment Receipt / Reference**: Reference number, transaction ID, or screenshot/capture.
+       - **Service Username / Registered Email**: For account renewal/reactivation.
+     * Agent escalates to billing human support only after collecting payment details.
+* **Nodes & Files Synchronized**:
+  * `prompts/agent_prompt.md`: TotalTv USA prompt updated with bilingual triage protocol and handover rules.
+  * `prompts/tvtotal24_prompt.md`: TVTotal24 prompt updated with Spanish triage protocol and handover rules.
+  * n8n Workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+    - Node `AI Agent`: `options.systemMessage` updated.
+    - Node `AI Agent - TVTotal24`: `options.systemMessage` updated.
+    - Node `Call 'transfer_to_human_tool'`: `description` updated with strict triage constraints.
+    - Nodes `Preparar Mensaje`, `Evaluar Cliente Mega`, `Evaluar DnSpace (Fallback)`, `Evaluar Cliente DnSpace`, and `Evaluar Mega (Fallback)`: `clientContextPrefix` updated with triage instructions.
+  * Live version published: `64a12a85-d221-48cd-9fdf-dc8d3d267e31`.
+  * Exported and verified: `workflows/router_chatwoot_ia.json`.
