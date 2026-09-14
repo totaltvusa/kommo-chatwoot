@@ -854,3 +854,17 @@
        - Workflow published with `activeVersionId: 2cd416ab-c67e-40fc-89df-2b5bb3dab5b4`.
        - Webhook triggered and execution `6382` completed with `status: success`.
        - Tab **`MegaData`** created and fully populated in Google Sheet `Clientes TotalTv`.
+
+* **Limitación Crítica de Arquitectura y Decisión Pendiente (MegaOTT)**:
+  > [!IMPORTANT]
+  > **TOMA DE NOTA ARQUITECTÓNICA**:
+  > **AL NO CONTAR CON EL ID DE SUSCRIPCION, NO PODEMOS CONSULTAR CLIENTES EN MEGA.OTT. DEBEMOS DETERMINAR CÓMO EXTENDER SUSCRIPCIONES SI NO TENEMOS ESE DATO.**
+  * **Detalle Técnico del Bloqueo**:
+    1. **Ausencia de ID en Google Sheets**: La hoja *"Mega"* en el archivo de Google Sheets `Clientes TotalTv` (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`) contiene columnas como `Usuario`, `Nombre`, `Apellido`, `Vence`, `Email`, `Teléfono`, pero **NO contiene el ID numérico de suscripción (`subscription_id`)** de MegaOTT.
+    2. **Limitación de la API de MegaOTT**: La API REST de MegaOTT (`https://megaott.net/api/v1`) **no permite búsquedas por nombre de usuario, teléfono ni correo electrónico**. Todos sus endpoints operativos (`GET /api/v1/subscriptions/{id}` y `POST /api/v1/subscriptions/{id}/extend`) exigen estrictamente el ID numérico entero de la suscripción.
+    3. **Impacto Operativo**: Sin el ID de suscripción numérico, no es posible consultar datos enriquecidos ni ejecutar renovaciones o extensiones automáticas de cuentas vía API en MegaOTT de forma directa.
+    4. **Política del Workflow de Sincronización (`Sync Mega to MegaData` - `Lcyro95g4yg39bdD`)**:
+       - Dispone de un `Manual Trigger` y un `Webhook Trigger` (`POST https://n8n.ac4.club/webhook/sync-mega-megadata`).
+       - No posee un cron recurrente para evitar ejecuciones innecesarias; se activa únicamente bajo demanda o invocación programática cuando se requiere sincronizar o poblar la hoja `MegaData`.
+    5. **Próximo Paso Arquitectónico**:
+       - Evaluar métodos alternativos para obtener el mapeo inicial de `Usuario` $\leftrightarrow$ `subscription_id` (por ejemplo, exportación masiva CSV desde el panel web de revendedor o scraping autenticado) o definir el mecanismo operativo para renovar/extender suscripciones cuando solo se disponga del nombre de usuario.
