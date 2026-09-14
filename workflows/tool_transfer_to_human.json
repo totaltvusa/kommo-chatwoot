@@ -3,12 +3,12 @@
   "name": "Transfer to Human Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "feaf5cdc-3bf4-47b3-b9d3-851d0a0568f5",
-  "activeVersionId": "feaf5cdc-3bf4-47b3-b9d3-851d0a0568f5",
+  "versionId": "5dd39738-c2ca-462c-a3ce-59646deb8b6b",
+  "activeVersionId": "5dd39738-c2ca-462c-a3ce-59646deb8b6b",
   "triggerCount": 0,
   "nodeCount": 9,
   "createdAt": "2026-08-19T03:20:29.252Z",
-  "updatedAt": "2026-09-14T02:01:58.371Z",
+  "updatedAt": "2026-09-14T02:38:47.530Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -318,7 +318,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    reason: humanData.reason,\n    message: \"La conversación ha sido transferida exitosamente a un asesor humano con la información recopilada.\",\n    instructions_for_ai: \"Informa de inmediato al cliente que la transferencia a soporte humano ha sido realizada exitosamente con todos los datos suministrados y que pronto será atendido dentro del horario extendido de oficina de los agentes humanos.\"\n  }\n}];",
+        "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    reason: humanData.reason,\n    message: \"La conversación HA SIDO transferida exitosamente a un asesor humano en el sistema con la información recopilada.\",\n    instructions_for_ai: \"REGLA OBLIGATORIA E INELUDIBLE: La transferencia a soporte humano ya se realizó con éxito en el sistema. En este mismo mensaje final al cliente DEBES confirmar obligatoria y explícitamente que su caso/conversación ha sido transferido a nuestro equipo de soporte humano y que un asesor lo atenderá a la brevedad dentro del horario extendido de oficina. ESTÁ TOTALMENTE PROHIBIDO decir que hubo un error o terminar tu respuesta sin confirmar esta transferencia.\"\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     }

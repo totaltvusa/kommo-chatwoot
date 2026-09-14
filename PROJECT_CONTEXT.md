@@ -792,3 +792,31 @@
 * **Export & Synchronization**:
   * Added `tool_get_mvplay_credentials: 'gyTc5A6r5TNRgJCs'` to `workflows/export_workflows.py`.
   * Exported `workflows/tool_get_mvplay_credentials.json` and updated `workflows/router_chatwoot_ia.json`.
+
+---
+
+## 20. Mandatory Customer Notification on Human Transfer Across All Scenarios
+
+* **Requirement & Context**:
+  * In all circumstances where a conversation is transferred to a human agent, regardless of the reason (explicit customer request, completion of technical triage, completion of administrative/billing triage, manual credential recovery, or unhandled inquiries), the customer **MUST ALWAYS BE EXPLICITLY INFORMED** that the transfer has been completed.
+* **Root Causes & Gaps Addressed**:
+  * **Hallucinated Transfer Errors**: In certain cases (e.g. Conv #1376), LLM agents executed `Call 'transfer_to_human_tool'` successfully, but hallucinated that a "momentary technical issue" occurred and stated they would "retry transferring later", confusing the customer even though the conversation was already labeled `human`, logged in private notes, and alerted to admins.
+  * **Soft / Omitted Notification**: In administrative or technical triage flows, prompts previously directed agents to "confirm that billing will verify" or "confirm that technical team will review", causing LLMs to reply with generic statements like "gracias, revisaremos tu comprobante" without explicitly stating that the conversation was officially handed off to a human support agent.
+* **Multi-Layer Architecture Implementation**:
+  1. **System Prompts (`prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`)**:
+     * Integrated absolute top-level mandate:
+       - **REGLA OBLIGATORIA E IMPERATIVA — INFORMAR AL CLIENTE SOBRE LA TRANSFERENCIA A HUMANO**: In all transfers for ANY reason, the final response MUST explicitly confirm that the transfer to human support has been completed.
+       - Strictly prohibited: silent transfers, finishing without notifying, and apologizing for non-existent transfer errors.
+     * Reinforced across all individual scenario instructions (Direct Request, Technical Triage, Billing Triage, Credential Recovery).
+  2. **Subworkflow `Transfer to Human Tool` (`xam0WV65gvTbXcIx`)**:
+     * Node `Respuesta Tool Transferencia`: Updated `instructions_for_ai` to enforce a mandatory, ineludible directive for the agent to confirm the transfer explicitly in the final customer message.
+     * Active version published: `5dd39738-c2ca-462c-a3ce-59646deb8b6b`.
+  3. **Main Router Workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`)**:
+     * Node `Call 'transfer_to_human_tool'`: Updated description to explicitly include the mandatory customer notification requirement.
+     * Node `Formatear Respuesta` (Fail-Safe Code Node):
+       - Added regex detection to sanitize and replace any hallucinated error excuses (e.g. "inconveniente técnico momentáneo", "no se pudo transferir", "error al transferir") with the correct, polite transfer confirmation.
+       - Added execution check for `Call 'transfer_to_human_tool'`: if the tool ran in the execution but the output text omitted transfer keywords (`transferid*`, `transferencia`, `soporte humano`, `asesor`, `human support`), automatically appends the explicit confirmation message in the customer's language.
+     * Active version published: `89827e56-09b9-4e43-a771-2cb6dc2f6703`.
+  4. **Export & Persistence**:
+     * Workflows synchronized and exported to `workflows/router_chatwoot_ia.json` and `workflows/tool_transfer_to_human.json`.
+
