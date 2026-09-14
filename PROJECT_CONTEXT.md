@@ -820,3 +820,27 @@
   4. **Export & Persistence**:
      * Workflows synchronized and exported to `workflows/router_chatwoot_ia.json` and `workflows/tool_transfer_to_human.json`.
 
+---
+
+## 21. MegaOTT API & Reseller Panel Synchronization Architecture Investigation
+
+* **Objective & User Requirements**:
+  * Implement an automated synchronization process to fetch the complete subscription catalog from MegaOTT (`action=user&sub=list`) and write it into a new tab named **`MegaData`** within Google Sheets document **`Clientes TotalTv`** (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`).
+  * Process 100% of delivered properties without omissions, dynamically constructing column headers from the union of all detected keys.
+  * Maintain tabular cell integrity by serializing nested objects and arrays into plain-text JSON.
+  * Print console summary reporting total records processed, total columns generated, and confirmation of dump into `MegaData`.
+
+* **Infrastructure Audit & Technical Discoveries**:
+  1. **MegaOTT REST API (`https://megaott.net/api/v1`)**:
+     * **Authentication**: Laravel Sanctum Bearer Token `1655|Uk2GI2EUH0v8NIcUFjGwLeKLlp14bVmEi2rcGSuJ48ec8236`.
+     * **User Verification**: `GET /api/v1/user` responds `200 OK` with user `TotalTvUSA` (`id: 52298`, `credit: 4.48`).
+     * **Single Subscription Retrieval**: `GET /api/v1/subscriptions/{id}` responds `200 OK` with full object schema containing 16 properties (`type`, `id`, `username`, `password`, `mac_address`, `package`, `template`, `max_connections`, `forced_country`, `adult`, `note`, `whatsapp_telegram`, `paid`, `expiring_at`, `dns_link`, `dns_link_for_samsung_lg`, `portal_link`).
+     * **Bulk Listing Restriction**: `GET /api/v1/subscriptions` returns `405 Method Not Allowed` with `allow: POST` (the REST endpoint only supports subscription creation). Official documentation at `https://megaott.net/docs/subscriptions` confirms no bulk listing route is exposed on `/api/v1/subscriptions`.
+  2. **Xtream UI / ZapX Panel API (`panel_api.php?action=user&sub=list`)**:
+     * Parameter `action=user&sub=list` belongs to the standard Xtream UI reseller panel specification.
+     * Host `http://xvgtfqif.sljur.com/panel_api.php` was confirmed operational with custom User-Agent, returning `{"user_info":{"auth":0}}` when missing reseller web password.
+     * The environment holds the API Bearer Token for `megaott.net`, but not the plain-text web panel password for user `TotalTvUSA`.
+  3. **Integration Strategy Formulated**:
+     * **Option A**: Direct bulk fetch via `panel_api.php?username=TotalTvUSA&password={pass}&action=user&sub=list` once panel password is provided.
+     * **Option B**: Programmatic iterative sync via REST API `GET https://megaott.net/api/v1/subscriptions/{id}` using known customer IDs from the existing `"Mega"` sheet in `Clientes TotalTv`.
+     * **Google Sheets Connectivity**: n8n OAuth credential `Pw5wN2L5UopOruaj` validated for creating and populating tab `"MegaData"` in spreadsheet `1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`.
