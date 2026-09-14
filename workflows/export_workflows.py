@@ -40,6 +40,7 @@ wfs = {
     'tool_calcular_pago_movil': '4AYo7CX3Ou1K2yXH',
     'tool_create_mvplay_trial': 'kh10aaenUURvi7Ji',
     'tool_create_mega_ott_trial': 'e1R7zQorWBaaqgou',
+    'tool_get_mvplay_credentials': 'gyTc5A6r5TNRgJCs',
     'tool_transfer_to_human': 'xam0WV65gvTbXcIx',
     'latin_vence_hoy_y_vence4': 'TfILC2hXao6SLQfE',
     'cron_autoclose_inactive_conversations': 'asQhO3WgzQW4gR5P',

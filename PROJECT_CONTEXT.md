@@ -751,3 +751,44 @@
     - Node `Respuesta Tool Transferencia`: returns success payload with reason and confirmation.
     - Live version published: `feaf5cdc-3bf4-47b3-b9d3-851d0a0568f5`.
   * Exported and verified: `workflows/router_chatwoot_ia.json` and `workflows/tool_transfer_to_human.json`.
+
+---
+
+## 19. Automated Credentials Recovery for TVTotal24 / MVPlay (`obtener_credenciales_tvtotal24`)
+
+* **Objective & Context**:
+  * Allow the AI agent for TVTotal24 / Latina (`Tivi`) to autonomously retrieve and deliver active service credentials (username, password, and DNS URLs) when an existing customer (`stage-leads-ganados`) requests their forgotten credentials or access details.
+  * Mega OTT / TotalTv USA credential recovery was deferred for a later phase as per explicit user instruction.
+* **API Research & Findings**:
+  * **MVPlay Panel API** (`http://1395.cooteg.ch:2095/pooqkDEG/reseller/index.php`):
+    * Endpoint `action=get_lines&search={term}` performs search across both `reseller_notes` (customer full name) and `username`.
+    * Tested with live accounts (`Lázaro Figueredo` id 213418, `Carlos Abreu` id 41663, `Andres Tablante` id 97231) confirming exact and partial token matching.
+  * **Mega OTT API** (`https://megaiptv.biz:8000/api/v1`):
+    * `GET /subscriptions` returns 405 Method Not Allowed; endpoint requires exact numeric subscription ID (`GET /subscriptions/{id}`), making direct name/username searches impossible without pre-indexed mapping.
+* **Strict Business Constraints**:
+  * **Zero "Most Apps" Wording**: Under NO circumstance will the AI or tool mention the phrase "most apps". The connection URLs are strictly labeled as:
+    * 🌐 **Servidor / DNS:** `http://wk.mvpl.uk:2082`
+    * 📺 **DNS para Smarters:** `http://cdn01link.uk:2095`
+  * **Restricted to Existing Clients**: Credential recovery is strictly enabled for customers with label `stage-leads-ganados`. If credentials cannot be found automatically or if the user is not verified, the agent transfers to a human agent with reason `Recuperación de Credenciales`.
+* **Subworkflow `Tool - Obtener Credenciales MVPlay` (`gyTc5A6r5TNRgJCs`)**:
+  * **Nodes**:
+    1. `Execute Workflow Trigger`: Inputs `contact_name` (from AI), `conversation_id`, and `account_id` (from Chatwoot context).
+    2. `Preparar Busqueda`: Sanitizes search term (lowercased, accents removed).
+    3. `Consultar MVPlay`: HTTP GET to MVPlay API `action=get_lines&search={term}`.
+    4. `Procesar Credenciales MVPlay`: Robust token-matching scoring algorithm matching tokens in `reseller_notes` (requiring `tokenMatches > 0` before awarding active/non-trial bonuses). Also posts a Chatwoot private audit note if `conversation_id` is supplied.
+    5. `Respuesta Tool`: Returns JSON payload:
+       - If found: `{ status: 'found', username, password, dns: 'http://wk.mvpl.uk:2082', dns_smarters: 'http://cdn01link.uk:2095', cliente: reseller_notes, instructions_for_ai: "..." }`.
+       - If not found: `{ status: 'not_found', message: "...", instructions_for_ai: "..." }`.
+  * Active version: `8a4e7255-f939-458f-a473-223130b2af36`.
+* **Integration into `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`)**:
+  * Added tool node `obtener_credenciales_tvtotal24` (`@n8n/n8n-nodes-langchain.toolWorkflow`, version 2.2) at canvas position `[1360, 616]`.
+  * Connected to `AI Agent - TVTotal24` as `ai_tool`.
+  * Updated system prompt in `prompts/tvtotal24_prompt.md` and node `AI Agent - TVTotal24`:
+    - Protocol for asking/verifying full name for clients with `stage-leads-ganados`.
+    - Execution of `obtener_credenciales_tvtotal24`.
+    - Delivery template with strict prohibition of "most apps".
+    - Fallback escalation to `Call 'transfer_to_human_tool'` if not found or unverified.
+  * Active version: `5c746f0a-a4e3-47e1-b0dc-c173ddee19b0`.
+* **Export & Synchronization**:
+  * Added `tool_get_mvplay_credentials: 'gyTc5A6r5TNRgJCs'` to `workflows/export_workflows.py`.
+  * Exported `workflows/tool_get_mvplay_credentials.json` and updated `workflows/router_chatwoot_ia.json`.
