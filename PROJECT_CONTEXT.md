@@ -619,5 +619,45 @@
     * Audited all other inboxes (13, 14, 16, 18, 4, 19, 6, 10, 7, 8) to verify that none contain `"null"` or invalid callback URLs.
     * Verified resolution with test message in conversation #1338, confirming message status is now immediately recorded as `sent`.
 
+### September 13-14, 2026
+* **Cross-Brand Google Sheets Search Fallback & Contact Auto-Enrichment Fix**:
+  * **Problem Statement**:
+    * Several incoming customer conversations were failing to match their corresponding record in the Google Sheets database (`Clientes TotalTV` - Doc ID `1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`), even though their phone numbers matched sheet records.
+    * As a result, the expected automatic operations were not triggering: the contact name was not updated to `Nombre` + `Apellido`, the default channel handle was not saved to `company_name`, the first purchase date was not written to `bio` (`additional_attributes.description`), and the conversation remained without the `stage-leads-ganados` label.
+  * **Root Causes Diagnosed**:
+    1. **Strict Brand-Locked Sheet Routing**:
+       * The switch node `¿Requiere Buscar en Sheet?` routed strictly by the brand detected from the inbox. TotalTv USA (e.g. Inbox 18) only searched sheet `Mega`, while TVTotal24 Latina (e.g. Inbox 16, 19) only searched sheet `DnSpace`.
+       * If a customer registered in `DnSpace` messaged the TotalTv USA WhatsApp inbox (such as Guillermo Montero #1230 / Conv #1381), the workflow never checked `DnSpace` and failed to identify the customer.
+    2. **Column Header Matching Sensitivity**:
+       * Direct object property access like `row['Teléfono']` or `row['Nombre']` returned `undefined` whenever sheet columns had whitespace variations, casing discrepancies, or alternative naming.
+    3. **Phone Number Format Nuances**:
+       * Formats such as Venezuelan numbers with leading zeros (`0414...` vs `58414...`), Mexican WhatsApp `1` prefix (`521...` vs `52...`), and Spanish 9-digit numbers failed strict string comparison.
+    4. **Premature Abort on `human` Conversations**:
+       * In node `Preparar Mensaje`, `if (labels.includes('human')) return [];` completely terminated workflow execution before the Google Sheets lookup, skipping contact enrichment entirely for human-managed conversations.
+  * **Remediation & Architecture Implemented in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`)**:
+    1. **Non-Blocking `human` Flag**:
+       * In `Preparar Mensaje`, conversations with the `human` label now set `skip_ai_response: true` instead of aborting. This allows the workflow to flow through sheet lookup and contact enrichment, while the switch node `¿Qué Empresa?` checks `skip_ai_response != true` to suppress LLM message generation.
+    2. **Robust Multi-Regex Field Extractor (`getField`)**:
+       * Normalized field extraction across `tel|phone|cel|movil|whats`, `email|correo`, `nombre`, `apellido`, and `1ra.*compra|primera.*compra|fecha.*compra|compra`.
+    3. **Multi-Format Phone Matcher (`phonesMatch`)**:
+       * Cleans non-digits, checks exact match, suffix match ($\ge 7$ digits), last-10-digits, last-9-digits, and Mexican `521` normalization.
+    4. **Cross-Sheet Fallback Routing**:
+       * TotalTv USA Path: `Leer Sheet Mega` $\to$ `Evaluar Cliente Mega` $\to$ `¿Encontró en Mega?`. If false $\to$ `Leer Sheet DnSpace (Fallback)` $\to$ `Evaluar DnSpace (Fallback)` $\to$ `¿Qué Empresa?`.
+       * TVTotal24 Latina Path: `Leer Sheet DnSpace` $\to$ `Evaluar Cliente DnSpace` $\to$ `¿Encontró en DnSpace?`. If false $\to$ `Leer Sheet Mega (Fallback)` $\to$ `Evaluar Mega (Fallback)` $\to$ `¿Qué Empresa?`.
+    5. **Complete Contact Enrichment**:
+       * If found:
+         * Preserves default channel handle into `additional_attributes.company_name`.
+         * Sets `name` to `Nombre` + `Apellido`.
+         * Sets `additional_attributes.description` (Bio) to first purchase date (`1ra compra`).
+         * Removes any prior `stage-*` labels and applies `stage-leads-ganados`.
+  * **Production Deployment & Live Verification**:
+    * Published workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) to active production (`activeVersionId: 46b3c455-e75d-46e8-80c6-3b33b668e958`).
+    * Verified live on Chatwoot contacts:
+      * **Guillermo Montero** (Conv #1381, Contact #1230): Bio set to `2022-06-20`, labeled `stage-leads-ganados`.
+      * **Lazaro Figueredo** (Conv #1372, Contact #1173): Channel handle `"EFGroning"` preserved in `company_name`, name updated to `"Lazaro Figueredo"`, bio set to `2026-08-17`, labeled `stage-leads-ganados`.
+      * **Luis Villar** (Conv #1365, Contact #1240): Bio set to `2025-11-16`, labeled `stage-leads-ganados`.
+    * Exported workflow to `workflows/router_chatwoot_ia.json`.
+
+
 
 

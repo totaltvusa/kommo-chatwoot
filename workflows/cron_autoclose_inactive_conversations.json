@@ -1,14 +1,14 @@
 {
   "id": "asQhO3WgzQW4gR5P",
-  "name": "Cron - Autoclose Inactive Conversations (48h)",
+  "name": "Cron - Autoclose Inactive Conversations (36h)",
   "active": true,
   "isArchived": false,
-  "versionId": "e54ef1cb-f576-4b13-964a-8169d839073b",
-  "activeVersionId": "e54ef1cb-f576-4b13-964a-8169d839073b",
+  "versionId": "79aae083-1941-4797-b5bc-b1250b1026b5",
+  "activeVersionId": "79aae083-1941-4797-b5bc-b1250b1026b5",
   "triggerCount": 2,
   "nodeCount": 3,
   "createdAt": "2026-08-20T02:25:07.537Z",
-  "updatedAt": "2026-09-06T16:12:09.644Z",
+  "updatedAt": "2026-09-13T23:57:46.924Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -41,7 +41,7 @@
       "main": [
         [
           {
-            "node": "Autoclose Inactive Conversations 48h",
+            "node": "Autoclose Inactive Conversations 36h",
             "type": "main",
             "index": 0
           }
@@ -52,7 +52,7 @@
       "main": [
         [
           {
-            "node": "Autoclose Inactive Conversations 48h",
+            "node": "Autoclose Inactive Conversations 36h",
             "type": "main",
             "index": 0
           }
@@ -99,7 +99,7 @@
     },
     {
       "id": "00b54ca6-0d77-4829-b50a-140e2f6c0473",
-      "name": "Autoclose Inactive Conversations 48h",
+      "name": "Autoclose Inactive Conversations 36h",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -107,7 +107,7 @@
         100
       ],
       "parameters": {
-        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\n\nconst results = [];\nconst now = Date.now();\n\n// 1. Fetch all open conversations with pagination\nlet allOpenConvs = [];\ntry {\n  let page = 1;\n  while (page <= 10) {\n    const resp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations?status=open&page=${page}`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const payload = resp.data?.payload || [];\n    if (payload.length === 0) break;\n    allOpenConvs.push(...payload);\n    if (payload.length < 25) break;\n    page++;\n  }\n} catch (e) {}\n\n// Deduplicate conversations by ID\nconst convMap = new Map();\nfor (const c of allOpenConvs) {\n  if (c && c.id) convMap.set(c.id, c);\n}\n\nfor (const [convId, conv] of convMap.entries()) {\n  const currentLabels = Array.isArray(conv.labels) ? conv.labels : [];\n  \n  // Fetch messages to determine the last customer message timestamp\n  let msgs = [];\n  try {\n    const msgResp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations/${convId}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    msgs = msgResp.payload || [];\n  } catch (e) {\n    continue;\n  }\n\n  // Customer incoming messages: message_type === 0 (or 'incoming') and not private\n  const customerMsgs = msgs.filter(m => (m.message_type === 0 || m.message_type === 'incoming') && m.private !== true);\n\n  let lastCustomerTimeMs = 0;\n  if (customerMsgs.length > 0) {\n    const lastMsg = customerMsgs[customerMsgs.length - 1];\n    const ts = Number(lastMsg.created_at || lastMsg.created_at_epoch || 0);\n    lastCustomerTimeMs = ts > 1e11 ? ts : ts * 1000;\n  } else {\n    const ts = Number(conv.created_at || conv.last_activity_at || 0);\n    lastCustomerTimeMs = ts > 1e11 ? ts : ts * 1000;\n  }\n\n  const elapsedHours = (now - lastCustomerTimeMs) / (1000 * 3600);\n\n  // If 48+ hours have elapsed without any customer message:\n  if (elapsedHours >= 48) {\n    // 1. Remove 'human' label (so future customer messages are handled by AI Agent immediately)\n    // 2. Add 'autoclosed' label\n    let updatedLabels = currentLabels.filter(l => l !== 'human');\n    if (!updatedLabels.includes('autoclosed')) {\n      updatedLabels.push('autoclosed');\n    }\n\n    // Update labels in Chatwoot\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {}\n\n    // Resolve conversation\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/toggle_status`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { status: 'resolved' },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      convId,\n      action: 'autoclosed_and_resolved',\n      elapsedHours: Math.round(elapsedHours * 10) / 10\n    });\n  } else {\n    results.push({\n      convId,\n      action: 'waiting',\n      elapsedHours: Math.round(elapsedHours * 10) / 10,\n      neededHours: 48\n    });\n  }\n}\n\nreturn [{\n  json: {\n    timestamp: new Date().toISOString(),\n    processed_count: results.length,\n    results\n  }\n}];",
+        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\n\nconst results = [];\nconst now = Date.now();\n\n// 1. Fetch all open conversations with pagination\nlet allOpenConvs = [];\ntry {\n  let page = 1;\n  while (page <= 10) {\n    const resp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations?status=open&page=${page}`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const payload = resp.data?.payload || [];\n    if (payload.length === 0) break;\n    allOpenConvs.push(...payload);\n    if (payload.length < 25) break;\n    page++;\n  }\n} catch (e) {}\n\n// Deduplicate conversations by ID\nconst convMap = new Map();\nfor (const c of allOpenConvs) {\n  if (c && c.id) convMap.set(c.id, c);\n}\n\nfor (const [convId, conv] of convMap.entries()) {\n  const currentLabels = Array.isArray(conv.labels) ? conv.labels : [];\n  \n  // Fetch messages to determine the last customer message timestamp\n  let msgs = [];\n  try {\n    const msgResp = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `${chatwootBase}/conversations/${convId}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    msgs = msgResp.payload || [];\n  } catch (e) {\n    continue;\n  }\n\n  // Customer incoming messages: message_type === 0 (or 'incoming') and not private\n  const customerMsgs = msgs.filter(m => (m.message_type === 0 || m.message_type === 'incoming') && m.private !== true);\n\n  let lastCustomerTimeMs = 0;\n  if (customerMsgs.length > 0) {\n    const lastMsg = customerMsgs[customerMsgs.length - 1];\n    const ts = Number(lastMsg.created_at || lastMsg.created_at_epoch || 0);\n    lastCustomerTimeMs = ts > 1e11 ? ts : ts * 1000;\n  } else {\n    const ts = Number(conv.created_at || conv.last_activity_at || 0);\n    lastCustomerTimeMs = ts > 1e11 ? ts : ts * 1000;\n  }\n\n  const elapsedHours = (now - lastCustomerTimeMs) / (1000 * 3600);\n\n  // If 36+ hours have elapsed without any customer message:\n  if (elapsedHours >= 36) {\n    // 1. Remove 'human' label (so future customer messages are handled by AI Agent immediately)\n    // 2. Add 'autoclosed' label\n    let updatedLabels = currentLabels.filter(l => l !== 'human');\n    if (!updatedLabels.includes('autoclosed')) {\n      updatedLabels.push('autoclosed');\n    }\n\n    // Update labels in Chatwoot\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: updatedLabels },\n        json: true\n      });\n    } catch (e) {}\n\n    // Resolve conversation\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${convId}/toggle_status`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { status: 'resolved' },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      convId,\n      action: 'autoclosed_and_resolved',\n      elapsedHours: Math.round(elapsedHours * 10) / 10\n    });\n  } else {\n    results.push({\n      convId,\n      action: 'waiting',\n      elapsedHours: Math.round(elapsedHours * 10) / 10,\n      neededHours: 36\n    });\n  }\n}\n\nreturn [{\n  json: {\n    timestamp: new Date().toISOString(),\n    processed_count: results.length,\n    results\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     }

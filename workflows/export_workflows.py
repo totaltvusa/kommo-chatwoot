@@ -52,7 +52,8 @@ import re
 
 def sanitize_secrets(data_str):
     # Mask tokens that trigger GitHub push protection
-    data_str = re.sub(r'KEY019[A-Za-z0-9_]+', 'KEY_TELNYX_REDACTED', data_str)
+    data_str = re.sub(r'KEY01[A-Za-z0-9_]+', 'KEY_TELNYX_REDACTED', data_str)
+    data_str = re.sub(r'KEY[A-Za-z0-9_]{25,}', 'KEY_TELNYX_REDACTED', data_str)
     data_str = re.sub(r'apik_[A-Za-z0-9_]+', 'APIK_WHOP_REDACTED', data_str)
     data_str = re.sub(r'sk_[A-Za-z0-9_]{20,}', 'SK_REDACTED', data_str)
     data_str = re.sub(r'pk_[A-Za-z0-9_]{20,}', 'PK_REDACTED', data_str)
