@@ -871,18 +871,23 @@
 
 ---
 
-## 22. Multimodal Vision Pipeline: Automated Payment Receipt Image Analysis & Verification
+## 22. Multimodal Vision Pipeline: Automated Payment Receipt & App Screenshot Error Diagnosis
 
 * **Objective & Operational Architecture**:
   * Implemented an automated vision analysis and verification pipeline within the inbound gateway workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
-  * When a customer sends an image attachment in Chatwoot (screenshots, transfer receipts, checkout confirmations), the workflow downloads the image blob, converts it to base64, and calls **Claude 3.5 Sonnet Vision** (`POST https://api.anthropic.com/v1/messages` using credential `ZbUWSAq6JlKInA64`).
-* **Structured Vision JSON Extraction & Supported Payment Types**:
-  * The vision model returns a strict JSON object:
-    - `is_payment_receipt` (boolean)
-    - `payment_method` (`pago_movil`, `zelle`, `pd_cash`, `cashapp`, `nowpayments`, `card_payment`, `binance`, `stripe`, `paypal`, `other`, `unknown`)
-    - `amount`, `currency` (`VES`, `USD`, `EUR`, `USDT`, `BTC`, `OTHER`), `date_time`, `bank_origin`, `reference_number`
-    - `destination_phone`, `destination_rif`, `destination_email`
-* **Automated Destination & Gateway Verification Rules**:
+  * When a customer sends an image attachment in Chatwoot (screenshots, transfer receipts, checkout confirmations, app error screens), the workflow downloads the image blob, converts it to base64, and calls **Claude 3.5 Sonnet Vision** (`POST https://api.anthropic.com/v1/messages` using credential `ZbUWSAq6JlKInA64`).
+* **Structured Vision JSON Extraction & Supported Image Types**:
+  * The vision model returns a strict JSON object categorizing the image:
+    1. **Payment Receipts (`is_payment_receipt: true`)**:
+       - `payment_method` (`pago_movil`, `zelle`, `pd_cash`, `cashapp`, `nowpayments`, `card_payment`, `binance`, `stripe`, `paypal`, `other`, `none`)
+       - `amount`, `currency` (`VES`, `USD`, `EUR`, `USDT`, `BTC`, `OTHER`), `date_time`, `bank_origin`, `reference_number`, `destination_phone`, `destination_rif`, `destination_email`
+    2. **App Screenshots & Technical Error Screens (`is_payment_receipt: false`, `is_app_screenshot_or_error: true`)**:
+       - `app_name`: App identified (e.g., IPTV Smarters Pro, Smarters Player Lite, XCIPTV, Tivimate, Downloader, IBO Player, SS IPTV, Web browser, etc.).
+       - `device_type`: Device identified (e.g., Smart TV, Firestick, iPhone, Android, PC, Mac, etc.).
+       - `screen_type`: Screen type (e.g., Login screen, Error modal, Playlist setup, Playback error, Channel list, etc.).
+       - `detected_error`: Exact error text/code read from screen (e.g., "Invalid Details", "Check Network", "Playlist Expired", "Code 500", "None").
+       - `app_diagnosis_summary`: Technical diagnosis of what is shown on screen and recommended solution.
+* **Automated Verification Rules**:
   1. **Pago Móvil (Bolívares / VES / Bs)**:
      - Phone verification: Must match **`04246861135`** (or `4246861135`).
      - RIF verification: Must match **`J405259221`** or **`405259221`** (ArialStore C.A. / Bancamiga).
@@ -892,17 +897,12 @@
      - TotalTv USA (Inboxes 4, 6, 14, 17, 18): Must match **`acalimanr@gmail.com`**.
      - Result: Marked as `VERIFIED_CORRECT` if matching official email; otherwise tagged as `DISCREPANCY_DETECTED`.
   3. **Payment Gateways & Third Parties (pd.cash, Cash App, NOWPayments, Card Payments, Binance Pay, Stripe, PayPal)**:
-     - Classified as `is_payment_receipt: true` and processed with extracted transaction/order parameters.
-     - Extracted amount, currency, reference ID, gateway name, and date/time are passed to human support for rapid verification and service activation.
+     - Classified as `is_payment_receipt: true` and processed with extracted transaction/order parameters passed to human support.
 * **Context Injection & Agent Action**:
-  * Formats a structured context block `[PAYMENT RECEIPT DETECTED IN ATTACHMENT: ...]` injected into the prompt for **Toto** (TotalTv USA) and **Tivi** (TVTotal24).
-  * **Verified Receipts & Gateway Payments**:
-     1. AI thanks the customer for sending their payment receipt.
-     2. Executes `Call 'transfer_to_human_tool'` passing `reason` ("Comprobante de Pago ({payment_method})") and `case_details` containing method, amount, date/time, reference number/order ID, gateway/bank, and status.
-     3. Explicitly confirms to the customer that their payment receipt was received, and that their conversation has been transferred to human support for activation/renewal within extended office hours.
-  * **Discrepancies (`DISCREPANCY_DETECTED`)**:
-     1. AI politely informs the customer of the exact mismatch (e.g. wrong phone/RIF for Pago Móvil or wrong email for Zelle) so they can verify the transfer.
+  * Formats a structured context block injected into the prompt for **Toto** (TotalTv USA) and **Tivi** (TVTotal24):
+    - **Payment Receipts**: `[PAYMENT RECEIPT DETECTED IN ATTACHMENT: ...]` -> AI thanks customer, passes details to `transfer_to_human_tool`, and confirms transfer.
+    - **App Screenshots & Technical Errors**: `[TECHNICAL SCREENSHOT DIAGNOSIS IN ATTACHMENT: ...]` -> AI acknowledges the app and error observed, provides targeted troubleshooting steps, and if human escalation is needed, passes App Name, Device, and Error in `reason` and `case_details` for `transfer_to_human_tool` so internal notes and admin alerts receive full technical diagnostic context.
 * **Production Deployment**:
-  * Deployed and published in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `d213b20e-7834-4eff-ad07-5fb8e0c16dbe`).
+  * Deployed and published in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `9c478d8b-53d1-4428-8966-7a4b0bfcecca`).
   * System prompts updated in `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
   * Local definitions exported and verified via `python3 workflows/export_workflows.py`.

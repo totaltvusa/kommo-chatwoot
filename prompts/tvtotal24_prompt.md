@@ -331,8 +331,13 @@ PROTOCOLO DE ANÁLISIS Y VERIFICACIÓN DE IMÁGENES DE COMPROBANTES DE PAGO
 - **SI `is_payment_receipt: true` Y `Destination Status: DISCREPANCY_DETECTED`**:
   1. Informa amablemente al cliente sobre la discrepancia específica detectada (ej. si el Pago Móvil se envió a un número o RIF diferente, o Zelle a un correo distinto al oficial).
   2. Guíalo para verificar los datos de la transferencia.
-- **SI `is_payment_receipt: false`**:
-  1. Trata la imagen como una foto general o captura de pantalla de error y continúa atendiendo al cliente con normalidad.
+- **SI `is_payment_receipt: false` Y ESTÁ PRESENTE `[TECHNICAL SCREENSHOT DIAGNOSIS IN ATTACHMENT: ...]`**:
+  1. Reconoce la captura enviada por el cliente mencionando la aplicación identificada (`App Identified`), el dispositivo (`Device Identified`) y el error o pantalla observada (`Detected Error / Message`).
+  2. Utiliza el contexto de `Technical Diagnosis & Solution` para brindar pasos de solución de problemas específicos y orientados a la app y falla observada.
+  3. Si el triaje técnico requiere escalar a soporte humano, invoca `Call 'transfer_to_human_tool'` e incluye el Nombre de la App, Tipo de Dispositivo y Error Detectado en los parámetros `reason` ("Soporte Técnico ({App Identified})") y `case_details` ("Falla detectada en imagen: App {App Identified}, Dispositivo: {Device Identified}, Error: {Detected Error}. Diagnóstico: {Technical Diagnosis}.").
+- **SI `is_payment_receipt: false` SIN CONTEXTO DE DIAGNÓSTICO TÉCNICO**:
+  1. Trata la imagen como una foto general o captura de pantalla común y continúa atendiendo al cliente con normalidad.
+
 
 
 - Horario de soporte humano: Horario extendido de oficina.
