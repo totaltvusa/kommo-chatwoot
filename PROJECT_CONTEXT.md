@@ -931,3 +931,35 @@
   * Applied `removeConnection` to n8n workflow `n0zgnS1vlOGNcGNY` and published active version `a38ef866-0951-4844-b5d9-35ba0a6cbb94`.
   * Exported and verified via `workflows/router_chatwoot_ia.json`.
 
+---
+
+## 24. Duplicate Transfer Alert Suppression, Phone Call Prohibition Mandate, & MegaOTT Trial Template Enforcement
+
+* **Objective & Problem Statements**:
+  1. **Telegram Transfer Notification Duplication**: When customers were transferred to human support, administrators received duplicate Telegram/WhatsApp alerts up to 4-5 times per conversation if consecutive messages arrived or if `transfer_to_human_tool` was re-invoked.
+  2. **Phone Call Prohibition Mandate**: AI Agents (Toto and Tivi) were strictly prohibited from ever mentioning, suggesting, offering, or promising phone calls (received or emitted). The service is 100% text-chat-only.
+  3. **MegaOTT Trial Template Requirement**: 24-hour trials created on the MegaOTT platform must always be generated using the template named "English" (`template_id: 2218`).
+
+* **Remediation & Technical Implementation**:
+  1. **Duplicate Telegram & WhatsApp Alert Suppression (`tool_transfer_to_human` - `xam0WV65gvTbXcIx`)**:
+     * Modified node `Agregar etiqueta human` to check if `labels` array already contained `'human'` before appending, returning boolean flag `already_had_human`.
+     * Added `n8n-nodes-base.if` node **`¿Primera Transferencia?`**:
+       - **First Transfer (`already_had_human == false`)**: Routes to `Notificar Administrador` (Telegram HTML push) and `Notificar WhatsApp (Evolution API)`, creates private note in Chatwoot, and returns success response to AI Agent.
+       - **Subsequent Transfer (`already_had_human == true`)**: Skips Telegram and WhatsApp external notifications to prevent spamming admin channels, while adding internal private notes to Chatwoot and returning standard success status to AI Agent.
+     * Deployed and published active production version `c9bbf2ff-f6d8-4c9b-8d39-a5317e2c1a3b`.
+
+  2. **Strict Prohibition on Phone Calls (100% Text-Chat-Only)**:
+     * Updated `prompts/agent_prompt.md` (TotalTv USA - Toto) and `prompts/tvtotal24_prompt.md` (TVTotal24 Latina - Tivi) with `STRICT PROHIBITION ON PHONE CALLS (100% TEXT CHAT ONLY)` section.
+     * Strict rules enforced: Neither incoming calls from customers nor outgoing calls from support may be mentioned, offered, or suggested under any circumstance. Support is provided exclusively via text chat in the active conversation channel.
+     * Injected updated prompts into node parameters for `AI Agent` and `AI Agent - TVTotal24` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`), and updated backup files `agent_totaltv_usa.json` and `agent_tvtotal24_latina.json`.
+     * Deployed and published active production version `d53d98e8-59e6-4394-86e5-efe1135f360e`.
+
+  3. **MegaOTT Trial Template Enforcement (`tool_create_mega_ott_trial` - `e1R7zQorWBaaqgou`)**:
+     * Verified MegaOTT REST API parameter for reseller template is `template_id` and the numeric ID for template "English" / "English-EU" is **`2218`**.
+     * Updated HTTP Request nodes `Crear Linea - Teléfono`, `Crear Linea - Email`, and `Crear Linea - Auto` to pass `template_id: 2218` in form-urlencoded body parameters.
+     * Deployed and published active production version `6f2d6d98-8e8c-464d-b32c-148c5b284b64`.
+
+* **Production Sync & Git Integration**:
+  * Executed `python3 workflows/export_workflows.py` to synchronize all production workflows into local git repository.
+  * Committed and pushed all prompt and workflow updates to git `main`.
+
