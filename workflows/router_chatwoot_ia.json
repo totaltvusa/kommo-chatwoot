@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "d53d98e8-59e6-4394-86e5-efe1135f360e",
-  "activeVersionId": "d53d98e8-59e6-4394-86e5-efe1135f360e",
+  "versionId": "ca2234df-24e4-43a4-9b71-115152cf4e5c",
+  "activeVersionId": "ca2234df-24e4-43a4-9b71-115152cf4e5c",
   "triggerCount": 2,
-  "nodeCount": 34,
+  "nodeCount": 35,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-09-15T23:07:10.056Z",
+  "updatedAt": "2026-09-15T23:22:12.793Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -248,7 +248,7 @@
       "main": [
         [
           {
-            "node": "¿Qué Empresa?",
+            "node": "Procesar Soporte TotalTv",
             "type": "main",
             "index": 0
           }
@@ -306,7 +306,7 @@
       "main": [
         [
           {
-            "node": "¿Qué Empresa?",
+            "node": "Procesar Soporte TotalTv",
             "type": "main",
             "index": 0
           }
@@ -331,17 +331,6 @@
         ]
       ]
     },
-    "Evaluar DnSpace (Fallback)": {
-      "main": [
-        [
-          {
-            "node": "¿Qué Empresa?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Evaluar Cliente DnSpace": {
       "main": [
         [
@@ -357,7 +346,7 @@
       "main": [
         [
           {
-            "node": "¿Qué Empresa?",
+            "node": "Procesar Soporte TotalTv",
             "type": "main",
             "index": 0
           }
@@ -376,17 +365,6 @@
         [
           {
             "node": "Evaluar Mega (Fallback)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Evaluar Mega (Fallback)": {
-      "main": [
-        [
-          {
-            "node": "¿Qué Empresa?",
             "type": "main",
             "index": 0
           }
@@ -438,6 +416,39 @@
         [
           {
             "node": "¿Requiere Buscar en Sheet?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar DnSpace (Fallback)": {
+      "main": [
+        [
+          {
+            "node": "Procesar Soporte TotalTv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar Mega (Fallback)": {
+      "main": [
+        [
+          {
+            "node": "Procesar Soporte TotalTv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Soporte TotalTv": {
+      "main": [
+        [
+          {
+            "node": "¿Qué Empresa?",
             "type": "main",
             "index": 0
           }
@@ -1505,6 +1516,20 @@
       ],
       "parameters": {
         "jsCode": "// Parse Anthropic Vision Output\\nlet visionRawText = '';\\ntry {\\n  const anthropicOutput = $input.first().json;\\n  visionRawText = anthropicOutput.content?.[0]?.text || '';\\n} catch (e) {}\\n\\n// Clean JSON formatting\\nlet cleanJson = visionRawText.replace(/```json\\\\s*|\\\\s*```/gi, '').trim();\\nlet receiptData = {};\\ntry {\\n  receiptData = JSON.parse(cleanJson);\\n} catch (e) {\\n  receiptData = { is_payment_receipt: false, raw_summary: visionRawText };\\n}\\n\\n// Extract original prepData from previous node\\nlet prepData = {};\\ntry {\\n  prepData = $('Preparar Mensaje').first().json || {};\\n} catch (e) {}\\n\\nconst isReceipt = Boolean(receiptData.is_payment_receipt);\\nconst isAppError = Boolean(receiptData.is_app_screenshot_or_error || receiptData.app_name || receiptData.detected_error);\\nconst paymentMethod = String(receiptData.payment_method || 'unknown').toLowerCase();\\nconst currency = String(receiptData.currency || 'USD').toUpperCase();\\nconst amount = String(receiptData.amount || '').trim();\\nconst dateTime = String(receiptData.date_time || '').trim();\\nconst bankOrigin = String(receiptData.bank_origin || '').trim();\\nconst refNumber = String(receiptData.reference_number || '').trim();\\nconst destPhone = String(receiptData.destination_phone || '').trim();\\nconst destRif = String(receiptData.destination_rif || '').trim();\\nconst destEmail = String(receiptData.destination_email || '').trim().toLowerCase();\\nconst brand = prepData.brand || 'totaltvusa';\\n\\nlet isVerified = false;\\nlet verificationNotes = '';\\n\\nif (isReceipt) {\\n  if (paymentMethod === 'pago_movil' || currency === 'VES' || currency === 'BS' || currency === 'BS.') {\\n    // Validate Pago Móvil destination details: Phone 04246861135 and RIF J405259221 / 405259221\\n    const cleanDestPhone = destPhone.replace(/\\\\D/g, '');\\n    const cleanDestRif = destRif.replace(/[^0-9]/g, '');\\n    \\n    const phoneMatches = cleanDestPhone.endsWith('04246861135') || cleanDestPhone.endsWith('4246861135') || cleanDestPhone.includes('04246861135');\\n    const rifMatches = cleanDestRif.includes('405259221');\\n\\n    if (phoneMatches && rifMatches) {\\n      isVerified = true;\\n      verificationNotes = 'VERIFIED_CORRECT: Pago Móvil realizado a teléfono oficial 04246861135 y RIF J405259221 (ArialStore C.A. / Bancamiga).';\\n    } else if (phoneMatches) {\\n      isVerified = true;\\n      verificationNotes = 'VERIFIED_CORRECT: Pago Móvil realizado a teléfono oficial 04246861135.';\\n    } else {\\n      isVerified = false;\\n      verificationNotes = `DISCREPANCIA DETECTADA: El Pago Móvil oficial es al teléfono 04246861135 RIF J405259221 (ArialStore C.A. / Bancamiga). La imagen indica teléfono: \\\"${destPhone}\\\", RIF: \\\"${destRif}\\\".`;\\n    }\\n  } else if (paymentMethod === 'zelle') {\\n    const expectedZelleEmail = (brand === 'tvtotal24') ? 'pagos@totaltvlatina.com' : 'acalimanr@gmail.com';\\n    if (destEmail.includes(expectedZelleEmail) || destEmail === expectedZelleEmail) {\\n      isVerified = true;\\n      verificationNotes = `VERIFIED_CORRECT: Pago Zelle realizado al correo oficial registrado (${expectedZelleEmail}).`;\\n    } else {\\n      isVerified = false;\\n      verificationNotes = `DISCREPANCIA DETECTADA: El correo Zelle oficial para ${brand === 'tvtotal24' ? 'TVTotal24' : 'TotalTv USA'} es \\\"${expectedZelleEmail}\\\". La imagen indica correo de destino \\\"${destEmail}\\\".`;\\n    }\\n  } else {\\n    // pd.cash, CashApp, NOWPayments, Card Payments, Binance, Stripe, PayPal, etc.\\n    isVerified = true;\\n    verificationNotes = `RECEIPT_RECEIVED: Comprobante de pago procesado vía ${paymentMethod.toUpperCase()} (pd.cash/pasarela/terceros). Se transmiten los datos extraídos para verificación y activación por agente humano.`;\\n  }\\n}\\n\\nlet receiptContextBlock = '';\\nif (isReceipt) {\\n  receiptContextBlock = `[PAYMENT RECEIPT DETECTED IN ATTACHMENT:\\n- Is Payment Receipt: TRUE\\n- Payment Method: ${paymentMethod.toUpperCase()}\\n- Amount: ${amount} ${currency}\\n- Date/Time: ${dateTime || 'N/A'}\\n- Bank / Platform Origin: ${bankOrigin || 'N/A'}\\n- Reference Number: ${refNumber || 'N/A'}\\n- Destination Phone in Receipt: ${destPhone || 'N/A'}\\n- Destination RIF/ID in Receipt: ${destRif || 'N/A'}\\n- Destination Email in Receipt: ${destEmail || 'N/A'}\\n- Destination Status: ${isVerified ? 'VERIFIED_CORRECT' : 'DISCREPANCY_DETECTED'}\\n- Verification Details: ${verificationNotes}\\n- MANDATE FOR AI:\\n  * IF Destination Status is VERIFIED_CORRECT (or payment via pd.cash / CashApp / NOWPayments / Card / Binance / Gateway): Thank the customer for sending their payment receipt (${paymentMethod.toUpperCase()}, amount: ${amount} ${currency}, ref: ${refNumber}), IMMEDIATELY execute Call 'transfer_to_human_tool' passing reason \\\"Comprobante de Pago (${paymentMethod.toUpperCase()})\\\" and case_details with all extracted payment details, and confirm to the customer that their payment receipt was received and passed to human support for activation/renewal.\\n  * IF Destination Status is DISCREPANCY_DETECTED: Politely inform the customer of the exact mismatch details (e.g., wrong Pago Móvil phone/RIF or Zelle email).]\\\\n\\\\n`;\\n} else if (isAppError) {\\n  const appName = String(receiptData.app_name || 'Desconocida').trim();\\n  const deviceType = String(receiptData.device_type || 'Desconocido').trim();\\n  const screenType = String(receiptData.screen_type || 'General').trim();\\n  const detectedError = String(receiptData.detected_error || 'Ninguno').trim();\\n  const diagnosisSummary = String(receiptData.app_diagnosis_summary || receiptData.raw_summary || visionRawText.slice(0, 250)).trim();\\n\\n  receiptContextBlock = `[TECHNICAL SCREENSHOT DIAGNOSIS IN ATTACHMENT:\\n- Is Payment Receipt: FALSE\\n- Is App Screenshot / Technical Error: TRUE\\n- App Identified: ${appName}\\n- Device Identified: ${deviceType}\\n- Screen Type: ${screenType}\\n- Detected Error / Message: \\\"${detectedError}\\\"\\n- Technical Diagnosis & Solution: ${diagnosisSummary}\\n- MANDATE FOR AI AGENT:\\n  1. Acknowledge the screenshot sent by the customer and mention the app (\\\"${appName}\\\") and error/screen observed (\\\"${detectedError}\\\").\\n  2. Use this technical diagnosis context to provide precise, targeted troubleshooting steps to help the customer resolve their issue.\\n  3. If human support escalation is needed or requested, include App Name (\\\"${appName}\\\"), Device (\\\"${deviceType}\\\"), and Error (\\\"${detectedError}\\\") in BOTH 'reason' and 'case_details' when executing Call 'transfer_to_human_tool' so internal notes and admin notifications include full diagnostic data.]\\\\n\\\\n`;\\n} else if (visionRawText) {\\n  receiptContextBlock = `[IMAGE ATTACHMENT CONTEXT: The customer sent an image. Summary: \\\"${receiptData.raw_summary || visionRawText.slice(0, 200)}\\\"]\\\\n\\\\n`;\\n}\\n\\nreturn [{\\n  json: {\\n    ...prepData,\\n    has_image: true,\\n    is_payment_receipt: isReceipt,\\n    is_app_screenshot_or_error: isAppError,\\n    receipt_data: receiptData,\\n    content: receiptContextBlock + (prepData.content || '')\\n  }\\n}];"
+      }
+    },
+    {
+      "id": "b1c8f42d-79e4-4a31-92b0-1f9e8a7c2b34",
+      "name": "Procesar Soporte TotalTv",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Node: Procesar Soporte TotalTv\nconst googleDocId = $vars.TOTALTV_SUPPORT_DOC_ID || '';\n\nlet rawDocText = '';\nlet fetchSuccess = false;\n\nif (googleDocId && googleDocId.length > 10) {\n  try {\n    const docRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://docs.googleapis.com/v1/documents/${googleDocId}`,\n      headers: {\n        'Authorization': `Bearer ${$credentials.googleSheetsOAuth2Api?.oauthTokenData?.access_token || ''}`\n      },\n      json: true\n    });\n\n    if (docRes && docRes.body && Array.isArray(docRes.body.content)) {\n      let fullText = '';\n      for (const element of docRes.body.content) {\n        if (element.paragraph && Array.isArray(element.paragraph.elements)) {\n          for (const elem of element.paragraph.elements) {\n            if (elem.textRun && elem.textRun.content) {\n              fullText += elem.textRun.content;\n            }\n          }\n        }\n      }\n      rawDocText = fullText;\n      fetchSuccess = true;\n    }\n  } catch (e) {}\n}\n\nlet prepData = {};\ntry {\n  prepData = $input.first().json || {};\n} catch (e) {}\n\nconst brand = (prepData.brand || 'totaltvusa').toLowerCase();\nconst brandName = (brand === 'tvtotal24') ? 'TVTotal24' : 'TotalTv USA';\nconst now = new Date();\n\nlet supportContextBlock = '';\n\nif (rawDocText) {\n  const lines = rawDocText.split('\\n');\n  let currentSection = '';\n  let tecnicaRules = [];\n  let administrativaRules = [];\n\n  const monthNames = {\n    'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3, 'mayo': 4, 'junio': 5,\n    'julio': 6, 'agosto': 7, 'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11\n  };\n\n  for (let line of lines) {\n    const trimmed = line.trim();\n    if (!trimmed) continue;\n\n    if (/^#*\\s*t[eé]cnica/i.test(trimmed)) {\n      currentSection = 'TECNICA';\n      continue;\n    } else if (/^#*\\s*administrativa/i.test(trimmed)) {\n      currentSection = 'ADMINISTRATIVA';\n      continue;\n    } else if (/^#*\\s*consultas\\s+pendientes/i.test(trimmed) || /^#*\\s*sin\\s+respuesta/i.test(trimmed)) {\n      currentSection = 'PENDIENTES';\n      continue;\n    }\n\n    if (currentSection === 'TECNICA' || currentSection === 'ADMINISTRATIVA') {\n      if (trimmed.startsWith('-') || trimmed.startsWith('*') || /^\\d+[\\.\\)]/.test(trimmed)) {\n        let ruleText = trimmed.replace(/^[-*\\d\\.\\)]\\s*/, '').trim();\n        const lowerRule = ruleText.toLowerCase();\n\n        if (lowerRule.includes('[tvtotal24]') && brand !== 'tvtotal24') continue;\n        if ((lowerRule.includes('[totaltv usa]') || lowerRule.includes('[totaltvusa]')) && brand === 'tvtotal24') continue;\n\n        const dateMatch = lowerRule.match(/antes\\s+del?\\s+(\\d{1,2})\\s+de\\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)(?:\\s+de\\s+(\\d{4}))?/i);\n        if (dateMatch) {\n          const day = parseInt(dateMatch[1]);\n          const monthIndex = monthNames[dateMatch[2].toLowerCase()];\n          const year = dateMatch[3] ? parseInt(dateMatch[3]) : now.getFullYear();\n          const targetDate = new Date(year, monthIndex, day, 23, 59, 59);\n\n          if (now > targetDate) {\n            ruleText += ` (Condición temporal: Fecha límite ${day} de ${dateMatch[2]} trascendida).`;\n          }\n        }\n\n        if (currentSection === 'TECNICA') {\n          tecnicaRules.push(ruleText);\n        } else {\n          administrativaRules.push(ruleText);\n        }\n      }\n    }\n  }\n\n  if (tecnicaRules.length > 0 || administrativaRules.length > 0) {\n    supportContextBlock = `[DOCUMENTO DE SOPORTE TOTALTV SUPPORT (BASE DE CONOCIMIENTO VIVA PARA ${brandName.toUpperCase()}):\\n`;\n    if (tecnicaRules.length > 0) {\n      supportContextBlock += `--- SECCIÓN TÉCNICA ---\\n` + tecnicaRules.map(r => `• ${r}`).join('\\n') + '\\n';\n    }\n    if (administrativaRules.length > 0) {\n      supportContextBlock += `--- SECCIÓN ADMINISTRATIVA ---\\n` + administrativaRules.map(r => `• ${r}`).join('\\n') + '\\n';\n    }\n    supportContextBlock += `INSTRUCCIONES PARA EL AGENTE DE IA:\\n`;\n    supportContextBlock += `1. Si la situación reportada coincide con las instrucciones anteriores, aplica DIRECTAMENTE la solución para ayudar al cliente.\\n`;\n    supportContextBlock += `2. Si logras resolver la situación del cliente con esta información, NO es necesario transferir a un asesor humano.\\n`;\n    supportContextBlock += `3. Si la situación del cliente NO está contemplada aquí ni en tu prompt y requiere atención personalizada, realiza la transferencia con Call 'transfer_to_human_tool'.]\\n\\n`;\n  }\n}\n\nreturn [{\n  json: {\n    ...prepData,\n    totaltv_support_doc_id: googleDocId,\n    totaltv_support_active: fetchSuccess,\n    content: supportContextBlock + (prepData.content || '')\n  }\n}];",
+        "mode": "runOnceForAllItems"
       }
     }
   ],
