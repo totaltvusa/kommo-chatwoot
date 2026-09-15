@@ -3,12 +3,12 @@
   "name": "Create Mega OTT Trial Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "68d3948e-5e02-410e-bd76-682f27d5b133",
-  "activeVersionId": "68d3948e-5e02-410e-bd76-682f27d5b133",
+  "versionId": "6f2d6d98-8e8c-464d-b32c-148c5b284b64",
+  "activeVersionId": "6f2d6d98-8e8c-464d-b32c-148c5b284b64",
   "triggerCount": 0,
   "nodeCount": 35,
   "createdAt": "2026-08-20T01:59:31.383Z",
-  "updatedAt": "2026-09-02T00:06:37.618Z",
+  "updatedAt": "2026-09-15T23:05:55.600Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -608,6 +608,10 @@
             {
               "name": "note",
               "value": "={{ $(\"Generar Credenciales\").item.json.note }}"
+            },
+            {
+              "name": "template_id",
+              "value": "2218"
             }
           ]
         }
@@ -842,6 +846,10 @@
             {
               "name": "note",
               "value": "={{ $(\"Generar Credenciales\").item.json.note }}"
+            },
+            {
+              "name": "template_id",
+              "value": "2218"
             }
           ]
         }
@@ -960,6 +968,10 @@
             {
               "name": "note",
               "value": "={{ $(\"Generar Credenciales\").item.json.note }}"
+            },
+            {
+              "name": "template_id",
+              "value": "2218"
             }
           ]
         }

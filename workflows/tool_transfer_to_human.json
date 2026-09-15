@@ -3,12 +3,12 @@
   "name": "Transfer to Human Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "5dd39738-c2ca-462c-a3ce-59646deb8b6b",
-  "activeVersionId": "5dd39738-c2ca-462c-a3ce-59646deb8b6b",
+  "versionId": "c9bbf2ff-f6d8-4c9b-8d39-a5317e2c1a3b",
+  "activeVersionId": "c9bbf2ff-f6d8-4c9b-8d39-a5317e2c1a3b",
   "triggerCount": 0,
-  "nodeCount": 9,
+  "nodeCount": 10,
   "createdAt": "2026-08-19T03:20:29.252Z",
-  "updatedAt": "2026-09-14T02:38:47.530Z",
+  "updatedAt": "2026-09-15T23:05:23.779Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -81,17 +81,6 @@
         ]
       ]
     },
-    "Marcar como humano": {
-      "main": [
-        [
-          {
-            "node": "Notificar Administrador",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Notificar Administrador": {
       "main": [
         [
@@ -124,6 +113,35 @@
         [
           {
             "node": "Respuesta Tool Transferencia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar como humano": {
+      "main": [
+        [
+          {
+            "node": "¿Primera Transferencia?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Primera Transferencia?": {
+      "main": [
+        [
+          {
+            "node": "Notificar Administrador",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nota privada Chatwoot",
             "type": "main",
             "index": 0
           }
@@ -194,7 +212,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Preparar Datos Transferencia').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id || 13;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst sender = convData.meta?.sender || {};\nconst contact_name = sender.name || 'Cliente';\nconst contact_phone = sender.phone_number || (sender.identifier && /^\\+?\\d[\\d\\s-]{6,}$/.test(sender.identifier) ? sender.identifier : 'No registrado');\nconst contact_email = sender.email || 'No registrado';\nconst inbox_id = Number(convData.inbox_id || 0);\n\n// Identificar marca según inbox\nconst isTVTotal24 = (inbox_id === 10 || inbox_id === 13 || inbox_id === 15 || inbox_id === 16 || inbox_id === 19);\nconst brandName = isTVTotal24 ? 'TVTotal24 (Latina)' : 'TotalTv USA';\n\n// Motivo de la transferencia\nlet reason = String(triggerData.reason || '').trim();\nif (!reason) {\n  reason = 'Atención / Soporte requerido';\n}\n\n// Información recopilada del caso\nlet rawDetails = String(triggerData.case_details || '').trim();\n\n// Fallback: Si no se pasó case_details por el tool, consultar los últimos mensajes entrantes del cliente en Chatwoot\nif (!rawDetails) {\n  try {\n    const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\n    const msgRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations/${conversation_id}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const msgs = (msgRes.payload || []).filter(m => m.message_type === 0 || m.message_type === 'incoming');\n    if (msgs.length > 0) {\n      const recentIncoming = msgs.slice(-4).map(m => `• \"${m.content}\"`).join('\\n');\n      rawDetails = `Mensajes recientes del cliente:\\n${recentIncoming}`;\n    }\n  } catch (e) {}\n}\n\nif (!rawDetails) {\n  rawDetails = 'No se registraron detalles adicionales previo a la transferencia.';\n}\n\n// 1. Formato para Nota Privada en Chatwoot (Markdown)\nconst privateNote = `⚠️ **TRANSFERENCIA A SOPORTE HUMANO**\n\n📌 **Motivo:** ${reason}\n👤 **Contacto:** ${contact_name}\n📱 **Teléfono:** ${contact_phone}\n📧 **Email:** ${contact_email}\n🏷️ **Canal / Inbox:** ${brandName} (Inbox #${inbox_id})\n💬 **Conversación:** #${conversation_id}\n\n📋 **INFORMACIÓN RECOPILADA DEL CASO:**\n${rawDetails}`;\n\n// Helper para escapar HTML en Telegram\nconst escapeHtml = (str) => String(str || '')\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;');\n\n// 2. Formato para Telegram (HTML)\nconst telegramText = `🔔 <b>Transferencia a Soporte Humano</b>\n\n👤 <b>Contacto:</b> ${escapeHtml(contact_name)}\n📱 <b>Teléfono:</b> ${escapeHtml(contact_phone)}\n📧 <b>Email:</b> ${escapeHtml(contact_email)}\n🏷️ <b>Canal:</b> ${escapeHtml(brandName)} (Inbox #${inbox_id})\n💬 <b>Conversación:</b> #${conversation_id}\n📌 <b>Motivo:</b> ${escapeHtml(reason)}\n\n📋 <b>Información Recopilada:</b>\n${escapeHtml(rawDetails)}`;\n\n// 3. Formato para WhatsApp Evolution API (WhatsApp Markdown)\nconst whatsappText = `🔔 *Transferencia a Soporte Humano*\n\n👤 *Contacto:* ${contact_name}\n📱 *Teléfono:* ${contact_phone}\n📧 *Email:* ${contact_email}\n🏷️ *Canal:* ${brandName} (Inbox #${inbox_id})\n💬 *Conversación:* #${conversation_id}\n📌 *Motivo:* ${reason}\n\n📋 *Información Recopilada:*\n${rawDetails}`;\n\n// Preservar etiquetas y agregar 'human'\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\nif (!currentLabels.includes('human')) {\n  currentLabels.push('human');\n}\n\nreturn [{\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    contact_phone,\n    contact_email,\n    inbox_id,\n    brand_name: brandName,\n    reason,\n    case_details: rawDetails,\n    private_note_content: privateNote,\n    telegram_text: telegramText,\n    whatsapp_text: whatsappText,\n    labels: currentLabels\n  }\n}];",
+        "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Preparar Datos Transferencia').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id || 13;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst sender = convData.meta?.sender || {};\nconst contact_name = sender.name || 'Cliente';\nconst contact_phone = sender.phone_number || (sender.identifier && /^\\+?\\d[\\d\\s-]{6,}$/.test(sender.identifier) ? sender.identifier : 'No registrado');\nconst contact_email = sender.email || 'No registrado';\nconst inbox_id = Number(convData.inbox_id || 0);\n\n// Identificar marca según inbox\nconst isTVTotal24 = (inbox_id === 10 || inbox_id === 13 || inbox_id === 15 || inbox_id === 16 || inbox_id === 19);\nconst brandName = isTVTotal24 ? 'TVTotal24 (Latina)' : 'TotalTv USA';\n\n// Motivo de la transferencia\nlet reason = String(triggerData.reason || '').trim();\nif (!reason) {\n  reason = 'Atención / Soporte requerido';\n}\n\n// Información recopilada del caso\nlet rawDetails = String(triggerData.case_details || '').trim();\n\n// Fallback: Si no se pasó case_details por el tool, consultar los últimos mensajes entrantes del cliente en Chatwoot\nif (!rawDetails) {\n  try {\n    const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\n    const msgRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations/${conversation_id}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const msgs = (msgRes.payload || []).filter(m => m.message_type === 0 || m.message_type === 'incoming');\n    if (msgs.length > 0) {\n      const recentIncoming = msgs.slice(-4).map(m => `• \"${m.content}\"`).join('\\n');\n      rawDetails = `Mensajes recientes del cliente:\\n${recentIncoming}`;\n    }\n  } catch (e) {}\n}\n\nif (!rawDetails) {\n  rawDetails = 'No se registraron detalles adicionales previo a la transferencia.';\n}\n\n// 1. Formato para Nota Privada en Chatwoot (Markdown)\nconst privateNote = `⚠️ **TRANSFERENCIA A SOPORTE HUMANO**\n\n📌 **Motivo:** ${reason}\n👤 **Contacto:** ${contact_name}\n📱 **Teléfono:** ${contact_phone}\n📧 **Email:** ${contact_email}\n🏷️ **Canal / Inbox:** ${brandName} (Inbox #${inbox_id})\n💬 **Conversación:** #${conversation_id}\n\n📋 **INFORMACIÓN RECOPILADA DEL CASO:**\n${rawDetails}`;\n\n// Helper para escapar HTML en Telegram\nconst escapeHtml = (str) => String(str || '')\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;');\n\n// 2. Formato para Telegram (HTML)\nconst telegramText = `🔔 <b>Transferencia a Soporte Humano</b>\n\n👤 <b>Contacto:</b> ${escapeHtml(contact_name)}\n📱 <b>Teléfono:</b> ${escapeHtml(contact_phone)}\n📧 <b>Email:</b> ${escapeHtml(contact_email)}\n🏷️ <b>Canal:</b> ${escapeHtml(brandName)} (Inbox #${inbox_id})\n💬 <b>Conversación:</b> #${conversation_id}\n📌 <b>Motivo:</b> ${escapeHtml(reason)}\n\n📋 <b>Información Recopilada:</b>\n${escapeHtml(rawDetails)}`;\n\n// 3. Formato para WhatsApp Evolution API (WhatsApp Markdown)\nconst whatsappText = `🔔 *Transferencia a Soporte Humano*\n\n👤 *Contacto:* ${contact_name}\n📱 *Teléfono:* ${contact_phone}\n📧 *Email:* ${contact_email}\n🏷️ *Canal:* ${brandName} (Inbox #${inbox_id})\n💬 *Conversación:* #${conversation_id}\n📌 *Motivo:* ${reason}\n\n📋 *Información Recopilada:*\n${rawDetails}`;\n\n// Preservar etiquetas y agregar 'human'\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\nconst alreadyHadHuman = currentLabels.includes('human');\nif (!alreadyHadHuman) {\n  currentLabels.push('human');\n}\n\nreturn [{\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    contact_phone,\n    contact_email,\n    inbox_id,\n    brand_name: brandName,\n    reason,\n    case_details: rawDetails,\n    private_note_content: privateNote,\n    telegram_text: telegramText,\n    whatsapp_text: whatsappText,\n    labels: currentLabels,\n    already_had_human: alreadyHadHuman\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     },
@@ -320,6 +338,37 @@
       "parameters": {
         "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    reason: humanData.reason,\n    message: \"La conversación HA SIDO transferida exitosamente a un asesor humano en el sistema con la información recopilada.\",\n    instructions_for_ai: \"REGLA OBLIGATORIA E INELUDIBLE: La transferencia a soporte humano ya se realizó con éxito en el sistema. En este mismo mensaje final al cliente DEBES confirmar obligatoria y explícitamente que su caso/conversación ha sido transferido a nuestro equipo de soporte humano y que un asesor lo atenderá a la brevedad dentro del horario extendido de oficina. ESTÁ TOTALMENTE PROHIBIDO decir que hubo un error o terminar tu respuesta sin confirmar esta transferencia.\"\n  }\n}];",
         "mode": "runOnceForAllItems"
+      }
+    },
+    {
+      "id": "b0a2c918-7f41-477d-815d-8c149d5efd12",
+      "name": "¿Primera Transferencia?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        950,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c1f721a9-7e48-408a-b732-26155694fa35",
+              "leftValue": "={{ $node[\"Agregar etiqueta human\"].json.already_had_human }}",
+              "operator": {
+                "operation": "false",
+                "type": "boolean"
+              },
+              "rightValue": false
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          }
+        }
       }
     }
   ],
