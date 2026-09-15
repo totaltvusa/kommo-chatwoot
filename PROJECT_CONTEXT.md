@@ -963,3 +963,33 @@
   * Executed `python3 workflows/export_workflows.py` to synchronize all production workflows into local git repository.
   * Committed and pushed all prompt and workflow updates to git `main`.
 
+---
+
+## 25. "TotalTv Support" Google Doc Ingestion Pipeline & Dynamic Feedback Loop
+
+* **Objective & Architectural Overview**:
+  * Integrated a live dynamic knowledge base and automated feedback loop connecting Google Doc **"TotalTv Support"** (`totaltvusa@gmail.com`) to the AI Agents for **TotalTv USA** (`Toto`) and **TVTotal24** (`Tivi`).
+  * Allows administrators to add, update, or remove technical and administrative troubleshooting situations in real time without modifying workflow code.
+  * Enables dynamic date/time evaluation (e.g. *"si el cliente no accede desde antes del 15 de septiembre de 2026..."*) and brand-scoped filtering (`[TotalTv USA]`, `[TVTotal24]`, `[General]`).
+  * Automatically logs unhandled/unresolved customer queries to section `# CONSULTAS PENDIENTES / SIN RESPUESTA` in the Google Doc when transferred to human support.
+
+* **Pipeline Components & Node Architecture**:
+  1. **Dynamic Ingestion Node (`Procesar Soporte TotalTv` in `n0zgnS1vlOGNcGNY`)**:
+     * Node type: `n8n-nodes-base.code` (version 2), positioned right before `¿Qué Empresa?`.
+     * Configured with Document ID variable (`TOTALTV_SUPPORT_DOC_ID`).
+     * Calls Google Docs API (`GET https://docs.googleapis.com/v1/documents/{TOTALTV_SUPPORT_DOC_ID}`) via credential `googleSheetsOAuth2Api` (`Pw5wN2L5UopOruaj`).
+     * Parses sections `# TÉCNICA` and `# ADMINISTRATIVA`, filters rules based on brand tags, evaluates date conditions against current date ($now), and injects `[DOCUMENTO DE SOPORTE TOTALTV SUPPORT (BASE DE CONOCIMIENTO VIVA...)]` into the AI context block.
+     * Degrades gracefully if the doc ID is not yet provided or doc is inaccessible.
+     * Production active version published: `ca2234df-24e4-43a4-9b71-115152cf4e5c`.
+
+  2. **Automated Unresolved Query Logger (`Registrar Consulta Pendiente Google Doc` in `xam0WV65gvTbXcIx`)**:
+     * Node type: `n8n-nodes-base.code` (version 2), connected to `¿Primera Transferencia?` (output 0).
+     * When a conversation is transferred to human support for the first time (`already_had_human == false`), extracts timestamp, brand, conversation ID, transfer reason, and case details.
+     * Calls Google Docs API (`POST https://docs.googleapis.com/v1/documents/{TOTALTV_SUPPORT_DOC_ID}:batchUpdate`) with `insertText` request targeting the end of the document to append:
+       `- [YYYY-MM-DD HH:MM] [Brand] [Conv #ID] Motivo: {reason} | Detalles: {case_details}`
+     * Production active version published: `96f3e5a6-d759-479f-b799-d53f16d20099`.
+
+* **Production Sync & Git Integration**:
+  * Workflows exported via `python3 workflows/export_workflows.py`.
+  * Committed and pushed to git `main` (`13a1238`).
+
