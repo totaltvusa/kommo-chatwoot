@@ -868,3 +868,40 @@
        - No posee un cron recurrente para evitar ejecuciones innecesarias; se activa únicamente bajo demanda o invocación programática cuando se requiere sincronizar o poblar la hoja `MegaData`.
     5. **Próximo Paso Arquitectónico**:
        - Evaluar métodos alternativos para obtener el mapeo inicial de `Usuario` $\leftrightarrow$ `subscription_id` (por ejemplo, exportación masiva CSV desde el panel web de revendedor o scraping autenticado) o definir el mecanismo operativo para renovar/extender suscripciones cuando solo se disponga del nombre de usuario.
+
+---
+
+## 22. Multimodal Vision Pipeline: Automated Payment Receipt Image Analysis & Verification
+
+* **Objective & Operational Architecture**:
+  * Implemented an automated vision analysis and verification pipeline within the inbound gateway workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+  * When a customer sends an image attachment in Chatwoot (screenshots, transfer receipts), the workflow downloads the image blob, converts it to base64, and calls **Claude 3.5 Sonnet Vision** (`POST https://api.anthropic.com/v1/messages` using credential `ZbUWSAq6JlKInA64`).
+* **Structured Vision JSON Extraction**:
+  * The vision model returns a strict JSON object:
+    - `is_payment_receipt` (boolean)
+    - `payment_method` (`pago_movil`, `zelle`, `cashapp`, `binance`, `other`, `unknown`)
+    - `amount`, `currency` (`VES`, `USD`, `USDT`), `date_time`, `bank_origin`, `reference_number`
+    - `destination_phone`, `destination_rif`, `destination_email`
+* **Automated Destination Verification Rules**:
+  1. **Pago Móvil (Bolívares / VES / Bs)**:
+     - Phone verification: Must match **`04246861135`** (or `4246861135`).
+     - RIF verification: Must match **`J405259221`** or **`405259221`** (ArialStore C.A. / Bancamiga).
+     - Result: Marked as `VERIFIED_CORRECT` if phone/RIF match; otherwise tagged as `DISCREPANCY_DETECTED`.
+  2. **Zelle**:
+     - TVTotal24 Latina (Inboxes 10, 13, 15, 16, 19): Must match **`pagos@totaltvlatina.com`**.
+     - TotalTv USA (Inboxes 4, 6, 14, 17, 18): Must match **`acalimanr@gmail.com`**.
+     - Result: Marked as `VERIFIED_CORRECT` if matching official email; otherwise tagged as `DISCREPANCY_DETECTED`.
+  3. **CashApp / Binance Pay / Crypto**:
+     - Processed as `VERIFIED_CORRECT` with extracted transaction details.
+* **Context Injection & Agent Action**:
+  * Formats a structured context block `[PAYMENT RECEIPT DETECTED IN ATTACHMENT: ...]` injected into the prompt for **Toto** (TotalTv USA) and **Tivi** (TVTotal24).
+  * **Verified Receipts (`VERIFIED_CORRECT`)**:
+     1. AI thanks the customer for sending their payment receipt.
+     2. Executes `Call 'transfer_to_human_tool'` passing `reason` ("Comprobante de Pago Verificado") and `case_details` containing method, amount, date/time, reference number, origin bank, and verified status.
+     3. Explicitly confirms to the customer that their payment receipt was received and verified, and that their conversation has been transferred to human support for activation/renewal within extended office hours.
+  * **Discrepancies (`DISCREPANCY_DETECTED`)**:
+     1. AI politely informs the customer of the exact mismatch (e.g. wrong phone/RIF for Pago Móvil or wrong email for Zelle) so they can verify the transfer.
+* **Production Deployment**:
+  * Deployed and published in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `022feb66-a988-4f4f-9563-a771cbbe7ac9`).
+  * System prompts updated in `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
+  * Local definitions exported and verified via `python3 workflows/export_workflows.py`.
