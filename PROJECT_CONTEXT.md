@@ -906,3 +906,28 @@
   * Deployed and published in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `9c478d8b-53d1-4428-8966-7a4b0bfcecca`).
   * System prompts updated in `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
   * Local definitions exported and verified via `python3 workflows/export_workflows.py`.
+
+---
+
+## 23. Fix: Double AI Responses per Customer Message (Duplicate Branching Removal)
+
+* **Problem Statement**:
+  * AI agents for both TotalTv USA (`Toto`) and TVTotal24 (`Tivi`) were responding twice to every incoming customer message across multiple inboxes (e.g. Inboxes 16, 17, 18).
+  * The two responses were not identical copies; rather, the AI generated two distinct messages in rapid succession (2 to 5 seconds apart) for a single customer incoming message.
+* **Root Cause**:
+  * In workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`), when the multimodal Vision pipeline was added, node `Preparar Mensaje` was inadvertently left connected to **BOTH** `¿Requiere Buscar en Sheet?` **AND** `¿Tiene Imagen Adjunta?` at the same time.
+  * Node `¿Tiene Imagen Adjunta?` also routes downstream to `¿Requiere Buscar en Sheet?` (both on the "Sin Imagen" fallback and after vision analysis on "Con Imagen").
+  * Consequently, every single incoming webhook triggered two parallel downstream branches simultaneously:
+    - **Branch 1**: `Preparar Mensaje` $\to$ `¿Requiere Buscar en Sheet?` $\to$ `¿Qué Empresa?` $\to$ `AI Agent` $\to$ `Responder en Chatwoot` (Response #1).
+    - **Branch 2**: `Preparar Mensaje` $\to$ `¿Tiene Imagen Adjunta?` $\to$ `¿Requiere Buscar en Sheet?` $\to$ `¿Qué Empresa?` $\to$ `AI Agent` $\to$ `Responder en Chatwoot` (Response #2).
+* **Remediation & Architecture Fix**:
+  * Removed the direct redundant connection from `Preparar Mensaje` to `¿Requiere Buscar en Sheet?`.
+  * The pipeline is now strictly sequential and single-branch:
+    - `Preparar Mensaje` $\to$ `¿Tiene Imagen Adjunta?`
+      - **Con Imagen**: `Analizar Imagen (Visión Anthropic)` $\to$ `Procesar Resultado Visión` $\to$ `¿Requiere Buscar en Sheet?`
+      - **Sin Imagen**: `¿Requiere Buscar en Sheet?`
+    - Downstream: `¿Requiere Buscar en Sheet?` $\to$ `¿Qué Empresa?` $\to$ `AI Agent` (single invocation) $\to$ `Formatear Respuesta` $\to$ `Wait Typing Delay` $\to$ `Responder en Chatwoot` (single delivery).
+* **Production Deployment**:
+  * Applied `removeConnection` to n8n workflow `n0zgnS1vlOGNcGNY` and published active version `a38ef866-0951-4844-b5d9-35ba0a6cbb94`.
+  * Exported and verified via `workflows/router_chatwoot_ia.json`.
+

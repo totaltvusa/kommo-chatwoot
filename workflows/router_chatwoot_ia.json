@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "9c478d8b-53d1-4428-8966-7a4b0bfcecca",
-  "activeVersionId": "9c478d8b-53d1-4428-8966-7a4b0bfcecca",
+  "versionId": "a38ef866-0951-4844-b5d9-35ba0a6cbb94",
+  "activeVersionId": "a38ef866-0951-4844-b5d9-35ba0a6cbb94",
   "triggerCount": 2,
   "nodeCount": 34,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-09-15T01:21:51.260Z",
+  "updatedAt": "2026-09-15T14:44:35.467Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -236,11 +236,6 @@
     "Preparar Mensaje": {
       "main": [
         [
-          {
-            "node": "¿Requiere Buscar en Sheet?",
-            "type": "main",
-            "index": 0
-          },
           {
             "node": "¿Tiene Imagen Adjunta?",
             "type": "main",
