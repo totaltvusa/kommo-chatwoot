@@ -993,3 +993,18 @@
   * Workflows exported via `python3 workflows/export_workflows.py`.
   * Committed and pushed to git `main` (`13a1238`).
 
+---
+
+## 26. Google Doc ID Binding & Sept 2026 Support Cases Extraction
+
+* **Objective & Implementation**:
+  * Linked exact Google Doc ID `14VkDzxSnwQHZ6ezEZskeQ3lfLIXw5S0n2onK3I6yYdE` (Document **"TotalTv Support"** owned by `totaltvusa@gmail.com`) as default hardcoded fallback in nodes `Procesar Soporte TotalTv` (`router_chatwoot_ia.json` / workflow `n0zgnS1vlOGNcGNY`) and `Registrar Consulta Pendiente Google Doc` (`tool_transfer_to_human.json` / workflow `xam0WV65gvTbXcIx`).
+  * Analyzed all 92 Chatwoot conversations from September 1st–15th, 2026 across both TotalTv USA and TVTotal24 brands, extracting 7 recurring technical and administrative support situations with tested solutions to populate the Google Doc sections.
+
+* **Production Deployment & Synchronization**:
+  * Published updated n8n workflows:
+    - `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `b8fdbbc7-a1c2-4bda-b7bc-10cc86d02d65`)
+    - `Transfer to Human Tool` (`xam0WV65gvTbXcIx` / active version `c9b29f94-d41c-4092-b3af-33d20a54afd0`)
+  * Exported workflows and committed to git `main` (`418acd6`).
+
+
