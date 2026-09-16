@@ -1109,4 +1109,39 @@
      - Published active production version `a42958af-2807-49fd-a1ad-24be356c08af`.
      - Synchronized local files `workflows/router_chatwoot_ia.json`, `workflows/agent_tvtotal24_latina.json`, and `workflows/agent_totaltv_usa.json`.
 
+---
+
+## 31. Internal Process Privacy Mandate: Elimination of Backend Leaks and Panel Names to Customers
+
+* **Objective & Problem Statement**:
+  - When transferring conversations to human support (especially during credential recovery or tool lookups), the AI agent was leaking backend process information and internal tool errors directly to the customer (e.g. stating *"no se consiguieron datos en mvplay"* or *"no se encontraron tus datos en el sistema"*).
+  - Internal names of backend panels (such as **MVPlay**, **Mega OTT**, **Xtream-Masters**), database lookup failures, and backend API errors must NEVER be revealed to customers.
+  - The customer-facing message must ONLY reference what the customer themselves explicitly stated, while all internal technical diagnostic information belongs exclusively in private notes and administrator alerts.
+
+* **Root Cause**:
+  1. In `workflows/tool_get_mvplay_credentials.json`, node `Respuesta Tool` returned `instructions_for_ai` saying *"Informa amablemente al cliente que no fue posible ubicar sus credenciales activas automáticamente en el sistema bajo ese nombre..."*.
+  2. In `prompts/tvtotal24_prompt.md`, Paso 4 of the Credential Recovery section instructed the agent to *"Explicar amablemente que no fue posible ubicar automáticamente sus credenciales activas en el panel bajo ese nombre"*, causing the LLM to output internal search details.
+  3. No regex fail-safe sanitizer existed in `Formatear Respuesta` to intercept accidental leaks of internal panel names or backend search errors.
+
+* **Remediation & Technical Implementation**:
+  1. **Subworkflow `Tool - Obtener Credenciales MVPlay` (`gyTc5A6r5TNRgJCs`)**:
+     - Updated node `Respuesta Tool`: Injected absolute privacy mandate into `instructions_for_ai`:
+       `"REGLA DE PRIVACIDAD ABSOLUTA: NUNCA le digas al cliente que no se consiguieron datos en MVPlay ni menciones fallos de búsqueda o nombres de paneles internos. Transfiérelo de inmediato a soporte humano ejecutando Call 'transfer_to_human_tool' (reason: 'Recuperación de Credenciales', case_details: 'Consulta de credenciales en MVPlay para: ' + (item.search_term || 'cliente') + ' - no se hallaron líneas activas automáticas, requiere búsqueda manual') y dile al cliente ÚNICAMENTE que lo has transferido con soporte humano para verificar sus datos de acceso y suministrarle sus credenciales directamente."`
+     - Deployed and published active version `b96b5039-8eab-4b9d-b1e6-d784d4b87400`.
+  2. **System Prompts (`prompts/tvtotal24_prompt.md` and `prompts/agent_prompt.md`)**:
+     - Added top-level mandate:
+       `⛔ PRIVACIDAD TOTAL DE PROCESO INTERNO — CERO MENCIÓN DE ERRORES O PROCESOS DE BACKEND AL CLIENTE:`
+       - Strictly prohibited: mentioning internal panel names (MVPlay, Mega OTT, Xtream-Masters, reseller panel, lines database).
+       - Strictly prohibited: telling the customer that data was not found in backend systems, queries failed, or tools returned negative matches.
+       - Customer-facing messages must focus strictly on what the customer expressed.
+       - Updated Credential Recovery Paso 4 to enforce clean, polite transfer confirmations without backend leaks.
+  3. **Fail-Safe Sanitization in `Formatear Respuesta` (`Chatwoot + IA Agent` - `n0zgnS1vlOGNcGNY`)**:
+     - Integrated `backendLeakRegex` in the formatting code node right before message dispatch:
+       Intercepts patterns matching `no se consiguieron datos en mvplay`, `en mvplay`, `en mega ott`, `no fue posible ubicar tus credenciales automáticamente`, etc., and automatically replaces the message with a reassuring transfer confirmation:
+       *"He transferido tu caso con nuestro equipo de soporte humano para que un asesor verifique tus datos de acceso y te atienda directamente. Un asesor te responderá a la brevedad posible dentro de nuestro horario extendido de oficina. ¡Muchas gracias por tu paciencia!"*
+     - Deployed and published active production version `5b44b6d6-a701-4cbf-afe6-b7579aa681e2`.
+  4. **Production Sync & Git Integration**:
+     - Exported and synchronized local workflow files (`router_chatwoot_ia.json`, `tool_get_mvplay_credentials.json`, `agent_tvtotal24_latina.json`, `agent_totaltv_usa.json`).
+
+
 

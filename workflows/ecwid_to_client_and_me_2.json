@@ -3,12 +3,12 @@
   "name": "Ecwid to Client & me 2.0",
   "active": true,
   "isArchived": false,
-  "versionId": "9e3b6f03-9c75-4645-b73f-6666e550a802",
-  "activeVersionId": "9e3b6f03-9c75-4645-b73f-6666e550a802",
+  "versionId": "9b89a278-b7cf-4608-a79d-e96e1d41f6d7",
+  "activeVersionId": "9b89a278-b7cf-4608-a79d-e96e1d41f6d7",
   "triggerCount": 1,
-  "nodeCount": 30,
+  "nodeCount": 33,
   "createdAt": "2026-07-27T01:52:27.063Z",
-  "updatedAt": "2026-09-11T13:57:39.131Z",
+  "updatedAt": "2026-09-16T14:58:09.353Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -207,7 +207,7 @@
       "main": [
         [
           {
-            "node": "EnviarTextoZelle",
+            "node": "If Celular Zelle",
             "type": "main",
             "index": 0
           },
@@ -243,7 +243,17 @@
     },
     "EnviarTextoCashapp": {
       "main": [
+        []
+      ]
+    },
+    "pdCashlink": {
+      "main": [
         [
+          {
+            "node": "Whatsme Link PdCash",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Email Link a Cliente1",
             "type": "main",
@@ -253,20 +263,9 @@
             "node": "Notificarme Link Cashapp",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "pdCashlink": {
-      "main": [
-        [
-          {
-            "node": "EnviarTextoCashapp",
-            "type": "main",
-            "index": 0
           },
           {
-            "node": "Whatsme Link PdCash",
+            "node": "If Celular Cashapp",
             "type": "main",
             "index": 0
           }
@@ -277,7 +276,7 @@
       "main": [
         [
           {
-            "node": "EnviarTextoNowPay",
+            "node": "Whatsme Link NowPay",
             "type": "main",
             "index": 0
           },
@@ -287,7 +286,12 @@
             "index": 0
           },
           {
-            "node": "Whatsme Link NowPay",
+            "node": "Notificarme Link NowPay",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If Celular NowPay",
             "type": "main",
             "index": 0
           }
@@ -307,13 +311,43 @@
     },
     "EnviarTextoNowPay": {
       "main": [
+        []
+      ]
+    },
+    "If Celular Zelle": {
+      "main": [
         [
           {
-            "node": "Notificarme Link NowPay",
+            "node": "EnviarTextoZelle",
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
+      ]
+    },
+    "If Celular Cashapp": {
+      "main": [
+        [
+          {
+            "node": "EnviarTextoCashapp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If Celular NowPay": {
+      "main": [
+        [
+          {
+            "node": "EnviarTextoNowPay",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
       ]
     }
   },
@@ -354,7 +388,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all().map(item => {\n  const html = item.json.html || \"\";\n  const subject = item.json.headers.subject || \"\";\n\n  // 1. Limpieza de HTML para convertirlo en texto plano manejable\n  const cleanText = html\n    .replace(/<style([\\s\\S]*?)<\\/style>/gi, '') // Quita CSS\n    .replace(/<[^>]+>/g, ' ')                   // Quita etiquetas HTML\n    .replace(/&nbsp;/g, ' ')                    // Quita espacios HTML\n    .replace(/\\s+/g, ' ')                       // Normaliza espacios\n    .trim();\n\n  // Función de extracción segura con fallback personalizable\n  const extract = (regex, text, index = 1, fallback = \".\") => {\n    const match = text.match(regex);\n    return (match && match[index] && match[index].trim()) ? match[index].trim() : fallback;\n  };\n\n  // --- EXTRACCIÓN DE VARIABLES ---\n\n  // OrderID y Customer desde el Subject\n  const orderID = extract(/#([A-Z0-9]+)/, subject, 1, \".\");\n  \n  // Si el nombre no logra extraerse, debe decir \"Customer\"\n  const rawCustomerName = extract(/from\\s+([^!$]+)/i, subject, 1, \"Customer\");\n  const customerName = (rawCustomerName && rawCustomerName !== \"No encontrado\" && rawCustomerName !== \".\") ? rawCustomerName : \"Customer\";\n\n  // Email y Teléfono\n  const email = extract(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/, cleanText, 1, \".\");\n  const phone = extract(/Phone\\s+([\\+\\d\\s-]{7,20})/, cleanText, 1, \".\");\n\n  // Datos Financieros: de no conseguir la información, colocar un punto \".\"\n  const rawAmount = extract(/Total\\s+\\$([\\d.]+)/, cleanText, 1, \".\");\n  const totalAmount = (rawAmount !== \".\" && rawAmount !== \"No encontrado\" && !isNaN(parseFloat(rawAmount))) \n    ? Math.round(parseFloat(rawAmount)).toString() \n    : \".\";\n  \n  // El pattern (\\d+)\\s*Months? permite que la \"s\" sea opcional\n  const months = extract(/(\\d+)\\s*Months?/i, cleanText, 1, \".\");\n\n  // Conexiones: de no conseguir la información, colocar un punto \".\"\n  const conns = extract(/Conns:\\s*(\\d+)/i, cleanText, 1, \".\");\n\n  // Programación Adultos: de no conseguir la información, colocar un punto \".\"\n  const adult = extract(/Adult:\\s*(Yes|No)/i, cleanText, 1, \".\");\n\n  // Método de Pago\n  const paymentPart = extract(/Payment method\\s+(.+?)(?:View order details|$)/i, cleanText, 1, \".\");\n\n  return {\n    json: {\n      OrderID: orderID,\n      TotalAmount: totalAmount,\n      CustomerName: customerName,\n      Email: email,\n      Phone: phone,\n      PaymentMethod: paymentPart,\n      Months: months,\n      Conns: conns,\n      Adult: adult\n    }\n  };\n});"
+        "jsCode": "const telnyxApiKey = 'KEY_TELNYX_REDACTED';\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const html = item.json.html || \"\";\n  const subject = item.json.headers?.subject || \"\";\n\n  const cleanText = html\n    .replace(/<style([\\s\\S]*?)<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&nbsp;/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n  const extract = (regex, text, index = 1, fallback = \".\") => {\n    const match = text.match(regex);\n    return (match && match[index] && match[index].trim()) ? match[index].trim() : fallback;\n  };\n\n  const orderID = extract(/#([A-Z0-9]+)/, subject, 1, \".\");\n  const rawCustomerName = extract(/from\\s+([^!$]+)/i, subject, 1, \"Customer\");\n  const customerName = (rawCustomerName && rawCustomerName !== \"No encontrado\" && rawCustomerName !== \".\") ? rawCustomerName : \"Customer\";\n\n  const email = extract(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/, cleanText, 1, \".\");\n  const phone = extract(/Phone\\s+([\\+\\d\\s-]{7,20})/, cleanText, 1, \".\");\n\n  const rawAmount = extract(/Total\\s+\\$([\\d.]+)/, cleanText, 1, \".\");\n  const totalAmount = (rawAmount !== \".\" && rawAmount !== \"No encontrado\" && !isNaN(parseFloat(rawAmount))) \n    ? Math.round(parseFloat(rawAmount)).toString() \n    : \".\";\n  \n  const months = extract(/(\\d+)\\s*Months?/i, cleanText, 1, \".\");\n  const conns = extract(/Conns:\\s*(\\d+)/i, cleanText, 1, \".\");\n  const adult = extract(/Adult:\\s*(Yes|No)/i, cleanText, 1, \".\");\n  const paymentPart = extract(/Payment method\\s+(.+?)(?:View order details|$)/i, cleanText, 1, \".\");\n\n  let canSendSms = true;\n  let phoneLineType = \"unknown\";\n\n  if (phone && phone !== \".\") {\n    try {\n      const digits = phone.replace(/\\D/g, \"\");\n      let cleanLookupPhone = digits;\n      if (digits.length === 10) {\n        cleanLookupPhone = `+1${digits}`;\n      } else if (digits.length === 11 && digits.startsWith(\"1\")) {\n        cleanLookupPhone = `+${digits}`;\n      } else if (digits.length > 0) {\n        cleanLookupPhone = phone.trim().startsWith(\"+\") ? phone.trim() : `+${digits}`;\n      }\n\n      const lookupRes = await this.helpers.httpRequest({\n        method: \"GET\",\n        url: `https://api.telnyx.com/v2/number_lookup/${encodeURIComponent(cleanLookupPhone)}?type=carrier`,\n        headers: {\n          \"Authorization\": `Bearer ${telnyxApiKey}`,\n          \"Accept\": \"application/json\"\n        },\n        json: true\n      });\n\n      const carrierType = (lookupRes?.data?.carrier?.type || \"\").toLowerCase();\n      const lineType = (lookupRes?.data?.portability?.line_type || \"\").toLowerCase();\n      phoneLineType = lineType || carrierType || \"unknown\";\n\n      if (carrierType === \"fixed line\" || carrierType === \"landline\" || lineType === \"fixed line\" || lineType === \"landline\") {\n        canSendSms = false;\n      } else {\n        canSendSms = true;\n      }\n    } catch (e) {\n      canSendSms = true;\n    }\n  }\n\n  results.push({\n    json: {\n      OrderID: orderID,\n      TotalAmount: totalAmount,\n      CustomerName: customerName,\n      Email: email,\n      Phone: phone,\n      can_send_sms: canSendSms,\n      phone_line_type: phoneLineType,\n      PaymentMethod: paymentPart,\n      Months: months,\n      Conns: conns,\n      Adult: adult\n    }\n  });\n}\n\nreturn results;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1227,6 +1261,105 @@
           "name": "Evolution account 2"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a7c60f33-bdb2-4e80-962d-de98130945e4",
+              "leftValue": "={{ $json.can_send_sms ?? true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1040,
+        -100
+      ],
+      "id": "6b09df3a-37ed-4fd5-b8e3-eec25ab994a8",
+      "name": "If Celular Zelle"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5f0997fb-0dc0-4e7c-a64d-10378ba43bce",
+              "leftValue": "={{ $json.can_send_sms ?? true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        640,
+        520
+      ],
+      "id": "de00fb9c-731d-4b44-aab3-40c83a19f7a5",
+      "name": "If Celular Cashapp"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6834933e-3e03-4cca-bfc4-6af0bc28c90f",
+              "leftValue": "={{ $json.can_send_sms ?? true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        640,
+        320
+      ],
+      "id": "50baa76b-4c7f-43b6-b177-ae7c53ca6f1e",
+      "name": "If Celular NowPay"
     }
   ],
   "nodeGroups": [],
