@@ -1074,3 +1074,39 @@
   - Published active production version `edbdfe86-e861-4975-b300-a5891399d713`.
   - Workflows exported and synced to local git repository.
 
+---
+
+## 30. Absolute Brand Segregation: Device Policy Partition & Cross-Brand Contamination Elimination
+
+* **Objective & Problem Statement**:
+  - Customers in TVTotal24 (Latina) inboxes were being asked how many devices they needed (e.g. 1, 2 or 3 devices) and given multi-device pricing tiers upon greeting or inquiring about plans and payments.
+  - Furthermore, cross-brand contamination risks existed where one brand's payment methods (e.g., CashApp in TVTotal24 or Binance Pay ID in TotalTv USA) could leak into customer responses.
+
+* **Root Cause**:
+  - When intent-driven greetings and continuation rules were implemented in Section 28, the template from `agent_prompt.md` (TotalTv USA) was inadvertently copied into Section 2.1 of `prompts/tvtotal24_prompt.md`, which instructed the agent to:
+    1. *"Presentar los precios de esa duración específica para 1, 2 y 3 dispositivos."*
+    2. *"Preguntar cuántos dispositivos necesita o qué medio de pago prefiere."*
+    3. Included `"cashapp"` in intent keywords.
+  - In TVTotal24, accounts operate on single-account fixed duration pricing (1 Mes $8, 3 Meses $24, etc.) without any multi-device tiers. Device tiers belong exclusively to TotalTv USA (Mega OTT).
+
+* **Remediation & Strict Brand Partitioning**:
+  1. **TVTotal24 Latina (`prompts/tvtotal24_prompt.md`, `agent_tvtotal24_latina.json`, `AI Agent - TVTotal24`)**:
+     - Added strict top-level mandate:
+       `⛔ MANDATO ESTRICTO — NUNCA PREGUNTAR NÚMERO DE DISPOSITIVOS:`
+       - Fixed pricing per duration ONLY (1 Mes: 8$, 3 Meses: 24$, 6 Meses: 48$, 12 Meses: 84$; Binance discounts: 5$, 14$, 50$).
+       - Strictly forbidden from asking how many devices the customer needs, offering device tiers, or conditioning plans to device counts.
+       - Removed all occurrences of `"cashapp"` from intent triggers.
+       - Strictly limited to official TVTotal24 payment methods: Zelle (`pagos@totaltvlatina.com`), Binance Pay USDT (ID `22628239`), and Pago Móvil (Bancamiga).
+  2. **TotalTv USA (`prompts/agent_prompt.md`, `agent_totaltv_usa.json`, `AI Agent`)**:
+     - Added strict top-level mandate:
+       `⛔ STRICT MANDATE — NO TVTOTAL24 METHODS, CURRENCY OR SERVERS:`
+       - Strictly forbidden from mentioning Pago Móvil, Bolívares (Bs), Binance Pay ID 22628239, or Venezuelan payment methods.
+       - Strictly forbidden from providing TVTotal24 server URLs (`smrts.wxn.ch`, `cdn01link.uk`, `node01hub.uk`, `wk.mvpl.uk`). TotalTv USA DNS is exclusively `http://hbptsjrw.sljur.com` (Smarters: `http://hbptsjrw.smrtchin.com`).
+       - Enforced that device tiers (1, 2, and 3 devices) belong exclusively to TotalTv USA.
+       - Sanitized payment options to remove accidental `/Binance` reference.
+  3. **n8n Production Deployment**:
+     - Synchronized `AI Agent - TVTotal24` and `AI Agent` in workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+     - Published active production version `a42958af-2807-49fd-a1ad-24be356c08af`.
+     - Synchronized local files `workflows/router_chatwoot_ia.json`, `workflows/agent_tvtotal24_latina.json`, and `workflows/agent_totaltv_usa.json`.
+
+
