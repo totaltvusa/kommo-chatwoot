@@ -1049,6 +1049,28 @@
   - Exported workflows via `python3 workflows/export_workflows.py`.
   - Committed and pushed to git `main`.
 
+---
 
+## 29. Brand-Scoped Support Separation & TVTotal24 Smarters URL Fix
 
+* **Objective & Problem Statement**:
+  - The TotalTv USA AI agent (`Toto`) was delivering TVTotal24-specific IPTV Smarters troubleshooting instructions (including TVTotal24 server URLs `http://smrts.wxn.ch:2095`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`) to TotalTv USA customers (inboxes tagged `funnel-totaltv-usa`).
+  - **Root Cause**:
+    1. `prompts/agent_prompt.md` contained a hardcoded section `TOTALTV SUPPORT DOCUMENT OVERRIDE & SMARTERS APP LOGIC` that explicitly listed the TVTotal24 Smarters URLs.
+    2. Node `Procesar Soporte TotalTv` in workflow `n0zgnS1vlOGNcGNY` included a hardcoded example referencing TVTotal24 Smarters URLs in instruction #1 of `supportContextBlock`, which was injected universally across all brand executions.
+
+* **Remediation & Technical Implementation**:
+  1. **Prompt Sanitization (`prompts/agent_prompt.md`)**:
+     - Removed the brand-specific Smarters URL instructions from `agent_prompt.md`.
+     - Replaced with a brand-neutral `TOTALTV SUPPORT DOCUMENT OVERRIDE` section requiring `Toto` to prioritize rules from the live Google Doc dynamically without hardcoded external brand URLs.
+     - Kept TVTotal24 Smarters URL rules exclusively in `prompts/tvtotal24_prompt.md` and `AI Agent - TVTotal24` system prompt.
+  2. **Workflow Node De-Coupling (`Procesar Soporte TotalTv`)**:
+     - Updated instruction #1 in `supportContextBlock` to be brand-neutral: *"1. Si la situación reportada por el cliente coincide con alguna de las instrucciones anteriores, APLICA DIRECTAMENTE LA SOLUCIÓN INDICADA EN EL DOCUMENTO para ayudar al cliente sin preguntas adicionales innecesarias."*
+  3. **Workflow Backups & n8n Sync**:
+     - Updated node parameters for `AI Agent` in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+     - Synchronized backup file `workflows/agent_totaltv_usa.json`.
+
+* **Production Deployment & Git Integration**:
+  - Published active production version `edbdfe86-e861-4975-b300-a5891399d713`.
+  - Workflows exported and synced to local git repository.
 
