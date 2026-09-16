@@ -1007,4 +1007,29 @@
     - `Transfer to Human Tool` (`xam0WV65gvTbXcIx` / active version `c9b29f94-d41c-4092-b3af-33d20a54afd0`)
   * Exported workflows and committed to git `main` (`418acd6`).
 
+---
+
+## 27. 5-Second Rolling Debounce Pipeline, Multi-Message Aggregation & IPTV Smarters Support Rule Priority
+
+* **Objective & Problem Statements**:
+  1. **Dynamic Rolling Debounce (5-Second Wait & Timer Reset)**: Customers typing multiple consecutive lines or sending messages in rapid succession triggered multiple parallel n8n executions, causing double/multiple AI responses.
+  2. **IPTV Smarters Support Rule Enforcement**: In conversation #1392, when a customer reported IPTV Smarters login/playlist failure, the AI gave generic diagnostic replies instead of enforcing the explicit Google Doc rule requiring them to recreate the user profile with alternative URLs (`http://smrts.wxn.ch:2095`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`).
+  3. **Multimodal Attachment Extraction**: Image attachments sent without text were sometimes missed if Chatwoot ActiveStorage links or nested webhook attachments were not fully parsed.
+
+* **Remediation & Technical Implementation**:
+  1. **5-Second Rolling Debounce Node (`Espera 5s`)**:
+     - Added node `Espera 5s` (`n8n-nodes-base.wait`, 5 seconds) right after `¿Es mensaje entrante?`.
+     - In `Preparar Mensaje`, added rolling debounce check: fetches `GET /conversations/{id}/messages` from Chatwoot API. If `Date.now() - lastIncomingTimestamp < 4500` ms, the execution yields (`skip_ai_response: true`) to the newer execution currently waiting its 5 seconds.
+     - Concatenates all unhandled customer messages sent in the latest burst into a single unified prompt.
+     - Collects all image attachments from all messages in the burst, ensuring zero image attachments are missed.
+  2. **Support Knowledge Base Parser & Prompt Priority Overrides**:
+     - Updated `Procesar Soporte TotalTv` to parse all lines in `# TÉCNICA` and `# ADMINISTRATIVA` (regardless of hyphen/bullet formatting) and flexibly match brand tags (`[tvtotal24]`, `(tvtotal24:)`, `tvtotal24:`, etc.).
+     - Injected mandatory override rules into `agent_prompt.md`, `tvtotal24_prompt.md`, `AI Agent`, and `AI Agent - TVTotal24`: TotalTv Support Document rules take 100% top priority. For IPTV Smarters login/playlist failures on TVTotal24, agents MUST instruct customers to recreate the user profile with the alternative URLs (`http://smrts.wxn.ch:2095`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`).
+
+* **Production Deployment & Git Integration**:
+  * Published active production workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `2ab94c6b-3932-4969-8415-7cf85ddaafd5`).
+  * Exported workflows via `python3 workflows/export_workflows.py`.
+  * Committed and pushed all updates to git `main`.
+
+
 
