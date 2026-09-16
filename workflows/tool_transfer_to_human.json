@@ -3,12 +3,12 @@
   "name": "Transfer to Human Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "96f3e5a6-d759-479f-b799-d53f16d20099",
-  "activeVersionId": "96f3e5a6-d759-479f-b799-d53f16d20099",
+  "versionId": "c9b29f94-d41c-4092-b3af-33d20a54afd0",
+  "activeVersionId": "c9b29f94-d41c-4092-b3af-33d20a54afd0",
   "triggerCount": 0,
   "nodeCount": 11,
   "createdAt": "2026-08-19T03:20:29.252Z",
-  "updatedAt": "2026-09-15T23:22:19.945Z",
+  "updatedAt": "2026-09-16T00:16:06.552Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -386,7 +386,7 @@
         400
       ],
       "parameters": {
-        "jsCode": "// Node: Registrar Consulta Pendiente Google Doc\nconst humanData = $('Agregar etiqueta human').first().json || {};\nconst googleDocId = $vars.TOTALTV_SUPPORT_DOC_ID || '';\n\nif (googleDocId && googleDocId.length > 10 && !humanData.already_had_human) {\n  try {\n    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);\n    const brandName = humanData.brand_name || 'TotalTv USA';\n    const convId = humanData.conversation_id || 'N/A';\n    const reason = humanData.reason || 'Soporte / Atención';\n    const details = String(humanData.case_details || '').replace(/\\n/g, ' ');\n\n    const appendText = `\\n- [${nowStr}] [${brandName}] [Conv #${convId}] Motivo: ${reason} | Detalles: ${details}`;\n\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `https://docs.googleapis.com/v1/documents/${googleDocId}:batchUpdate`,\n      headers: {\n        'Authorization': `Bearer ${$credentials.googleSheetsOAuth2Api?.oauthTokenData?.access_token || ''}`,\n        'Content-Type': 'application/json'\n      },\n      body: {\n        requests: [\n          {\n            insertText: {\n              endOfSegmentLocation: {},\n              text: appendText\n            }\n          }\n        ]\n      },\n      json: true\n    });\n  } catch (e) {}\n}\n\nreturn [{ json: humanData }];",
+        "jsCode": "// Node: Registrar Consulta Pendiente Google Doc\nconst humanData = $('Agregar etiqueta human').first().json || {};\nconst googleDocId = $vars.TOTALTV_SUPPORT_DOC_ID || '14VkDzxSnwQHZ6ezEZskeQ3lfLIXw5S0n2onK3I6yYdE';\n\nif (googleDocId && googleDocId.length > 10 && !humanData.already_had_human) {\n  try {\n    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);\n    const brandName = humanData.brand_name || 'TotalTv USA';\n    const convId = humanData.conversation_id || 'N/A';\n    const reason = humanData.reason || 'Soporte / Atención';\n    const details = String(humanData.case_details || '').replace(/\\n/g, ' ');\n\n    const appendText = `\\n- [${nowStr}] [${brandName}] [Conv #${convId}] Motivo: ${reason} | Detalles: ${details}`;\n\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `https://docs.googleapis.com/v1/documents/${googleDocId}:batchUpdate`,\n      headers: {\n        'Authorization': `Bearer ${$credentials.googleSheetsOAuth2Api?.oauthTokenData?.access_token || ''}`,\n        'Content-Type': 'application/json'\n      },\n      body: {\n        requests: [\n          {\n            insertText: {\n              endOfSegmentLocation: {},\n              text: appendText\n            }\n          }\n        ]\n      },\n      json: true\n    });\n  } catch (e) {}\n}\n\nreturn [{ json: humanData }];",
         "mode": "runOnceForAllItems"
       }
     }
