@@ -1031,5 +1031,24 @@
   * Exported workflows via `python3 workflows/export_workflows.py`.
   * Committed and pushed all updates to git `main`.
 
+---
+
+## 28. Intent-Driven Greeting & Context Continuation Rules
+
+* **Objective & Problem Statement**:
+  - When a customer sent a message containing plan durations or payment intent (e.g. `"one month"`, `"1 mes"`, `"3 meses"`, `"One year"`, `"pagar"`, `"cashapp"`, `"zelle"`, `"dime el monto"`), the AI agents (Toto and Tivi) were previously outputting generic greetings (e.g. *"Hello! I'm Toto, AI Agent for Total TV. How can I help you today?"*) without addressing the customer's specific input in that turn.
+
+* **Remediation & Mandate Enforced**:
+  - Added **GREETING, CONTEXT CONTINUATION & INTENT DRIVEN RESPONSES** rules across all prompts (`agent_prompt.md`, `tvtotal24_prompt.md`, `AI Agent`, and `AI Agent - TVTotal24`).
+  - Mandatory rule: AI agents MAY greet briefly, BUT MUST IMMEDIATELY ADDRESS AND CONTINUE WITH THE CUSTOMER'S TOPIC IN THE VERY SAME RESPONSE:
+    - **Plan duration keywords (`"one month"`, `"1 mes"`, `"3 meses"`, `"1 year"`)**: Brief greeting + present exact pricing breakdown for that duration across 1, 2, and 3 devices + present payment options (Zelle, Crypto with 20% discount, CashApp, Card2Crypto/PayPal, Pago Móvil) + ask how many devices or preferred payment method.
+    - **Payment intent keywords (`"pagar"`, `"cashapp"`, `"zelle"`, `"dime el monto"`, `"quiero comprar"`)**: Brief greeting + assume immediate purchase intent + present pricing/payment details + ask for plan duration and devices.
+
+* **Production Deployment & Synchronization**:
+  - Published active version in n8n `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `ca5e6ff9-6a75-4761-ab61-11ac053da88d`).
+  - Exported workflows via `python3 workflows/export_workflows.py`.
+  - Committed and pushed to git `main`.
+
+
 
 
