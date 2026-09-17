@@ -1171,3 +1171,37 @@
   - Deployed to n8n `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `0aa952be-83c3-4351-be40-c31650d6b1c3`).
   - Workflows exported via `export_workflows.py`.
   - Exported and synchronized local workflow files (`router_chatwoot_ia.json`, `tool_get_mvplay_credentials.json`, `agent_tvtotal24_latina.json`, `agent_totaltv_usa.json`).
+
+---
+
+## 33. AI Agent Iteration/Request Limit Privacy & Chatwoot Internal Note Redirection
+
+* **Objective & Problem Statement**:
+  - **Leak of Technical Stopping Messages to Customers**: Under high load, complex multi-step tool calls, or repeated tool evaluations, LangChain reached `maxIterations: 10` (or encountered API rate/request limits). By default, LangChain's AgentExecutor stops and outputs technical messages like `"Agent stopped due to max iterations."` or `"Agent stopped due to iteration limit or time limit."`.
+  - Because node `Formatear Respuesta` did not intercept these engine-level stop messages, the raw technical message was passed downstream to `Responder en Chatwoot` and delivered as a standard public outgoing message (`private: false`) directly to the customer in WhatsApp / Telegram.
+  - The customer was exposed to confusing internal engine errors, while Chatwoot support agents had no internal private note explaining the incident, and the conversation was not tagged for human escalation.
+
+* **Remediation & Technical Implementation**:
+  1. **Interception & Private Note Redirection in `Formatear Respuesta` (`router_chatwoot_ia.json`)**:
+     - Introduced regex pattern `agentLimitRegex`:
+       `/(?:agent stopped due to (?:max )?iterations?|iteration limit|time limit|max_iterations|maximum iterations|reached the maximum number of iterations|rate limit|rate_limit_exceeded|overloaded_error|too many requests|l[íi]mite m[aá]ximo de iteraciones|m[aá]ximo de iteraciones|m[aá]ximo de peticiones|detiene su funcionamiento por alcanzar un m[aá]ximo|l[íi]mite de peticiones|too many iterations)/i`
+     - When an iteration/request limit or empty response is detected:
+       a) **Posts a Private Internal Note (`private: true`) to Chatwoot**:
+          `⚠️ [NOTA INTERNA - AGENTE IA DETENIDO POR LÍMITE O ERROR]`
+          Logs the exact technical details and notes that the conversation has been automatically redirected to human support.
+       b) **Applies `human` Label to Chatwoot Conversation**:
+          Automatically marks the conversation with `human` via Chatwoot API so the bot will not reply further and human agents receive the case in their queue.
+       c) **Replaces Public Customer-Facing Message**:
+          Replaces the outgoing message with a polite and reassuring transfer confirmation adapted to the customer's language (Spanish or English):
+          *"He transferido tu caso con nuestro equipo de soporte humano para que un asesor te atienda directamente. Un asesor te responderá a la brevedad posible dentro de nuestro horario extendido de oficina. ¡Muchas gracias por tu paciencia!"*
+  2. **Expansion of Agent Margins & Graceful Degradation**:
+     - Increased `maxIterations` from `10` to `15` on both `AI Agent` (TotalTv USA) and `AI Agent - TVTotal24` (TVTotal24 Latina) to grant 50% more headroom for complex chained tool executions (e.g. credential search fallback to transfer).
+     - Configured `"onError": "continueRegularOutput"` on both agent nodes so uncaught API/network exceptions pass into `Formatear Respuesta` rather than terminating the workflow run ungracefully.
+  3. **Prompt Mandate Reinforcement**:
+     - Added strict prohibitions in `prompts/agent_prompt.md`, `prompts/tvtotal24_prompt.md`, and the agent system messages banning the output of iteration limits, request limits, or technical error phrases to customers.
+
+* **Production Deployment & Git Integration**:
+  - Applied updates to n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `fe2f98b0-bd82-4f81-8717-a4c72d28d700`).
+  - Workflows re-exported and validated with `export_workflows.py`.
+  - Updated `PROJECT_CONTEXT.md`, `prompts/agent_prompt.md`, and `prompts/tvtotal24_prompt.md`.
+
