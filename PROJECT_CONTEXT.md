@@ -1143,5 +1143,31 @@
   4. **Production Sync & Git Integration**:
      - Exported and synchronized local workflow files (`router_chatwoot_ia.json`, `tool_get_mvplay_credentials.json`, `agent_tvtotal24_latina.json`, `agent_totaltv_usa.json`).
 
+---
 
+## 32. Vision AI Payload Syntax Fix & Multi-Turn Chatwoot Conversation History Injection
 
+* **Objective & Problem Statement**:
+  1. **Vision Node Failure on Image Uploads (Conv #1366)**: When customers sent payment receipts or error screenshots, the AI agent did not respond or process the image. The executions failed with `status: error`.
+  2. **Loss of Context Across Time Gaps**: When a customer returned after several minutes or hours and sent a message (e.g., `"🤷🏻‍♂️"`, `"Listo"`, `"Ya pagué"`), the AI agent greeted generically with *"¡Hola! Soy Tivi / Toto, ¿en qué puedo ayudarte?"* completely oblivious to the earlier conversation (such as already providing Bancamiga Pago Móvil details for 9.580 Bs).
+
+* **Root Causes Identified**:
+  1. **Anthropic HTTP Request Syntax Error**: In node `Analizar Imagen (Visión Anthropic)` (`router_chatwoot_ia.json`), `jsonBody` was written using `={\n "model": ... }` with handlebars `{{ $json.base64_image }}` inside raw text. In n8n expression mode (`=`), this caused a JavaScript `SyntaxError: Unexpected token ':'`, causing all image executions (e.g. 7920, 7942, 7945) to crash immediately before reaching the AI agent.
+  2. **Short Time-Window Filter on Unhandled Messages**: `Preparar Mensaje` filtered incoming messages using `(nowMs - mTime) < 120000` (2 minutes), dropping images or messages sent more than 2 minutes prior even if the assistant had never responded to them.
+  3. **Ephemeral In-Memory History (Simple Memory)**: Langchain `memoryBufferWindow` only existed in RAM and was cleared on server restarts or session timeouts. `Preparar Mensaje` already fetched all conversation messages from Chatwoot API (`allMessages`), but never injected prior messages into the AI prompt.
+
+* **Remediation & Technical Implementation**:
+  1. **Vision Node JSON Expression Fix (`Analizar Imagen (Visión Anthropic)`)**:
+     - Converted `jsonBody` to standard evaluated expression `={{ JSON.stringify({ model: 'claude-3-5-sonnet-20241022', max_tokens: 1000, messages: [...] }) }}`.
+     - Added `onError: "continueRegularOutput"` so that any external image API timeout or format issue degrades gracefully without halting the conversation.
+  2. **Continuous Unhandled Message & Attachment Aggregation**:
+     - Updated `Preparar Mensaje`: Incoming messages are now filtered by `mTime > lastOutgoingTimestamp` (all messages sent since the assistant's last reply, regardless of time elapsed).
+     - Any image sent in any unhandled turn is captured in `collectedImageAttachments` and analyzed by Vision AI.
+  3. **Chatwoot Conversation History Context Block Injection**:
+     - Extracts the last 8 visible (non-private) messages from `allMessages` prior to the unhandled turn, formatting relative timestamps (e.g. `hace 7h`, `hace 30m`, `hace unos segs`) and attachment descriptions.
+     - Injects `[HISTORIAL RECIENTE DE LA CONVERSACIÓN EN CHATWOOT: ...]` into the AI prompt, providing 100% resilient situational awareness across hours/days and surviving server restarts.
+
+* **Production Deployment & Git Integration**:
+  - Deployed to n8n `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `0aa952be-83c3-4351-be40-c31650d6b1c3`).
+  - Workflows exported via `export_workflows.py`.
+  - Exported and synchronized local workflow files (`router_chatwoot_ia.json`, `tool_get_mvplay_credentials.json`, `agent_tvtotal24_latina.json`, `agent_totaltv_usa.json`).
