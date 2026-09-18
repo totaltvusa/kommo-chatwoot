@@ -1205,3 +1205,45 @@
   - Workflows re-exported and validated with `export_workflows.py`.
   - Updated `PROJECT_CONTEXT.md`, `prompts/agent_prompt.md`, and `prompts/tvtotal24_prompt.md`.
 
+---
+
+## 34. Customer Service Username (`Usuario`) Custom Attribute in Chatwoot & Context Injection
+
+* **Objective & Problem Statement**:
+  - When an incoming contact was identified as an active customer in Google Sheets (`Mega` for TotalTv USA or `DnSpace` for TVTotal24 Latina), the system updated the contact's `name`, saved `1raCompra` date to `additional_attributes.description`, and applied `stage-leads-ganados`.
+  - However, the customer's service username (from the `"Usuario"` column in the corresponding Google Sheet) was not stored in the Chatwoot contact card or injected into the prompt context for the AI Agent.
+  - Support agents in Chatwoot could not immediately see the customer's service username in the contact card sidebar, and the AI agent had to query or lack direct visibility of the service username.
+
+* **Remediation & Technical Implementation**:
+  1. **Chatwoot Custom Attribute Definition**:
+     - Created `contact_attribute` custom attribute `usuario` in Chatwoot API:
+       - `attribute_key`: `"usuario"`
+       - `attribute_display_name`: `"Usuario"`
+       - `attribute_model`: `"contact_attribute"`
+       - `attribute_display_type`: `"text"` (ID 12).
+  2. **Evaluation & Fallback Nodes Update (`router_chatwoot_ia.json`)**:
+     - Updated 4 evaluation nodes (`Evaluar Cliente DnSpace`, `Evaluar Cliente Mega`, `Evaluar DnSpace (Fallback)`, `Evaluar Mega (Fallback)`):
+       - Extracts `sheetUsuario` using `/^(usuario|user|username)/i`.
+       - Injects `sheetUsuario` into contact update payload:
+         ```json
+         {
+           "additional_attributes": { "company_name": channelDefaultName, "description": firstPurchase, "usuario": sheetUsuario },
+           "custom_attributes": { "usuario": sheetUsuario }
+         }
+         ```
+       - Injects `Usuario: "${sheetUsuario}"` into `[CLIENT CONTEXT: Existing customer in database...]` passed to the AI agent.
+       - Returns `client_usuario` in output JSON.
+  3. **Message Preparation Update (`Preparar Mensaje`)**:
+     - Extracts `contactUsuario` from `custom_attributes.usuario` or `additional_attributes.usuario`.
+     - Injects `Usuario: "${contactUsuario}"` into cached `[CLIENT CONTEXT...]` for customers already marked with `stage-leads-ganados`.
+     - Returns `contact_usuario` in JSON output.
+  4. **Retrospective Backfill on September Conversations**:
+     - Queried all 100 September conversations from Chatwoot across open/snoozed/resolved statuses.
+     - Matched customer phone numbers and emails against all 106 rows of `Mega` and 93 rows of `DnSpace`.
+     - Successfully updated 55 active customer contact cards in Chatwoot with their service `Usuario`, registered `name`, and `1ra compra` date with 0 errors.
+
+* **Production Deployment & Git Integration**:
+  - Deployed atomically to n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `ef0953d3-6b20-4e4c-93d9-ff4a4e3afe41`).
+  - Workflows re-exported and synchronized via `export_workflows.py`.
+  - Updated `PROJECT_CONTEXT.md` and committed changes to git.
+
