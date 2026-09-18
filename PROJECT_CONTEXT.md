@@ -1247,3 +1247,37 @@
   - Workflows re-exported and synchronized via `export_workflows.py`.
   - Updated `PROJECT_CONTEXT.md` and committed changes to git.
 
+---
+
+## 35. Automatic Human Transfer Guardrail, Internal Note Synchronization & Prompt Hardening
+
+* **Objective & Problem Statement**:
+  - In certain conversations (e.g. Conversation 1365 with Luis Villar, plus historical cases like 1342, 1378, 1380), when the AI Agent decided to transfer the customer to human support after troubleshooting, the LLM generated customer-facing confirmation text (*"Te he transferido con nuestro equipo de soporte humano..."*) directly in its response without issuing a tool call to `Call 'transfer_to_human_tool'`.
+  - Because the tool function was bypassed:
+    1. The `human` label was never applied to the Chatwoot conversation.
+    2. The private internal note summarizing the case and customer credentials was not generated.
+    3. The administrator alerts (via Telegram and Evolution API WhatsApp) were never dispatched.
+    4. When the customer replied subsequently (e.g. "Gracias"), the bot woke up and responded again rather than pausing for human support.
+
+* **Remediation & Technical Implementation**:
+  1. **Automatic Transfer Guardrail in `Formatear Respuesta` (`router_chatwoot_ia.json`)**:
+     - Added transfer phrase detection regex `transferPhrasesRegex`:
+       `/(?:te he transferido|he transferido (?:tu|el|su|la)|transferí tu|transferido con nuestro equipo|transferida a soporte|transferirte a un asesor|un asesor (?:de nuestro equipo|humano )?te (?:atenderá|contactará|responderá)|transfer (?:your|you|the)|transferred (?:your request|you|the conversation) to (?:our )?human|an agent will (?:assist|contact|reach out to) you)/i`
+     - Whenever transfer phrasing is present (or triggered by engine error/leak replacements) and `transferToolCalled` was false or the conversation lacks `human`:
+       a) **Applies `human` Label**: Fetches current labels and immediately writes `human` to the conversation via Chatwoot API `POST /conversations/{id}/labels`.
+       b) **Posts Internal Private Note**: Generates and posts a Markdown private note (`private: true`) to Chatwoot containing Contact Name, Phone, Email, Service Username (`Usuario`), Brand/Inbox, and the exact message sent to the client.
+  2. **Reliable Conversation ID in `Call 'transfer_to_human_tool'`**:
+     - Updated parameter mapping to use `$('Preparar Mensaje').first().json.conversation_id` and `account_id` instead of fragile webhook body navigation, ensuring tool calls always target the exact active conversation.
+  3. **Resilient Error Handling in `Transfer to Human Tool` (`xam0WV65gvTbXcIx`)**:
+     - Configured `onError: "continueRegularOutput"` on `Notificar Administrador` (Telegram), `Nota privada Chatwoot`, `Notificar WhatsApp (Evolution API)`, and `Registrar Consulta Pendiente Google Doc` to prevent transient network issues from aborting the transfer workflow.
+  4. **Prompt Mandate & Smarters Escalation Hardening**:
+     - Added strict prohibitions in `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md` banning the output of transfer promises without prior execution of `Call 'transfer_to_human_tool'` in the same turn.
+     - Added explicit Smarters troubleshooting escalation instructions in `tvtotal24_prompt.md` directing the agent to call the transfer tool with user and device details if alternative URLs fail to resolve login errors.
+  5. **Remediation of Active Conversation 1365**:
+     - Applied `human` label to conversation 1365 and posted a complete internal private note with Luis Villar's diagnostic details, app, and service username (`LuisVillar`).
+
+* **Production Deployment & Git Integration**:
+  - Deployed updates to n8n workflows `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `4e0daa14-b798-4e3c-aeb6-2f53b448bab0`) and `Transfer to Human Tool` (`xam0WV65gvTbXcIx` / active version `26f40ba7-395f-4bcf-b072-437a2de70422`).
+  - Workflows synchronized locally via `export_workflows.py`.
+  - Updated `PROJECT_CONTEXT.md` and committed changes to git.
+
