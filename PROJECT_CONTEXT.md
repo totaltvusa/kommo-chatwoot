@@ -1312,4 +1312,37 @@
   - Published n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `1fd937e9-92de-4a84-9b96-785c8b9a94ab`).
   - Synchronized repository with `export_workflows.py`.
 
+---
+
+## 37. Customer Evaluation Nodes: Removal of `$node.name` ExpressionError on New Leads
+
+* **Objective & Problem Statement**:
+  - The AI Agent was failing to attend incoming customer conversations in Chatwoot (e.g. Conversation #1406 with Mitchell Lovett, along with other non-customer leads).
+  - Webhook executions in n8n (e.g. 9425, 9422, 9419, 9417, 9415, 9413, 9411, 9408, 9405) were crashing immediately after the Google Sheets lookup step without reaching the AI Agent or generating a response.
+
+* **Root Cause**:
+  - In recent updates, the `else` branch of customer evaluation nodes (`Evaluar Cliente Mega`, `Evaluar Cliente DnSpace`, `Evaluar DnSpace (Fallback)`, and `Evaluar Mega (Fallback)`) contained:
+    ```javascript
+    const isFallbackNode = typeof $node !== 'undefined' && ($node.name.includes('Fallback'));
+    ```
+  - In n8n's JavaScript sandbox, `$node` is a proxy object for accessing output data from upstream nodes by name (e.g. `$node["NodeName"].json`). Accessing `$node.name` caused n8n's expression engine to look for an upstream node literally named `"name"`.
+  - When evaluating any lead NOT registered in Google Sheets, execution entered the `else` block and threw `ExpressionError: Referenced node doesn't exist` (`nodeCause: "name"`).
+  - This unhandled fatal exception crashed the workflow prior to reaching `¿Qué Empresa?` and the AI Agent nodes.
+
+* **Remediation & Technical Implementation**:
+  - Removed all `$node.name` expressions across all 4 customer evaluation nodes in `workflows/router_chatwoot_ia.json`:
+    1. **`Evaluar Cliente Mega` & `Evaluar Cliente DnSpace`**:
+       - Replaced the `else` block with simple, clean `else { isLeadGanado = false; }`.
+    2. **`Evaluar DnSpace (Fallback)`**:
+       - `else` block sets `isLeadGanado = false;` and if the conversation lacks any `stage-*` label, appends `stage-incoming-leads` via Chatwoot API `POST /conversations/{id}/labels`.
+    3. **`Evaluar Mega (Fallback)`**:
+       - `else` block sets `isLeadGanado = false;` and if the conversation lacks any `stage-*` label, appends `stage-leads-entrantes` via Chatwoot API `POST /conversations/{id}/labels`.
+  - Verified syntax of all JavaScript code nodes across the workflow (`Syntax OK`).
+
+* **Production Deployment & Verification**:
+  - Updated live n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) via MCP tool `update_workflow` with 4 atomic operations.
+  - Published active version `9ebe7752-2065-403f-9ae1-1f55c0845c19`.
+  - Exported and synchronized `workflows/router_chatwoot_ia.json`.
+
+
 
