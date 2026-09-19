@@ -1281,3 +1281,35 @@
   - Workflows synchronized locally via `export_workflows.py`.
   - Updated `PROJECT_CONTEXT.md` and committed changes to git.
 
+---
+
+## 36. Image Processing (Anthropic Vision), Receipt Acknowledgment & Language Detection Hardening
+
+* **Objective & Problem Statement**:
+  - When customers sent image attachments (payment receipts such as Zelle, Pago Móvil, or Binance Pay, or technical screenshots of IPTV app errors / device screens), the AI agent froze/paralyzed without providing any response to the customer.
+  - Furthermore, in cases where vision or human transfer tools executed, the agent would either remain silent or fall back to generic English canned responses even when Spanish-speaking customers were contacting TotalTv USA.
+
+* **Root Causes & Technical Implementation**:
+  1. **Obsolete Anthropic Vision Model (HTTP 404)**:
+     - The HTTP request node `Analizar Imagen (Visión Anthropic)` was configured with deprecated model `claude-3-5-sonnet-20241022`, returning HTTP 404 from the Anthropic API (`{"type":"not_found_error","message":"model: claude-3-5-sonnet-20241022"}`).
+     - **Fix**: Updated model to `claude-sonnet-4-6` (Anthropic's latest high-capability multimodal model active on credential `ZbUWSAq6JlKInA64`).
+  2. **Binary Image Download Corruption (HTTP 400)**:
+     - In `Preparar Mensaje`, image downloading via `this.helpers.httpRequest` was configured with `encoding: null`. In modern n8n Axios execution, `encoding: null` caused binary JPEG/PNG byte streams to be decoded into UTF-8 strings with replacement characters (`\xef\xbf\xbd`), expanding 79 KB images into 184 KB of corrupted base64 payloads that Anthropic rejected with HTTP 400 (`"Could not process image"`).
+     - **Fix**: Changed download configuration to `encoding: 'arraybuffer'`. Image buffers are now preserved exactly in raw binary and cleanly converted to base64 (`Buffer.from(imgBuffer).toString('base64')`).
+  3. **Resilient Parsing & Execution Mode in `Procesar Resultado Visión`**:
+     - Configured `"mode": "runOnceForAllItems"` to prevent n8n item execution mismatch errors.
+     - Implemented robust regex JSON extraction `/\{[\s\S]*\}/` to parse structured vision responses reliably even if Anthropic outputs markdown fences or conversational preambles.
+     - Verified strict brand boundaries for Zelle destinations (`pagos@totaltvlatina.com` for TVTotal24 Latina; `acalimanr@gmail.com` for TotalTv USA) and Pago Móvil verification (Phone `04246861135` / RIF `J405259221`).
+  4. **Customer Language Detection & Receipt Confirmation in `Formatear Respuesta`**:
+     - **Language Detection Fix**: Replaced the rigid `prepData.brand === 'totaltvusa'` check with keyword-based language detection matching the customer's incoming message (`esRegex` vs `enRegex`), ensuring bilingual TotalTv USA customers communicating in Spanish receive Spanish responses.
+     - **Explicit Receipt Confirmation**: When a customer sends a payment receipt, `Formatear Respuesta` reads `visionData` from `Procesar Resultado Visión` and guarantees the customer receives an explicit confirmation mentioning the payment method, amount, and reference number (e.g. *"¡Muchas gracias por enviar tu comprobante de pago! Hemos recibido los datos de tu transacción vía ZELLE por $12.00 USD (Ref: COF2FWMXWLGP)..."*) before transferring the case to human administration.
+     - **Technical Screenshot Confirmation**: For app/device error screenshots, ensures diagnostic details are included in the transfer and acknowledged to the customer without leaving the chat hanging.
+     - **Auto-Guardrail Human Transfer**: Guarantees that any payment receipt automatically applies the `human` label and creates a comprehensive internal private note in Chatwoot with financial details even if the LLM tool execution had transient hiccups.
+
+* **End-to-End Verification & Production Deployment**:
+  - Tested end-to-end against real production payload (Conversation #1401 with Jose Parra, Zelle payment receipt of $12.00 USD).
+  - Test execution 8943 succeeded with status `success`: Anthropic vision extracted transaction details, human transfer executed, and Chatwoot response was sent in Spanish acknowledging the receipt.
+  - Published n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / active version `1fd937e9-92de-4a84-9b96-785c8b9a94ab`).
+  - Synchronized repository with `export_workflows.py`.
+
+
