@@ -1489,3 +1489,38 @@
      - Added `tool_card2crypto_tvtotal24` to `workflows/export_workflows.py`.
      - Exported and synchronized all workflows locally.
 
+---
+
+### 43. Strict Closed-Domain Boundary Enforcement & Anti-Banking/Cashtag Hallucination Guardrails (2026-09-21)
+
+* **Objective & Problem Statement**:
+  - In Conversation #1406 (Mitchell Lovett), the AI Agent (Toto - TotalTv USA) generated critical hallucinations that fell completely outside the service's approved knowledge base and operational model:
+    1. **False Confirmation of CashApp Tag**: When the customer asked if we had a CashApp tag for our email and if sending money directly would be received, the agent affirmed: *"Yes, if you send payment through CashApp to our official CashApp tag/account, we will absolutely receive it."* TotalTv USA has **no CashApp tag ($tag), direct account, or email recipient** in CashApp (CashApp is processed exclusively through generated payment links).
+    2. **Fictitious In-Person Banking & Teller Scripts**: When the customer asked if visiting their bank in person would help, the agent encouraged visiting a physical branch: *"Visit your bank branch in person and ask them to send a Zelle transfer to acalimanr@gmail.com for $9.00. They'll process it right there... Just make sure to tell them: Recipient Email: acalimanr@gmail.com, Amount: $9.00, Payment Method: Zelle."*
+  - The business mandate is categorical: **AI Agents MUST answer STRICTLY and EXCLUSIVELY based on their System Prompt and the attached Support Document (`[DOCUMENTO DE SOPORTE...]`), with zero external information, zero speculation, and zero unapproved advice.**
+
+* **Root Cause**:
+  - LLMs have strong default conversational tendencies to validate user questions and speculate using general world knowledge (e.g. retail banking, teller windows, app tags).
+  - While negative rules existed against whitelisting, there was no top-priority Closed-World Assumption (CWA) directive at the very top of `agent_prompt.md`, nor explicit rules clarifying that TotalTv USA does NOT have a CashApp tag or physical branch procedures.
+
+* **Remediation & Technical Implementation**:
+  1. **Strict Closed-Domain Directive at Root Priority (`prompts/agent_prompt.md` & `prompts/tvtotal24_prompt.md`)**:
+     - Elevated knowledge boundary to **Section 1 (Absolute Highest Priority)**.
+     - Declared that the agent's **ONLY sources of truth** are: (1) The System Prompt, and (2) The attached Support Document (`[DOCUMENTO DE SOPORTE...]`).
+     - Established the Closed-World Assumption (CWA): If a feature, tag, account, branch, procedure, or policy is NOT explicitly written in these two sources, **it does not exist**.
+     - Strictly prohibited drawing on pre-training knowledge about external banking or apps.
+  2. **Explicit CashApp Tag & Account Prohibitions**:
+     - Prohibited confirming or validating any CashApp Cashtag (`$tag`) or direct recipient.
+     - Mandated explaining clearly that CashApp is accepted exclusively through generated payment links (`Call 'getpaymentlink'`), and direct peer-to-peer transfers are rejected.
+  3. **Explicit In-Person Banking & Branch Prohibitions**:
+     - Clarified that TotalTv is a 100% digital online service with no physical branches or teller arrangements.
+     - Strictly prohibited suggesting, validating, or scripting in-person visits to banks or conversations with tellers.
+     - Instructed the agent to redirect the customer to their bank's online app/website, offer approved online alternatives (Card2Crypto/PayPal, Crypto), or escalate to human support (`Call 'transfer_to_human_tool'`).
+  4. **Programmatic Regex Guardrails in `Formatear Respuesta` (`workflows/router_chatwoot_ia.json`)**:
+     - Added post-generation interceptors:
+       - `bankBranchRegex`: Catches any rogue mention of visiting banks in person, branches, or tellers and instantly replaces it with the official online service clarification.
+       - `cashTagAffirmRegex`: Catches any affirmation of a CashApp tag and replaces it with the official denial and generated link reminder.
+  5. **Production Deployment & Synchronization**:
+     - Applied atomic updates to live n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
+     - Published active version `c1a955d1-ba63-49b3-be44-df1b008990e7`.
+     - Exported and synchronized all workflow files via `export_workflows.py`.
