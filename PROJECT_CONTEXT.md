@@ -1481,6 +1481,11 @@
      - Published active version `ff92c790-d76e-49ca-8581-f406750c6c57`.
   3. **Prompt Updates (`prompts/tvtotal24_prompt.md`)**:
      - Added authorized exception for explicit PayPal/Card/Apple Pay/Google Pay requests with 10% surcharge explanation and tool invocation.
-  4. **Export & Git Tracking**:
+  4. **Parameter Mapping & Chatwoot Contact Enrichment**:
+     - Configured explicit `$fromAI(...)` schema and value mappings on `generar_link_card2crypto_tvtotal24` in `router_chatwoot_ia.json` for `amount`, `base_amount`, `duration`, `payment_method`, `contact_name`, `contact_phone`, `conversation_id`, and `account_id`.
+     - In `tool_card2crypto_tvtotal24` (`OCrN0N77qR9Gqppx`), added API lookup to `/api/v1/accounts/{account_id}/conversations/{conversation_id}` to dynamically fetch sender name and phone number if not supplied by LLM arguments, plus bidirectional plan duration/amount reconciliation (e.g. $52.80 <-> $48 USD base for 6 Months).
+     - Both Chatwoot internal private notes and Telegram/WhatsApp notifications now display the exact customer name, phone number, requested duration, base price, +10% surcharge, and final amount matching the generated link.
+  5. **Export & Git Tracking**:
      - Added `tool_card2crypto_tvtotal24` to `workflows/export_workflows.py`.
      - Exported and synchronized all workflows locally.
+
