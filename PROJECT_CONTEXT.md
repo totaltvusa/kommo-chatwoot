@@ -1520,7 +1520,14 @@
      - Added post-generation interceptors:
        - `bankBranchRegex`: Catches any rogue mention of visiting banks in person, branches, or tellers and instantly replaces it with the official online service clarification.
        - `cashTagAffirmRegex`: Catches any affirmation of a CashApp tag and replaces it with the official denial and generated link reminder.
-  5. **Production Deployment & Synchronization**:
+  5. **Refinement: Anti-Lecture & Elegant Out-of-Scope Fallback (Crucial Nuance)**:
+     - **Anti-Lecture Directive**: Detailed negative constraints in system prompts must NEVER be dumped on the customer as defensive or robotic lectures whenever a client mentions a keyword (e.g. "bank", "branch", "cashapp"). Internal behavioral constraints dictate how the agent acts, not a script to lecture the client.
+     - **"No Dispongo de Información" Protocol**: Any query, procedure, or feature outside the prompt and support document has the strict status of *"No dispongo de información sobre eso"*. The agent responds elegantly:
+       - *Spanish*: "Como asistente virtual de IA no dispongo de información sobre ese tema. Con gusto puedo orientarte con nuestros planes de servicio, generarte un enlace oficial de pago o transferirte con un asesor humano si requieres atención personalizada."
+       - *English*: "As an AI assistant, I don't have information on that topic. I can gladly help you with our service plans, generate an official payment link, or connect you with our human support team if you need personalized assistance."
+     - **Natural CashApp Handling**: Brief and direct: TotalTv does not have a direct CashApp tag/account, and CashApp payments are handled exclusively via generated invoice links.
+     - **Refined Interceptor Guardrails**: `Formatear Respuesta` regexes tuned to specifically target actual rogue branch/teller scripts and cashtag affirmations, replacing them with the clean, elegant responses.
+  6. **Production Deployment & Synchronization**:
      - Applied atomic updates to live n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
-     - Published active version `c1a955d1-ba63-49b3-be44-df1b008990e7`.
+     - Published active version: `7ad1ceab-370f-4e42-9357-a6a99264aa54`.
      - Exported and synchronized all workflow files via `export_workflows.py`.
