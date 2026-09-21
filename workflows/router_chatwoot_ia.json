@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "ff92c790-d76e-49ca-8581-f406750c6c57",
-  "activeVersionId": "ff92c790-d76e-49ca-8581-f406750c6c57",
+  "versionId": "df91647a-ff1a-4776-a61a-882e7f383673",
+  "activeVersionId": "df91647a-ff1a-4776-a61a-882e7f383673",
   "triggerCount": 2,
   "nodeCount": 37,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-09-21T02:24:07.513Z",
+  "updatedAt": "2026-09-21T02:32:52.910Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -1576,7 +1576,7 @@
         616
       ],
       "parameters": {
-        "description": "Llama a esta herramienta ÚNICAMENTE cuando un cliente de TVTotal24 solicite EXPRESAMENTE pagar mediante PayPal, Tarjeta de Crédito/Débito, Apple Pay o Google Pay. Esta herramienta genera el enlace de Card2Crypto agregando el 10% de recargo sobre el plan base (ej: 1 Mes base $8 -> cobrar $8.80, 3 Meses base $24 -> cobrar $26.40, 6 Meses base $48 -> cobrar $52.80, 12 Meses base $84 -> cobrar $92.40), registra la nota privada en Chatwoot y notifica al administrador por Telegram y WhatsApp Evolution API. Parámetros: amount (monto final con 10%), base_amount (monto base del plan), duration (duración del plan, ej. '1 Mes', '3 Meses'), payment_method ('PayPal', 'Tarjeta de Crédito/Débito', 'Apple Pay', 'Google Pay'), conversation_id (ID de conversación), contact_name (nombre del cliente), contact_phone (teléfono del cliente).",
+        "description": "Llama a esta herramienta ÚNICAMENTE cuando un cliente de TVTotal24 solicite EXPRESAMENTE pagar mediante PayPal, Tarjeta de Crédito/Débito, Apple Pay o Google Pay. Esta herramienta genera el enlace oficial de Card2Crypto agregando el 10% de recargo sobre el plan base (ej: 1 Mes base $8 -> $8.80, 3 Meses base $24 -> $26.40, 6 Meses base $48 -> $52.80, 12 Meses base $84 -> $92.40), registra la nota privada en Chatwoot y notifica al administrador por Telegram y WhatsApp Evolution API. Parámetros obligatorios: amount (número final con 10%), base_amount (número base sin recargo), duration (texto del plan, ej. '6 Meses', '1 Mes'), payment_method (método solicitado, ej. 'Google Pay', 'PayPal', 'Tarjeta de Crédito/Débito', 'Apple Pay'), contact_name (nombre del cliente), contact_phone (teléfono del cliente).",
         "workflowId": {
           "__rl": true,
           "value": "OCrN0N77qR9Gqppx",
@@ -1586,9 +1586,55 @@
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "account_id": "={{ $('Preparar Mensaje').first().json.account_id || 1 }}",
+            "conversation_id": "={{ $('Preparar Mensaje').first().json.conversation_id || 13 }}",
+            "contact_name": "={{ $fromAI('contact_name', 'Nombre del cliente') || $('Preparar Mensaje').first().json.contact_name || 'Cliente' }}",
+            "contact_phone": "={{ $fromAI('contact_phone', 'Teléfono del cliente') || $('Preparar Mensaje').first().json.contact_phone || 'No registrado' }}",
+            "amount": "={{ $fromAI('amount', 'Monto final a cobrar con el 10% de recargo incluido (ej: 8.80 para 1 mes, 26.40 para 3 meses, 52.80 para 6 meses, 92.40 para 12 meses)') }}",
+            "base_amount": "={{ $fromAI('base_amount', 'Monto base del plan sin recargo (ej: 8 para 1 mes, 24 para 3 meses, 48 para 6 meses, 84 para 12 meses)') }}",
+            "duration": "={{ $fromAI('duration', 'Duración del plan solicitado por el cliente (ej: 1 Mes, 3 Meses, 6 Meses, 12 Meses)') }}",
+            "payment_method": "={{ $fromAI('payment_method', 'Método de pago solicitado por el cliente (ej: PayPal, Tarjeta de Crédito/Débito, Apple Pay, Google Pay)') }}"
+          },
           "matchingColumns": [],
-          "schema": [],
+          "schema": [
+            {
+              "displayName": "amount",
+              "id": "amount",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "displayName": "base_amount",
+              "id": "base_amount",
+              "required": false,
+              "type": "number"
+            },
+            {
+              "displayName": "duration",
+              "id": "duration",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "payment_method",
+              "id": "payment_method",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "contact_name",
+              "id": "contact_name",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "displayName": "contact_phone",
+              "id": "contact_phone",
+              "required": false,
+              "type": "string"
+            }
+          ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         }
