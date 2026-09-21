@@ -1374,6 +1374,37 @@
   - Published active version `c1540ac6-c27e-4e8b-89d1-022a83ff95e5`.
   - Synchronized repository and exported all workflows via `workflows/export_workflows.py`.
 
+---
+
+### 39. Card2Crypto Dynamic Payment Links, Regional Provider Support & Website Fallback (2026-09-20)
+
+* **Objective & Problem Statement**:
+  - Previously, Card2Crypto payment links generated across n8n workflows and AI agent tools hardcoded `provider=paypal` in the payment link URL (`https://pay.card2crypto.org/process-payment.php?...&provider=paypal&...`).
+  - This forced PayPal as the exclusive payment provider and prevented clients from paying with other available regional payment methods (such as direct Credit/Debit Cards, Apple Pay, Google Pay, Revolut Pay, MoonPay, Banxa, etc.).
+  - Additionally, when customers did not want to use PayPal or encountered difficulties, there was no clear protocol to refer them to the official website (`http://totaltvusa.com`) where Card2Crypto processes payments with dynamic provider selection under the option *"Credit/Debit Card, Paypal & more!"*.
+
+* **Card2Crypto API Analysis**:
+  - According to Card2Crypto documentation:
+    1. Wallet Encryption API: `GET https://api.card2crypto.org/control/wallet.php?address={POLYGON_USDC_ADDRESS}&callback={CALLBACK_URL}` returns `{ address: "{ENCRYPTED_ADDRESS}", callback: "..." }`.
+    2. General Payment Link Format (Dynamic Provider): `https://pay.card2crypto.org/process-payment.php?address={ENCRYPTED_ADDRESS}&amount={AMOUNT}&currency=USD&email={EMAIL}`.
+       - When `provider` parameter is omitted, Card2Crypto dynamically detects the client's country, currency, device, and amount to show all available payment methods (Cards, Apple Pay, Google Pay, Revolut, PayPal, etc.).
+       - When `provider=paypal` is explicitly included, it locks the checkout exclusively to PayPal.
+    3. Fallback: If a general link fails or cannot be loaded, fallback to forcing PayPal (`&provider=paypal`) is maintained.
+
+* **Remediation & Technical Implementation**:
+  1. **System Prompt Updates (`prompts/agent_prompt.md`)**:
+     - Updated Card2Crypto payment method description in Spanish and English to reflect dynamic payment method options (Credit/Debit Card, Apple Pay, Google Pay, PayPal, etc.).
+     - Added explicit instruction in link delivery explaining that the client will see all payment options available for their location.
+     - Added website referral rule: If the customer does not want to use PayPal or encounters issues, refer them to `http://totaltvusa.com` to place their order choosing the payment option **"Credit/Debit Card, Paypal & more!"**.
+     - Added fallback rule to standard PayPal link if general dynamic link generation fails.
+  2. **Workflow Synchronization (`Chatwoot + IA Agent` `n0zgnS1vlOGNcGNY`)**:
+     - Updated the `AI Agent` systemMessage in n8n live workflow `n0zgnS1vlOGNcGNY` with the updated prompt instructions.
+     - Published active version `ab3b977f-cd83-42c4-a33c-46a16a803a08`.
+  3. **Subworkflow Structure & Guidelines (`Card2CryptoLink` `p8dS1jx73xvpbrkj`, `getpaymentlink` `3dBu0SNABE2pKCqU`, `Telegram to N8N` `TS2CADjNNn05jXBW`)**:
+     - In `Card2CryptoLink` (`p8dS1jx73xvpbrkj`) and `Telegram to N8N` (`TS2CADjNNn05jXBW`), URL generation is updated to remove `&provider=paypal` from the standard output template so that generated URLs follow the general format `https://pay.card2crypto.org/process-payment.php?address=${address}&amount=${amount}&currency=USD&email=${email}`.
+     - Exported updated workflows locally via `workflows/export_workflows.py`.
+
+
 
 
 
