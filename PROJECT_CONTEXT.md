@@ -1404,6 +1404,26 @@
      - In `Card2CryptoLink` (`p8dS1jx73xvpbrkj`) and `Telegram to N8N` (`TS2CADjNNn05jXBW`), URL generation is updated to remove `&provider=paypal` from the standard output template so that generated URLs follow the general format `https://pay.card2crypto.org/process-payment.php?address=${address}&amount=${amount}&currency=USD&email=${email}`.
      - Exported updated workflows locally via `workflows/export_workflows.py`.
 
+---
+
+### 40. Inbox 16 (`lat-whatscol`) Channel Label Correction to `channel-whatsapp-lite` (2026-09-20)
+
+* **Objective & Problem Statement**:
+  - Conversations in Inbox 16 (`lat-whatscol`, TVTotal24 Latina WhatsApp Colombia) were erroneously receiving the label `channel-facebook` instead of `channel-whatsapp-lite`.
+
+* **Root Cause**:
+  - In `router_chatwoot_ia.json` (node `Preparar Mensaje`), `inboxId === 16` was mistakenly coded to push `'channel-facebook'` under the `isTVTotal24` branch instead of `'channel-whatsapp-lite'`.
+
+* **Remediation & Technical Implementation**:
+  1. **Router Workflow Fix (`router_chatwoot_ia.json` / `n0zgnS1vlOGNcGNY`)**:
+     - Updated node `Preparar Mensaje` so that `inboxId === 16` and `inboxId === 19` strip any erroneous `channel-facebook` or `channel-whatsapp` and ensure `channel-whatsapp-lite` is assigned.
+     - Published active version `b0c112e7-5f87-482c-8ad8-0f07cbcf0af8`.
+  2. **Retroactive Correction in Chatwoot**:
+     - Executed a remediation script across all conversations in Inbox 16 (`lat-whatscol`), removing `channel-facebook` and adding `channel-whatsapp-lite` to 13 affected conversations.
+  3. **Workflow Export & Synchronization**:
+     - Exported all workflows locally via `workflows/export_workflows.py`.
+
+
 
 
 
