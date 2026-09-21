@@ -1423,8 +1423,29 @@
   3. **Workflow Export & Synchronization**:
      - Exported all workflows locally via `workflows/export_workflows.py`.
 
+---
 
+### 41. Card2Crypto Smart Hosted Endpoint Fix (`pay.php`) for Dynamic Multi-Provider Checkout (2026-09-20)
 
+* **Objective & Problem Statement**:
+  - Links generated for Card2Crypto without forcing PayPal (`process-payment.php?address=...&amount=...`) failed to open, returning HTTP 400 (`Page Not Found / Error 404`).
+  - The goal was to generate functional general links that present all payment methods available according to the customer's country/region (Cards, Apple Pay, Google Pay, Revolut, etc.) as supported by Card2Crypto.
 
+* **Technical Investigation & Root Cause**:
+  - Direct inspection of the official Card2Crypto WooCommerce plugin architecture revealed:
+    1. `/process-payment.php` is exclusively a direct single-provider handoff script expecting a specific provider parameter (`provider=topper`, `provider=transak`, etc.).
+    2. `/pay.php` is the dedicated **Smart Hosted Multi-Provider Checkout** page.
+    3. `/pay.php` requires `currency=USD` and `email` query parameters alongside `address` and `amount` (`https://pay.card2crypto.org/pay.php?address={address_in}&amount={amount}&currency=USD&email={email}`).
+    4. When called with these required arguments, `/pay.php` responds with `HTTP 200: Complete Your Purchase` and dynamically presents all eligible regional payment gateways.
 
-
+* **Remediation & Technical Implementation**:
+  1. **Subworkflow Update (`Card2CryptoLink` `p8dS1jx73xvpbrkj`)**:
+     - Updated node `Edit Fields` `paylink` expression to:
+       `https://pay.card2crypto.org/pay.php?address={{ $json.address_in }}&amount={{ $('code1').first().json.amount }}&email=totaltvusa%40gmail.com&currency=USD`
+     - Fixed query parameter key in `GetLink` node to clean `callback`.
+     - Published active version `8aeaa61a-bb96-4509-b7c1-4e3decef68bd`.
+  2. **Telegram Bot Workflow (`Telegram to N8N` `TS2CADjNNn05jXBW`)**:
+     - Uses `Card2CryptoLink Sub-Workflow` (`p8dS1jx73xvpbrkj`) for `/card2crypto` and `/c2c` commands, automatically delivering working dynamic multi-provider payment links to operators.
+  3. **Verification**:
+     - Verified live generation of temporary encrypted wallet and validated HTTP 200 response of generated `/pay.php` links.
+     - Exported updated workflows locally via `workflows/export_workflows.py`.
