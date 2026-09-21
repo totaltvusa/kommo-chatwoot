@@ -1,0 +1,519 @@
+{
+  "id": "TS2CADjNNn05jXBW",
+  "name": "Telegram to N8N",
+  "active": true,
+  "isArchived": false,
+  "versionId": "f8964365-ba81-49b9-a5fb-871697d750d3",
+  "activeVersionId": "f8964365-ba81-49b9-a5fb-871697d750d3",
+  "triggerCount": 1,
+  "nodeCount": 11,
+  "createdAt": "2026-08-11T00:27:51.670Z",
+  "updatedAt": "2026-09-21T01:43:06.601Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parsear y Calcular Comando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear y Calcular Comando": {
+      "main": [
+        [
+          {
+            "node": "Switch Comando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Comando": {
+      "main": [
+        [
+          {
+            "node": "Card2CryptoLink Sub-Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Error Sintaxis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NowPaymentsLink",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "pdCashlink",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Ayuda Comando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Card2CryptoLink Sub-Workflow": {
+      "main": [
+        [
+          {
+            "node": "Enviar Card2Crypto link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NowPaymentsLink": {
+      "main": [
+        [
+          {
+            "node": "Enviar NowPayments Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pdCashlink": {
+      "main": [
+        [
+          {
+            "node": "Enviar PdCash Link1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -704,
+        112
+      ],
+      "id": "6e5328ed-73bb-4f3c-87ef-5482e4f08503",
+      "name": "Telegram Trigger",
+      "webhookId": "2b023e4b-2e1d-4ecf-b71d-205db2541c20",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraer datos del mensaje recibido\nconst messageText = $json.message?.text ? $json.message.text.trim() : '';\nconst chatId = $json.message?.chat?.id;\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/pdcash@MiBot -> /pdcash)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet errorMessage = '';\n\nif (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        // Si no envía orden, usar formato ttv-mmdd según la fecha actual\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 30 10 ttv0810a</code>\\n<code>${command} 100 -20</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        112
+      ],
+      "id": "1281ab1e-f01c-4f93-8ed7-cf79b3147205",
+      "name": "Parsear y Calcular Comando"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.isValid && $json.isCard2Crypto }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true"
+                    },
+                    "id": "3e9981e3-3439-44b1-a537-fc9d38258963"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Ejecutar Card2Crypto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.isCard2Crypto }}",
+                    "rightValue": true,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true"
+                    },
+                    "id": "3b99de12-2110-42c2-8444-8a7d5c8c3f84"
+                  },
+                  {
+                    "leftValue": "={{ $json.isValid }}",
+                    "rightValue": false,
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false"
+                    },
+                    "id": "3abf7fe5-1cb1-49f9-9d78-05d47ce3a29b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Error de Sintaxis"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8491f978-9b2e-4403-b88d-e8008cbe7707",
+                    "leftValue": "={{ $json.isValid && $json.isNowPayments }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "NowPayments"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4b67b00f-6162-4204-9354-e65ae21939fa",
+                    "leftValue": "={{ $json.isValid && $json.isPdCash }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "pdCash"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -256,
+        80
+      ],
+      "id": "532bc85f-6970-4f98-937a-ae7cc011a654",
+      "name": "Switch Comando"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "p8dS1jx73xvpbrkj",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/p8dS1jx73xvpbrkj",
+          "cachedResultName": "Card2CryptoLink"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        -176
+      ],
+      "id": "cfe43422-e503-4d45-8246-f041158704aa",
+      "name": "Card2CryptoLink Sub-Workflow"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.errorMessage }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        16
+      ],
+      "id": "2b17f7d5-8f08-45af-b9a2-5b6a87513d1a",
+      "name": "Enviar Error Sintaxis",
+      "webhookId": "858de2e5-0d88-4310-9f22-4d06e59f0867",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ '🤖 <b>Comando no reconocido</b>\\n\\nSintaxis para enlaces de pago:\\n<code>/card2crypto monto porcentaje [orden]</code>\\n\\n<i>Ejemplos:</i>\\n• <code>/card2crypto 30 10 ttv0810a</code> ($33 USD)\\n• <code>/card2crypto 100 -20</code> ($80 USD, orden automática)' }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        400
+      ],
+      "id": "ae9ee706-cb3c-4b1f-af19-33dc4cdc73bd",
+      "name": "Enviar Ayuda Comando",
+      "webhookId": "c1216b4e-76ed-46d0-a0cb-9525a1e3bb28",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.nowpayments.io/v1/invoice",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "08Y432W-7BA4G0X-KEZ4GWR-5S82WP2"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  JSON.stringify({\n    \"price_amount\": $json.amount,\n    \"price_currency\": \"usd\",\n    \"order_id\": String($json.orderid),\n    \"order_description\": \"Total TV Order #\" + $json.orderid\n  })\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -32,
+        208
+      ],
+      "id": "4471d3c8-7917-4c5b-82bd-650c1aa36c4d",
+      "name": "NowPaymentsLink"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Parsear y Calcular Comando').item.json.chatId }}",
+        "text": "={{ '✅ <b>Link de Pago Card2Crypto</b>\\n\\n' +\n   '💵 <b>Monto Base:</b> $' + $('Parsear y Calcular Comando').item.json.baseAmount + ' USD\\n' +\n   '📊 <b>Ajuste (%):</b> ' + $('Parsear y Calcular Comando').item.json.percentage + '%\\n' +\n   '💰 <b>Monto a Cobrar:</b> $' + $('Parsear y Calcular Comando').item.json.amount + ' USD\\n' +\n   '🆔 <b>Orden:</b> <code>' + ($('Parsear y Calcular Comando').item.json.orderid || $('Parsear y Calcular Comando').item.json.order_id || $('Parsear y Calcular Comando').item.json.orderId || 'N/A') + '</code>\\n\\n' +\n   '🔗 <b>Enlace de Pago:</b>\\n' + ($json.checkout_url || $json.paylink || $json.url || 'No disponible') }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        -176
+      ],
+      "id": "1bc6c406-a492-4485-98b8-c6cbb6286d07",
+      "name": "Enviar Card2Crypto link",
+      "webhookId": "fe1983e9-6705-4883-b8c2-76e6859527b8",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Parsear y Calcular Comando').item.json.chatId }}",
+        "text": "={{ '✅ <b>Link de pago NOWPayments</b>\\n\\n' +\n   '💵 <b>Monto Base:</b> $' + $('Parsear y Calcular Comando').item.json.baseAmount + ' USD\\n' +\n   '📊 <b>Ajuste (%):</b> ' + $('Parsear y Calcular Comando').item.json.percentage + '%\\n' +\n   '💰 <b>Monto a Cobrar:</b> $' + $json.price_amount + ' USD\\n' +\n   '🆔 <b>Orden:</b> <code>' + $json.order_id + '</code>\\n\\n' +\n   '🔗 <b>Enlace de Pago:</b>\\n' + $json.invoice_url }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        208
+      ],
+      "id": "51ae5743-53fd-478a-b8a1-fcfed79a3938",
+      "name": "Enviar NowPayments Link",
+      "webhookId": "fe1983e9-6705-4883-b8c2-76e6859527b8",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://pd.cash/api/create-payment-link",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "PK_REDACTED"
+            },
+            {
+              "name": "X-API-Secret",
+              "value": "SK_REDACTED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"amount\": {{ $json.amount }},\n  \"order_id\": \"{{ $json.orderid }}\",\n  \"currency\": \"USD\"\n}",
+        "options": {
+          "response": {
+            "neverError": true
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        192,
+        448
+      ],
+      "id": "48a83192-14c6-4348-8d65-9528832cdbfa",
+      "name": "pdCashlink",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Parsear y Calcular Comando').item.json.chatId }}",
+        "text": "={{\n(() => {\n  const link = $json.data?.urls?.payment_page || $json.checkout_url || $json.paylink;\n  const baseAmt = $('Parsear y Calcular Comando').item.json.baseAmount;\n  const perc = $('Parsear y Calcular Comando').item.json.percentage;\n  const finalAmt = $('Parsear y Calcular Comando').item.json.amount;\n  const order = $('Parsear y Calcular Comando').item.json.orderid;\n\n  if (link) {\n    return '✅ <b>Link de pago PDCash</b>\\n\\n' +\n      '💵 <b>Monto Base:</b> $' + baseAmt + ' USD\\n' +\n      '📊 <b>Ajuste (%):</b> ' + perc + '%\\n' +\n      '💰 <b>Monto a Cobrar:</b> $' + finalAmt + ' USD\\n' +\n      '🆔 <b>Orden:</b> <code>' + order + '</code>\\n\\n' +\n      '🔗 <b>Enlace de Pago:</b>\\n' + link;\n  } else {\n    return '⚠️ <b>Error al generar Link PDCash</b>\\n\\n' +\n      'El servicio externo de pd.cash reportó un error o no responde en este momento (HTTP 500 / Error de pasarela).\\n\\n' +\n      '💵 <b>Monto a Cobrar:</b> $' + finalAmt + ' USD\\n' +\n      '🆔 <b>Orden:</b> <code>' + order + '</code>\\n\\n' +\n      '👉 <i>Por favor intenta nuevamente en unos minutos o genera el link con otro método (<code>/nowpayments</code> o <code>/card2crypto</code>).</i>';\n  }\n})()\n}}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        448
+      ],
+      "id": "339ad9cf-401f-40ce-bf34-ee19b0fbb5f6",
+      "name": "Enviar PdCash Link1",
+      "webhookId": "fe1983e9-6705-4883-b8c2-76e6859527b8",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "id": "p8dS1jx73xvpbrkj",
+  "name": "Card2CryptoLink",
+  "active": true,
+  "isArchived": false,
+  "versionId": "e1728934-f917-4a15-9d4e-b0ec02a94ddc",
+  "activeVersionId": "e1728934-f917-4a15-9d4e-b0ec02a94ddc",
+  "triggerCount": 0,
+  "nodeCount": 4,
+  "createdAt": "2026-08-04T00:58:06.643Z",
+  "updatedAt": "2026-09-21T01:43:16.569Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetLink": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "code1": {
+      "main": [
+        [
+          {
+            "node": "GetLink",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "amount",
+              "type": "number"
+            },
+            {
+              "name": "orderid"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "99f4f6ee-43c9-4daa-b51e-a6af3ca955f0",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "https://api.card2crypto.org/control/wallet.php",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "={{ $json.wallet }}"
+            },
+            {
+              "name": "=  callback",
+              "value": "={{ $json.callback_url }}"
+            },
+            {
+              "name": "amount",
+              "value": "={{ $json.amount }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        432,
+        0
+      ],
+      "id": "617ff87f-f9ac-400d-8dfa-64ba0eb03e7c",
+      "name": "GetLink"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96b914ad-e44b-4e72-bc04-a7e715e70e06",
+              "name": "paylink",
+              "type": "string",
+              "value": "=https://pay.card2crypto.org/process-payment.php?address={{ $json.address_in }}&amount={{ $('code1').first().json.amount }}&email=totaltvusa%40gmail.com&currency=USD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        0
+      ],
+      "id": "bbac28a6-f879-4c5c-ba22-4ded7dfd5f2a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst item = items[0] ? items[0].json : {};\nconst data = item.body || item;\nconst amt = data.amount !== undefined ? data.amount : (data.baseAmount !== undefined ? data.baseAmount : '');\nconst ord = data.orderid || data.order_id || data.orderId || '';\n\nreturn [{\n  json: {\n    wallet: \"0x9a9eDccAF06FD44232896f56e0A73D04EF33B4e0\",\n    callback_url: \"https://n8n.ac4.club/webhook/paymentdone\",\n    amount: amt,\n    order_id: ord\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "c812f50a-9e76-43c8-9e2b-d3940b2477f9",
+      "name": "code1"
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

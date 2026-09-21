@@ -46,7 +46,9 @@ wfs = {
     'cron_autoclose_inactive_conversations': 'asQhO3WgzQW4gR5P',
     'ecwid_to_client_and_me_2': 'hAHmBsRVDc4Hyt6g',
     'proxy_chatwoot_evolution': 'ecfTEElylV4snTHG',
-    'sync_mega_to_megadata': 'Lcyro95g4yg39bdD'
+    'sync_mega_to_megadata': 'Lcyro95g4yg39bdD',
+    'card2crypto_link': 'p8dS1jx73xvpbrkj',
+    'telegram_to_n8n': 'TS2CADjNNn05jXBW'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
