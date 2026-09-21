@@ -1,0 +1,334 @@
+{
+  "id": "OCrN0N77qR9Gqppx",
+  "name": "Tool - Card2Crypto TVTotal24",
+  "active": true,
+  "isArchived": false,
+  "versionId": "35d56239-806e-4734-b63c-21eb4630167a",
+  "activeVersionId": "35d56239-806e-4734-b63c-21eb4630167a",
+  "triggerCount": 0,
+  "nodeCount": 8,
+  "createdAt": "2026-09-20T00:15:15.125Z",
+  "updatedAt": "2026-09-21T02:23:24.953Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Preparar Parámetros y Cálculos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Parámetros y Cálculos": {
+      "main": [
+        [
+          {
+            "node": "Obtener Wallet Card2Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Wallet Card2Crypto": {
+      "main": [
+        [
+          {
+            "node": "Construir Mensajes y Enlace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir Mensajes y Enlace": {
+      "main": [
+        [
+          {
+            "node": "Nota Privada Chatwoot",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificar Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificar WhatsApp (Evolution API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nota Privada Chatwoot": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar Telegram": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar WhatsApp (Evolution API)": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "trigger-exec",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "amount",
+              "type": "number"
+            },
+            {
+              "name": "base_amount",
+              "type": "number"
+            },
+            {
+              "name": "duration",
+              "type": "string"
+            },
+            {
+              "name": "payment_method",
+              "type": "string"
+            },
+            {
+              "name": "conversation_id",
+              "type": "number"
+            },
+            {
+              "name": "contact_name",
+              "type": "string"
+            },
+            {
+              "name": "contact_phone",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "prep-params",
+      "name": "Preparar Parámetros y Cálculos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const trigger = $input.first().json || {};\nconst data = trigger.body || trigger;\n\nlet rawBase = data.base_amount || data.baseAmount || data.monto_base;\nlet rawAmount = data.amount || data.monto || data.final_amount;\nconst duration = String(data.duration || data.meses || data.plan || '1 Mes').trim();\nconst payment_method = String(data.payment_method || data.metodo || data.metodo_pago || 'PayPal / Tarjeta').trim();\nlet conversation_id = data.conversation_id ? parseInt(data.conversation_id) : 0;\nconst contact_name = String(data.contact_name || data.nombre || 'Cliente').trim();\nconst contact_phone = String(data.contact_phone || data.telefono || 'No registrado').trim();\nconst account_id = data.account_id ? parseInt(data.account_id) : 1;\n\nlet baseAmount = 8;\nlet finalAmount = 8.80;\n\nif (rawBase !== undefined && rawBase !== null && !isNaN(parseFloat(rawBase))) {\n  baseAmount = parseFloat(parseFloat(rawBase).toFixed(2));\n  finalAmount = parseFloat((baseAmount * 1.10).toFixed(2));\n} else if (rawAmount !== undefined && rawAmount !== null && !isNaN(parseFloat(rawAmount))) {\n  const parsedAmt = parseFloat(rawAmount);\n  if (parsedAmt === 8.80 || parsedAmt === 26.40 || parsedAmt === 52.80 || parsedAmt === 92.40) {\n    finalAmount = parsedAmt;\n    baseAmount = parseFloat((finalAmount / 1.10).toFixed(2));\n  } else if (parsedAmt === 8 || parsedAmt === 24 || parsedAmt === 48 || parsedAmt === 84) {\n    baseAmount = parsedAmt;\n    finalAmount = parseFloat((baseAmount * 1.10).toFixed(2));\n  } else {\n    baseAmount = parsedAmt;\n    finalAmount = parseFloat((baseAmount * 1.10).toFixed(2));\n  }\n}\n\nif (!conversation_id && data.query) {\n  const m = String(data.query).match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'nuwRKpG2bBAQBpRFznfvrMpT',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    wallet: \"0x9a9eDccAF06FD44232896f56e0A73D04EF33B4e0\",\n    callback_url: \"https://n8n.ac4.club/webhook/paymentdone\",\n    base_amount: baseAmount,\n    amount: finalAmount,\n    duration: duration,\n    payment_method: payment_method,\n    conversation_id: conversation_id || 0,\n    account_id: account_id || 1,\n    contact_name: contact_name,\n    contact_phone: contact_phone\n  }\n}];"
+      }
+    },
+    {
+      "id": "get-wallet",
+      "name": "Obtener Wallet Card2Crypto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "url": "https://api.card2crypto.org/control/wallet.php",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "={{ $json.wallet }}"
+            },
+            {
+              "name": "callback",
+              "value": "={{ $json.callback_url }}"
+            },
+            {
+              "name": "amount",
+              "value": "={{ $json.amount }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "build-messages",
+      "name": "Construir Mensajes y Enlace",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const prep = $('Preparar Parámetros y Cálculos').first().json || {};\nconst walletData = $input.first().json || {};\nconst addressIn = walletData.address_in || '';\n\nconst paylink = `https://pay.card2crypto.org/pay.php?address=${addressIn}&amount=${prep.amount}&email=totaltvusa%40gmail.com&currency=USD`;\n\nconst privateNote = `💳 **ENLACE DE PAGO CARD2CRYPTO GENERADO (TVTotal24)**\\n\\n` +\n  `👤 **Contacto:** ${prep.contact_name}\\n` +\n  `📱 **Teléfono:** ${prep.contact_phone}\\n` +\n  `💬 **Conversación:** #${prep.conversation_id}\\n` +\n  `⏱️ **Plan:** ${prep.duration}\\n` +\n  `💵 **Monto Base:** $${prep.base_amount} USD\\n` +\n  `📊 **Recargo (10%):** +$${(prep.amount - prep.base_amount).toFixed(2)} USD\\n` +\n  `💰 **Monto a Pagar:** $${prep.amount} USD\\n` +\n  `📌 **Método Solicitado:** ${prep.payment_method}\\n\\n` +\n  `🔗 **Enlace de Pago:**\\n${paylink}`;\n\nconst escapeHtml = (str) => String(str || '')\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;');\n\nconst telegramText = `💳 <b>Enlace de Pago Card2Crypto Generado (TVTotal24)</b>\\n\\n` +\n  `👤 <b>Contacto:</b> ${escapeHtml(prep.contact_name)}\\n` +\n  `📱 <b>Teléfono:</b> ${escapeHtml(prep.contact_phone)}\\n` +\n  `💬 <b>Conversación:</b> #${prep.conversation_id}\\n` +\n  `⏱️ <b>Plan:</b> ${escapeHtml(prep.duration)}\\n` +\n  `💵 <b>Monto Base:</b> $${prep.base_amount} USD (+10% recargo)\\n` +\n  `💰 <b>Monto a Cobrar:</b> $${prep.amount} USD\\n` +\n  `📌 <b>Método Solicitado:</b> ${escapeHtml(prep.payment_method)}\\n\\n` +\n  `🔗 <b>Enlace:</b>\\n${escapeHtml(paylink)}`;\n\nconst whatsappText = `💳 *Enlace de Pago Card2Crypto Generado (TVTotal24)*\\n\\n` +\n  `👤 *Contacto:* ${prep.contact_name}\\n` +\n  `📱 *Teléfono:* ${prep.contact_phone}\\n` +\n  `💬 *Conversación:* #${prep.conversation_id}\\n` +\n  `⏱️ *Plan:* ${prep.duration}\\n` +\n  `💵 *Monto Base:* $${prep.base_amount} USD (+10% recargo)\\n` +\n  `💰 *Monto a Cobrar:* $${prep.amount} USD\\n` +\n  `📌 *Método Solicitado:* ${prep.payment_method}\\n\\n` +\n  `🔗 *Enlace:*\\n${paylink}`;\n\nreturn [{\n  json: {\n    ...prep,\n    address_in: addressIn,\n    paylink: paylink,\n    private_note: privateNote,\n    telegram_text: telegramText,\n    whatsapp_text: whatsappText\n  }\n}];"
+      }
+    },
+    {
+      "id": "post-chatwoot-note",
+      "name": "Nota Privada Chatwoot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -120
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $node[\"Construir Mensajes y Enlace\"].json.account_id }}/conversations/{{ $node[\"Construir Mensajes y Enlace\"].json.conversation_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api_access_token",
+              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"content\": {{ JSON.stringify($node[\"Construir Mensajes y Enlace\"].json.private_note) }},\n  \"private\": true\n}",
+        "options": {}
+      },
+      "disabled": false
+    },
+    {
+      "id": "post-telegram",
+      "name": "Notificar Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        40
+      ],
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ $node[\"Construir Mensajes y Enlace\"].json.telegram_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "webhookId": "aa1031c4-3b31-4e90-9e41-db2f89fd171f",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "id": "post-evolution",
+      "name": "Notificar WhatsApp (Evolution API)",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        880,
+        200
+      ],
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ $node[\"Construir Mensajes y Enlace\"].json.whatsapp_text }}",
+        "options_message": {}
+      },
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "id": "tool-response",
+      "name": "Respuesta Tool",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const data = $('Construir Mensajes y Enlace').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    paylink: data.paylink,\n    amount: data.amount,\n    base_amount: data.base_amount,\n    duration: data.duration,\n    payment_method: data.payment_method,\n    message: `Enlace de pago Card2Crypto generado exitosamente por $${data.amount} USD (incluye 10% de recargo sobre el plan base de $${data.base_amount} USD). Entrega este enlace al cliente para que realice su pago con ${data.payment_method}.`\n  }\n}];"
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

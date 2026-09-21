@@ -1449,3 +1449,38 @@
   3. **Verification**:
      - Verified live generation of temporary encrypted wallet and validated HTTP 200 response of generated `/pay.php` links.
      - Exported updated workflows locally via `workflows/export_workflows.py`.
+
+---
+
+### 42. Conditional Card2Crypto Payment Option (+10% Surcharge) for TVTotal24 with Internal Logging and Admin Alerts (2026-09-20)
+
+* **Objective & Business Requirements**:
+  - For TVTotal24 (Latina) customers, the standard payment options offered proactively remain Zelle, Binance Pay USDT, and Pago Móvil in Bolívares.
+  - **ONLY if a customer explicitly requests** to pay with PayPal, Credit/Debit card, Apple Pay, or Google Pay, the AI Agent offers and delivers a Card2Crypto payment link.
+  - A mandatory **10% surcharge** is added to the base plan amount (e.g. 1 Month base $8 -> $8.80 USD, 3 Months base $24 -> $26.40 USD, 6 Months base $48 -> $52.80 USD, 12 Months base $84 -> $92.40 USD).
+  - When the link is generated:
+    1. A **private internal note** is automatically added to the Chatwoot conversation.
+    2. The administrator is instantly alerted via **Telegram** (`chatId: 40371837`).
+    3. The administrator is instantly alerted via **WhatsApp (Evolution API)** (instance `TTvAlertsMovistar` to `584146130135`).
+
+* **Technical Implementation**:
+  1. **New Tool Subworkflow (`tool_card2crypto_tvtotal24` / `OCrN0N77qR9Gqppx`)**:
+     - Created in n8n and published (active version `35d56239-806e-4734-b63c-21eb4630167a`).
+     - Nodes:
+       - `Execute Workflow Trigger`: receives `amount`, `base_amount`, `duration`, `payment_method`, `conversation_id`, `contact_name`, `contact_phone`.
+       - `Preparar Parámetros y Cálculos`: calculates 10% fee if needed, finds conversation ID fallback from Chatwoot.
+       - `Obtener Wallet Card2Crypto`: calls `https://api.card2crypto.org/control/wallet.php`.
+       - `Construir Mensajes y Enlace`: builds official Smart Hosted link `https://pay.card2crypto.org/pay.php?address={address_in}&amount={amount}&currency=USD&email=totaltvusa@gmail.com`, plus markdown note, Telegram HTML, and Evolution API WhatsApp text.
+       - `Nota Privada Chatwoot`: `POST /api/v1/accounts/{account_id}/conversations/{conversation_id}/messages` with `private: true`.
+       - `Notificar Telegram`: sends alert to Telegram admin channel.
+       - `Notificar WhatsApp (Evolution API)`: sends alert to admin WhatsApp.
+       - `Respuesta Tool`: returns structured success payload to AI agent.
+  2. **Router Workflow Update (`router_chatwoot_ia.json` / `n0zgnS1vlOGNcGNY`)**:
+     - Added tool node `generar_link_card2crypto_tvtotal24` connected to `AI Agent - TVTotal24` via `ai_tool` connection.
+     - Updated system prompt for `AI Agent - TVTotal24` in `n0zgnS1vlOGNcGNY`.
+     - Published active version `ff92c790-d76e-49ca-8581-f406750c6c57`.
+  3. **Prompt Updates (`prompts/tvtotal24_prompt.md`)**:
+     - Added authorized exception for explicit PayPal/Card/Apple Pay/Google Pay requests with 10% surcharge explanation and tool invocation.
+  4. **Export & Git Tracking**:
+     - Added `tool_card2crypto_tvtotal24` to `workflows/export_workflows.py`.
+     - Exported and synchronized all workflows locally.

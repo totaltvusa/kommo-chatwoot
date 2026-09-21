@@ -48,7 +48,8 @@ wfs = {
     'proxy_chatwoot_evolution': 'ecfTEElylV4snTHG',
     'sync_mega_to_megadata': 'Lcyro95g4yg39bdD',
     'card2crypto_link': 'p8dS1jx73xvpbrkj',
-    'telegram_to_n8n': 'TS2CADjNNn05jXBW'
+    'telegram_to_n8n': 'TS2CADjNNn05jXBW',
+    'tool_card2crypto_tvtotal24': 'OCrN0N77qR9Gqppx'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
