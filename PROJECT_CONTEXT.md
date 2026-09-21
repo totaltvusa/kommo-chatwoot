@@ -1344,5 +1344,36 @@
   - Published active version `9ebe7752-2065-403f-9ae1-1f55c0845c19`.
   - Exported and synchronized `workflows/router_chatwoot_ia.json`.
 
+---
+
+## 38. Strict Zero-Hallucination Policy & Anti-Whitelisting Payment Guardrails
+
+* **Objective & Problem Statement**:
+  - In Conversation #1406 (Mitchell Lovett), when the customer reported difficulties opening payment links or sending money, the AI agent hallucinated and instructed the customer to call their bank to "whitelist `acalimanr@gmail.com` for Zelle", explaining fictional banking security procedures and inventing non-existent allowlist steps.
+  - The AI agents must be strictly grounded in the defined context and are strictly forbidden from inventing external banking procedures, whitelisting instructions, or policies outside the approved documentation.
+
+* **Root Cause**:
+  - While base instructions listed the accepted payment methods, there was no explicit negative constraint in `prompts/agent_prompt.md` or `prompts/tvtotal24_prompt.md` prohibiting the LLM from inventing banking explanations (e.g. "your bank blocks new recipients", "call your bank to whitelist the email") when a user asks about payment link issues or alternative payment methods.
+
+* **Remediation & Technical Implementation**:
+  1. **Strict Zero-Hallucination & Closed-Domain Mandate (`agent_prompt.md` & `tvtotal24_prompt.md`)**:
+     - Added an imperative closed-domain rule stating that if a process or instruction is not explicitly written in the prompt, it does NOT exist for the agent.
+     - Added explicit negative prohibitions:
+       - **NEVER** instruct or suggest to any customer to "whitelist", "allowlist", or ask their bank to authorize/whitelist our Zelle email (`acalimanr@gmail.com` for TotalTv USA or `pagos@totaltvlatina.com` for TVTotal24) or any other account under any circumstance.
+       - **NEVER** invent reasons why a customer's bank or payment app may have blocked or rejected a payment.
+  2. **Standardized Payment Troubleshooting & Escalation Protocol**:
+     - If a customer experiences an issue with a payment link or their transfer fails:
+       a) Offer the alternative official payment options (e.g., Card2Crypto / PayPal link, CashApp link, Zelle, or Crypto with 20% discount).
+       b) Suggest opening the payment link in an external web browser or generate a fresh payment link via tool.
+       c) If the customer still cannot pay or requires manual billing assistance, perform administrative triage and execute `Call 'transfer_to_human_tool'` with reason `"Payment Assistance"` / `"Consulta Administrativa"` so human support can handle the transaction directly.
+  3. **Workflow Synchronization**:
+     - Updated node parameters for `AI Agent` (TotalTv USA) and `AI Agent - TVTotal24` in `workflows/router_chatwoot_ia.json`.
+
+* **Production Deployment & Verification**:
+  - Updated live n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) via MCP `update_workflow`.
+  - Published active version `c1540ac6-c27e-4e8b-89d1-022a83ff95e5`.
+  - Synchronized repository and exported all workflows via `workflows/export_workflows.py`.
+
+
 
 
