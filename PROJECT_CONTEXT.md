@@ -1627,3 +1627,38 @@
   5. **Verification & Export**:
      - Verified end-to-end execution of live transfer on Chatwoot #1427.
      - Exported and synchronized all 17 workflows via `workflows/export_workflows.py`.
+
+---
+
+### 47. Follow-up Cron Inactive Leads Safeguards & Outbound Payment Reminder Contact Enrichment (2026-09-22)
+
+* **Objective & Problem Statement**:
+  - **False Farewell Messages in Inactive / Outbound Conversations (e.g. Chatwoot #1425)**:
+    - In `cron_followup_incoming_leads` (`1IlXjaNv0rc9laJy`), when checking open conversations, if `customerMsgs.length === 0`, it fell back to using `conv.created_at` or `conv.last_activity_at` as `lastCustomerTimeMs`.
+    - Consequently, when an outbound payment reminder was sent to a client (e.g. #1425) and 20 hours passed without any customer reply, the cron falsely assumed the customer had been attended to and sent:
+      *"¡Hola! 👋 Ha sido un verdadero gusto atenderte en TVTotal24. Quedamos a tu entera disposición para cualquier consulta..."*
+  - **Missing Contact Enrichment in Outbound Payment Reminders (`latin_vence_hoy_y_vence4`)**:
+    - In `latin_vence_hoy_y_vence4` (`TfILC2hXao6SLQfE`), nodes `SyncChatwootVenceHoy` and `SyncChatwootVence4dias` were executed immediately after Evolution API nodes (`VenceHoy` and `Vence4dias`).
+    - Evolution API returns a message delivery payload without the original Google Sheets row columns (`Teléfono`, `Nombre`, `1ra compra`, `Usuario`), causing `SyncChatwoot` nodes to exit with `"skipped_no_phone"`.
+    - Furthermore, `inboxId` was hardcoded to `19` instead of `16` (`lat-whatscol`), and the nodes completely lacked logic to enrich the contact with DnSpace attributes (name, bio/1ra compra, usuario, company_name) or tag conversations with `stage-leads-ganados`.
+
+* **Remediation & Technical Implementation**:
+  1. **`cron_followup_incoming_leads` (`1IlXjaNv0rc9laJy`)**:
+     - **Zero-Customer-Messages Safeguard**: If `customerMsgs.length === 0`, the conversation is immediately skipped (`continue;`).
+     - **Existing Won Customer Safeguard**: Explicitly checks `contactCustomAttrs.kommo_stage === 'Leads Ganados' || contactCustomAttrs.kommo_stage === 'Ganado'` in addition to `stage-leads-ganados` label.
+     - **Payment Reminder Safeguard**: Scans outbound messages for payment reminder patterns (`/(?:próxima a vencer|vence el día|renovar tu plan|recordatorio de pago|tu suscripción a total tv|vencehoy|vencepronto)/i`). If a payment reminder exists and no customer message has arrived after it, the conversation is skipped.
+  2. **`latin_vence_hoy_y_vence4` (`TfILC2hXao6SLQfE`)**:
+     - **Source Item Recovery**: Accesses `$('Evaluar Vencimiento y Categorizar').all()` to match the full DnSpace row by phone/JID, bypassing Evolution API payload data loss.
+     - **Contact Enrichment via Chatwoot PATCH**:
+       - Contact `name` updated to full registered name from DnSpace (`Nombre + Apellido`).
+       - Channel default name preserved in `additional_attributes.company_name`.
+       - `1ra compra` stored in `additional_attributes.description` (Bio).
+       - `Usuario` stored in both `additional_attributes.usuario` and `custom_attributes.usuario`.
+       - `email` populated if provided and missing.
+     - **Conversation Tagging & Inboxes**:
+       - Supports inbox 16 (`lat-whatscol`) and 19.
+       - Strips any prior `stage-*` labels and assigns `stage-leads-ganados` and `funnel-totaltv-latina`.
+     - **Private Note Documentation**: Posts private note containing details of outbound WhatsApp template (`vencehoy` / `vencepronto`).
+  3. **Retrospective Remediation**:
+     - Updated Contact 1203 (Jose Aguirre, `+584246253264`) with `name: "Jose Aguirre"`, `company_name: "Miguel José"`, `description: "2025-10-21"`, `usuario: "JoseAguirre"`.
+     - Updated Conversation 1425 labels to `['stage-leads-ganados', 'funnel-totaltv-latina']`.
