@@ -1531,3 +1531,27 @@
      - Applied atomic updates to live n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
      - Published active version: `7ad1ceab-370f-4e42-9357-a6a99264aa54`.
      - Exported and synchronized all workflow files via `export_workflows.py`.
+
+---
+
+### 44. Webplayer URL Isolation & Separation between TotalTv USA and TVTotal24 (2026-09-21)
+
+* **Issue Identified**:
+  - A TVTotal24 (Latina) customer was mistakenly provided the webplayer URL for TotalTv USA (`http://web.ip365.cx/`) instead of TVTotal24's own webplayer (`http://player.cooteg.ch:2095/player`).
+  - **Root Cause Analysis**: The agents are logically isolated on separate routing branches and nodes in n8n (`AI Agent` vs `AI Agent - TVTotal24`). However, when `prompts/tvtotal24_prompt.md` was originally authored, Section *INSTALLATION INSTRUCTIONS -> 6. Game consoles / Computers* inherited the USA webplayer URL (`http://web.ip365.cx/`) instead of TVTotal24's specific webplayer URL (`http://player.cooteg.ch:2095/player`).
+
+* **Remediation & Technical Implementation**:
+  1. **Prompt Updates**:
+     - **TVTotal24 Prompt (`prompts/tvtotal24_prompt.md`)**:
+       - Updated item 6 of *INSTALLATION INSTRUCTIONS* to explicitly provide `http://player.cooteg.ch:2095/player`.
+       - Updated top prohibitions section to strictly forbid providing USA servers and USA webplayer (`http://web.ip365.cx/`), explicitly reinforcing `http://player.cooteg.ch:2095/player` as TVTotal24's official webplayer.
+     - **TotalTv USA Prompt (`prompts/agent_prompt.md`)**:
+       - Retained official USA webplayer `http://web.ip365.cx/`.
+       - Updated top prohibitions section to strictly forbid providing TVTotal24 webplayer (`player.cooteg.ch`).
+  2. **Live n8n Router Workflow Update (`n0zgnS1vlOGNcGNY`)**:
+     - Updated `systemMessage` on `AI Agent - TVTotal24` node with corrected `tvtotal24_prompt.md`.
+     - Updated `systemMessage` on `AI Agent` node with updated `agent_prompt.md`.
+     - Published active live version (`7a838e11-eb80-4f64-b018-9fe6e961bc48`).
+  3. **Repository Synchronization & Export**:
+     - Executed `workflows/export_workflows.py` to synchronize live workflow state into `workflows/router_chatwoot_ia.json`.
+     - Committed and pushed changes to GitHub repository.
