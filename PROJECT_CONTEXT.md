@@ -1555,3 +1555,25 @@
   3. **Repository Synchronization & Export**:
      - Executed `workflows/export_workflows.py` to synchronize live workflow state into `workflows/router_chatwoot_ia.json`.
      - Committed and pushed changes to GitHub repository.
+
+---
+
+### 45. Remediation of Exposed n8n MCP Access Token (GitGuardian Alert) (2026-09-22)
+
+* **Incident Identified**:
+  - GitGuardian detected an exposed `n8n MCP Access Token with host` in commit `2fb7d1fc73069859e360acbdb6e2989572037832` (`workflows/export_workflows.py`, line 6).
+  - The secret was hardcoded directly in Python code: JWT token pointing to `https://n8n.ac4.club/mcp-server/http`.
+
+* **Remediation & Hardening**:
+  1. **Source Code Sanitization (`workflows/export_workflows.py`)**:
+     - Completely eliminated the hardcoded JWT token and endpoint URL from the repository.
+     - Implemented dynamic environment loading: checks `os.environ` and loads from local `.env` if present.
+     - Wrapped the execution logic in `def main():` and `if __name__ == '__main__':` to prevent accidental execution when imported.
+  2. **Environment Variable Configuration (`.env` & `.env.example`)**:
+     - Added `.env.example` as a committed template with placeholder values (`N8N_MCP_TOKEN=your_token_here`, `N8N_MCP_URL=...`).
+     - Ensured `.gitignore` whitelists `!.env.example` while strictly ignoring all `.env` files.
+     - Created local `.env` with credentials so the export utility continues working without disruption.
+  3. **Revocation & Credential Rotation Protocol**:
+     - The exposed JWT token must be rotated/revoked in the n8n instance (`n8n.ac4.club`) or user settings.
+     - After generating a fresh token in n8n, it is placed into `.env` (never committed to git).
+     - The incident in GitGuardian dashboard can then be marked as **Resolved / Revoked**.

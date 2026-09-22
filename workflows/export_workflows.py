@@ -1,12 +1,39 @@
-import urllib.request
-import json
 import os
-import time
-
-token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyY2E4ZWVmMi1hOWVjLTRiYTktOWVmMy02MDA1OTJlYzY1ZWYiLCJpc3MiOiJuOG4iLCJhdWQiOiJtY3Atc2VydmVyLWFwaSIsImp0aSI6ImUzZmZlNjkwLWNmYTMtNDNkNC05YTM0LThjNGViMjA1NjM4YSIsImlhdCI6MTc4NzA5NDk3Mn0.1C2sTahMnvbG6_H6Q4s2Fhq_cgKR8KlqGlmkG5s34bE'
-url = 'https://n8n.ac4.club/mcp-server/http'
-
+import sys
 import ssl
+import time
+import json
+import urllib.request
+import re
+
+def load_dotenv():
+    env_paths = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env'),
+        '.env'
+    ]
+    for path in env_paths:
+        if os.path.exists(path):
+            with open(path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#') and '=' in line:
+                        k, v = line.split('=', 1)
+                        k = k.strip()
+                        v = v.strip().strip("'").strip('"')
+                        if k and k not in os.environ:
+                            os.environ[k] = v
+            break
+
+load_dotenv()
+
+token = os.environ.get('N8N_MCP_TOKEN', '').strip()
+url = os.environ.get('N8N_MCP_URL', 'https://n8n.ac4.club/mcp-server/http').strip()
+
+if not token:
+    print("Error: N8N_MCP_TOKEN not found in environment or .env file.")
+    print("Please copy .env.example to .env and set your N8N_MCP_TOKEN.")
+    sys.exit(1)
 
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
@@ -54,8 +81,6 @@ wfs = {
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-import re
-
 def sanitize_secrets(data_str):
     # Mask tokens that trigger GitHub push protection
     data_str = re.sub(r'KEY01[A-Za-z0-9_]+', 'KEY_TELNYX_REDACTED', data_str)
@@ -65,17 +90,21 @@ def sanitize_secrets(data_str):
     data_str = re.sub(r'pk_[A-Za-z0-9_]{20,}', 'PK_REDACTED', data_str)
     return data_str
 
-for name, wid in wfs.items():
-    try:
-        res = call_mcp('get_workflow_details', {'workflowId': wid})
-        if res:
-            wf_data = json.loads(res.get('result', {}).get('content', [{}])[0].get('text', '{}')).get('workflow', {})
-            filepath = os.path.join(base_dir, f'{name}.json')
-            raw_json = json.dumps(wf_data, indent=2, ensure_ascii=False)
-            sanitized_json = sanitize_secrets(raw_json)
-            with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(sanitized_json)
-            print(f'Exported {name} -> {filepath}')
-    except Exception as e:
-        print(f'Error exporting {name}: {e}')
+def main():
+    for name, wid in wfs.items():
+        try:
+            res = call_mcp('get_workflow_details', {'workflowId': wid})
+            if res:
+                wf_data = json.loads(res.get('result', {}).get('content', [{}])[0].get('text', '{}')).get('workflow', {})
+                filepath = os.path.join(base_dir, f'{name}.json')
+                raw_json = json.dumps(wf_data, indent=2, ensure_ascii=False)
+                sanitized_json = sanitize_secrets(raw_json)
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    f.write(sanitized_json)
+                print(f'Exported {name} -> {filepath}')
+        except Exception as e:
+            print(f'Error exporting {name}: {e}')
+
+if __name__ == '__main__':
+    main()
 
