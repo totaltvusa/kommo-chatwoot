@@ -1577,3 +1577,53 @@
      - The exposed JWT token must be rotated/revoked in the n8n instance (`n8n.ac4.club`) or user settings.
      - After generating a fresh token in n8n, it is placed into `.env` (never committed to git).
      - The incident in GitGuardian dashboard can then be marked as **Resolved / Revoked**.
+
+---
+
+### 46. Guaranteed Admin Alert Dispatch on Human Transfers & Contact Friction Removal (2026-09-22)
+
+* **Incident Identified (Conversation #1427 - Jamel Jackson, Instagram Direct)**:
+  - In Conversation #1427, customer Jamel Jackson stated:
+    > *"I'm good I'm not doing this again this AIT I'm not doing it again thank you I'm good"*
+  - The AI Agent (Toto - TotalTv USA) replied (Message #8308):
+    > *"Since you're ready to move forward, let me get you connected with our human support team right away... Just need one quick thing: What's your phone number so I can route your case... Once I have that, I'll transfer you over..."*
+  - The auto-guardrail in node `Formatear Respuesta` matched `"I'll transfer you over"`, added the label `human` (Message #8306), and created an internal private note (Message #8307).
+  - **FATAL FLAW**: The administrator was **NEVER alerted** (neither via Telegram nor WhatsApp Evolution API). Because `human` label was applied, the conversation was silenced (`skip_ai_response: true`) and the customer was left completely abandoned.
+
+* **Root Cause Analysis**:
+  1. **Auto-Guardarraíl Alert Void in `router_chatwoot_ia.json`**:
+     - `Formatear Respuesta` had embedded Chatwoot API calls (`/labels` and `/messages`), but had zero mechanism or connection to notify Telegram (`40371837`) or WhatsApp Evolution API (`TTvAlertsMovistar` to `584146130135`).
+  2. **Legacy Expression Breakage in `tool_transfer_to_human.json` (`xam0WV65gvTbXcIx`)**:
+     - Nodes `Notificar Administrador`, `Nota privada Chatwoot`, and `Notificar WhatsApp (Evolution API)` were using legacy n8n 0.x expressions: `$node["Agregar etiqueta human"].json.*`.
+     - In modern n8n v1/v2, downstream nodes crossing HTTP Request nodes (`Marcar como humano`) evaluated these to `undefined`/empty, causing silent alert dropouts because `onError: continueRegularOutput` was active.
+  3. **Alert Suppression by `¿Primera Transferencia?`**:
+     - In `tool_transfer_to_human.json`, a switch node was suppressing Telegram and WhatsApp alerts if `already_had_human` was true.
+  4. **System Prompt Friction**:
+     - System prompts (`agent_prompt.md` and `tvtotal24_prompt.md`) strictly mandated collecting Name and Phone number before any human transfer, with no exception for social media channels or AI rejection.
+     - On Instagram DMs, the agent felt compelled to promise future transfer ("once you give me your phone number...") rather than executing `Call 'transfer_to_human_tool'` immediately in that same turn.
+
+* **Remediation & Technical Implementation**:
+  1. **Direct Notification for Conversation #1427**:
+     - Executed live handover for Conversation #1427 (Jamel Jackson).
+     - Telegram alert sent to Chat ID `40371837`.
+     - WhatsApp alert sent via Evolution API `TTvAlertsMovistar` to `584146130135`.
+     - Chatwoot private note registered as Message #8310.
+  2. **Fixed `tool_transfer_to_human.json` (`xam0WV65gvTbXcIx`)**:
+     - Updated all node expressions from legacy `$node["Agregar etiqueta human"].json` to modern `$('Agregar etiqueta human').first().json.*`.
+     - Eliminated node `¿Primera Transferencia?` so alerts to Telegram and WhatsApp are ALWAYS dispatched unconditionally.
+     - Added `Webhook Direct Trigger` (`POST /webhook/transfer-to-human-direct`) to allow direct API/webhook invocations.
+     - Published active live version: `2090b7f0-0c55-4cb8-a249-1a1d0b5fdf9d`.
+  3. **Added Auto-Guardrail Pipeline in `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`)**:
+     - Updated `Formatear Respuesta` to output `execute_auto_transfer: true` when `isTransferIntent && !transferToolCalled`.
+     - Added node `¿Ejecutar Auto-Transferencia?` (If node: `$json.execute_auto_transfer === true`).
+     - Added node `Preparar Payload Auto-Transferencia` (formats `account_id`, `conversation_id`, `reason`, `case_details`).
+     - Added node `Ejecutar Transferencia a Humano (Auto-Guardarraíl)` (type `n8n-nodes-base.executeWorkflow`, target `xam0WV65gvTbXcIx`).
+     - Connected in parallel to `Wait Typing Delay`, ensuring immediate admin alerts while the client message is being delivered.
+     - Published active live version: `073bb18f-e8f2-4c64-99e0-561cf95b80b5`.
+  4. **Prompt Hardening against Friction & False Promises (`agent_prompt.md` & `tvtotal24_prompt.md`)**:
+     - **Social Channel Exception**: On Instagram Direct, Facebook Messenger, Telegram, Web Chat, or WhatsApp, phone collection is strictly optional. Handover occurs immediately using available identity.
+     - **AI Rejection & Direct Request Exception**: If the customer rejects the AI or asks for human support, the agent is strictly forbidden from holding back or demanding a phone number/email. It MUST execute `Call 'transfer_to_human_tool'` in THAT EXACT TURN.
+     - **Prohibition on Conditional Promises**: Strictly prohibited saying "give me your number and I'll transfer you".
+  5. **Verification & Export**:
+     - Verified end-to-end execution of live transfer on Chatwoot #1427.
+     - Exported and synchronized all 17 workflows via `workflows/export_workflows.py`.

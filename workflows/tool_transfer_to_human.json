@@ -3,12 +3,12 @@
   "name": "Transfer to Human Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "26f40ba7-395f-4bcf-b072-437a2de70422",
-  "activeVersionId": "26f40ba7-395f-4bcf-b072-437a2de70422",
-  "triggerCount": 0,
+  "versionId": "2090b7f0-0c55-4cb8-a249-1a1d0b5fdf9d",
+  "activeVersionId": "2090b7f0-0c55-4cb8-a249-1a1d0b5fdf9d",
+  "triggerCount": 1,
   "nodeCount": 11,
   "createdAt": "2026-08-19T03:20:29.252Z",
-  "updatedAt": "2026-09-18T01:10:58.667Z",
+  "updatedAt": "2026-09-22T14:38:05.343Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -123,17 +123,6 @@
       "main": [
         [
           {
-            "node": "¿Primera Transferencia?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "¿Primera Transferencia?": {
-      "main": [
-        [
-          {
             "node": "Notificar Administrador",
             "type": "main",
             "index": 0
@@ -143,10 +132,14 @@
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Webhook Direct Trigger": {
+      "main": [
         [
           {
-            "node": "Nota privada Chatwoot",
+            "node": "Preparar Datos Transferencia",
             "type": "main",
             "index": 0
           }
@@ -176,7 +169,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const trigger = $input.first().json || {};\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst reason = String(trigger.reason || trigger.motivo || '').trim();\nconst case_details = String(trigger.case_details || trigger.details || trigger.summary || trigger.informacion_caso || trigger.info || '').trim();\nconst query = (trigger.query || '').toString();\n\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'nuwRKpG2bBAQBpRFznfvrMpT',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 13,\n    reason: reason,\n    case_details: case_details,\n    query: query\n  }\n}];",
+        "jsCode": "const inp = $input.first().json || {};\nconst trigger = inp.body || inp;\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst reason = String(trigger.reason || trigger.motivo || '').trim();\nconst case_details = String(trigger.case_details || trigger.details || trigger.summary || trigger.informacion_caso || trigger.info || '').trim();\nconst query = (trigger.query || inp.query || '').toString();\n\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'nuwRKpG2bBAQBpRFznfvrMpT',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 13,\n    reason: reason,\n    case_details: case_details,\n    query: query\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     },
@@ -263,7 +256,7 @@
       ],
       "parameters": {
         "chatId": "40371837",
-        "text": "={{ $node[\"Agregar etiqueta human\"].json.telegram_text }}",
+        "text": "={{ $('Agregar etiqueta human').first().json.telegram_text }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -289,7 +282,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $node[\"Agregar etiqueta human\"].json.account_id }}/conversations/{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}/messages",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $('Agregar etiqueta human').first().json.account_id }}/conversations/{{ $('Agregar etiqueta human').first().json.conversation_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -305,7 +298,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\\n  \\\"content\\\": {{ JSON.stringify($node[\\\"Agregar etiqueta human\\\"].json.private_note_content) }},\\n  \\\"private\\\": true\\n}",
+        "jsonBody": "={\n  \"content\": {{ JSON.stringify($('Agregar etiqueta human').first().json.private_note_content) }},\n  \"private\": true\n}",
         "options": {}
       },
       "onError": "continueRegularOutput"
@@ -323,7 +316,7 @@
         "resource": "messages-api",
         "instanceName": "TTvAlertsMovistar",
         "remoteJid": "584146130135",
-        "messageText": "={{ $node[\"Agregar etiqueta human\"].json.whatsapp_text }}",
+        "messageText": "={{ $('Agregar etiqueta human').first().json.whatsapp_text }}",
         "options_message": {}
       },
       "onError": "continueRegularOutput",
@@ -349,37 +342,6 @@
       }
     },
     {
-      "id": "b0a2c918-7f41-477d-815d-8c149d5efd12",
-      "name": "¿Primera Transferencia?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        950,
-        300
-      ],
-      "parameters": {
-        "conditions": {
-          "combinator": "and",
-          "conditions": [
-            {
-              "id": "c1f721a9-7e48-408a-b732-26155694fa35",
-              "leftValue": "={{ $node[\"Agregar etiqueta human\"].json.already_had_human }}",
-              "operator": {
-                "operation": "false",
-                "type": "boolean"
-              },
-              "rightValue": false
-            }
-          ],
-          "options": {
-            "caseSensitive": false,
-            "leftValue": "",
-            "typeValidation": "strict"
-          }
-        }
-      }
-    },
-    {
       "id": "e7b9f821-4a2c-4519-86b3-90d2e8f1c34a",
       "name": "Registrar Consulta Pendiente Google Doc",
       "type": "n8n-nodes-base.code",
@@ -393,6 +355,22 @@
         "mode": "runOnceForAllItems"
       },
       "onError": "continueRegularOutput"
+    },
+    {
+      "id": "731ab011-cbc9-49c5-b33d-85f6e1a3227b",
+      "name": "Webhook Direct Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        140
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transfer-to-human-direct",
+        "options": {}
+      },
+      "webhookId": "fc04db61-e511-411c-89c6-103b9e67522b"
     }
   ],
   "nodeGroups": [],
