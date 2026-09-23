@@ -1734,3 +1734,38 @@
   3. **Workflow Export & Repository Tracking**:
      - Added `campana_reactivacion_nova` to `workflows/export_workflows.py`.
      - Exported `workflows/campana_reactivacion_nova.json`.
+
+---
+
+### 50. Strict Payment Method Beneficiary Isolation & Zelle ACR Enterprises Fix (2026-09-23)
+
+* **Incident Identified (Conversation #1407 - Rolando Garcia)**:
+  - In Conversation #1407, the customer selected the 6-month plan ($48 USD) and asked: *"Cual es el nombre del recipiente"*.
+  - The TVTotal24 AI agent (`Tivi`) replied: *"El nombre del beneficiario para la transferencia Zelle es: ArialStore C.A."*, incorrectly attributing the Venezuelan Pago Móvil beneficiary (`ArialStore C.A.`) to the Zelle account (`pagos@totaltvlatina.com`), which is officially registered under **`ACR Enterprises`** (`ACR ENTERPRISES LLC`).
+
+* **Root Cause Analysis**:
+  1. **Omission of Zelle Beneficiary in Prompt**:
+     - `prompts/tvtotal24_prompt.md` explicitly defined the beneficiary for Pago Móvil (`Beneficiario: ArialStore C.A.`), but under Zelle it only listed the email `pagos@totaltvlatina.com` without naming the account holder / recipient.
+  2. **LLM Attribute Cross-Contamination / Hallucination**:
+     - When the customer explicitly asked for the recipient/beneficiary of Zelle, the LLM searched the prompt for beneficiary-related tokens, found `Beneficiario: ArialStore C.A.` under Pago Móvil, and falsely cross-pollinated it into the Zelle response.
+  3. **Absence of Strict Cross-Method Boundary Rule**:
+     - The prompt lacked an explicit rule isolating payment method attributes and strictly forbidding the association of `ArialStore` with Zelle.
+
+* **Remediation & Technical Implementation**:
+  1. **Prompt Updates (`prompts/tvtotal24_prompt.md` & `prompts/agent_prompt.md`)**:
+     - **Principle 4 / Principle 6: Zero Cross-Contamination & Closed-Domain Mandate**:
+       - Strictly isolates all payment method attributes (beneficiary, bank, email, phone, RIF, ID).
+       - Explicitly declares:
+         * **Zelle TVTotal24 (`pagos@totaltvlatina.com`)**: Titular / Beneficiario registrado es EXCLUSIVAMENTE **`ACR Enterprises`** (o `ACR ENTERPRISES LLC`).
+         * **Pago Móvil (Bancamiga / Bolívares)**: Beneficiario registrado es EXCLUSIVAMENTE **`ArialStore C.A.`** (RIF: `J405259221`, Tel: `04246861135`).
+         * **Zelle TotalTv USA (`acalimanr@gmail.com`)**: Beneficiario registrado es EXCLUSIVAMENTE **`Alvez Caliman`**.
+       - Mandates that `ArialStore C.A.` belongs SOLELY to Pago Móvil, with absolute prohibition of associating it with Zelle or Binance.
+       - Reenforces the rule that any attribute not listed in the prompt has a status of "no tengo información sobre eso" and must never be guessed or borrowed from other sections.
+  2. **Workflow Deployment & Publishing**:
+     - Updated nodes `AI Agent` and `AI Agent - TVTotal24` in master router workflow `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`).
+     - Published active live version in n8n.
+     - Updated standalone files `workflows/agent_tvtotal24_latina.json` and `workflows/agent_totaltv_usa.json`.
+     - Re-exported via `workflows/export_workflows.py`.
+  3. **Immediate Client Clarification**:
+     - Dispatched a direct correction message to Rolando in Conversation #1407 (Message ID 8581) clarifying that the registered beneficiary for Zelle `pagos@totaltvlatina.com` is **`ACR Enterprises`** (`ACR ENTERPRISES LLC`) and that `ArialStore C.A.` corresponds strictly to Pago Móvil, allowing him to complete his 6-month payment with full confidence.
+
