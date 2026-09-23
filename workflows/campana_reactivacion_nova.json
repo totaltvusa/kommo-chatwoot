@@ -1,0 +1,317 @@
+{
+  "id": "uqCdr1F5uqNwgRTA",
+  "name": "📌 Campaña Reactivación Nova (Outbound)",
+  "active": true,
+  "isArchived": false,
+  "versionId": "b9ed5eaa-d6b0-4adb-9b6a-270a5ac4834c",
+  "activeVersionId": "b9ed5eaa-d6b0-4adb-9b6a-270a5ac4834c",
+  "triggerCount": 1,
+  "nodeCount": 8,
+  "createdAt": "2026-09-20T00:17:09.389Z",
+  "updatedAt": "2026-09-23T00:54:08.010Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "BuscarContactosNova": {
+      "main": [
+        [
+          {
+            "node": "Filtrar y Preparar Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Manual": {
+      "main": [
+        [
+          {
+            "node": "BuscarContactosNova",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar y Preparar Mensaje": {
+      "main": [
+        [
+          {
+            "node": "EnviarImagenNova",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EnviarImagenNova": {
+      "main": [
+        [
+          {
+            "node": "EnviarWhatsAppNova",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EnviarWhatsAppNova": {
+      "main": [
+        [
+          {
+            "node": "SyncChatwootContactAndLabels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SyncChatwootContactAndLabels": {
+      "main": [
+        [
+          {
+            "node": "MarcarSENT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "BuscarContactosNova",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "de13e91a-9f97-459b-9738-d88e2e1b4627",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "df316a76-9844-4f6c-8496-3cbf6d0ec916",
+      "name": "BuscarContactosNova",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        96
+      ],
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "NOVA",
+          "mode": "name"
+        },
+        "options": {},
+        "authentication": "oAuth2",
+        "combineFilters": "AND",
+        "filtersUI": {},
+        "operation": "read",
+        "resource": "sheet"
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "id": "18f94aff-e5a3-45a5-bacb-6e0bbbd20d1b",
+      "name": "Webhook Manual",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        192
+      ],
+      "parameters": {
+        "path": "reactivacion-nova-outbound",
+        "httpMethod": "POST",
+        "responseMode": "onReceived"
+      },
+      "webhookId": "877518f0-0962-47ae-9a49-d5d9b7b3d47e"
+    },
+    {
+      "id": "5104ccf1-b4ab-4a8e-896f-a019ad369136",
+      "name": "Filtrar y Preparar Mensaje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        96
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nconst row = $json;\nconst play = (row.PLAY || '').trim().toUpperCase();\n\nif (play === 'SENT') {\n  return null;\n}\n\nlet rawPhone = String(row.Teléfono || row['Teléfono'] || '').replace(/\\D/g, '');\nif (!rawPhone) return null;\n\nif (rawPhone.length === 10 && (rawPhone.startsWith('7') || rawPhone.startsWith('3') || rawPhone.startsWith('4') || rawPhone.startsWith('8') || rawPhone.startsWith('9'))) {\n  rawPhone = '1' + rawPhone;\n}\n\nconst nombreBase = (row.Nombre || '').trim();\nconst apellidoBase = (row.Apellido || row.apellido || '').trim();\nconst nombreCompleto = (nombreBase + ' ' + apellidoBase).trim() || 'Cliente';\nconst nombreSaludo = nombreBase || 'Cliente';\n\nconst primeraCompra = (row['1ra compra'] || row['1ra Compra'] || '').trim();\n\nconst mensaje = `¡Hola ${nombreSaludo}!, Esperamos que estés muy bien. ✨\\n\\nEn TotalTv te extrañamos y nos encantaría tenerte de vuelta disfrutando de tus canales, series, películas y deportes favoritos.\\n\\nSi deseas reactivar tu servicio, solo responde a este mensaje directamente por aquí y te ayudamos al instante. 📺🙌`;\n\nreturn {\n  json: {\n    ...row,\n    clean_phone: rawPhone,\n    remote_jid: rawPhone + '@s.whatsapp.net',\n    nombre: nombreSaludo,\n    nombre_completo: nombreCompleto,\n    primera_compra: primeraCompra,\n    mensaje: mensaje\n  }\n};\n"
+      }
+    },
+    {
+      "id": "2c526246-4644-4d23-94f2-1336e6160282",
+      "name": "EnviarImagenNova",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        672,
+        96
+      ],
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-image",
+        "instanceName": "lat-whatscol",
+        "remoteJid": "={{ $('Filtrar y Preparar Mensaje').item.json.remote_jid }}",
+        "mediaUrl": "https://raw.githubusercontent.com/totaltvusa/images/main/TotalTv%20NewLogo%200.png",
+        "options": {
+          "delay": 1500
+        },
+        "media": "https://raw.githubusercontent.com/totaltvusa/images/main/TotalTv%20NewLogo%200.png"
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false,
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "id": "078e48f5-8190-4415-ad65-03d90cad6592",
+      "name": "EnviarWhatsAppNova",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        896,
+        96
+      ],
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-text",
+        "instanceName": "lat-whatscol",
+        "remoteJid": "={{ $('Filtrar y Preparar Mensaje').item.json.remote_jid }}",
+        "messageText": "={{ $('Filtrar y Preparar Mensaje').item.json.mensaje }}",
+        "options": {
+          "delay": 1500
+        }
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false,
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "id": "a8feb769-59ca-4e4f-a8c3-4fc9a2985fdc",
+      "name": "SyncChatwootContactAndLabels",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        96
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\nconst defaultInboxId = 16;\n\nconst results = [];\nconst items = $input.all();\n\nlet sourceItems = [];\ntry {\n  sourceItems = $('Filtrar y Preparar Mensaje').all().map(i => i.json);\n} catch (e) {\n  sourceItems = [];\n}\n\nconst getField = (obj, regex) => {\n  if (!obj) return '';\n  for (const k of Object.keys(obj)) {\n    if (regex.test(k.trim())) {\n      const v = obj[k];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();\n    }\n  }\n  return '';\n};\n\nfor (const item of items) {\n  try {\n    const itJson = item.json || {};\n    const jid = itJson.data?.key?.remoteJid || itJson.remoteJid || '';\n    const cleanJidPhone = String(jid).replace(/@.*/, '').replace(/\\D/g, '');\n    const directPhone = String(itJson.clean_phone || itJson.Teléfono || itJson.Telefono || itJson.phone || '').replace(/\\D/g, '');\n    const rawPhone = directPhone || cleanJidPhone;\n    const cleanPhone = rawPhone.length > 0 ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : '';\n\n    let sourceRow = itJson;\n    if (sourceItems.length > 0 && rawPhone) {\n      const matched = sourceItems.find(r => {\n        const rPhone = String(r.clean_phone || r.Teléfono || r.Telefono || '').replace(/\\D/g, '');\n        return rPhone && (rPhone === rawPhone || rawPhone.endsWith(rPhone) || rPhone.endsWith(rawPhone));\n      });\n      if (matched) sourceRow = matched;\n    }\n\n    const sheetNombre = getField(sourceRow, /^nombre$/i) || sourceRow.nombre || '';\n    const sheetApellido = getField(sourceRow, /^apellido/i) || sourceRow.apellido || '';\n    const fullName = sourceRow.nombre_completo || [sheetNombre, sheetApellido].filter(Boolean).join(' ').trim() || 'Cliente';\n    const firstPurchase = sourceRow.primera_compra || getField(sourceRow, /^(1ra.*compra|primera.*compra|fecha.*compra|compra)/i);\n    const sheetEmail = getField(sourceRow, /^(email|correo)/i) || sourceRow.email || '';\n    const sheetUsuario = sourceRow.Usuario || sourceRow.usuario || getField(sourceRow, /^(usuario|user|username)/i);\n    const mensajeEnviado = sourceRow.mensaje || itJson.mensaje || '';\n\n    if (!cleanPhone) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'skipped_no_phone' } });\n      continue;\n    }\n\n    // 1. Search existing contact by phone\n    let contactId = null;\n    let existingContact = null;\n    try {\n      const searchRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(rawPhone)}`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      if (searchRes.payload && searchRes.payload.length > 0) {\n        existingContact = searchRes.payload[0];\n        contactId = existingContact.id;\n      }\n    } catch (e) {}\n\n    if (!contactId) {\n      try {\n        const searchRes2 = await this.helpers.httpRequest({\n          method: 'GET',\n          url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(cleanPhone)}`,\n          headers: { 'api_access_token': chatwootToken },\n          json: true\n        });\n        if (searchRes2.payload && searchRes2.payload.length > 0) {\n          existingContact = searchRes2.payload[0];\n          contactId = existingContact.id;\n        }\n      } catch (e) {}\n    }\n\n    // 2. Create contact if not exists\n    if (!contactId) {\n      try {\n        const createPayload = {\n          name: fullName || sheetNombre || 'Cliente',\n          phone_number: cleanPhone\n        };\n        if (sheetEmail) createPayload.email = sheetEmail;\n        const createRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/contacts`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: createPayload,\n          json: true\n        });\n        existingContact = createRes.payload?.contact;\n        contactId = existingContact?.id;\n      } catch (e) {}\n    }\n\n    if (!contactId) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'contact_failed' } });\n      continue;\n    }\n\n    // 3. Enrich contact with Nova/Sheet data\n    try {\n      if (!existingContact || !existingContact.additional_attributes) {\n        const getContactRes = await this.helpers.httpRequest({\n          method: 'GET',\n          url: `${chatwootBase}/contacts/${contactId}`,\n          headers: { 'api_access_token': chatwootToken },\n          json: true\n        });\n        existingContact = getContactRes.payload || existingContact || {};\n      }\n\n      const existingAttrs = existingContact.additional_attributes || {};\n      const existingCustomAttrs = existingContact.custom_attributes || {};\n      const existingCompany = String(existingAttrs.company_name || '').trim();\n      const currentContactName = String(existingContact.name || '').trim();\n\n      let channelDefaultName = existingCompany;\n      if (!channelDefaultName && currentContactName && currentContactName !== fullName) {\n        channelDefaultName = currentContactName;\n      }\n\n      const updatePayload = {\n        additional_attributes: {\n          ...existingAttrs\n        },\n        custom_attributes: {\n          ...existingCustomAttrs\n        }\n      };\n\n      if (channelDefaultName) {\n        updatePayload.additional_attributes.company_name = channelDefaultName;\n      }\n      if (firstPurchase) {\n        updatePayload.additional_attributes.description = firstPurchase;\n      }\n      if (sheetUsuario) {\n        updatePayload.additional_attributes.usuario = sheetUsuario;\n        updatePayload.custom_attributes.usuario = sheetUsuario;\n      }\n      if (fullName) {\n        updatePayload.name = fullName;\n      }\n      if (sheetEmail && !existingContact.email) {\n        updatePayload.email = sheetEmail;\n      }\n\n      await this.helpers.httpRequest({\n        method: 'PATCH',\n        url: `${chatwootBase}/contacts/${contactId}`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: updatePayload,\n        json: true\n      });\n    } catch (e) {}\n\n    // 4. Find or create conversation in Chatwoot\n    let conversationId = null;\n    let convLabels = [];\n    try {\n      const convListRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/${contactId}/conversations`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      const convs = convListRes.payload || [];\n      const match = convs.find(c => (Number(c.inbox_id) === defaultInboxId || Number(c.inbox_id) === 19) && c.status !== 'resolved')\n                 || convs.find(c => Number(c.inbox_id) === defaultInboxId || Number(c.inbox_id) === 19)\n                 || convs.find(c => c.status !== 'resolved')\n                 || convs[0];\n      if (match) {\n        conversationId = match.id;\n        convLabels = Array.isArray(match.labels) ? match.labels : [];\n      }\n    } catch (e) {}\n\n    if (!conversationId) {\n      try {\n        const createConvRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/conversations`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { inbox_id: defaultInboxId, contact_id: contactId },\n          json: true\n        });\n        conversationId = createConvRes.id;\n        convLabels = [];\n      } catch (e) {}\n    }\n\n    if (!conversationId) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'conv_failed' } });\n      continue;\n    }\n\n    // 5. Update conversation labels: ensure stage-leads-ganados and funnel-totaltv-latina\n    try {\n      let cleanLabels = convLabels.filter(l => !l.startsWith('stage-'));\n      if (!cleanLabels.includes('stage-leads-ganados')) cleanLabels.push('stage-leads-ganados');\n      if (!cleanLabels.includes('funnel-totaltv-latina')) cleanLabels.push('funnel-totaltv-latina');\n\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: cleanLabels },\n        json: true\n      });\n    } catch (e) {}\n\n    // 6. Post private note documenting the outbound WhatsApp message\n    const noteContent = `📌 *Campaña WhatsApp Enviada (Outbound - Reactivación Nova)*\\n• Instancia: \\`lat-whatscol\\`\\n• Destinatario: ${cleanPhone}\\n• Usuario: ${sheetUsuario}\\n• Fecha/Hora: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\\n\\n📝 *Mensaje:*\\n${mensajeEnviado}`;\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { content: noteContent, private: true },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      json: {\n        ...sourceRow,\n        ...itJson,\n        Usuario: sheetUsuario,\n        PLAY: 'SENT',\n        chatwoot_contact_id: contactId,\n        chatwoot_conversation_id: conversationId,\n        chatwoot_sync: 'success'\n      }\n    });\n  } catch (err) {\n    results.push({ json: { ...item.json, chatwoot_sync: 'error', error: err.message } });\n  }\n}\n\nreturn results;"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "fc8d536e-ec29-4dc9-bf43-016829fee08d",
+      "name": "MarcarSENT",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1344,
+        96
+      ],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "NOVA",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "PLAY": "SENT",
+            "Usuario": "={{ $json.Usuario }}"
+          },
+          "matchingColumns": [
+            "Usuario"
+          ]
+        },
+        "options": {},
+        "authentication": "oAuth2",
+        "resource": "sheet"
+      },
+      "disabled": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

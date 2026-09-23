@@ -1689,3 +1689,48 @@
   4. **Export & Git Tracking**:
      - Exported and synchronized `router_chatwoot_ia.json` via `workflows/export_workflows.py`.
      - Committed and pushed changes to repository.
+
+---
+
+### 49. Optimization of "Campaña Reactivación Nova" & Retrospective Chatwoot / Google Sheets Synchronization (2026-09-22)
+
+* **Incident Identified**:
+  - The outbound campaign workflow `📌 Campaña Reactivación Nova (Outbound)` (`uqCdr1F5uqNwgRTA`) was executed (Execution 11250) sending messages to 12 clients from the Google Sheet (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`, tab `NOVA`).
+  - **Issues Reported**:
+    1. The Google Sheet column `PLAY` was not marked as `SENT` after message delivery.
+    2. The Chatwoot contacts were not updated with the full name, `usuario` attribute, `company_name`, bio (`1ra compra`), and the conversations were not tagged with TVTotal24 Latina labels (`stage-leads-ganados`, `funnel-totaltv-latina`) or documented with private notes.
+  - **Workflow Audit**:
+    - Compared `uqCdr1F5uqNwgRTA` (`📌 Campaña Reactivación Nova (Outbound)`) with older `JrWuPMkHwmvyBXxu` (`Reactivación Clientes Nova (lat-whatscol)`). Confirmed that `uqCdr1F5uqNwgRTA` is the newest and active workflow.
+
+* **Root Cause Analysis**:
+  1. **Google Sheets Node (`MarcarSENT`)**:
+     - The Google Sheets v4.5 node was failing with `NodeOperationError: The 'Column to Match On' parameter is required` because `matchingColumns: ["row_number"]` lacked column matching definitions in Google Sheets v4.5 update operation.
+  2. **Chatwoot Synchronization Node (`SyncChatwootContactAndLabels`)**:
+     - The code node used raw `fetch(...)` instead of `this.helpers.httpRequest`, did not create contacts if missing, did not target inbox 16 (`lat-whatscol`), and contained obsolete TotalTv USA tags instead of TVTotal24 Latina tags (`stage-leads-ganados`, `funnel-totaltv-latina`).
+
+* **Remediation & Technical Implementation**:
+  1. **Fixed Workflow `uqCdr1F5uqNwgRTA` in n8n**:
+     - **Contact Enrichment**: Rewrote `SyncChatwootContactAndLabels` using `this.helpers.httpRequest`. It searches contacts by phone/email, creates if missing, and patches `name: fullName`, `additional_attributes.company_name`, `additional_attributes.description: firstPurchase`, `additional_attributes.usuario`, `custom_attributes.usuario`, and `email`.
+     - **Conversation Creation & Labeling**: Ensures a conversation exists in inbox 16 (`lat-whatscol`), removes obsolete stage labels, and sets `['stage-leads-ganados', 'funnel-totaltv-latina']`.
+     - **Private Note Documentation**: Posts an internal private note documenting the outbound WhatsApp campaign message details.
+     - **Google Sheets `MarcarSENT` Fix**: Configured `operation: "update"`, `matchingColumns: ["Usuario"]`, and mapped values `Usuario: "={{ $json.Usuario }}"`, `PLAY: "SENT"`.
+     - Published active live version `b9ed5eaa-d6b0-4adb-9b6a-270a5ac4834c`.
+  2. **Retrospective Enrichment of the 12 Clients from Execution 11250 (Zero Duplicate Messages Sent)**:
+     - Retrospectively updated and enriched all 12 contacts in Chatwoot:
+       - Richy Machoa (`+593998822606`)
+       - Alejandra Cohen (`+584126442658`)
+       - Moises Vargas (`+584242686738`)
+       - Erasmo Bravo (`+584247572700`)
+       - Gabriel De Armas (`+584242687595`)
+       - Santiago Landinez (`+584144415848`)
+       - Said Cervantes (`+573133649534`)
+       - Francisco Lopez Pinzon (`+573214876616`)
+       - Duwis Tapia Ramirez (`+573016480838`)
+       - Gabriel Briceño (`+584149721731`)
+       - Jairo Rubio (`+584147577536`)
+       - Anthoni Moreno (`+584242131238`)
+     - Assigned full contact names, `usuario` attribute, `company_name`, and bio. Tagged all conversations with `['stage-leads-ganados', 'funnel-totaltv-latina']` and added internal private notes.
+     - Updated Google Sheets tab `NOVA` marking `PLAY = SENT` for all 12 clients (Execution 11365) with WhatsApp sending node bypassed.
+  3. **Workflow Export & Repository Tracking**:
+     - Added `campana_reactivacion_nova` to `workflows/export_workflows.py`.
+     - Exported `workflows/campana_reactivacion_nova.json`.
