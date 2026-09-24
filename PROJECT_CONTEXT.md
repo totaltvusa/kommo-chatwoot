@@ -1769,3 +1769,32 @@
   3. **Immediate Client Clarification**:
      - Dispatched a direct correction message to Rolando in Conversation #1407 (Message ID 8581) clarifying that the registered beneficiary for Zelle `pagos@totaltvlatina.com` is **`ACR Enterprises`** (`ACR ENTERPRISES LLC`) and that `ArialStore C.A.` corresponds strictly to Pago Móvil, allowing him to complete his 6-month payment with full confidence.
 
+
+---
+
+### 51. TotalTV USA Payment Link Double Fee Prevention & Customer Clarification (2026-09-23)
+
+* **Incident Identified (Conversation #1445 - RaulSaray Jr., WhatsApp Lite TotalTv USA)**:
+  - In Conversation #1445, the customer requested a 1-month subscription for 3 devices (5 USD base price).
+  - The AI Agent presented the payment options, stating: `4. Credit / Debit Card or PayPal (via Card2Crypto) — Base Price + 10% fee (6.50)`.
+  - When the customer replied `4`, the AI Agent generated and delivered a Card2Crypto link for **8.15 USD** instead of **6.50 USD**, claiming it included the 10% processing fee.
+
+* **Root Cause Analysis**:
+  1. **Compounded 10% Fee Application**:
+     - The AI Agent in its first turn calculated 5 + 10% = 6.50.
+     - In the subsequent turn when calling the tool `Call 'getpaymentlink'` (`command: "/card2crypto"`, `percentage: "10"`), the LLM extracted the pre-calculated figure (6.50) and passed it as `baseAmount: 16.5` while ALSO passing `percentage: "10"`.
+     - The sub-workflow `getpaymentlink` (`3dBu0SNABE2pKCqU`) applied its automatic percentage adjustment: 6.50 	imes 1.10 = \8.15$.
+     - Consequently, the 10% fee was applied twice (effective 21% surcharge).
+
+* **Remediation & Technical Implementation**:
+  1. **Prompt Hardening (`prompts/agent_prompt.md`)**:
+     - Explicitly mandated under `SPECIFIC CARD / PAYPAL PAYMENT LINK GENERATION` and `SPECIFIC CASHAPP REQUEST`:
+       * `baseAmount` MUST ALWAYS be the **RAW BASE PRICE** from the pricing table (e.g. `9, 12, 15, 24, 30, 36, 48, 60, 72, 90, 105, 120` as a number).
+       * STRICT PROHIBITION: Never pass a price that already includes the 10% surcharge (e.g. for 1 month 3 devices, pass `baseAmount: 15`, NEVER `16.50` or `18.15`), because the tool automatically calculates and applies the 10% surcharge.
+  2. **Workflow Deployment & Publishing**:
+     - Updated node `AI Agent` in master router `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`).
+     - Published active live version in n8n (`ec04b13b-caa6-43fe-924e-2cb5c6e7c724`).
+     - Synchronized standalone workflow files `workflows/agent_totaltv_usa.json` and `workflows/router_chatwoot_ia.json` via `export_workflows.py`.
+  3. **Immediate Customer Remediation (Conversation #1445)**:
+     - Generated a fresh, correct Card2Crypto payment link for **6.50 USD**.
+     - Delivered the corrected link to RaulSaray Jr. in Chatwoot (Message ID 8607) with a polite apology and breakdown (5 base + 10% fee).
