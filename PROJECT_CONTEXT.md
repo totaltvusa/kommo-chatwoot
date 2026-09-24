@@ -1889,14 +1889,14 @@
 
 * **Remediation & Technical Implementation**:
   1. **Knowledge of Official WhatsApp Channels in Both Agents (`agent_prompt.md` & `tvtotal24_prompt.md`)**:
-     - **TVTotal24 Latina**: WhatsApp `+57 300 647 9271` / `+57 300 947 6271` (formato numérico: `573006479271` / `573009476271`, instancia `lat-whatscol`, Colombia).
+     - **TVTotal24 Latina**: WhatsApp `+57 300 947 6271` (formato numérico: `573009476271`, instancia `lat-whatscol`, Colombia).
      - **TotalTv USA**: WhatsApp `+1 305 986 1096` (`13059861096`, instancia `3059861096`, Miami, FL, USA).
   2. **Strict Activation & Scope Rules (Zero Proactive Output)**:
      - **Explicit Inquiries Only**: The agent provides information about WhatsApp numbers **ONLY if the customer directly and explicitly asks** about that specific channel/number (or provides a screenshot asking if it is ours).
      - **Targeted Assistance Only**: The agent answers strictly about the specific number queried; no unsolicited lists or phone directories.
      - **No Proactive Mentions**: Never mention these channel numbers during greetings, plan breakdowns, or checkout unless directly requested.
      - **Affirmative Cross-Platform Confirmation**:
-       * In TotalTv USA: If asked about `+57 300 647 9271` / `+57 300 947 6271`, affirm that it is a 100% legitimate and official channel of sister platform **TVTotal24 Latina** (used for automated renewal notices and support for Latin services).
+       * In TotalTv USA: If asked about `+57 300 947 6271` (`lat-whatscol`), affirm that it is a 100% legitimate and official channel of sister platform **TVTotal24 Latina** (used for automated renewal notices and support for Latin services).
        * In TVTotal24 Latina: If asked about `+1 305 986 1096`, affirm that it is an official and verified channel of sister platform **TotalTv USA**.
   3. **Strengthened Principle 1 & Strict Ban on Fabricating Scam/Fraud Warnings**:
      - Explicitly prohibited agents from characterizing unknown numbers or external contacts as "no oficial", "falso", "sospechoso" or "estafa/suplantación".
@@ -1906,7 +1906,35 @@
      - Added sanitizers **C.5** (intercepts false "no oficial" statements regarding TotalTv USA Miami number).
      - Added sanitizers **C.6** (intercepts general hallucinated scam warnings or fraud accusations and replaces with polite AI out-of-scope response offering human handover).
   5. **Deployment & Synchronization**:
-     - Updated live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) in n8n and published active version `5796ad24-4b6c-497f-9a56-b1db4362fa36`.
+     - Updated live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) in n8n.
      - Synchronized standalone workflows `agent_totaltv_usa.json` and `agent_tvtotal24_latina.json`.
      - Exported all 19 workflows via `export_workflows.py`.
      - Ensured strictly zero messages sent to customers during remediation.
+
+---
+
+### 55. Eradication of Erroneous Number (+57 300 647 9271) & Universal Closed-Domain Law (2026-09-24)
+
+* **Root Cause & User Mandate**:
+  - The number `+57 300 647 9271` was completely wrong, never handled by the company, and mistakenly introduced. The ONLY valid Colombian WhatsApp number for TVTotal24 Latina is `+57 300 947 6271` (`573009476271`, instance `lat-whatscol`).
+  - Furthermore, piling on negative micro-rules ("do not talk about bank branches, do not talk about tellers, do not mention cashapp tags") creates cognitive clutter for LLMs, drawing attention to forbidden concepts and prompting hallucinations about anything not explicitly listed as forbidden.
+  - The correct, foundational design principle is pure, universal **Closed-Domain**:
+    * The AI Agent has strictly 3 sources of truth: (1) System Prompt, (2) Conversation Context (`[CLIENT CONTEXT: ...]`), and (3) Support Document (`TotalTv Support`).
+    * If anything is not explicitly stated in those 3 sources, its status is strictly: **"NO DISPONGO DE INFORMACIÓN SOBRE ESO"**.
+    * The agent must simply state as an AI assistant that it does not have information on that topic, and offer official plans or human handover. **Y PUNTO.** No lectures, no defensive disclaimers, no security warnings, and no fabricating.
+
+* **Changes Implemented**:
+  1. **Prompt Cleanup (`prompts/agent_prompt.md` & `prompts/tvtotal24_prompt.md`)**:
+     - Completely eliminated all occurrences of `+57 300 647 9271` / `573006479271`.
+     - Set TVTotal24 Latina number strictly to `+57 300 947 6271` (`573009476271`, instance `lat-whatscol`).
+     - Replaced fragmented negative micro-rules with the clean, universal "MANDATO SUPREMO: DOMINIO CERRADO Y CERO INVENTOS" at the top and in the Knowledge Boundary section of both prompts.
+     - Preserved isolated payment method identities in TVTotal24 Latina (`pagos@totaltvlatina.com` = `ACR Enterprises`, Pago Móvil = `ArialStore C.A.`, Binance Pay = ID `22628239`).
+  2. **Workflow Guardrail Sanitizers (`Formatear Respuesta` in `router_chatwoot_ia.json`)**:
+     - Removed `647` from regex and replacement strings in sanitizer C.4, matching strictly `947`.
+     - Deduplicated redundant blocks of C.4, C.5, and C.6 in `Formatear Respuesta`.
+  3. **Deployment**:
+     - Applied updates to n8n workflow `n0zgnS1vlOGNcGNY` via MCP (`update_workflow` with operations on `AI Agent`, `AI Agent - TVTotal24`, and `Formatear Respuesta`).
+     - Published active version `cc3903ee-2650-4493-9681-863d66e074e1`.
+     - Synchronized standalone workflows `agent_totaltv_usa.json` and `agent_tvtotal24_latina.json`.
+     - Re-exported all 19 workflows via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.
