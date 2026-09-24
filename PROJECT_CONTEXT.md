@@ -1775,15 +1775,15 @@
 ### 51. TotalTV USA Payment Link Double Fee Prevention & Customer Clarification (2026-09-23)
 
 * **Incident Identified (Conversation #1445 - RaulSaray Jr., WhatsApp Lite TotalTv USA)**:
-  - In Conversation #1445, the customer requested a 1-month subscription for 3 devices (5 USD base price).
-  - The AI Agent presented the payment options, stating: `4. Credit / Debit Card or PayPal (via Card2Crypto) — Base Price + 10% fee (6.50)`.
-  - When the customer replied `4`, the AI Agent generated and delivered a Card2Crypto link for **8.15 USD** instead of **6.50 USD**, claiming it included the 10% processing fee.
+  - In Conversation #1445, the customer requested a 1-month subscription for 3 devices ($15 USD base price).
+  - The AI Agent presented the payment options, stating: `4. Credit / Debit Card or PayPal (via Card2Crypto) — Base Price + 10% fee ($16.50)`.
+  - When the customer replied `4`, the AI Agent generated and delivered a Card2Crypto link for **$18.15 USD** instead of **$16.50 USD**, claiming it included the 10% processing fee.
 
 * **Root Cause Analysis**:
   1. **Compounded 10% Fee Application**:
-     - The AI Agent in its first turn calculated 5 + 10% = 6.50.
-     - In the subsequent turn when calling the tool `Call 'getpaymentlink'` (`command: "/card2crypto"`, `percentage: "10"`), the LLM extracted the pre-calculated figure (6.50) and passed it as `baseAmount: 16.5` while ALSO passing `percentage: "10"`.
-     - The sub-workflow `getpaymentlink` (`3dBu0SNABE2pKCqU`) applied its automatic percentage adjustment: 6.50 	imes 1.10 = \8.15$.
+     - The AI Agent in its first turn calculated $15 + 10% = $16.50.
+     - In the subsequent turn when calling the tool `Call 'getpaymentlink'` (`command: "/card2crypto"`, `percentage: "10"`), the LLM extracted the pre-calculated figure ($16.50) and passed it as `baseAmount: 16.5` while ALSO passing `percentage: "10"`.
+     - The sub-workflow `getpaymentlink` (`3dBu0SNABE2pKCqU`) applied its automatic percentage adjustment: $16.50 \times 1.10 = \$18.15$.
      - Consequently, the 10% fee was applied twice (effective 21% surcharge).
 
 * **Remediation & Technical Implementation**:
@@ -1796,5 +1796,41 @@
      - Published active live version in n8n (`ec04b13b-caa6-43fe-924e-2cb5c6e7c724`).
      - Synchronized standalone workflow files `workflows/agent_totaltv_usa.json` and `workflows/router_chatwoot_ia.json` via `export_workflows.py`.
   3. **Immediate Customer Remediation (Conversation #1445)**:
-     - Generated a fresh, correct Card2Crypto payment link for **6.50 USD**.
-     - Delivered the corrected link to RaulSaray Jr. in Chatwoot (Message ID 8607) with a polite apology and breakdown (5 base + 10% fee).
+     - Generated a fresh, correct Card2Crypto payment link for **$16.50 USD**.
+     - Delivered the corrected link to RaulSaray Jr. in Chatwoot (Message ID 8608) with a clear breakdown ($15 base + 10% fee).
+
+---
+
+### 52. Dual-Stage Card2Crypto Payment Lifecycle Notifications (In-Progress & Completed) (2026-09-23)
+
+* **Objective & Problem Statement**:
+  - Previously, the webhook receiver workflow `Card2Crypto to ME` (`OrUMncnYf5wezbpU`, path `/webhook/paymentdone`) only notified the administrator when a transaction had fully completed (`txid_out` payout executed to the Polygon merchant wallet).
+  - The administrator had zero visibility when a customer started or was in the middle of processing a payment on Card2Crypto (e.g. entering details, card checkout, or awaiting blockchain confirmation).
+
+* **Remediation & Technical Implementation**:
+  1. **Dual-Stage Lifecycle State Processing in `Card2Crypto to ME` (`OrUMncnYf5wezbpU`)**:
+     - Added code node `Procesar Estado de Pago` that inspects incoming query and body parameters (`value_coin`, `value_forwarded_coin`, `txid_in`, `txid_out`, `status`, `address_in`).
+     - Evaluates whether the transaction is **IN_PROGRESS** vs **COMPLETED**:
+       * **IN_PROGRESS (🟡 Transacción iniciada / En proceso)**:
+         Fired when `txid_in` is detected or `status` is pending/processing without `txid_out`.
+         Telegram & WhatsApp alert:
+         > `⏳ ¡PAGO EN PROCESO EN CARD2CRYPTO!`
+         > `💵 Monto Detectado: $XX USDC`
+         > `📊 Estado: 🟡 Transacción iniciada / Confirmando en red`
+         > `🔗 TXID Entrada: <txid_in>`
+         > `📥 Billetera Temporal: <address_in>`
+       * **COMPLETED (✅ Pago completado y acreditado)**:
+         Fired when `txid_out` is generated or `status` is confirmed/paid.
+         Telegram & WhatsApp alert:
+         > `🚀 ¡PAGO COMPLETADO EN CARD2CRYPTO!`
+         > `💵 Monto Recibido: $XX USDC`
+         > `📥 Monto Neto: $XX USDC`
+         > `📊 Estado: ✅ Fondos transferidos a billetera`
+         > `🆔 TXID Payout: <txid_out>`
+  2. **Settings & Logging**:
+     - Enabled `saveDataSuccessExecution: 'all'` and `saveDataErrorExecution: 'all'` on `OrUMncnYf5wezbpU`.
+     - Published active live version in n8n (`e933c041-78ad-46f9-8784-267b1f2619cc`).
+  3. **Export & Repository Tracking**:
+     - Added `card2crypto_to_me` to `workflows/export_workflows.py`.
+     - Exported and synchronized `workflows/card2crypto_to_me.json`.
+

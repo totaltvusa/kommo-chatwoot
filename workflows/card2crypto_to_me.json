@@ -1,0 +1,162 @@
+{
+  "id": "OrUMncnYf5wezbpU",
+  "name": "Card2Crypto to ME",
+  "active": true,
+  "isArchived": false,
+  "versionId": "e933c041-78ad-46f9-8784-267b1f2619cc",
+  "activeVersionId": "e933c041-78ad-46f9-8784-267b1f2619cc",
+  "triggerCount": 1,
+  "nodeCount": 4,
+  "createdAt": "2026-08-08T00:18:33.825Z",
+  "updatedAt": "2026-09-24T02:37:37.671Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Notificar por Telegram": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Card2Crypto": {
+      "main": [
+        [
+          {
+            "node": "Procesar Estado de Pago",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Estado de Pago": {
+      "main": [
+        [
+          {
+            "node": "Notificar por Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "path": "paymentdone",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        112,
+        -144
+      ],
+      "id": "e89b8e31-8bea-4a65-b4ac-084849c86f99",
+      "name": "Webhook Card2Crypto",
+      "webhookId": "167e8002-99e5-4701-a55a-6f6971579c11"
+    },
+    {
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        -272
+      ],
+      "id": "b5b59142-c854-4b4b-9319-0a85941b0265",
+      "name": "Notificar por Telegram",
+      "webhookId": "6387b57e-8f2b-4ed6-bf35-7abed564f314",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ $json.whatsapp_text }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        768,
+        -368
+      ],
+      "id": "4ffa74f0-5131-42f1-90f7-3607acd17c2d",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "id": "process-c2c-state",
+      "name": "Procesar Estado de Pago",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -144
+      ],
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json.query || item.json.body || item.json || {};\n  \n  const value_coin = data.value_coin !== undefined && data.value_coin !== '' ? String(data.value_coin) : '';\n  const value_forwarded = data.value_forwarded_coin !== undefined && data.value_forwarded_coin !== '' ? String(data.value_forwarded_coin) : '';\n  const txid_in = data.txid_in !== undefined && data.txid_in !== '' ? String(data.txid_in) : '';\n  const txid_out = data.txid_out !== undefined && data.txid_out !== '' ? String(data.txid_out) : '';\n  const status = data.status !== undefined && data.status !== '' ? String(data.status).toLowerCase() : '';\n  const address_in = data.address_in || data.polygon_address_in || data.address || '';\n  const currency = data.currency || data.coin || 'USDC';\n\n  // Identificar si la operacion esta completada o en proceso\n  const isCompleted = Boolean(\n    (txid_out && txid_out !== 'null' && txid_out !== 'undefined' && txid_out !== '') ||\n    ['paid', 'confirmed', 'forwarded', 'completed', 'done', 'success'].includes(status) ||\n    (value_forwarded && Number(value_forwarded) > 0)\n  );\n\n  const event_type = isCompleted ? 'COMPLETED' : 'IN_PROGRESS';\n  \n  let telegram_text = '';\n  let whatsapp_text = '';\n\n  if (isCompleted) {\n    const displayNet = value_forwarded || value_coin || '0';\n    telegram_text = '🚀 *¡PAGO COMPLETADO EN CARD2CRYPTO!*\\n\\n' +\n      '💵 *Monto Recibido:* $' + (value_coin || displayNet) + ' ' + currency + '\\n' +\n      '📥 *Monto Neto:* $' + displayNet + ' ' + currency + '\\n' +\n      '📊 *Estado:* ✅ Fondos transferidos a billetera\\n\\n' +\n      '🆔 *TXID Payout:*\\n`' + (txid_out || 'Confirmado en pasarela') + '`';\n\n    whatsapp_text = '🚀 ¡PAGO COMPLETADO EN CARD2CRYPTO!\\n\\n' +\n      '💵 Monto Recibido: $' + (value_coin || displayNet) + ' ' + currency + '\\n' +\n      '📥 Monto Neto: $' + displayNet + ' ' + currency + '\\n' +\n      '📊 Estado: ✅ Fondos transferidos a billetera\\n' +\n      '🆔 TXID Payout: ' + (txid_out || 'Confirmado');\n  } else {\n    telegram_text = '⏳ *¡PAGO EN PROCESO EN CARD2CRYPTO!*\\n\\n' +\n      '💵 *Monto Detectado:* $' + (value_coin || 'Pendiente') + ' ' + currency + '\\n' +\n      '📊 *Estado:* 🟡 Transacción iniciada / Confirmando en red\\n\\n' +\n      '🔗 *TXID Entrada:*\\n`' + (txid_in || 'Procesando en pasarela...') + '`\\n\\n' +\n      '📥 *Billetera Temporal:*\\n`' + (address_in || 'No especificada') + '`';\n\n    whatsapp_text = '⏳ ¡PAGO EN PROCESO EN CARD2CRYPTO!\\n\\n' +\n      '💵 Monto Detectado: $' + (value_coin || 'Pendiente') + ' ' + currency + '\\n' +\n      '📊 Estado: 🟡 Transacción iniciada / Confirmando en red\\n' +\n      '🔗 TXID Entrada: ' + (txid_in || 'Procesando en pasarela...') + '\\n' +\n      '📥 Billetera: ' + (address_in || 'No especificada');\n  }\n\n  results.push({\n    json: {\n      ...data,\n      event_type,\n      is_completed: isCompleted,\n      value_coin,\n      value_forwarded,\n      txid_in,\n      txid_out,\n      status,\n      address_in,\n      telegram_text,\n      whatsapp_text\n    }\n  });\n}\n\nreturn results;"
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

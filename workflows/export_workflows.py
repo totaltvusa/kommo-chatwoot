@@ -77,7 +77,8 @@ wfs = {
     'card2crypto_link': 'p8dS1jx73xvpbrkj',
     'telegram_to_n8n': 'TS2CADjNNn05jXBW',
     'tool_card2crypto_tvtotal24': 'OCrN0N77qR9Gqppx',
-    'campana_reactivacion_nova': 'uqCdr1F5uqNwgRTA'
+    'campana_reactivacion_nova': 'uqCdr1F5uqNwgRTA',
+    'card2crypto_to_me': 'OrUMncnYf5wezbpU'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
