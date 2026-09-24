@@ -1834,3 +1834,43 @@
      - Added `card2crypto_to_me` to `workflows/export_workflows.py`.
      - Exported and synchronized `workflows/card2crypto_to_me.json`.
 
+
+---
+
+### 53. Human Transfer Two-Path Protocol & Guardrail False-Positive Remediation (2026-09-23)
+
+* **Incident Identified (Conversation #1445 - RaulSaray Jr., WhatsApp Lite TotalTv USA)**:
+  - In Conversation #1445, the customer requested alternative payment options due to accessibility needs (blindness).
+  - The AI Agent presented website alternative steps and ended by asking:
+    > *"Would you like me to transfer you to a human agent who can assist you directly? 🤝"*
+  - **Issues Reported**:
+    1. The system immediately executed a human transfer in the background, added the `human` label in Chatwoot, and alerted the administrator via Telegram before the customer could answer.
+    2. Because the agent was only asking a question, it did not tell the customer they had already been transferred.
+    3. When the customer replied *"No thanks"*, the conversation was silenced (`skip_ai_response: true`) because the `human` label had already been falsely applied by the auto-guardrail.
+
+* **Root Cause Analysis**:
+  1. **Overly Broad Guardrail Regex in `Formatear Respuesta` (`router_chatwoot_ia.json`)**:
+     - The auto-guardrail used `transferPhrasesRegex = /...|transfer (?:your|you|the)|.../i`.
+     - When the AI politely asked *"Would you like me to transfer you...?"*, the substring `transfer you` triggered the guardrail as an active transfer intent, executing the auto-transfer pipeline and tagging the conversation with `human`.
+  2. **Lack of Strict Two-Path Protocol in System Prompts**:
+     - The prompts lacked explicit differentiation between **Path A (Offering transfer / asking question and waiting for customer's response)** vs **Path B (Direct transfer execution without asking)**.
+
+* **Remediation & Technical Implementation**:
+  1. **Fixed Auto-Guardrail in `router_chatwoot_ia.json` (`Formatear Respuesta`)**:
+     - Added `isQuestionOrOffer` condition to strictly exclude questions/proposals (e.g. `would you like ... transfer`, `¿deseas que te transfiera?`, or ending in `?`).
+     - Restricted `transferAccomplishedRegex` strictly to affirmative, completed transfer statements (e.g. `I have transferred your...`, `Te he transferido con nuestro equipo...`).
+  2. **Prompt Hardening (`prompts/agent_prompt.md` & `prompts/tvtotal24_prompt.md`)**:
+     - **Path A (Question / Offer)**:
+       * Prohibited calling `transfer_to_human_tool` in the same turn.
+       * Agent asks the question and waits for response.
+       * If customer replies affirmatively ("yes", "si", "por favor", "please"): invokes `transfer_to_human_tool`, adds private note, alerts admin, and tells customer *"I have transferred you..."*.
+       * If customer replies negatively ("no", "no thanks"): continues assisting normally with AI without transferring.
+     - **Path B (Direct Transfer without asking)**:
+       * Applicable upon explicit human request, AI rejection, or verified payment/error screenshot.
+       * Agent invokes `transfer_to_human_tool` immediately, adds note, alerts admin, and obligatorily tells customer *"I have transferred you..."*.
+  3. **Workflow Deployment & Publishing**:
+     - Updated nodes in master router `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`).
+     - Published active live version in n8n (`1e2f5ee2-4cff-4420-8891-401332d390ea`).
+     - Updated standalone files `agent_totaltv_usa.json` and `agent_tvtotal24_latina.json`.
+  4. **Chatwoot State Remediation (Conversation #1445)**:
+     - Removed the premature `human` label from Conversation #1445 in Chatwoot (strictly 0 customer-facing messages sent).
