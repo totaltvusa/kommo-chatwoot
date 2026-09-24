@@ -48,7 +48,7 @@ def call_mcp(method_name, args):
             'Authorization': f'Bearer {token}',
             'Content-Type': 'application/json',
             'Accept': 'application/json, text/event-stream',
-            'User-Agent': 'Mozilla/5.0'
+            'User-Agent': 'curl/8.7.1'
         },
         method='POST'
     )

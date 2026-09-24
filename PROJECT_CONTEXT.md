@@ -1874,3 +1874,39 @@
      - Updated standalone files `agent_totaltv_usa.json` and `agent_tvtotal24_latina.json`.
   4. **Chatwoot State Remediation (Conversation #1445)**:
      - Removed the premature `human` label from Conversation #1445 in Chatwoot (strictly 0 customer-facing messages sent).
+
+---
+
+### 54. Official WhatsApp Channels Cross-Platform Verification & Zero-Hallucination Hardening (2026-09-24)
+
+* **Incident Identified (Conversation #1380 - Juliana Soto, WhatsApp Lite TotalTv USA / Inbox 18)**:
+  - In Conversation #1380, the customer received an automated renewal notification (`vencepronto`) from TVTotal24 Latina's WhatsApp instance (`lat-whatscol`, Colombia: `+57 300 947 6271` / `573006479271`).
+  - The customer then wrote to TotalTv USA (`+1 305 986 1096`), shared a screenshot showing the Colombian WhatsApp profile ("TTV LAT", `+57 300 947 6271`), and asked whether that new number was official and belonged to the company.
+  - **Issues Identified**:
+    1. **Lack of Channel Knowledge**: The AI Agent for TotalTv USA (`Toto`) was not configured with the official numbers of its sister platform TVTotal24 Latina (`lat-whatscol`).
+    2. **Severe Hallucination / Definite False Negative**: Because the number was not in its context, instead of declaring that as an AI assistant it had no information, the agent falsely stated that the number was *not official*, warned the customer about "números desconocidos que podrían ser intentos de estafa o suplantación", and aggressively pushed a renewal under TotalTv USA plans ($30 for 2 devices vs $24 for TVTotal24 Latina).
+    3. **Violation of Closed-Domain Mandate**: The agent invented security and fraud warnings completely outside the scope of its system prompt and support document, causing confusion, unnecessary customer panic, and pricing mismatch.
+
+* **Remediation & Technical Implementation**:
+  1. **Knowledge of Official WhatsApp Channels in Both Agents (`agent_prompt.md` & `tvtotal24_prompt.md`)**:
+     - **TVTotal24 Latina**: WhatsApp `+57 300 647 9271` / `+57 300 947 6271` (formato numérico: `573006479271` / `573009476271`, instancia `lat-whatscol`, Colombia).
+     - **TotalTv USA**: WhatsApp `+1 305 986 1096` (`13059861096`, instancia `3059861096`, Miami, FL, USA).
+  2. **Strict Activation & Scope Rules (Zero Proactive Output)**:
+     - **Explicit Inquiries Only**: The agent provides information about WhatsApp numbers **ONLY if the customer directly and explicitly asks** about that specific channel/number (or provides a screenshot asking if it is ours).
+     - **Targeted Assistance Only**: The agent answers strictly about the specific number queried; no unsolicited lists or phone directories.
+     - **No Proactive Mentions**: Never mention these channel numbers during greetings, plan breakdowns, or checkout unless directly requested.
+     - **Affirmative Cross-Platform Confirmation**:
+       * In TotalTv USA: If asked about `+57 300 647 9271` / `+57 300 947 6271`, affirm that it is a 100% legitimate and official channel of sister platform **TVTotal24 Latina** (used for automated renewal notices and support for Latin services).
+       * In TVTotal24 Latina: If asked about `+1 305 986 1096`, affirm that it is an official and verified channel of sister platform **TotalTv USA**.
+  3. **Strengthened Principle 1 & Strict Ban on Fabricating Scam/Fraud Warnings**:
+     - Explicitly prohibited agents from characterizing unknown numbers or external contacts as "no oficial", "falso", "sospechoso" or "estafa/suplantación".
+     - Re-enforced that anything not in prompt or support document strictly has the status of *"no dispongo de información sobre eso"*, responding elegantly as an AI and offering human verification.
+  4. **Safety Net in `Formatear Respuesta` (`router_chatwoot_ia.json`)**:
+     - Added sanitizers **C.4** (intercepts false "no oficial" statements regarding TVTotal24 Colombia numbers and replaces with verified sister-platform confirmation).
+     - Added sanitizers **C.5** (intercepts false "no oficial" statements regarding TotalTv USA Miami number).
+     - Added sanitizers **C.6** (intercepts general hallucinated scam warnings or fraud accusations and replaces with polite AI out-of-scope response offering human handover).
+  5. **Deployment & Synchronization**:
+     - Updated live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) in n8n and published active version `5796ad24-4b6c-497f-9a56-b1db4362fa36`.
+     - Synchronized standalone workflows `agent_totaltv_usa.json` and `agent_tvtotal24_latina.json`.
+     - Exported all 19 workflows via `export_workflows.py`.
+     - Ensured strictly zero messages sent to customers during remediation.
