@@ -11,7 +11,7 @@
 * **Inbound Gateway**: Chatwoot Inboxes (Telegram, WhatsApp/Meta, API).
 * **Webhook Ingestion**: Chatwoot webhook posts `message_created` events to `https://n8n.ac4.club/webhook/chatwoot-inbound-webhook`.
 * **n8n Orchestration Workflow**: `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
-* **Debounce & Aggregation**: 3-second non-blocking wait (`Wait 3s`) + Chatwoot message query (`GET /messages`) + deduplication code node (`Preparar Mensaje`) that clusters consecutive lines into a single prompt.
+* **Debounce & Aggregation**: 8-second non-blocking rolling debounce wait (`Espera 8s`) + Chatwoot message query (`GET /messages`) + rolling reset check & aggregation code node (`Preparar Mensaje`) that clusters consecutive lines into a single prompt and resets the wait window for each new incoming line.
 * **LLM Engine**: **Anthropic Claude Haiku 4.5** (`claude-haiku-4-5`) via `@n8n/n8n-nodes-langchain.lmChatAnthropic` with credential `Anthropic account` (`ZbUWSAq6JlKInA64`).
   * **Sampling Parameters**: Deterministic greedy decoding (`temperature: 0`).
   * ⚠️ **STRICT MANDATE (NO OPENAI)**: OpenAI is permanently decommissioned. Under NO circumstance will OpenAI models be used.
@@ -1938,3 +1938,28 @@
      - Synchronized standalone workflows `agent_totaltv_usa.json` and `agent_tvtotal24_latina.json`.
      - Re-exported all 19 workflows via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 56. Extension of Rolling Debounce Wait Window to 8 Seconds & Timer Reset Verification (2026-09-24)
+
+* **Problem & User Requirement**:
+  - Customers frequently type thoughts across multiple short messages in quick succession (e.g. sending one line about price, followed 4-7 seconds later by a second line detailing signal issues or devices).
+  - The previous 5-second wait window was sometimes expiring before the customer finished typing their full message, leading to two split executions where the AI Agent responded to each fragment independently (resulting in disjointed/double responses).
+  - User requested: Increase the debounce wait time by 3 seconds (from 5s to 8s), ensuring the rolling reset rule is strictly preserved (i.e. every new message from the customer within the wait window resets the timer so all consecutive lines are aggregated into a single context for the AI Agent).
+
+* **Technical Implementation**:
+  1. **Wait Node Upgrade (`router_chatwoot_ia.json`)**:
+     - Renamed node `Espera 5s` $\to$ `Espera 8s` (`n8n-nodes-base.wait`, typeVersion 1.1).
+     - Explicitly configured parameters: `{"amount": 8, "unit": "seconds"}`.
+     - Updated connections: `¿Es mensaje entrante?` $\to$ `Espera 8s` $\to$ `Preparar Mensaje`.
+  2. **Dynamic Rolling Debounce & Timer Reset in `Preparar Mensaje`**:
+     - Updated rolling debounce logic in `Preparar Mensaje`:
+       * Measures elapsed time since latest incoming customer message: `elapsedMs = Date.now() - lastIncomingTimestamp`.
+       * If `lastIncomingTimestamp > 0 && elapsedMs < 7500`: The current execution yields (`skip_ai_response: true`, `reason: 'rolling_debounce_yield_to_newer_message'`) to allow the newer execution (which has its own full 8s wait window) to collect and process the complete accumulated context.
+       * When the 8-second window passes without new messages (`elapsedMs >= 7500`), all unhandled incoming messages since the assistant's last response are aggregated into a single unified prompt (`fullContent = combinedTextParts.join('\n')`).
+  3. **Deployment & Synchronization**:
+     - Live n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) updated via MCP (`update_workflow`).
+     - Local repository synchronized and verified via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.
+
