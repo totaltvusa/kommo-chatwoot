@@ -1993,3 +1993,24 @@
      - Deployed live to n8n workflows `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) and `xam0WV65gvTbXcIx` (`Transfer to Human Tool`).
      - Synchronized repository via `workflows/export_workflows.py`.
      - Zero messages sent to customers during testing and deployment.
+
+---
+
+### 58. TVTotal24 Simultaneous Device Limit Clarification (Up to 3 Active Screens per Account) (2026-09-26)
+
+* **Requirement & Problem**:
+  - In a live conversation, an agent mistakenly claimed TVTotal24 had no limit on simultaneous active screens/devices.
+  - TVTotal24 subscriptions operate on a **flat price per account** (1m: $8, 3m: $24, 6m: $48, 12m: $84, or Binance USDT discount: 1m: $5, 3m: $14, 12m: $50) and each account strictly allows **up to 3 screens/devices active simultaneously**.
+  - Unlike TotalTv USA, TVTotal24 does not charge tiered pricing per connection (which is not explained to the customer).
+
+* **Changes Implemented**:
+  1. **Knowledge Base Update (`knowledge/tvtotal24_latina_support.md`)**:
+     - Added FAQ Question P3 explaining that each TVTotal24 Latina account allows a maximum of **up to 3 simultaneous active devices/screens** included in the account price without extra connection fees. If a customer needs more than 3 simultaneous screens, an additional account is required.
+  2. **System Prompt Update (`prompts/tvtotal24_prompt.md`)**:
+     - Updated section `PRECIOS POR CUENTA, LÍMITE DE 3 PANTALLAS SIMULTÁNEAS Y PROHIBICIÓN DE COTIZAR POR DISPOSITIVO`.
+     - Explicitly prohibited stating that screens are unlimited or have no limit.
+     - Mandated that the agent does NOT ask for devices proactively, but if the customer asks how many devices can be used at the same time, it clearly answers: *"Cada cuenta de TVTotal24 permite conectar y usar hasta 3 pantallas o dispositivos activos al mismo tiempo sin costo adicional."*
+  3. **Live Deployment & Synchronization**:
+     - Deployed live update to n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
+     - Synchronized local repository with `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

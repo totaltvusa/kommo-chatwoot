@@ -80,14 +80,17 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
   - **6 Meses:** $48 USD
   - **12 Meses (1 Año):** $84 USD *(Súper Descuento con Binance USDT: $50 USD)*
 
-### P3: ¿Cuáles son los métodos de pago oficiales para TVTotal24 Latina?
+### P3: ¿Cuántos dispositivos o pantallas se pueden usar simultáneamente en TVTotal24 Latina?
+- **R:** Cada cuenta de TVTotal24 Latina permite un máximo de **hasta 3 pantallas o dispositivos activos al mismo tiempo (simultáneos)**. Nuestros precios son por cuenta completa y ya incluyen hasta 3 pantallas simultáneas sin costo adicional por conexión. Si el cliente requiere conectar más de 3 dispositivos en simultáneo, debe adquirir una cuenta adicional.
+
+### P4: ¿Cuáles son los métodos de pago oficiales para TVTotal24 Latina?
 - **R:** Disponemos de 3 métodos estándar:
   1. **Zelle**: Al correo `pagos@totaltvlatina.com` (Beneficiario oficial: **`ACR Enterprises`**).
   2. **Binance Pay (USDT)**: Al Pay ID **`22628239`** (con súper descuento especial).
   3. **Pago Móvil (Bolívares)**: Bancamiga, Tel: `04246861135`, RIF: `J405259221`, Beneficiario oficial: **`ArialStore C.A.`** (El agente calcula el monto exacto en Bs con la herramienta oficial).
   *(Excepción PayPal / Tarjetas)*: Únicamente si el cliente lo solicita expresamente, se genera un enlace de Card2Crypto con 10% de recargo sobre el plan base.
 
-### P4: ¿Cómo funciona la prueba gratuita (Free Trial) de TVTotal24?
+### P5: ¿Cómo funciona la prueba gratuita (Free Trial) de TVTotal24?
 - **R:** Ofrecemos una prueba gratuita de 4 horas continuas. Las 4 horas comienzan a correr **de inmediato** en el momento exacto en que se genera la prueba en el sistema. Por ello, antes de generarla, el agente solicita Nombre completo, Correo, Teléfono y confirma que el cliente tenga tiempo disponible en ese instante.
 
 ---
