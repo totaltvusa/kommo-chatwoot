@@ -1963,3 +1963,33 @@
      - Local repository synchronized and verified via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
 
+
+---
+
+### 57. Modular Knowledge Architecture: Brand-Separated Live Support Documents & Invariant System Prompts (2026-09-26)
+
+* **Problem & Architecture Evolution**:
+  - Previously, both AI Agents (TotalTv USA and TVTotal24 Latina) shared single-point configurations and a unified Google Doc (`TOTALTV_SUPPORT_DOC_ID`), requiring regex filtering and cluttering context windows with cross-brand rules and volatile troubleshooting instructions.
+  - Adding new device setup steps, troubleshooting fixes, and frequent FAQ Q&As directly to System Prompts risked token bloat, rule interference, and regression on immutable behavioral/security invariants.
+  - The solution is a **Modular Knowledge Base Architecture**:
+    1. **System Prompts (`prompts/agent_prompt.md` & `prompts/tvtotal24_prompt.md`)**: Maintain strictly immutable rules, identity boundaries, security constraints (Closed-Domain mandate, Zero Hallucination, Invariant Payment Beneficiaries, Two-Path Human Handover Protocol, 100% text chat mandate, Trial gates).
+    2. **Brand-Separated Knowledge Base Docs (`knowledge/totaltv_usa_support.md` & `knowledge/tvtotal24_latina_support.md`)**: Dynamic, live Google Docs/Markdown files containing brand-specific installation guides, app settings, troubleshooting solutions (e.g. VLC/ExoPlayer selection, Smarters alternative DNS URLs), pricing FAQs, and administrative policies.
+    3. **Dynamic n8n Routing & Integration**:
+       - Node `Procesar Soporte TotalTv` in `router_chatwoot_ia.json` dynamically routes Google Doc fetching based on brand:
+         * For TVTotal24 Latina: `$vars.TVTOTAL24_SUPPORT_DOC_ID || $vars.TOTALTV_SUPPORT_DOC_ID || '14VkDzxSnwQHZ6ezEZskeQ3lfLIXw5S0n2onK3I6yYdE'`.
+         * For TotalTv USA: `$vars.TOTALTV_USA_SUPPORT_DOC_ID || $vars.TOTALTV_SUPPORT_DOC_ID || '14VkDzxSnwQHZ6ezEZskeQ3lfLIXw5S0n2onK3I6yYdE'`.
+       - Node `Registrar Consulta Pendiente Google Doc` in `tool_transfer_to_human.json` appends unhandled pending queries directly to the respective brand's Google Doc for continuous knowledge enrichment.
+       - Synthesizer workflow: As the user supplies raw client questions and answers, Antigravity formats and commits them into the respective knowledge base file.
+
+* **Changes Implemented**:
+  1. **Knowledge Base Repository Files**:
+     - `knowledge/totaltv_usa_support.md`: Dedicated guide for TotalTv USA (Downloader code `5533902`, Firestick, Apple Smarters Lite, Smart TVs, Roku IBO Player, Webplayer `http://web.ip365.cx/`, player selection VLC/ExoPlayer troubleshooting, pricing, and FAQ).
+     - `knowledge/tvtotal24_latina_support.md`: Dedicated guide for TVTotal24 Latina (Downloader code `5533902`, Panel TotalTv Latina, Smarters alternative URLs `smrts.wxn.ch`, `cdn01link.uk`, `node01hub.uk`, single-price plans, Binance Pay, Pago Móvil, and FAQ).
+  2. **System Prompts & Workflow Synchronizations**:
+     - `prompts/agent_prompt.md` & `prompts/tvtotal24_prompt.md`: Cleaned and updated to reference brand-specific dynamic live knowledge documents.
+     - `workflows/router_chatwoot_ia.json`: Updated `Procesar Soporte TotalTv`, `AI Agent` (USA), and `AI Agent - TVTotal24` (Latina).
+     - `workflows/tool_transfer_to_human.json`: Updated `Registrar Consulta Pendiente Google Doc` to route by brand.
+  3. **Live Deployment & Verification**:
+     - Deployed live to n8n workflows `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) and `xam0WV65gvTbXcIx` (`Transfer to Human Tool`).
+     - Synchronized repository via `workflows/export_workflows.py`.
+     - Zero messages sent to customers during testing and deployment.
