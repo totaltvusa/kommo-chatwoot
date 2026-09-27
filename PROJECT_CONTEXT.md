@@ -2102,3 +2102,20 @@
      - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
      - Synchronized repository via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 63. Activation Pricing Invariants: Zero Discounts & Gateway Processing Fee Rules (2026-09-26)
+
+* **Requirement & Business Rule**:
+  - **Zero Discounts on Activations**: Application activation fees (SmartOne 1y: $4 USD, SmartOne Lifetime: $20 USD, IBO Player Lifetime: $20 USD, Multi-Player Lifetime: $25 USD) **NEVER carry any discount**, regardless of the payment method used (even when paying with Crypto in TotalTv USA or Binance Pay in TVTotal24 Latina).
+  - **Gateway Fees Apply**: If payment methods with processing fees are chosen (CashApp +10%, Card2Crypto / PayPal / Cards +10%), the 10% fee is added to the activation price ($4 -> $4.40 USD, $20 -> $22 USD, $25 -> $27.50 USD). Direct methods like Zelle or Pago Móvil receive the exact base price.
+
+* **Changes Implemented**:
+  1. **Knowledge Base Support Documents (`knowledge/totaltv_usa_support.md` & `knowledge/tvtotal24_latina_support.md`)**:
+     - Updated Section 1 (Smart TVs & Activation Terms) and FAQ P6 to reflect net non-discountable pricing and gateway fee additions.
+  2. **System Prompts & Live Workflows**:
+     - Updated `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
+     - Synchronized repository via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

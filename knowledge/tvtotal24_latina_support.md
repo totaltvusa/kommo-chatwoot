@@ -43,8 +43,10 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
        - Opción De por Vida (Lifetime): **$20 USD**.
      * **IBO Player**: **$20 USD** (pago único de por vida).
      * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: **$25 USD** (pago único de por vida).
-   - **Condiciones Clave**:
-     * Es un pago único de por vida para ese dispositivo en particular (ligado a su MAC y Device ID).
+   - **Condiciones Clave y Reglas de Pago**:
+     * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Binance Pay USDT (que tiene descuento en suscripciones), **la activación NO lleva descuento** ($4, $20 o $25 USD netos).
+     * **RECARGOS POR PASARELA**: Si el cliente solicita pagar con Card2Crypto (PayPal/Tarjetas), aplica el 10% de recargo sobre el valor base de la activación (ej. $4 -> $4.80, $20 -> $22.00, $25 -> $27.50 USD). En Zelle o Pago Móvil (a la tasa oficial) se abona el monto base.
+     * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (ligada a su MAC y Device ID).
      * **No transferible**: La activación no se puede transferir a otro dispositivo.
      * **Autogestión**: El cliente siempre puede gestionarla directamente con el desarrollador de la aplicación en su web oficial si lo prefiere.
 4. Abrir la app, seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o DNS Smarters: `http://cdn01link.uk:2095`).
@@ -119,7 +121,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
     * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida).
     * **IBO Player:** **$20 USD** (de por vida).
     * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** **$25 USD** (de por vida).
-    *(Pago para ese dispositivo específico, no transferible a otros equipos. El cliente también puede tramitarlo directamente con el desarrollador)*.
+    *(Precios netos: A las activaciones NO aplica ningún descuento, incluso si paga con Binance. En Card2Crypto/PayPal aplica el 10% de recargo. Pago exclusivo para ese dispositivo específico, no transferible)*.
   - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor y más recomendado usar nuestra app oficial TotalTv Latina descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS

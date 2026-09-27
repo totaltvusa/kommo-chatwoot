@@ -357,7 +357,10 @@ Provide these exact steps based on the customer's device:
   * **SmartOne IPTV**: $4 USD por 1 año, o $20 USD de por vida (lifetime).
   * **IBO Player**: $20 USD (activación de por vida).
   * **Apps del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, etc.)**: $25 USD (activación de por vida).
-- *(Reglas de activación)*: Pago para ese dispositivo específico (no transferible a otro equipo). El cliente siempre puede gestionarla directamente con el desarrollador si lo prefiere.
+- *(Reglas de pago de activaciones)*:
+  * **CERO DESCUENTOS**: A las activaciones NO aplica ningún descuento (incluso con Binance Pay, se paga el valor completo: $4, $20 o $25 USD netos).
+  * **RECARGOS POR PASARELA**: Si paga con Card2Crypto (PayPal/Tarjetas), se agrega el 10% de recargo ($4 -> $4.40, $20 -> $22, $25 -> $27.50 USD). En Zelle y Pago Móvil se paga el precio base.
+  * No transferible a otro equipo. El cliente puede gestionarla directamente con el desarrollador si lo prefiere.
 - Ingresar credenciales y URL de servidor: http://wk.mvpl.uk:2082 (o DNS Smarters http://cdn01link.uk:2095).
 
 4. Roku Devices:

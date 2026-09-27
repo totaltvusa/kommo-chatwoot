@@ -399,7 +399,11 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
       🎁 **TOTALTV USA 1-YEAR BONUS**: If customer buys any 1-Year (12 Months) TotalTv USA subscription (1, 2, or 3 devices, with or without adult content), they receive the 1-Year SmartOne IPTV activation for 1 device completely FREE as a gift!
     - **IBO Player**: $20 USD (lifetime activation for that specific device).
     - **Multi-Player ecosystem apps (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, etc.)**: $25 USD (lifetime activation for that specific device).
-  * Rules: Activation fee is for that specific device (non-transferable to another device). The customer can always activate directly with the developer if preferred.
+  * **Activation Pricing & Payment Rules**:
+    - **NO DISCOUNTS**: Activation fees NEVER carry any discount (even with Crypto, activation is paid at full raw price).
+    - **PROCESSING FEES**: Methods with fees (CashApp +10%, Card2Crypto / PayPal / Cards +10%) DO add the 10% fee to the activation price ($4 -> $4.40, $20 -> $22, $25 -> $27.50 USD). Zelle is base price ($4, $20, $25 USD).
+    - Non-transferable: Tied exclusively to that specific device MAC/Device ID.
+    - Self-service: The customer can always activate directly with the developer if preferred.
 - **Roku**: Search "IBO Player" (7 days free trial, then $20 USD lifetime activation).
 - **Web Browser / PC / Console**: Access http://web.ip365.cx/
 

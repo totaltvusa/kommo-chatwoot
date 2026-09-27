@@ -42,8 +42,10 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
      * **IBO Player**: $20 USD (pago único de por vida).
      * **SmartOne IPTV**: $20 USD (pago único de por vida).
      * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: $25 USD (pago único de por vida).
-   - **Condiciones Clave**:
-     * Es un pago único de por vida exclusivo para ese dispositivo específico (asociado a su MAC y Device ID).
+   - **Condiciones Clave y Reglas de Pago**:
+     * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Criptomonedas (que tienen 20% de descuento en planes de suscripción), **la activación NO lleva descuento**.
+     * **RECARGOS / FEES POR PASARELA**: Si se utilizan métodos de pago que incluyen comisión por procesamiento (CashApp +10%, Card2Crypto / Tarjetas / PayPal +10%), estos fees **SÍ se suman** al valor de la activación (ej. $4 base -> $4.40 USD, $20 base -> $22 USD, $25 base -> $27.50 USD). En Zelle se abona el precio base exacto ($4, $20 o $25 USD).
+     * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (asociada a su MAC y Device ID).
      * **No transferible**: Las activaciones no se pueden transferir a otro dispositivo.
      * **Autogestión**: El cliente siempre tiene la opción de gestionar el pago y la activación directamente por su cuenta en el sitio web oficial del desarrollador de la app.
 4. Abrir la aplicación instalada, seleccionar acceso por API de Xtream Codes (o proveer Dirección MAC y Device ID si la app lo solicita) e ingresar Usuario, Contraseña y URL del servidor: `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
@@ -115,7 +117,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
     * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis!)*.
     * **IBO Player:** **$20 USD** (de por vida).
     * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** **$25 USD** (de por vida).
-    *(Las activaciones son exclusivas para ese dispositivo específico y no son transferibles a otros equipos. El cliente también puede gestionarlo directamente con el desarrollador si lo prefiere)*.
+    *(Precios netos: A las activaciones NO aplica ningún descuento, incluso si paga con Crypto. En métodos con comisión como CashApp o Card2Crypto/PayPal se suma el 10% de recargo. Son pagos exclusivos para ese dispositivo específico, no transferibles)*.
   - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor utilizar nuestra app nativa oficial TotalTv USA descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
