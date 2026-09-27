@@ -351,10 +351,10 @@ Provide these exact steps based on the customer's device:
 - Ingresar credenciales (usuario, contraseña y URL http://wk.mvpl.uk:2082 o DNS Smarters http://cdn01link.uk:2095).
 - Alternativas si falla Smarters: XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.
 
-3. Smart TVs sin Android (LG WebOS, Samsung Tizen, Hisense VIDAA):
-- Instalar **SmartOne IPTV** (muy recomendada), **IBO Player**, **IPTV Smarters** o apps de `https://multi-player.app/en/apps-store` (Multi-Player).
-- *(Nota de activación)*: SmartOne, IBO Player y MultiPlayer tienen período de prueba gratuito y luego requieren un pago único de activación de por vida con sus desarrolladores.
-- Ingresar credenciales y URL de servidor.
+3. Smart TVs sin Android (LG WebOS, Samsung Tizen, Hisense VIDAA, WhaleOS):
+- Recomendar apps de la tienda de la TV: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player**.
+- *(Nota de activación)*: Reproductores de terceros como SmartOne, IBO Player, PRO Player ofrecen un período de prueba gratuito y luego requieren un pago único de activación de por vida con sus desarrolladores. (NUNCA enviar enlaces web de tiendas a clientes; recomendar las apps directamente por su nombre en la tienda de su televisor).
+- Ingresar credenciales y URL de servidor: http://wk.mvpl.uk:2082 (o DNS Smarters http://cdn01link.uk:2095).
 
 4. Roku Devices:
 - Instalar "IBO Player" (período de prueba gratuito, luego activación de por vida).

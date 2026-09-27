@@ -2035,3 +2035,28 @@
      - Live n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) updated via MCP.
      - Synchronized repository with `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 60. Direct App Recommendations per OS / Smart TV Ecosystem (No External Store Links) (2026-09-26)
+
+* **Requirement & Rule**:
+  - The AI Agents must **NEVER send external website store links** (e.g. `multi-player.app`) to customers.
+  - Instead, the knowledge base and agents must directly know and recommend the exact store apps compatible with each operating system / Smart TV brand by name:
+    * **Samsung Smart TV (Tizen)**: `SmartOne IPTV`, `IBO Player`, `IPTV Smarters`, `HD Media Player`, `IPTV 4K`, `IPTV Pro`, `PRO Player`, `IPTV Stream Player`, `IPTV Play`, `IPTV OTT Player`.
+    * **LG Smart TV (webOS)**: `SmartOne IPTV`, `IBO Player`, `IPTV Smarters`, `HD Media Player`, `IPTV 4K`, `IPTV Pro`, `PRO Player`, `IPTV Stream Player`, `IPTV Play`, `IPTV OTT Player`.
+    * **Hisense (VIDAA OS) & WhaleOS / Zeasn (Philips, TCL non-Android)**: `SmartOne IPTV`, `IBO Player`, `IPTV Smarters`, `PRO Player`, `IPTV Stream Player`, `HD Media Player`.
+    * **Roku (Roku OS)**: `IBO Player`.
+    * **Apple iOS / tvOS (iPhone, iPad, Apple TV)**: `Smarters Player Lite`, `IBO Player`, `IPTV Smarters Pro`.
+    * **Android Devices (Firestick, Google TV, Android TV, Onn Box, Android Phones)**: Always prioritize our official native TotalTv app via Downloader (`5533902`).
+  - Third-party app activation model (trial period followed by a one-time lifetime activation with the app developers) is explained clearly in text without external links.
+
+* **Changes Implemented**:
+  1. **Knowledge Base Documents (`knowledge/totaltv_usa_support.md` & `knowledge/tvtotal24_latina_support.md`)**:
+     - Removed all external website store links.
+     - Documented the concrete breakdown of store application names per operating system.
+  2. **System Prompts & n8n Live Workflows**:
+     - Updated `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
+     - Synchronized repository via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

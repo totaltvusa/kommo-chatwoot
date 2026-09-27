@@ -29,15 +29,14 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
    - **URL / DNS:** `http://wk.mvpl.uk:2082` *(o DNS Smarters: `http://cdn01link.uk:2095`)*
 4. *(Apps alternativas en Apple si Smarters falla)*: **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
 
-### C. Smart TVs (LG WebOS, Samsung Tizen, Hisense VIDAA, u otros sin Android)
-1. Abrir la tienda oficial de aplicaciones del televisor (**LG Content Store / Apps** o **Samsung Apps**).
-2. Instalar cualquiera de las aplicaciones recomendadas:
-   - **SmartOne IPTV** *(altamente recomendada para Smart TVs Samsung y LG)*.
-   - **IBO Player** *(opción popular en Smart TVs y Roku)*.
-   - Aplicaciones listadas y disponibles en el catálogo de **`https://multi-player.app/en/apps-store`** (como **Multi-Player** para diferentes sistemas).
-   - Otras alternativas de la tienda: **IPTV SMARTERS**, **XCIPTV**, **SMART IPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
-3. *(Activación de aplicaciones de terceros)*: Reproductores como **SmartOne**, **IBO Player** y **MultiPlayer** tienen un período de prueba gratuito otorgado por sus desarrolladores; luego requieren un pago único de **activación de por vida (lifetime)** directamente en su web oficial.
-4. Ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o DNS Smarters: `http://cdn01link.uk:2095`).
+### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
+1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
+2. Buscar e instalar cualquiera de las aplicaciones recomendadas según la marca y sistema del televisor:
+   - **Samsung Smart TV (Tizen)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+   - **LG Smart TV (webOS)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+   - **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL, marcas sin Android)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
+3. *(Condición de activación de aplicaciones de terceros)*: Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., cuentan con un período de prueba gratuito otorgado por sus desarrolladores; luego requieren un pago único de **activación de por vida (lifetime)** en el portal de la app.
+4. Abrir la app, seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o DNS Smarters: `http://cdn01link.uk:2095`).
 
 ### D. Dispositivos Roku
 1. Buscar e instalar la app **"IBO Player"** desde la Roku Channel Store.
@@ -103,8 +102,8 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 
 ---
 
-### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android (Samsung, LG, etc.)?
-- **R:** En Smart TVs sin sistema Android (como Samsung Tizen o LG WebOS), puedes instalar aplicaciones como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters** o las aplicaciones compatibles disponibles en **`https://multi-player.app/en/apps-store`** (Multi-Player). Estas apps (SmartOne, IBO Player, MultiPlayer) brindan un período de prueba gratuito y luego solicitan un pago único de activación de por vida a sus desarrolladores. Por el contrario, para dispositivos **Android o Firestick, siempre es mucho mejor utilizar nuestra app oficial TotalTv Latina descargada mediante Downloader (código 5533902)**.
+### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android (Samsung, LG, Hisense, etc.)?
+- **R:** En televisores inteligentes con sistemas de fábrica (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), puedes instalar desde la tienda de la TV aplicaciones como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**. Estas aplicaciones cuentan con un período de prueba gratuito y luego solicitan un pago único de activación de por vida directamente a sus desarrolladores. En cambio, para dispositivos con **Android, Firestick o Google TV, siempre es mucho mejor y más recomendado usar nuestra app oficial TotalTv Latina descargada mediante Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 

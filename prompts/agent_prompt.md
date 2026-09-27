@@ -390,7 +390,7 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
 - Provide instructions ONLY when the customer explicitly asks how to install, or indicates which specific device they want to use:
 - **Android Devices (Firestick / Android TV / Google TV / Onn Box / Android Phones)**: In Android devices, IT IS ALWAYS BEST to use our native TotalTv USA app! Download "Downloader", enter code `5533902` (or direct link http://aftv.news/5533902), install TotalTv USA, choose panel TOTALTV USA, login with credentials.
 - **Apple Devices (iPhone, iPad, Apple TV, Mac)**: Install "Smarters Player Lite" from App Store, enter login credentials and DNS http://hbptsjrw.sljur.com.
-- **Smart TVs non-Android (Samsung / LG / VIDAA)**: Install **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, or apps from `https://multi-player.app/en/apps-store` (Multi-Player). (Note: SmartOne, IBO Player, and MultiPlayer have a free trial period followed by a one-time lifetime activation fee with their developers).
+- **Smart TVs non-Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS)**: Recommend store apps: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player**. (Note: Third-party apps like SmartOne, IBO Player, PRO Player offer a free trial period followed by a one-time lifetime activation fee with their developers). (NEVER send external website store links to customers; recommend the apps directly by name from their TV store).
 - **Roku**: Search "IBO Player" (7 days free trial, then lifetime activation fee).
 - **Web Browser / PC / Console**: Access http://web.ip365.cx/
 
