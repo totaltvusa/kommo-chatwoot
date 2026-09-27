@@ -2060,3 +2060,27 @@
      - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
      - Synchronized repository via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 61. Third-Party App Activation Assistance & Pricing Rules (2026-09-26)
+
+* **Requirement & Business Rule**:
+  - For Smart TV applications requiring lifetime activation (IBO Player, SmartOne IPTV, and Multi-Player ecosystem apps), our customer support team can assist clients with the activation process.
+  - **Official Activation Fees**:
+    * **IBO Player**: $20 USD (lifetime one-time activation for that specific device).
+    * **SmartOne IPTV**: $20 USD (lifetime one-time activation for that specific device).
+    * **Multi-Player ecosystem apps** (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.): $25 USD (lifetime one-time activation for that specific device).
+  - **Invariants**:
+    * Each activation is a one-time lifetime payment tied exclusively to that physical device (MAC address and Device ID) and is strictly **non-transferable** to other devices.
+    * The customer always retains the option to self-manage and pay for their activation directly on the official app developer's website.
+
+* **Changes Implemented**:
+  1. **Knowledge Base Documents (`knowledge/totaltv_usa_support.md` & `knowledge/tvtotal24_latina_support.md`)**:
+     - Updated Section 1 (Smart TV Installation Guide) with activation assistance terms, pricing breakdown ($20 / $25), and non-transferability rule.
+     - Updated FAQ P6 with the complete activation assistance policy.
+  2. **System Prompts & Live Workflows**:
+     - Updated on-demand installation sections of `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
+     - Synchronized repository with `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

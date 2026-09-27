@@ -36,7 +36,16 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
    - **Samsung Smart TV (Tizen)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
    - **LG Smart TV (webOS)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
    - **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL sin Android)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
-3. *(Condición de activación de aplicaciones de terceros)*: Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K** y similares ofrecen un período de prueba gratuito de varios días por parte de sus desarrolladores; luego requieren un pago único de **activación de por vida (lifetime)** directamente en el portal de la app.
+3. *(Servicio de Activación de Aplicaciones de Terceros)*:
+   - Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., ofrecen un período de prueba gratuito por parte de sus desarrolladores.
+   - **Asistencia de Activación por nuestro equipo**: Podemos ayudar al cliente a tramitar y activar su aplicación de forma directa:
+     * **IBO Player**: $20 USD (pago único de por vida).
+     * **SmartOne IPTV**: $20 USD (pago único de por vida).
+     * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: $25 USD (pago único de por vida).
+   - **Condiciones Clave**:
+     * Es un pago único de por vida exclusivo para ese dispositivo específico (asociado a su MAC y Device ID).
+     * **No transferible**: Las activaciones no se pueden transferir a otro dispositivo.
+     * **Autogestión**: El cliente siempre tiene la opción de gestionar el pago y la activación directamente por su cuenta en el sitio web oficial del desarrollador de la app.
 4. Abrir la aplicación instalada, seleccionar acceso por API de Xtream Codes (o proveer Dirección MAC y Device ID si la app lo solicita) e ingresar Usuario, Contraseña y URL del servidor: `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
 
 ### D. Dispositivos Roku
@@ -100,8 +109,14 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ---
 
-### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android (Samsung, LG, Hisense, etc.)?
-- **R:** En televisores inteligentes con sistemas propios (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), puedes buscar e instalar en la tienda de la TV aplicaciones como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**. Estas aplicaciones de terceros incluyen un período de prueba gratuito y posteriormente solicitan un pago único de activación de por vida a sus desarrolladores. En cambio, para dispositivos con **Android, Firestick o Google TV, siempre es mucho mejor utilizar nuestra aplicación nativa TotalTv USA descargada mediante Downloader (código 5533902)**.
+### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android y cómo se activan?
+- **R:** En televisores inteligentes con sistemas propios (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), puedes instalar aplicaciones de la tienda como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
+  - **Activación**: Estas aplicaciones ofrecen una prueba gratuita inicial. Si el cliente desea, **nosotros podemos ayudarle con la activación de por vida**:
+    * **IBO Player:** $20 USD.
+    * **SmartOne IPTV:** $20 USD.
+    * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** $25 USD.
+    *(Es un pago único de por vida para ese dispositivo específico, no transferible a otros equipos. El cliente también puede gestionarlo directamente con el desarrollador si lo prefiere)*.
+  - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor utilizar nuestra app nativa oficial TotalTv USA descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 
