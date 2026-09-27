@@ -122,6 +122,13 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 
+- **Caso — Incentivo Especial: Descuento del 5% en Zelle para planes mayores a $30 USD:**
+  - *Condición de activación*: Cuando un cliente de TotalTv USA solicita pagar una **suscripción cuyo monto base supere los $30 USD** (ej. $36, $48, $60, $72, $90, $105, $120) utilizando métodos con 10% de recargo (**CashApp**, **Tarjetas de crédito/débito** o **PayPal vía Card2Crypto**).
+  - *Instrucción para el Agente IA*: Además de generar o suministrar el enlace de pago con el 10% de recargo, se le ofrece proactivamente el incentivo de Zelle:
+    - *En Español*: "¿Estás seguro? ¡Puedo ofrecerte un 5% de descuento si pagas usando Zelle! En lugar de pagar $(MontoBase + 10%), pagarías solo $(MontoBase - 5%)."
+    - *En English*: "Are you sure? I can offer you a 5% discount if you pay using Zelle! Instead of paying $(BasePrice + 10%), you would pay only $(BasePrice - 5%)."
+  - *⛔ EXCLUSIÓN ESTRICTA*: Esta oferta NO aplica bajo ninguna circunstancia a pagos de activaciones de aplicaciones (SmartOne, IBO Player, Multi-Player). Es exclusiva para planes de suscripción mayores a $30.
+
 *(Esta sección se actualiza continuamente con las nuevas preguntas, situaciones especiales y respuestas oficiales aprobadas por la administración para TotalTv USA).*
 
 - **Caso — Consulta sobre actualización de catálogo de películas/series:**

@@ -2119,3 +2119,22 @@
      - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
      - Synchronized repository via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 64. TotalTv USA Zelle 5% Discount Incentive for Plans > $30 (2026-09-26)
+
+* **Requirement & Business Rule**:
+  - For **TotalTv USA** customers requesting payment methods with a 10% fee (CashApp, Card2Crypto, Credit/Debit Cards, PayPal) for subscription plans where the **raw base price is greater than $30 USD** (e.g. $36, $48, $60, $72, $90, $105, $120):
+    * The agent provides the requested payment link and simultaneously offers the **5% Zelle discount alternative**:
+      *"¿Estás seguro? ¡Puedo ofrecerte un 5% de descuento si pagas usando Zelle! En lugar de pagar $(Base + 10%), pagarías solo $(Base - 5%)."*
+  - **Strict Invariant**: This incentive **NEVER applies to application activations** (SmartOne, IBO Player, Multi-Player).
+
+* **Changes Implemented**:
+  1. **Knowledge Base Support Document (`knowledge/totaltv_usa_support.md`)**:
+     - Added learned case in Section 4 detailing the 5% Zelle conversion incentive and the activation exclusion.
+  2. **System Prompt & Live Workflow**:
+     - Updated `prompts/agent_prompt.md` in the Card/PayPal/CashApp section.
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
+     - Synchronized repository via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.
