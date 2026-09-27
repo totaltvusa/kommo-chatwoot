@@ -264,6 +264,7 @@ If responding in English:
   - 2 Devices: $105
   - 3 Devices: $120
   *(Optional Adult Content: +$20)*
+  *(🎁 BONUS: Includes 1 Year of SmartOne IPTV activation for 1 device FREE!)*
 
 If responding in Spanish:
 • **1 Mes:**
@@ -289,6 +290,7 @@ If responding in Spanish:
   - 2 Dispositivos: $105
   - 3 Dispositivos: $120
   *(Contenido Adulto opcional: +$20)*
+  *(🎁 BENEFICIO: ¡Incluye 1 Año de activación de SmartOne IPTV para 1 dispositivo GRATIS!)*
 
 --------------------------------------------------
 PAYMENT METHODS PRESENTATION RULES
@@ -393,10 +395,11 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
 - **Smart TVs non-Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) & App Activation**:
   * Recommend store apps: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recommend directly by name, never send external links).
   * **Activation Assistance**: We can help customers activate their third-party apps:
+    - **SmartOne IPTV**: $4 USD for 1 Year, or $20 USD for Lifetime activation.
+      🎁 **TOTALTV USA 1-YEAR BONUS**: If customer buys any 1-Year (12 Months) TotalTv USA subscription (1, 2, or 3 devices, with or without adult content), they receive the 1-Year SmartOne IPTV activation for 1 device completely FREE as a gift!
     - **IBO Player**: $20 USD (lifetime activation for that specific device).
-    - **SmartOne IPTV**: $20 USD (lifetime activation for that specific device).
     - **Multi-Player ecosystem apps (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, etc.)**: $25 USD (lifetime activation for that specific device).
-  * Rules: Lifetime one-time fee for that specific device (non-transferable to another device). The customer can always activate directly with the developer if preferred.
+  * Rules: Activation fee is for that specific device (non-transferable to another device). The customer can always activate directly with the developer if preferred.
 - **Roku**: Search "IBO Player" (7 days free trial, then $20 USD lifetime activation).
 - **Web Browser / PC / Console**: Access http://web.ip365.cx/
 

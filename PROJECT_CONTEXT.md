@@ -2084,3 +2084,21 @@
      - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
      - Synchronized repository with `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 62. SmartOne 1-Year Activation ($4 USD) & TotalTv USA 1-Year Annuality Bonus (2026-09-26)
+
+* **Requirement & Business Rule**:
+  - **SmartOne 1-Year Activation**: For both brands (TotalTv USA and TVTotal24 Latina), we can assist customers with activating **SmartOne IPTV for 1 Year** at **$4 USD** (as an alternative to the $20 USD lifetime activation).
+  - **TotalTv USA 1-Year Bundle Gift**: When a customer purchases any **1-Year (12 Months)** subscription of TotalTv USA (1 device: $90, 2 devices: $105, 3 devices: $120, with or without adult content), **we include 1 year of SmartOne IPTV activation for 1 device completely FREE as a gift**.
+
+* **Changes Implemented**:
+  1. **Knowledge Base Support Documents**:
+     - `knowledge/totaltv_usa_support.md`: Updated Section 1 (Smart TVs) and FAQ P6 with the $4/1-yr SmartOne option and the 1-Year TotalTv USA gift promotion.
+     - `knowledge/tvtotal24_latina_support.md`: Updated Section 1 (Smart TVs) and FAQ P6 with the $4/1-yr SmartOne option.
+  2. **System Prompts & Live Workflows**:
+     - Updated pricing and installation sections of `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md`.
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
+     - Synchronized repository via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

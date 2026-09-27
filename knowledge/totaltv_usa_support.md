@@ -111,11 +111,11 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android y cómo se activan?
 - **R:** En televisores inteligentes con sistemas propios (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), puedes instalar aplicaciones de la tienda como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
-  - **Activación**: Estas aplicaciones ofrecen una prueba gratuita inicial. Si el cliente desea, **nosotros podemos ayudarle con la activación de por vida**:
-    * **IBO Player:** $20 USD.
-    * **SmartOne IPTV:** $20 USD.
-    * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** $25 USD.
-    *(Es un pago único de por vida para ese dispositivo específico, no transferible a otros equipos. El cliente también puede gestionarlo directamente con el desarrollador si lo prefiere)*.
+  - **Activación**: Estas aplicaciones ofrecen una prueba gratuita inicial. Si el cliente desea, **nosotros podemos ayudarle con la activación**:
+    * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis!)*.
+    * **IBO Player:** **$20 USD** (de por vida).
+    * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** **$25 USD** (de por vida).
+    *(Las activaciones son exclusivas para ese dispositivo específico y no son transferibles a otros equipos. El cliente también puede gestionarlo directamente con el desarrollador si lo prefiere)*.
   - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor utilizar nuestra app nativa oficial TotalTv USA descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS

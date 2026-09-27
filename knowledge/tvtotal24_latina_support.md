@@ -38,9 +38,11 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
 3. *(Servicio de Activación de Aplicaciones de Terceros)*:
    - Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., cuentan con un período de prueba gratuito por parte de sus desarrolladores.
    - **Asistencia de Activación por nuestro equipo**: Podemos ayudar al cliente a tramitar y activar su aplicación:
-     * **IBO Player**: $20 USD (pago único de por vida).
-     * **SmartOne IPTV**: $20 USD (pago único de por vida).
-     * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: $25 USD (pago único de por vida).
+     * **SmartOne IPTV**:
+       - Opción 1 Año: **$4 USD**.
+       - Opción De por Vida (Lifetime): **$20 USD**.
+     * **IBO Player**: **$20 USD** (pago único de por vida).
+     * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: **$25 USD** (pago único de por vida).
    - **Condiciones Clave**:
      * Es un pago único de por vida para ese dispositivo en particular (ligado a su MAC y Device ID).
      * **No transferible**: La activación no se puede transferir a otro dispositivo.
@@ -113,11 +115,11 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 
 ### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android y cómo se activan?
 - **R:** En televisores inteligentes con sistemas de fábrica (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), puedes instalar aplicaciones como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
-  - **Activación**: Estas aplicaciones cuentan con prueba gratuita inicial. Si el cliente lo desea, **nosotros podemos ayudarle con la activación de por vida**:
-    * **IBO Player:** $20 USD.
-    * **SmartOne IPTV:** $20 USD.
-    * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** $25 USD.
-    *(Pago único de por vida para ese dispositivo específico, no transferible a otros equipos. El cliente también puede tramitarlo directamente con el desarrollador)*.
+  - **Activación**: Estas aplicaciones cuentan con prueba gratuita inicial. Si el cliente lo desea, **nosotros podemos ayudarle con la activación**:
+    * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida).
+    * **IBO Player:** **$20 USD** (de por vida).
+    * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** **$25 USD** (de por vida).
+    *(Pago para ese dispositivo específico, no transferible a otros equipos. El cliente también puede tramitarlo directamente con el desarrollador)*.
   - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor y más recomendado usar nuestra app oficial TotalTv Latina descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS

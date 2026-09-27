@@ -353,11 +353,11 @@ Provide these exact steps based on the customer's device:
 
 3. Smart TVs sin Android (LG WebOS, Samsung Tizen, Hisense VIDAA, WhaleOS) y Activación de Apps:
 - Recomendar apps de la tienda: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recomendar directamente por nombre, nunca enviar enlaces externos).
-- **Asistencia de Activación**: Podemos ayudar al cliente a tramitar su activación de por vida:
+- **Asistencia de Activación**: Podemos ayudar al cliente a tramitar la activación de su app:
+  * **SmartOne IPTV**: $4 USD por 1 año, o $20 USD de por vida (lifetime).
   * **IBO Player**: $20 USD (activación de por vida).
-  * **SmartOne IPTV**: $20 USD (activación de por vida).
   * **Apps del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, etc.)**: $25 USD (activación de por vida).
-- *(Reglas de activación)*: Pago único de por vida para ese dispositivo específico (no transferible a otro equipo). El cliente siempre puede gestionarla directamente con el desarrollador si lo prefiere.
+- *(Reglas de activación)*: Pago para ese dispositivo específico (no transferible a otro equipo). El cliente siempre puede gestionarla directamente con el desarrollador si lo prefiere.
 - Ingresar credenciales y URL de servidor: http://wk.mvpl.uk:2082 (o DNS Smarters http://cdn01link.uk:2095).
 
 4. Roku Devices:
