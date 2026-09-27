@@ -2014,3 +2014,24 @@
      - Deployed live update to n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
      - Synchronized local repository with `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 59. Integration of SmartOne, Multi-Player and Native Android App Best Practices (2026-09-26)
+
+* **Requirement & Context**:
+  - For non-Android Smart TVs (Samsung Tizen, LG WebOS, VIDAA, etc.) across both brands (TotalTv USA and TVTotal24 Latina), customers can use dedicated store apps like **SmartOne IPTV**, **IBO Player**, or any of the apps listed in **`https://multi-player.app/en/apps-store`** (Multi-Player).
+  - Third-party apps (SmartOne, IBO Player, Multi-Player) offer a free trial period and subsequently require a one-time lifetime activation fee paid directly to the app developers.
+  - On any Android device (Firestick, Android TV, Google TV, Onn Box, Android TV Box, Android smartphones), it is **always best to use the official native TotalTv app downloaded via Downloader (code `5533902`)**.
+
+* **Changes Implemented**:
+  1. **Knowledge Base Support Documents**:
+     - Updated `knowledge/totaltv_usa_support.md`: Added Android golden rule, non-Android Smart TV guide featuring SmartOne, IBO Player, and Multi-Player, plus FAQ P6.
+     - Updated `knowledge/tvtotal24_latina_support.md`: Added Android golden rule, non-Android Smart TV guide featuring SmartOne, IBO Player, and Multi-Player, plus FAQ P6.
+  2. **System Prompts & Workflows**:
+     - Updated `prompts/agent_prompt.md` and `prompts/tvtotal24_prompt.md` in the on-demand installation section.
+     - Updated nodes `AI Agent` and `AI Agent - TVTotal24` in `workflows/router_chatwoot_ia.json`.
+  3. **Live Deployment & Synchronization**:
+     - Live n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) updated via MCP.
+     - Synchronized repository with `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

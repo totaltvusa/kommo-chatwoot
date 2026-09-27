@@ -10,6 +10,8 @@
 El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming, televisores inteligentes, computadoras y smartphones en toda Latinoamérica y el mundo hispanohablante.
 
 ### A. Firestick / Android TV / Google TV / Onn Box / TV Boxes
+> 💡 **Regla de Oro para Android**: En dispositivos con sistema Android, **siempre es mejor y altamente recomendado utilizar nuestra aplicación oficial nativa TotalTv Latina**, descargada con Downloader. Garantiza la mejor experiencia, interfaz y estabilidad.
+
 1. Descargar e instalar la aplicación gratuita **"Downloader"** desde la tienda de aplicaciones.
 2. Abrir **Downloader** e ingresar el código numérico de descarga rápida: **`5533902`**.
 3. El sistema descargará e instalará la aplicación oficial **TotalTv Latina**.
@@ -27,9 +29,15 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
    - **URL / DNS:** `http://wk.mvpl.uk:2082` *(o DNS Smarters: `http://cdn01link.uk:2095`)*
 4. *(Apps alternativas en Apple si Smarters falla)*: **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
 
-### C. Smart TVs (LG WebOS, Samsung Tizen, Hisense VIDAA)
-1. Instalar cualquiera de las apps disponibles en la tienda de la TV: **IPTV SMARTERS**, **XCIPTV**, **SMART IPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
-2. Ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o `http://cdn01link.uk:2095`).
+### C. Smart TVs (LG WebOS, Samsung Tizen, Hisense VIDAA, u otros sin Android)
+1. Abrir la tienda oficial de aplicaciones del televisor (**LG Content Store / Apps** o **Samsung Apps**).
+2. Instalar cualquiera de las aplicaciones recomendadas:
+   - **SmartOne IPTV** *(altamente recomendada para Smart TVs Samsung y LG)*.
+   - **IBO Player** *(opción popular en Smart TVs y Roku)*.
+   - Aplicaciones listadas y disponibles en el catálogo de **`https://multi-player.app/en/apps-store`** (como **Multi-Player** para diferentes sistemas).
+   - Otras alternativas de la tienda: **IPTV SMARTERS**, **XCIPTV**, **SMART IPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
+3. *(Activación de aplicaciones de terceros)*: Reproductores como **SmartOne**, **IBO Player** y **MultiPlayer** tienen un período de prueba gratuito otorgado por sus desarrolladores; luego requieren un pago único de **activación de por vida (lifetime)** directamente en su web oficial.
+4. Ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o DNS Smarters: `http://cdn01link.uk:2095`).
 
 ### D. Dispositivos Roku
 1. Buscar e instalar la app **"IBO Player"** desde la Roku Channel Store.
@@ -94,6 +102,9 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 - **R:** Ofrecemos una prueba gratuita de 4 horas continuas. Las 4 horas comienzan a correr **de inmediato** en el momento exacto en que se genera la prueba en el sistema. Por ello, antes de generarla, el agente solicita Nombre completo, Correo, Teléfono y confirma que el cliente tenga tiempo disponible en ese instante.
 
 ---
+
+### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android (Samsung, LG, etc.)?
+- **R:** En Smart TVs sin sistema Android (como Samsung Tizen o LG WebOS), puedes instalar aplicaciones como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters** o las aplicaciones compatibles disponibles en **`https://multi-player.app/en/apps-store`** (Multi-Player). Estas apps (SmartOne, IBO Player, MultiPlayer) brindan un período de prueba gratuito y luego solicitan un pago único de activación de por vida a sus desarrolladores. Por el contrario, para dispositivos **Android o Firestick, siempre es mucho mejor utilizar nuestra app oficial TotalTv Latina descargada mediante Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 

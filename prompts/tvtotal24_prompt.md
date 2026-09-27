@@ -340,33 +340,29 @@ INSTALLATION INSTRUCTIONS
 --------------------------------------------------
 Provide these exact steps based on the customer's device:
 
-1. Android TvBoxes / Onn / Firestick / Google TV / Android TV:
-- Install the app "Downloader".
-- Open Downloader and enter code: 5533902 to download our native app.
-- Open the app, choose panel TOTALTV LATINA, and enter login credentials (username and password).
-- For a better experience: go to Settings → Other Settings and select "OTR LAYOUT".
+1. Android TvBoxes / Onn / Firestick / Google TV / Android TV / Celulares Android:
+- **Regla de Oro**: En dispositivos Android SIEMPRE es mejor y más recomendado usar nuestra aplicación nativa TotalTv Latina.
+- Instalar la app "Downloader", abrir e ingresar código: `5533902` (o enlace http://aftv.news/5533902) para descargar la app oficial.
+- Abrir la app, elegir panel TOTALTV LATINA e ingresar credenciales (usuario y contraseña).
+- Para mejor experiencia: ir a Ajustes → Otros Ajustes y seleccionar "OTR LAYOUT".
 
-2. Apple Devices (iPhone, iPad, Apple TV):
-- Search and install "Smarters Player Lite" from the App Store.
-- Enter login credentials (username, password, and URL).
-- Alternative apps if Smarters Player Lite fails: XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.
+2. Apple Devices (iPhone, iPad, Apple TV, Mac):
+- Descargar "Smarters Player Lite" desde App Store.
+- Ingresar credenciales (usuario, contraseña y URL http://wk.mvpl.uk:2082 o DNS Smarters http://cdn01link.uk:2095).
+- Alternativas si falla Smarters: XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.
 
-3. Smart TVs (LG WebOS, Samsung Tizen, or non-Android Smart TVs):
-- Install any of these apps from the TV Store: IPTV SMARTERS, XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.
-- Enter login credentials.
+3. Smart TVs sin Android (LG WebOS, Samsung Tizen, Hisense VIDAA):
+- Instalar **SmartOne IPTV** (muy recomendada), **IBO Player**, **IPTV Smarters** o apps de `https://multi-player.app/en/apps-store` (Multi-Player).
+- *(Nota de activación)*: SmartOne, IBO Player y MultiPlayer tienen período de prueba gratuito y luego requieren un pago único de activación de por vida con sus desarrolladores.
+- Ingresar credenciales y URL de servidor.
 
 4. Roku Devices:
-- Search and install "IBO Player" (free for 7 days, then a $20 one-time fee to continue using it).
-- Enter login credentials, or ask customer support to enter them (MAC address and device ID required).
+- Instalar "IBO Player" (período de prueba gratuito, luego activación de por vida).
+- Ingresar credenciales o suministrar Dirección MAC y Device ID para configuración.
 
-5. Android Smartphones:
-- Install the app from this link: http://aftv.news/5533902
-- Once installed, open the app, choose panel TOTALTV LATINA, and enter login credentials (username and password).
-- For a better experience: go to Settings → Other Settings and select "OTR LAYOUT".
-
-6. Game consoles (Xbox, Playstation, etc) OR Computers (PC, Laptop, etc):
-- Best option is to use our webplayer: http://player.cooteg.ch:2095/player
-- Enter login credentials (username, password).
+5. Computadoras y Consolas de Videojuegos:
+- Reproductor web oficial: http://player.cooteg.ch:2095/player
+- Ingresar credenciales directamente en el navegador.
 
 --------------------------------------------------
 SOPORTE DE CREDENCIALES Y ACCESOS PARA CLIENTES EXISTENTES (RECUPERACIÓN AUTOMÁTICA CON TOOL)

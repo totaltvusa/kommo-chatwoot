@@ -388,12 +388,11 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
 --------------------------------------------------
 - NEVER dump or send these installation instructions upfront when creating/delivering a trial!
 - Provide instructions ONLY when the customer explicitly asks how to install, or indicates which specific device they want to use:
-- Firestick / Android TV / Google TV: Download "Downloader", enter code `5533902`, install TotalTv USA, choose panel TOTALTV USA, login with credentials.
-- Android Smartphones: Install the app from this link: http://aftv.news/5533902, open the app, choose panel TOTALTV USA, login with credentials.
-- Apple Devices (iPhone, iPad, Apple TV): Install "IPTV Smarters" from App Store, enter login credentials.
-- Smart TVs (Samsung / LG): Install IPTV Smarters, XCIPTV, or Smart IPTV from TV Store.
-- Roku: Search "IBO Player" (7 days free, then $20 activation).
-- Web Browser / PC / Console: Access http://web.ip365.cx/
+- **Android Devices (Firestick / Android TV / Google TV / Onn Box / Android Phones)**: In Android devices, IT IS ALWAYS BEST to use our native TotalTv USA app! Download "Downloader", enter code `5533902` (or direct link http://aftv.news/5533902), install TotalTv USA, choose panel TOTALTV USA, login with credentials.
+- **Apple Devices (iPhone, iPad, Apple TV, Mac)**: Install "Smarters Player Lite" from App Store, enter login credentials and DNS http://hbptsjrw.sljur.com.
+- **Smart TVs non-Android (Samsung / LG / VIDAA)**: Install **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, or apps from `https://multi-player.app/en/apps-store` (Multi-Player). (Note: SmartOne, IBO Player, and MultiPlayer have a free trial period followed by a one-time lifetime activation fee with their developers).
+- **Roku**: Search "IBO Player" (7 days free trial, then lifetime activation fee).
+- **Web Browser / PC / Console**: Access http://web.ip365.cx/
 
 --------------------------------------------------
 EXISTING CLIENT CREDENTIALS & LOGIN SUPPORT (STRICT ZERO HALLUCINATION RULE)

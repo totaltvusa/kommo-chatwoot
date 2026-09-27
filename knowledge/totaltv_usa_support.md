@@ -10,6 +10,8 @@
 El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de streaming, televisores inteligentes, computadoras y teléfonos móviles. Las instrucciones oficiales de instalación por tipo de dispositivo son las siguientes:
 
 ### A. Firestick / Fire TV / Android TV / Google TV / Onn Box / TV Boxes
+> 💡 **Regla de Oro para Android**: En cualquier dispositivo con sistema operativo Android, **siempre es mejor y altamente recomendado utilizar nuestra aplicación oficial nativa TotalTv USA**, descargada con Downloader. Ofrece la mejor fluidez, interfaz adaptada y estabilidad.
+
 1. Descargar e instalar la aplicación gratuita **"Downloader"** desde la tienda de aplicaciones del dispositivo (Amazon Appstore o Google Play Store).
 2. Abrir **Downloader** e ingresar el código numérico de descarga rápida: **`5533902`**.
 3. El sistema descargará automáticamente el instalador oficial de la aplicación **TotalTv USA**. Seleccionar **"Instalar"**.
@@ -30,8 +32,13 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
 
 ### C. Smart TVs (Samsung Tizen, LG WebOS, Hisense VIDAA, u otros sin Android)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps** o **LG Content Store / Apps**).
-2. Buscar e instalar cualquiera de las siguientes aplicaciones compatibles: **IPTV SMARTERS**, **XCIPTV**, **SMART IPTV**, **XTREAM PLAYER**, **MEGA OTT**, o **TIVIMATE**.
-3. Abrir la app, seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del servidor: `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
+2. Buscar e instalar cualquiera de las aplicaciones compatibles recomendadas:
+   - **SmartOne IPTV** *(muy recomendada para televisores Samsung y LG)*.
+   - **IBO Player** *(opción popular y rápida en tiendas de Smart TV y Roku)*.
+   - Aplicaciones listadas y disponibles en el catálogo de **`https://multi-player.app/en/apps-store`** (como **Multi-Player** para diferentes marcas y sistemas operativos).
+   - Otras alternativas de la tienda: **IPTV SMARTERS**, **XCIPTV**, **SMART IPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
+3. *(Activación de aplicaciones de terceros)*: Aplicaciones como **SmartOne**, **IBO Player** y **MultiPlayer** ofrecen un período de prueba inicial gratuito por parte de sus propios desarrolladores; al culminar la prueba, requieren un pago único de **activación de por vida (lifetime)** directamente en sus portales web oficiales.
+4. Abrir la app elegida, seleccionar acceso por API de Xtream Codes (o suministrarnos MAC y Device ID si aplica) e ingresar Usuario, Contraseña y URL del servidor: `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
 
 ### D. Dispositivos Roku
 1. En la pantalla principal de Roku, ir a **Search (Buscar)** e ingresar **"IBO Player"**.
@@ -93,6 +100,9 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 - **R:** Sí, todos los eventos deportivos estelares (UFC, Boxeo PPV, NFL Sunday Ticket, NBA Pass, MLB Extra Innings, Premier League, Champions League, Formula 1, LaLiga, etc.) están incluidos sin costo adicional en nuestras categorías de Deportes y PPV.
 
 ---
+
+### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android (Samsung, LG, etc.)?
+- **R:** En televisores inteligentes sin sistema Android (como Samsung Tizen o LG WebOS), puedes instalar aplicaciones destacadas como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters** o cualquiera de las aplicaciones compatibles descritas en **`https://multi-player.app/en/apps-store`** (Multi-Player). Recuerda que reproductores como SmartOne, IBO Player y Multi-Player cuentan con un período de prueba gratuito y luego requieren un pago único de activación de por vida gestionado directamente con sus desarrolladores. En cambio, para dispositivos con sistema **Android o Firestick, siempre es mucho mejor y más recomendado usar nuestra app nativa TotalTv USA descargada mediante Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 
