@@ -31,10 +31,13 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
 
 ### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
-2. Buscar e instalar cualquiera de las aplicaciones recomendadas según la marca y sistema del televisor:
-   - **Samsung Smart TV (Tizen)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
-   - **LG Smart TV (webOS)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
-   - **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL, marcas sin Android)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
+2. **Regla de Recomendación de Aplicaciones (SMART ONE como primera opción)**:
+   - **Primera opción prioritaria**: Siempre que el cliente indique que su televisor es **sin Android**, o mencione directamente la marca **Samsung** o **LG**, **se recomienda SMART ONE (SmartOne IPTV) como la primera opción de aplicación**.
+   - **Restricción de aplicación gratuita**: Se recomienda **IPTV Smarters** (o IPTV Smarters Pro) **ÚNICAMENTE en caso de que el cliente solicite explícitamente una aplicación gratuita** (ej. "quiero una app gratis", "sin costo de activación"). NUNCA ofrecer IPTV Smarters de entrada como primera opción.
+   - **Catálogo de aplicaciones compatibles disponibles en tienda**:
+     * **Samsung Smart TV (Tizen)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+     * **LG Smart TV (webOS)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+     * **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL, marcas sin Android)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
 3. *(Servicio de Activación de Aplicaciones de Terceros)*:
    - Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., cuentan con un período de prueba gratuito por parte de sus desarrolladores.
    - **Asistencia de Activación por nuestro equipo**: Podemos ayudar al cliente a tramitar y activar su aplicación:
@@ -116,7 +119,9 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 ---
 
 ### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android y cómo se activan?
-- **R:** En televisores inteligentes con sistemas de fábrica (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), puedes instalar aplicaciones como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
+- **R:** En televisores inteligentes con sistemas de fábrica (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), la aplicación recomendada como **primera opción es SMART ONE (SmartOne IPTV)**.
+  - *(Excepción app gratuita)*: Si el cliente solicita explícitamente una opción gratuita, se le recomienda **IPTV Smarters** (o IPTV Smarters Pro).
+  - Otras opciones compatibles de la tienda: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
   - **Activación**: Estas aplicaciones cuentan con prueba gratuita inicial. Si el cliente lo desea, **nosotros podemos ayudarle con la activación**:
     * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida).
     * **IBO Player:** **$20 USD** (de por vida).

@@ -351,8 +351,11 @@ Provide these exact steps based on the customer's device:
 - Ingresar credenciales (usuario, contraseña y URL http://wk.mvpl.uk:2082 o DNS Smarters http://cdn01link.uk:2095).
 - Alternativas si falla Smarters: XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.
 
-3. Smart TVs sin Android (LG WebOS, Samsung Tizen, Hisense VIDAA, WhaleOS) y Activación de Apps:
-- Recomendar apps de la tienda: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recomendar directamente por nombre, nunca enviar enlaces externos).
+3. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) y Activación de Apps:
+- **REGLAS DE RECOMENDACIÓN DE APLICACIONES (SMART ONE COMO PRIMERA OPCIÓN)**:
+  * Cuando un cliente mencione que su dispositivo es un **televisor no Android**, o mencione directamente la marca **Samsung** o **LG**: **RECOMENDAR SIEMPRE COMO PRIMERA OPCIÓN LA APLICACIÓN SMART ONE (SmartOne IPTV)**.
+  * **RESTRICCIÓN DE APLICACIÓN GRATUITA**: Recomendar **IPTV Smarters** (o IPTV Smarters Pro) **ÚNICAMENTE Y EXCLUSIVAMENTE en caso de que este tipo de cliente solicite explícitamente una aplicación gratuita** (ej. "una app gratis", "que sea gratis", "aplicación gratuita", "sin costo de activación"). NUNCA recomendar IPTV Smarters de entrada ni por defecto para televisores Samsung, LG o no Android.
+  * Otras apps de la tienda disponibles si el cliente consulta o las requiere: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recomendar directamente por nombre, nunca enviar enlaces externos).
 - **Asistencia de Activación**: Podemos ayudar al cliente a tramitar la activación de su app:
   * **SmartOne IPTV**: $4 USD por 1 año, o $20 USD de por vida (lifetime).
   * **IBO Player**: $20 USD (activación de por vida).

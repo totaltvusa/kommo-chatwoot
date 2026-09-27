@@ -32,16 +32,19 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
 
 ### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
-2. Buscar e instalar cualquiera de las aplicaciones recomendadas según el sistema operativo:
-   - **Samsung Smart TV (Tizen)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
-   - **LG Smart TV (webOS)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
-   - **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL sin Android)**: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
+2. **Regla de Recomendación de Aplicaciones (SMART ONE como primera opción)**:
+   - **Primera opción prioritaria**: Siempre que el cliente indique que su equipo es un **Smart TV no Android**, o mencione directamente la marca **Samsung** o **LG**, **se recomienda SMART ONE (SmartOne IPTV) como la primera opción de aplicación**.
+   - **Restricción de aplicación gratuita**: Se recomienda **IPTV Smarters** (o IPTV Smarters Pro) **ÚNICAMENTE en caso de que el cliente solicite explícitamente una aplicación gratuita** (ej. "quiero una app gratis", "sin costo de activación"). NUNCA ofrecer IPTV Smarters de entrada como primera opción.
+   - **Catálogo de aplicaciones compatibles disponibles en tienda**:
+     * **Samsung Smart TV (Tizen)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+     * **LG Smart TV (webOS)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+     * **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL sin Android)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
 3. *(Servicio de Activación de Aplicaciones de Terceros)*:
    - Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., ofrecen un período de prueba gratuito por parte de sus desarrolladores.
    - **Asistencia de Activación por nuestro equipo**: Podemos ayudar al cliente a tramitar y activar su aplicación de forma directa:
-     * **IBO Player**: $20 USD (pago único de por vida).
-     * **SmartOne IPTV**: $20 USD (pago único de por vida).
-     * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: $25 USD (pago único de por vida).
+     * **SmartOne IPTV**: **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier compra de suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis!)*.
+     * **IBO Player**: **$20 USD** (pago único de por vida).
+     * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: **$25 USD** (pago único de por vida).
    - **Condiciones Clave y Reglas de Pago**:
      * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Criptomonedas (que tienen 20% de descuento en planes de suscripción), **la activación NO lleva descuento**.
      * **RECARGOS / FEES POR PASARELA**: Si se utilizan métodos de pago que incluyen comisión por procesamiento (CashApp +10%, Card2Crypto / Tarjetas / PayPal +10%), estos fees **SÍ se suman** al valor de la activación (ej. $4 base -> $4.40 USD, $20 base -> $22 USD, $25 base -> $27.50 USD). En Zelle se abona el precio base exacto ($4, $20 o $25 USD).
@@ -112,7 +115,9 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 ---
 
 ### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android y cómo se activan?
-- **R:** En televisores inteligentes con sistemas propios (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), puedes instalar aplicaciones de la tienda como **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
+- **R:** En televisores inteligentes con sistemas propios (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), la aplicación recomendada como **primera opción es SMART ONE (SmartOne IPTV)**. 
+  - *(Excepción app gratuita)*: Si el cliente solicita explícitamente una opción gratuita, se le recomienda **IPTV Smarters** (o IPTV Smarters Pro).
+  - Otras opciones compatibles de la tienda: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
   - **Activación**: Estas aplicaciones ofrecen una prueba gratuita inicial. Si el cliente desea, **nosotros podemos ayudarle con la activación**:
     * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis!)*.
     * **IBO Player:** **$20 USD** (de por vida).

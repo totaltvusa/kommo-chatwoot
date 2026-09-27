@@ -2138,3 +2138,26 @@
      - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
      - Synchronized repository via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 65. Non-Android Smart TV App Recommendation Policy: SmartOne as First Choice, IPTV Smarters Free-Only Restriction (2026-09-27)
+
+* **Requirement & Business Rule**:
+  - Across both AI Agents (**TotalTv USA** and **TVTotal24 Latina**):
+    * Whenever a customer mentions that their device is a **non-Android TV**, OR directly states the brand **Samsung** or **LG**:
+      - The AI Agent must **ALWAYS recommend SMART ONE (SmartOne IPTV) as the FIRST and primary application option**.
+    * **Strict Free Application Restriction**: The agent is strictly prohibited from offering **IPTV Smarters** (or IPTV Smarters Pro) upfront or alongside SmartOne. IPTV Smarters must **ONLY and EXCLUSIVELY be recommended if this type of customer explicitly asks for a free application** (e.g. "una app gratis", "que sea gratis", "aplicación gratuita", "without cost", "a free app", "no quiero pagar activación").
+
+* **Changes Implemented**:
+  1. **System Prompts**:
+     - `prompts/agent_prompt.md`: Updated Section `INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)` under `- **Smart TVs non-Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) & App Activation**:` to mandate SmartOne as first choice and restrict IPTV Smarters strictly to explicit free app requests.
+     - `prompts/tvtotal24_prompt.md`: Updated Section `3. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) y Activación de Apps:` to enforce the identical rule in Spanish.
+  2. **Knowledge Base Support Documents**:
+     - `knowledge/totaltv_usa_support.md`: Updated Section `C. Smart TVs sin Android` and FAQ `P6` to document SmartOne as primary recommendation and IPTV Smarters as explicit-free-only.
+     - `knowledge/tvtotal24_latina_support.md`: Updated Section `C. Smart TVs sin Android` and FAQ `P6` identically.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via MCP (`update_workflow` & `publish_workflow`).
+     - Exported workflows and updated `workflows/router_chatwoot_ia.json` via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.
+

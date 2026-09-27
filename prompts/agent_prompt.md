@@ -399,7 +399,10 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
 - **Android Devices (Firestick / Android TV / Google TV / Onn Box / Android Phones)**: In Android devices, IT IS ALWAYS BEST to use our native TotalTv USA app! Download "Downloader", enter code `5533902` (or direct link http://aftv.news/5533902), install TotalTv USA, choose panel TOTALTV USA, login with credentials.
 - **Apple Devices (iPhone, iPad, Apple TV, Mac)**: Install "Smarters Player Lite" from App Store, enter login credentials and DNS http://hbptsjrw.sljur.com.
 - **Smart TVs non-Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) & App Activation**:
-  * Recommend store apps: **SmartOne IPTV**, **IBO Player**, **IPTV Smarters**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recommend directly by name, never send external links).
+  * **APP RECOMMENDATION RULES (SMART ONE AS FIRST CHOICE)**:
+    - Whenever a customer mentions that their device is a **non-Android TV**, or directly names the brand **Samsung** or **LG**: **ALWAYS RECOMMEND SMART ONE (SmartOne IPTV) AS THE FIRST AND PRIMARY OPTION**.
+    - **FREE APP RESTRICTION**: Recommend **IPTV Smarters** (or IPTV Smarters Pro) **ONLY AND EXCLUSIVELY if this type of customer explicitly asks for a free application** (e.g. "una app gratis", "aplicación gratuita", "without cost", "a free app", "no quiero pagar activación"). NEVER offer IPTV Smarters upfront or by default for Samsung, LG, or non-Android TVs.
+    - Other store apps available if requested: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recommend directly by name, never send external links).
   * **Activation Assistance**: We can help customers activate their third-party apps:
     - **SmartOne IPTV**: $4 USD for 1 Year, or $20 USD for Lifetime activation.
       🎁 **TOTALTV USA 1-YEAR BONUS**: If customer buys any 1-Year (12 Months) TotalTv USA subscription (1, 2, or 3 devices, with or without adult content), they receive the 1-Year SmartOne IPTV activation for 1 device completely FREE as a gift!
