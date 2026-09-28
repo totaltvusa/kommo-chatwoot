@@ -2161,3 +2161,30 @@
      - Exported workflows and updated `workflows/router_chatwoot_ia.json` via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
 
+---
+
+### 66. Downloader Troubleshooting (YouTube Video Guide) and SmartOne Fallback Recommendation Policy (2026-09-27)
+
+* **Requirement & Business Rules**:
+  1. **TVTotal24 Downloader Installation Issue**:
+     - When a TVTotal24 client reports that they cannot get Downloader to install the application on their device (permissions, unknown sources, developer options):
+       - The AI Agent suggests a step-by-step YouTube tutorial video:
+         👉 `https://www.youtube.com/watch?v=ffiUu9wsac8`
+  2. **SmartOne IPTV Fallback on Both Platforms (TotalTv USA & TVTotal24)**:
+     - If the client insists they cannot install the TotalTv native app or Downloader, or that despite the video instructions they still cannot manage to install it:
+       - The AI Agent recommends installing **SmartOne IPTV** directly from their device's store.
+       - Explains that SmartOne provides a **15-day free trial period**, and can later be activated for **$4 USD/year** (or $20 USD lifetime).
+       - In the case of **TotalTv USA**: Reminds the customer that with the purchase of any **1-Year (12 Months) subscription**, the 1-Year SmartOne IPTV activation for 1 device is gifted completely FREE!
+
+* **Changes Implemented**:
+  1. **System Prompts**:
+     - `prompts/tvtotal24_prompt.md`: Updated Android installation section with the Downloader YouTube guide URL (`https://www.youtube.com/watch?v=ffiUu9wsac8`) and the SmartOne IPTV fallback policy (15 days trial, $4/yr).
+     - `prompts/agent_prompt.md`: Updated Android installation section with the SmartOne IPTV fallback policy (15 days trial, $4/yr, and free 1-year activation bonus with 12-month subscription).
+  2. **Knowledge Base Support Documents**:
+     - `knowledge/tvtotal24_latina_support.md`: Updated Section 1.A, Section 2.D, and Section 4.
+     - `knowledge/totaltv_usa_support.md`: Updated Section 1.A, Section 2.D, and Section 4.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via MCP.
+     - Synchronized repository via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.
+

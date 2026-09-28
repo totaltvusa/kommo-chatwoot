@@ -18,6 +18,13 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
 4. Al abrir la app, seleccionar en la pantalla principal el panel **"TOTALTV LATINA"**.
 5. Ingresar las credenciales (Usuario y Contraseña) suministradas.
 6. *(Recomendación de visualización)*: En **Ajustes → Otros Ajustes**, activar la opción **"OTR LAYOUT"** para la interfaz moderna.
+7. *(Soporte ante fallos de Downloader / Alternativa SmartOne IPTV)*:
+   - Si el cliente **no logra hacer que Downloader instale la aplicación** (permisos de fuentes desconocidas, opciones de desarrollador):
+     * Sugerirle ver el video oficial de YouTube: 👉 `https://www.youtube.com/watch?v=ffiUu9wsac8` (explica cómo habilitar los permisos de instalación con Downloader).
+   - Si el cliente **insiste en que no puede instalar la app o Downloader, o sigue sin lograrlo tras el video**:
+     * Recomendarle instalar directamente **SmartOne IPTV** desde la tienda de su dispositivo.
+     * SmartOne ofrece **15 días de prueba gratuita** y luego se puede activar por **$4 USD al año** (o $20 de por vida).
+     * En SmartOne ingresará sus credenciales de TVTotal24 y el servidor `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac)
 1. Descargar **"Smarters Player Lite"** desde la App Store.
@@ -89,6 +96,14 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 - Para clientes existentes (`stage-leads-ganados`) que olviden sus datos, el Agente IA ejecuta automáticamente la herramienta `obtener_credenciales_tvtotal24` en el panel MVPlay.
 - Si la herramienta las encuentra, las entrega de forma clara. Si no aparecen registradas, transfiere con nota interna al asesor humano.
 
+### D. Dificultad para Instalar con Downloader (Permisos / Alternativa SmartOne)
+1. Si el cliente indica que **Downloader no instala la aplicación** o arroja error de permisos/orígenes desconocidos:
+   - Compartir el video de YouTube con los pasos para habilitar instalaciones: 👉 `https://www.youtube.com/watch?v=ffiUu9wsac8`
+2. Si el cliente **sigue sin poder instalar o insiste en la dificultad**:
+   - Recomendar la instalación directa de **SmartOne IPTV** desde la tienda de su dispositivo.
+   - SmartOne cuenta con **15 días de prueba gratuita** y activación posterior por **$4 USD/año** (o $20 lifetime).
+   - Configurar en SmartOne con Usuario, Contraseña y URL `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
+
 ---
 
 ## 3. PREGUNTAS FRECUENTES (FAQ) Y POLÍTICAS DE SERVICIO
@@ -133,5 +148,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 
 *(Esta sección se actualiza continuamente con nuevas dudas, consultas operativas y respuestas aprobadas por la administración para TVTotal24 Latina).*
 
+- **Caso — Dificultad para instalar aplicación con Downloader:**
+  - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $4/año).
 - **Caso — Consulta sobre canales deportivos de fútbol latinoamericano:**
   - *Instrucción:* Contamos con cobertura de Liga BetPlay Colombia, Liga Venezolana (FUTVE y Béisbol LVBP), Liga MX México, Liga Argentina, Brasileirao, Copa Libertadores, Copa Sudamericana, Champions League y ligas europeas en señales FHD y HD.

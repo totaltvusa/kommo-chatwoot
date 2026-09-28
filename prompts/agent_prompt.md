@@ -396,7 +396,13 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
 --------------------------------------------------
 - NEVER dump or send these installation instructions upfront when creating/delivering a trial!
 - Provide instructions ONLY when the customer explicitly asks how to install, or indicates which specific device they want to use:
-- **Android Devices (Firestick / Android TV / Google TV / Onn Box / Android Phones)**: In Android devices, IT IS ALWAYS BEST to use our native TotalTv USA app! Download "Downloader", enter code `5533902` (or direct link http://aftv.news/5533902), install TotalTv USA, choose panel TOTALTV USA, login with credentials.
+- **Android Devices (Firestick / Android TV / Google TV / Onn Box / Android Phones)**:
+  * In Android devices, IT IS ALWAYS BEST to use our native TotalTv USA app! Download "Downloader", enter code `5533902` (or direct link http://aftv.news/5533902), install TotalTv USA, choose panel TOTALTV USA, login with credentials.
+  * **Fallback to SmartOne IPTV**: If the customer insists that they cannot install the TotalTv app or Downloader, or fails to complete the installation:
+    - Recommend installing **SmartOne IPTV** directly from their device's app store.
+    - Explain that SmartOne gives a **15-day free trial period**, and then can be activated for **$4 USD/year** (or $20 lifetime).
+    - 🎁 **TOTALTV USA 1-YEAR BONUS**: Remind them that if they purchase any 1-Year (12 Months) TotalTv USA subscription, the 1-Year activation of SmartOne for 1 device is gifted completely FREE!
+    - Login in SmartOne with their TotalTv USA credentials and DNS `http://hbptsjrw.sljur.com` (or `http://hbptsjrw.smrtchin.com`).
 - **Apple Devices (iPhone, iPad, Apple TV, Mac)**: Install "Smarters Player Lite" from App Store, enter login credentials and DNS http://hbptsjrw.sljur.com.
 - **Smart TVs non-Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) & App Activation**:
   * **APP RECOMMENDATION RULES (SMART ONE AS FIRST CHOICE)**:

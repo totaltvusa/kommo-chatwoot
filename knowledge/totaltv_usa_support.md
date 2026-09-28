@@ -18,6 +18,12 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
 4. Al abrir la aplicación instalada, seleccionar el panel **"TOTALTV USA"**.
 5. Ingresar las credenciales de acceso (Usuario y Contraseña) suministradas.
 6. *(Recomendación de configuración)*: Para una navegación más cómoda y moderna, ir a **Ajustes (Settings) → Otros Ajustes (Other Settings)** y seleccionar el diseño **"OTR LAYOUT"**.
+7. *(Alternativa SmartOne IPTV ante dificultades de instalación)*:
+   - Si el cliente insiste en que no puede instalar la aplicación nativa o Downloader en su dispositivo:
+     * Recomendar instalar **SmartOne IPTV** directamente desde la tienda de aplicaciones de su equipo.
+     * SmartOne brinda **15 días de prueba gratuita** y luego se activa por **$4 USD/año** (o $20 lifetime).
+     * *(🎁 Promoción Anual)*: Si el cliente adquiere cualquier suscripción de **1 Año de TotalTv USA**, se le **obsequia la activación de 1 año de SmartOne para 1 dispositivo gratis**.
+     * En SmartOne ingresará sus credenciales de TotalTv USA y el DNS `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac con Apple Silicon)
 1. Abrir la **App Store** oficial de Apple.
@@ -89,6 +95,13 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 - Recordar que las mayúsculas y minúsculas deben respetarse fielmente en usuario y contraseña.
 - Si el cliente es un usuario existente y olvidó sus accesos, se aplica el protocolo de transferencia a soporte humano para consulta directa en panel.
 
+### D. Dificultad para Instalar con Downloader (Alternativa SmartOne IPTV)
+1. Si el cliente insiste en que no logra instalar la aplicación oficial nativa TotalTv USA o Downloader en su equipo:
+   - Recomendar la instalación directa de **SmartOne IPTV** desde la tienda de su dispositivo.
+   - SmartOne ofrece **15 días de prueba gratuita** y luego activación por **$4 USD/año** (o $20 lifetime).
+   - *(🎁 Promoción Anual)*: Recordar que con la compra de cualquier suscripción de **1 Año de TotalTv USA**, ¡se le **obsequia 1 año de activación de SmartOne para 1 dispositivo gratis**!
+   - Configurar en SmartOne con Usuario, Contraseña y DNS `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
+
 ---
 
 ## 3. PREGUNTAS FRECUENTES (FAQ) Y POLÍTICAS DE SERVICIO
@@ -127,6 +140,8 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 
+- **Caso — Dificultad para instalar con Downloader / Fallback a SmartOne IPTV:**
+  - *Instrucción:* Si el cliente no logra o insiste en que no puede instalar la app con Downloader en su dispositivo Android/Firestick, se le recomienda instalar directamente SmartOne IPTV (15 días de prueba gratis, activación $4/año, y gratis por 1 año si compra cualquier plan anual de TotalTv USA).
 - **Caso — Incentivo Especial: Descuento del 5% en Zelle para planes mayores a $30 USD:**
   - *Condición de activación*: Cuando un cliente de TotalTv USA solicita pagar una **suscripción cuyo monto base supere los $30 USD** (ej. $36, $48, $60, $72, $90, $105, $120) utilizando métodos con 10% de recargo (**CashApp**, **Tarjetas de crédito/débito** o **PayPal vía Card2Crypto**).
   - *Instrucción para el Agente IA*: Además de generar o suministrar el enlace de pago con el 10% de recargo, se le ofrece proactivamente el incentivo de Zelle:

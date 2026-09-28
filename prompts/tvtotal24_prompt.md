@@ -345,6 +345,13 @@ Provide these exact steps based on the customer's device:
 - Instalar la app "Downloader", abrir e ingresar código: `5533902` (o enlace http://aftv.news/5533902) para descargar la app oficial.
 - Abrir la app, elegir panel TOTALTV LATINA e ingresar credenciales (usuario y contraseña).
 - Para mejor experiencia: ir a Ajustes → Otros Ajustes y seleccionar "OTR LAYOUT".
+- **Soporte para Downloader y Alternativa SmartOne IPTV**:
+  * **Si el cliente no logra hacer que Downloader instale la app** (problemas de permisos, orígenes desconocidos, opciones de desarrollador):
+    - Sugiérele ver este video de YouTube que explica paso a paso cómo activar las instalaciones con Downloader:
+      👉 https://www.youtube.com/watch?v=ffiUu9wsac8
+  * **Si el cliente insiste en que no puede instalar la app o Downloader, o sigue sin lograrlo tras el video**:
+    - Recomiéndale instalar directamente la aplicación **SmartOne IPTV** desde la tienda de su dispositivo.
+    - Explícale que SmartOne le dará un **período de prueba de 15 días** y luego se puede activar por solo **$4 USD al año** (o $20 de por vida), ingresando en la app sus credenciales y el servidor `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
 
 2. Apple Devices (iPhone, iPad, Apple TV, Mac):
 - Descargar "Smarters Player Lite" desde App Store.
