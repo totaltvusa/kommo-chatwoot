@@ -2209,3 +2209,21 @@
      - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via MCP.
      - Synchronized repository via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 68. LLM Model Switch: Anthropic Claude Haiku -> DeepSeek Chat (2026-09-28)
+
+* **Objective & Rationale**:
+  - To test and improve strict compliance with knowledge base guidelines and prevent hallucinations (such as inventing native App Store availability), the LLM model powering both AI agents was switched from Anthropic Claude Haiku to DeepSeek Chat.
+  - Utilizes existing DeepSeek account credentials in n8n (`deepSeekApi` id: `22sfGWS6Ev7XMOfa`).
+
+* **Changes Implemented**:
+  1. **n8n Workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`)**:
+     - Added `DeepSeek Chat Model` (`@n8n/n8n-nodes-langchain.lmChatDeepSeek` v1) configured with model `deepseek-chat`, `temperature: 0`, and `deepSeekApi` credentials.
+     - Connected `DeepSeek Chat Model` to both `AI Agent` (TotalTv USA) and `AI Agent - TVTotal24` (TVTotal24 Latina) via `ai_languageModel`.
+     - Removed `Anthropic Chat Model` node and published workflow.
+     - Note: `Analizar Imagen (Visión Anthropic)` remains intact as the specialized multimodal vision analyzer for payment receipts and screenshot diagnostics.
+  2. **Repository Synchronization**:
+     - Exported updated workflow definition to `workflows/router_chatwoot_ia.json`.
+     - Zero messages sent to customers.

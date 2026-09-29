@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "8e75beeb-afb0-43cb-8653-5d062d4478c6",
-  "activeVersionId": "8e75beeb-afb0-43cb-8653-5d062d4478c6",
+  "versionId": "4e649a71-b94f-4407-8247-7a5ab12ef0e8",
+  "activeVersionId": "4e649a71-b94f-4407-8247-7a5ab12ef0e8",
   "triggerCount": 2,
   "nodeCount": 40,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-09-29T00:02:39.353Z",
+  "updatedAt": "2026-09-29T00:59:27.999Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -146,22 +146,6 @@
           {
             "node": "AI Agent - TVTotal24",
             "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Anthropic Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          },
-          {
-            "node": "AI Agent - TVTotal24",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -499,6 +483,22 @@
           {
             "node": "Preparar Mensaje",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent - TVTotal24",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -887,33 +887,6 @@
         3136,
         96
       ]
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "claude-haiku-4-5",
-          "mode": "list",
-          "cachedResultName": "Claude Haiku 4.5"
-        },
-        "options": {
-          "temperature": 0
-        }
-      },
-      "id": "anthropic-chat-model-v2",
-      "name": "Anthropic Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
-      "typeVersion": 1.5,
-      "position": [
-        3368,
-        120
-      ],
-      "credentials": {
-        "anthropicApi": {
-          "id": "ZbUWSAq6JlKInA64",
-          "name": "Anthropic account"
-        }
-      }
     },
     {
       "parameters": {
@@ -1735,6 +1708,28 @@
           "cachedResultName": "Transfer to Human Tool"
         },
         "options": {}
+      }
+    },
+    {
+      "id": "2e2f584e-7242-4c82-b91b-aee16d26d82a",
+      "name": "DeepSeek Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        3368,
+        120
+      ],
+      "parameters": {
+        "model": "deepseek-chat",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "credentials": {
+        "deepSeekApi": {
+          "id": "22sfGWS6Ev7XMOfa",
+          "name": "DeepSeek account"
+        }
       }
     }
   ],
