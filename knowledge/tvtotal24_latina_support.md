@@ -27,14 +27,17 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
      * En SmartOne ingresará sus credenciales de TVTotal24 y el servidor `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac)
-1. Descargar **"Smarters Player Lite"** desde la App Store.
-2. Abrir la app y seleccionar **"Add User"** / **"Login with Xtream Codes API"**.
-3. Ingresar:
+> ⛔ **Mandato Crítico — Exclusividad de Android y Cero App Nativa en iOS**: La aplicación oficial nativa TotalTv Latina **SOLO existe para dispositivos Android**. **NO existe ninguna aplicación de TotalTv en la App Store de Apple**. Está terminantemente prohibido indicar al cliente buscar "TotalTv" en la App Store o decir "Descarga la app TotalTv en tu iPhone".
+
+1. En dispositivos Apple, el cliente **debe instalar un reproductor de terceros compatible** desde la **App Store** oficial de Apple.
+2. Descargar **"Smarters Player Lite"** (o **"IPTV Smarters Pro"**) desde la App Store.
+3. Abrir la app y seleccionar **"Add User"** / **"Login with Xtream Codes API"**.
+4. Ingresar:
    - **Nombre:** TVTotal24 Latina
    - **Usuario:** *(Usuario suministrado)*
    - **Contraseña:** *(Contraseña suministrada)*
    - **URL / DNS:** `http://wk.mvpl.uk:2082` *(o DNS Smarters: `http://cdn01link.uk:2095`)*
-4. *(Apps alternativas en Apple si Smarters falla)*: **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
+5. *(Apps alternativas en Apple si Smarters falla)*: **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
 
 ### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
@@ -148,6 +151,8 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 
 *(Esta sección se actualiza continuamente con nuevas dudas, consultas operativas y respuestas aprobadas por la administración para TVTotal24 Latina).*
 
+- **Caso — Dispositivos Apple (iPhone, iPad, Apple TV, Mac) y Exclusividad de Android:**
+  - *Instrucción:* La aplicación oficial nativa de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales con servidor `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
 - **Caso — Dificultad para instalar aplicación con Downloader:**
   - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $4/año).
 - **Caso — Consulta sobre canales deportivos de fútbol latinoamericano:**

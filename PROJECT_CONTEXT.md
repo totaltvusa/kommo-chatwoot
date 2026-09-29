@@ -2188,3 +2188,24 @@
      - Synchronized repository via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
 
+
+---
+
+### 67. TotalTv Native App Android-Exclusivity and Apple App Store Anti-Hallucination Policy (2026-09-28)
+
+* **Requirement & Core Problem**:
+  - Both AI agents (TotalTv USA & TVTotal24 Latina) occasionally hallucinated that a native "TotalTv USA" or "TotalTv Latina" app was available directly in the Apple App Store for iPhone/iPad/Apple TV/Mac, instructing users to search the App Store and download the native app with credentials.
+  - **Fact**: The native TotalTv app is **100% exclusive to Android devices** (Firestick, Android TV, Google TV, Onn Box, TV Box, Android phones/tablets via Downloader code `5533902` or URL `http://aftv.news/5533902`).
+  - **Apple Policy**: NO native TotalTv app exists on Apple App Store. For any Apple device (iPhone, iPad, Apple TV, Mac), agents must STRICTLY direct users to install a third-party player such as **"Smarters Player Lite"** (or **"IPTV Smarters Pro"**) or other compatible apps, configuring their Xtream Codes credentials (Username, Password, Server URL/DNS).
+
+* **Changes Implemented**:
+  1. **System Prompts**:
+     - `prompts/agent_prompt.md`: Added top-level invariant `⛔ CRITICAL INVARIANT: TOTALTV NATIVE APP IS 100% EXCLUSIVE TO ANDROID DEVICES` and reinforced Apple/iOS third-party app guidelines (Smarters Player Lite). Explicitly forbade claiming native app availability in the App Store.
+     - `prompts/tvtotal24_prompt.md`: Added top-level invariant `⛔ MANDATO CRÍTICO: LA APLICACIÓN NATIVA TOTALTV LATINA ES 100% EXCLUSIVA PARA DISPOSITIVOS ANDROID` and reinforced Apple/iOS third-party app guidelines (Smarters Player Lite). Explicitly forbade claiming native app availability in the App Store.
+  2. **Knowledge Base Support Documents**:
+     - `knowledge/totaltv_usa_support.md`: Updated Section 1.B (Apple / iOS / iPad / Apple TV / Mac) and Section 4 with learned cases forbidding native app App Store suggestions.
+     - `knowledge/tvtotal24_latina_support.md`: Updated Section 1.B (Apple / iOS / iPad / Apple TV / Mac) and Section 4 with learned cases forbidding native app App Store suggestions.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Deployed live updates to `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via MCP.
+     - Synchronized repository via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

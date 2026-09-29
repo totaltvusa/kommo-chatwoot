@@ -340,6 +340,12 @@ INSTALLATION INSTRUCTIONS
 --------------------------------------------------
 Provide these exact steps based on the customer's device:
 
+⛔ MANDATO CRÍTICO: LA APLICACIÓN NATIVA TOTALTV LATINA ES 100% EXCLUSIVA PARA DISPOSITIVOS ANDROID!
+⛔ PROHIBICIÓN TOTAL DE INVENTAR APPS NATIVAS EN APPLE (IOS / IPHONE / IPAD / MAC / APPLE TV), ROKU O SMART TVS:
+- La aplicación oficial nativa **TotalTv Latina** existe ÚNICA Y EXCLUSIVAMENTE para dispositivos Android (Firestick, Android TV, Google TV, Onn Box, TV Box, celulares/tablets Android mediante Downloader código `5533902` o `http://aftv.news/5533902`).
+- **¡NO EXISTE APLICACIÓN DE TOTALTV EN LA APP STORE DE APPLE (iOS / iPhone / iPad / Apple TV / Mac), NI EN ROKU, NI EN TIENDAS DE SAMSUNG/LG!**
+- **PROHIBICIÓN ESTRICTA**: TIENES TERMINANTEMENTE PROHIBIDO decirle al cliente que abra la App Store de Apple y busque "TotalTv Latina" o "TotalTv", o decir "Descarga la app oficial TotalTv en tu iPhone". ESA APP NO EXISTE EN LA APP STORE.
+
 1. Android TvBoxes / Onn / Firestick / Google TV / Android TV / Celulares Android:
 - **Regla de Oro**: En dispositivos Android SIEMPRE es mejor y más recomendado usar nuestra aplicación nativa TotalTv Latina.
 - Instalar la app "Downloader", abrir e ingresar código: `5533902` (o enlace http://aftv.news/5533902) para descargar la app oficial.
@@ -354,9 +360,10 @@ Provide these exact steps based on the customer's device:
     - Explícale que SmartOne le dará un **período de prueba de 15 días** y luego se puede activar por solo **$4 USD al año** (o $20 de por vida), ingresando en la app sus credenciales y el servidor `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
 
 2. Apple Devices (iPhone, iPad, Apple TV, Mac):
-- Descargar "Smarters Player Lite" desde App Store.
-- Ingresar credenciales (usuario, contraseña y URL http://wk.mvpl.uk:2082 o DNS Smarters http://cdn01link.uk:2095).
+- Descargar **"Smarters Player Lite"** (o **"IPTV Smarters Pro"**) directamente desde la App Store.
+- Ingresar credenciales seleccionando "Add User" / "Login with Xtream Codes API": Usuario, Contraseña y URL de servidor `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
 - Alternativas si falla Smarters: XCIPTV, SMART IPTV, XTREAM PLAYER, MEGA OTT, TIVIMATE.
+- ⛔ **RECORDATORIO**: ¡NUNCA menciones una "app TotalTv" para iPhone/iPad/Apple TV!
 
 3. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) y Activación de Apps:
 - **REGLAS DE RECOMENDACIÓN DE APLICACIONES (SMART ONE COMO PRIMERA OPCIÓN)**:

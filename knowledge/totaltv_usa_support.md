@@ -26,7 +26,9 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
      * En SmartOne ingresará sus credenciales de TotalTv USA y el DNS `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac con Apple Silicon)
-1. Abrir la **App Store** oficial de Apple.
+> ⛔ **Mandato Crítico — Exclusividad de Android y Cero App Nativa en iOS**: La app oficial nativa TotalTv USA **SOLO existe para dispositivos Android**. **NO existe ninguna app de TotalTv en la App Store de Apple**. Está terminantemente prohibido indicar al cliente buscar "TotalTv" en la App Store o decir "Descarga la app TotalTv en tu iPhone".
+
+1. En dispositivos Apple, el cliente **debe instalar un reproductor de terceros compatible** desde la **App Store** oficial de Apple.
 2. Buscar e instalar la aplicación gratuita **"Smarters Player Lite"** (o **"IPTV Smarters Pro"**).
 3. Abrir la aplicación y seleccionar **"Add User"** / **"Login with Xtream Codes API"**.
 4. Ingresar los datos de acceso:
@@ -140,6 +142,8 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 
+- **Caso — Dispositivos Apple (iPhone, iPad, Apple TV, Mac) y Exclusividad de Android:**
+  - *Instrucción:* La aplicación nativa oficial de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales con DNS `http://hbptsjrw.sljur.com`.
 - **Caso — Dificultad para instalar con Downloader / Fallback a SmartOne IPTV:**
   - *Instrucción:* Si el cliente no logra o insiste en que no puede instalar la app con Downloader en su dispositivo Android/Firestick, se le recomienda instalar directamente SmartOne IPTV (15 días de prueba gratis, activación $4/año, y gratis por 1 año si compra cualquier plan anual de TotalTv USA).
 - **Caso — Incentivo Especial: Descuento del 5% en Zelle para planes mayores a $30 USD:**
