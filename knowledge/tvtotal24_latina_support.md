@@ -36,8 +36,8 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
    - **Nombre:** TVTotal24 Latina
    - **Usuario:** *(Usuario suministrado)*
    - **Contraseña:** *(Contraseña suministrada)*
-   - **URL / DNS:** `http://wk.mvpl.uk:2082` *(o DNS Smarters: `http://cdn01link.uk:2095`)*
-5. *(Apps alternativas en Apple si Smarters falla)*: **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**.
+   - **URL / DNS:** `http://cdn01link.uk:2095` *(DNS para Smarters: OBLIGATORIO para Smarters Player Lite / IPTV Smarters Pro)*
+5. *(Apps alternativas en Apple si Smarters falla)*: **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE** *(si usa estas apps generales, el servidor es `http://wk.mvpl.uk:2082`)*.
 
 ### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
@@ -62,7 +62,7 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
      * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (ligada a su MAC y Device ID).
      * **No transferible**: La activación no se puede transferir a otro dispositivo.
      * **Autogestión**: El cliente siempre puede gestionarla directamente con el desarrollador de la aplicación en su web oficial si lo prefiere.
-4. Abrir la app, seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o DNS Smarters: `http://cdn01link.uk:2095`).
+4. Abrir la app, seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o si utiliza IPTV Smarters, ingresar obligatoriamente DNS para Smarters: `http://cdn01link.uk:2095`).
 
 ### D. Dispositivos Roku
 1. Buscar e instalar la app **"IBO Player"** desde la Roku Channel Store.
@@ -152,7 +152,11 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 *(Esta sección se actualiza continuamente con nuevas dudas, consultas operativas y respuestas aprobadas por la administración para TVTotal24 Latina).*
 
 - **Caso — Dispositivos Apple (iPhone, iPad, Apple TV, Mac) y Exclusividad de Android:**
-  - *Instrucción:* La aplicación oficial nativa de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales con servidor `http://wk.mvpl.uk:2082` (o DNS Smarters `http://cdn01link.uk:2095`).
+  - *Instrucción:* La aplicación oficial nativa de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales obligatoriamente con el DNS para Smarters: `http://cdn01link.uk:2095` (nunca el servidor general `wk.mvpl.uk`).
+- **Caso — Asignación Estricta de DNS para Aplicaciones Smarters vs Otras Apps:**
+  - *Instrucción:* TVTotal24 cuenta con dos URLs/DNS:
+    1. **DNS para Smarters (`http://cdn01link.uk:2095`)**: OBLIGATORIO Y EXCLUSIVO para cualquier aplicación de la familia Smarters (**Smarters Player Lite**, **IPTV Smarters Pro**, **IPTV Smarters**). Si el cliente indica que usa o va a usar Smarters, se le entrega únicamente este DNS para Smarters.
+    2. **Servidor / DNS General (`http://wk.mvpl.uk:2082`)**: Para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
 - **Caso — Dificultad para instalar aplicación con Downloader:**
   - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $4/año).
 - **Caso — Consulta sobre canales deportivos de fútbol latinoamericano:**

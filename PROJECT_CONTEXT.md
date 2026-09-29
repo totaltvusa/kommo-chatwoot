@@ -2259,3 +2259,34 @@
      - Synchronized local workflows via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
 
+
+---
+
+### 70. Strict DNS Smarters Assignment Policy for Smarters Family Applications (2026-09-29)
+
+* **Requirement & Problem Identified**:
+  - When the AI Agent for TotalTv USA generated and delivered free trial credentials, it properly presented both endpoints (`🌐 DNS: {dns}` and `📺 DNS Smarters: {dns_smarters}`).
+  - However, when the customer subsequently requested installation or indicated they were using an app from the Smarters family (such as **IPTV Smarters** or **Smarters Player Lite**), the agent incorrectly provided the general DNS (`http://hbptsjrw.sljur.com`) instead of the required **DNS Smarters** (`http://hbptsjrw.smrtchin.com`).
+  - The same risk existed for TVTotal24 Latina where `DNS para Smarters` (`http://cdn01link.uk:2095`) must strictly be provided whenever Smarters apps are used, rather than the general server (`http://wk.mvpl.uk:2082`).
+
+* **Policy Mandate**:
+  1. **TotalTv USA**:
+     - 📺 **DNS Smarters (`http://hbptsjrw.smrtchin.com`)**: MANDATORY AND EXCLUSIVE FOR ALL SMARTERS APPS (**Smarters Player Lite**, **IPTV Smarters Pro**, **IPTV Smarters**) across all platforms (Apple iOS/Mac, Smart TVs, Android, Firestick, PC).
+     - 🌐 **DNS General (`http://hbptsjrw.sljur.com`)**: Exclusively for other third-party Xtream Codes players (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
+     - ⛔ **PROHIBITION**: Never give `http://hbptsjrw.sljur.com` when configuring or using any Smarters application.
+  2. **TVTotal24 Latina**:
+     - 📺 **DNS para Smarters (`http://cdn01link.uk:2095`)**: MANDATORY AND EXCLUSIVE FOR ALL SMARTERS APPS (**Smarters Player Lite**, **IPTV Smarters Pro**, **IPTV Smarters**).
+     - 🌐 **Servidor / DNS General (`http://wk.mvpl.uk:2082`)**: For general third-party players (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
+     - ⛔ **PROHIBITION**: Never give `http://wk.mvpl.uk:2082` when configuring or using any Smarters application.
+
+* **Changes Implemented**:
+  1. **System Prompts**:
+     - `prompts/agent_prompt.md`: Added top-level invariant `⛔ CRITICAL MANDATE — EXACT DNS ASSIGNMENT RULE` and updated Apple, Smart TVs, and general setup sections to enforce `DNS Smarters: http://hbptsjrw.smrtchin.com`.
+     - `prompts/tvtotal24_prompt.md`: Added top-level invariant `⛔ MANDATO CRÍTICO DE ASIGNACIÓN DE SERVIDOR / DNS` and updated Apple, Smart TVs, and general setup sections to enforce `DNS para Smarters: http://cdn01link.uk:2095`.
+  2. **Knowledge Base Support Documents**:
+     - `knowledge/totaltv_usa_support.md`: Updated Section 1.B, Section 1.C.4, and Section 4 learned cases.
+     - `knowledge/tvtotal24_latina_support.md`: Updated Section 1.B, Section 1.C.4, and Section 4 learned cases.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Deployed prompt updates live to n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via MCP and published workflow.
+     - Exported workflows via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.

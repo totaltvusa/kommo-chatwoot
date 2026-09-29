@@ -36,8 +36,8 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
    - **Any Name / Nombre:** TotalTv USA
    - **Username / Usuario:** *(Usuario asignado)*
    - **Password / Contraseña:** *(Contraseña asignada)*
-   - **URL / DNS:** `http://hbptsjrw.sljur.com` *(o DNS Smarters: `http://hbptsjrw.smrtchin.com`)*
-5. *(Aplicaciones alternativas para Apple si Smarters presenta inconvenientes)*: **XCIPTV**, **XTREAM PLAYER**, **TIVIMATE**, **MEGA OTT**.
+   - **URL / DNS:** `http://hbptsjrw.smrtchin.com` *(DNS Smarters: OBLIGATORIO para Smarters Player Lite / IPTV Smarters Pro)*
+5. *(Aplicaciones alternativas para Apple si Smarters presenta inconvenientes)*: **XCIPTV**, **XTREAM PLAYER**, **TIVIMATE**, **MEGA OTT** *(si usa estas apps generales, el DNS es `http://hbptsjrw.sljur.com`)*.
 
 ### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
@@ -60,7 +60,7 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
      * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (asociada a su MAC y Device ID).
      * **No transferible**: Las activaciones no se pueden transferir a otro dispositivo.
      * **Autogestión**: El cliente siempre tiene la opción de gestionar el pago y la activación directamente por su cuenta en el sitio web oficial del desarrollador de la app.
-4. Abrir la aplicación instalada, seleccionar acceso por API de Xtream Codes (o proveer Dirección MAC y Device ID si la app lo solicita) e ingresar Usuario, Contraseña y URL del servidor: `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
+4. Abrir la aplicación instalada, seleccionar acceso por API de Xtream Codes (o proveer Dirección MAC y Device ID si la app lo solicita) e ingresar Usuario, Contraseña y URL del servidor: `http://hbptsjrw.sljur.com` (o si el cliente utiliza IPTV Smarters, ingresar obligatoriamente DNS Smarters: `http://hbptsjrw.smrtchin.com`).
 
 ### D. Dispositivos Roku
 1. En la pantalla principal de Roku, ir a **Search (Buscar)** e ingresar **"IBO Player"**.
@@ -146,7 +146,11 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 - **Caso — Presentación Limpia de Planes y Precios (Cero mención de SmartOne o regalos de apps):**
   - *Instrucción:* Al presentar o explicar planes de suscripción, precios, conexiones simultáneas o contenido de adultos, está TERMINANTEMENTE PROHIBIDO mencionar SmartOne IPTV o el regalo de activación anual. La explicación de planes y precios debe ser 100% limpia y circunscrita a duración, dispositivos y costos. El obsequio de 1 año de SmartOne en planes de 12 meses SOLO se menciona cuando el cliente esté en fase de instalación en un equipo compatible (Samsung, LG, VIDAA) o si no logra instalar en Android. En dispositivos Apple (iPhone, iPad, Apple TV, Mac), JAMÁS se menciona SmartOne (no existe en iOS). En dispositivos Android, la opción primordial y recomendada siempre es la app nativa TotalTv USA.
 - **Caso — Dispositivos Apple (iPhone, iPad, Apple TV, Mac) y Exclusividad de Android:**
-  - *Instrucción:* La aplicación nativa oficial de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. Tampoco existe SmartOne IPTV para iOS. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales con DNS `http://hbptsjrw.sljur.com`.
+  - *Instrucción:* La aplicación nativa oficial de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. Tampoco existe SmartOne IPTV para iOS. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales obligatoriamente con el DNS Smarters: `http://hbptsjrw.smrtchin.com` (nunca el DNS general `sljur.com`).
+- **Caso — Asignación Estricta de DNS para Aplicaciones Smarters vs Otras Apps:**
+  - *Instrucción:* TotalTv USA cuenta con dos URLs/DNS:
+    1. **DNS Smarters (`http://hbptsjrw.smrtchin.com`)**: OBLIGATORIO Y EXCLUSIVO para cualquier aplicación de la familia Smarters (**Smarters Player Lite**, **IPTV Smarters Pro**, **IPTV Smarters**). Si el cliente indica que usa o va a usar Smarters, se le entrega únicamente este DNS Smarters.
+    2. **DNS General (`http://hbptsjrw.sljur.com`)**: Para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
 - **Caso — Dificultad para instalar con Downloader / Fallback a SmartOne IPTV:**
   - *Instrucción:* Si el cliente no logra o insiste en que no puede instalar la app con Downloader en su dispositivo Android/Firestick, se le recomienda instalar directamente SmartOne IPTV (15 días de prueba gratis, activación $4/año, y gratis por 1 año si compra cualquier plan anual de TotalTv USA).
 - **Caso — Incentivo Especial: Descuento del 5% en Zelle para planes mayores a $30 USD:**

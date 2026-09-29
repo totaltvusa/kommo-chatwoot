@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "f8964365-ba81-49b9-a5fb-871697d750d3",
-  "activeVersionId": "f8964365-ba81-49b9-a5fb-871697d750d3",
+  "versionId": "40643ea6-94b0-49c7-9da3-305d3e667131",
+  "activeVersionId": "40643ea6-94b0-49c7-9da3-305d3e667131",
   "triggerCount": 1,
-  "nodeCount": 11,
+  "nodeCount": 13,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-09-21T01:43:06.601Z",
+  "updatedAt": "2026-09-29T15:02:38.257Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -90,6 +90,13 @@
         ],
         [
           {
+            "node": "Ejecutar Agente Sub-Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Enviar Ayuda Comando",
             "type": "main",
             "index": 0
@@ -129,6 +136,17 @@
           }
         ]
       ]
+    },
+    "Ejecutar Agente Sub-Workflow": {
+      "main": [
+        [
+          {
+            "node": "Enviar Confirmación Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodes": [
@@ -157,7 +175,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extraer datos del mensaje recibido\nconst messageText = $json.message?.text ? $json.message.text.trim() : '';\nconst chatId = $json.message?.chat?.id;\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/pdcash@MiBot -> /pdcash)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet errorMessage = '';\n\nif (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        // Si no envía orden, usar formato ttv-mmdd según la fecha actual\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 30 10 ttv0810a</code>\\n<code>${command} 100 -20</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
+        "jsCode": "// Extraer datos del mensaje recibido\nconst messageText = $json.message?.text ? $json.message.text.trim() : '';\nconst chatId = $json.message?.chat?.id;\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/pdcash@MiBot -> /pdcash)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\nlet isAgent = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet conversationId = null;\nlet instruction = '';\nlet errorMessage = '';\n\nif (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 30 10 ttv0810a</code>\\n<code>${command} 100 -20</code>`;\n  }\n} else if (command === '/agent' || command === '/agente') {\n  isAgent = true;\n  if (parts.length >= 3) {\n    const rawConvId = parts[1];\n    const convId = parseInt(rawConvId, 10);\n    const instructionText = parts.slice(2).join(' ').trim();\n    \n    if (isNaN(convId) || convId <= 0) {\n      errorMessage = `⚠️ El número de conversación debe ser un valor numérico entero (ej. 1323).\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else if (!instructionText) {\n      errorMessage = `⚠️ Debes indicar la instrucción que el Agente IA debe ejecutar.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else {\n      conversationId = convId;\n      instruction = instructionText;\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para /agent.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isAgent,\n    conversation_id: conversationId,\n    instruction,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash || isAgent) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -206,22 +224,13 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.isCard2Crypto }}",
+                    "leftValue": "={{ !$json.isValid && !!$json.errorMessage }}",
                     "rightValue": true,
                     "operator": {
                       "type": "boolean",
                       "operation": "true"
                     },
                     "id": "3b99de12-2110-42c2-8444-8a7d5c8c3f84"
-                  },
-                  {
-                    "leftValue": "={{ $json.isValid }}",
-                    "rightValue": false,
-                    "operator": {
-                      "type": "boolean",
-                      "operation": "false"
-                    },
-                    "id": "3abf7fe5-1cb1-49f9-9d78-05d47ce3a29b"
                   }
                 ],
                 "combinator": "and"
@@ -278,6 +287,31 @@
               },
               "renameOutput": true,
               "outputKey": "pdCash"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "agent-rule-output-05",
+                    "leftValue": "={{ $json.isValid && $json.isAgent }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Ejecutar Agente Chatwoot"
             }
           ]
         },
@@ -342,7 +376,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chatId }}",
-        "text": "={{ '🤖 <b>Comando no reconocido</b>\\n\\nSintaxis para enlaces de pago:\\n<code>/card2crypto monto porcentaje [orden]</code>\\n\\n<i>Ejemplos:</i>\\n• <code>/card2crypto 30 10 ttv0810a</code> ($33 USD)\\n• <code>/card2crypto 100 -20</code> ($80 USD, orden automática)' }}",
+        "text": "={{ '🤖 <b>Comandos Disponibles en AlvezN8Nbot</b>\\n\\n' +\n   '💳 <b>Generación de Enlaces de Pago:</b>\\n' +\n   '• <code>/card2crypto monto porcentaje [orden]</code>\\n' +\n   '• <code>/nowpayments monto porcentaje [orden]</code>\\n' +\n   '• <code>/pdcash monto porcentaje [orden]</code>\\n\\n' +\n   '<i>Ejemplo de pago:</i> <code>/card2crypto 30 10 ttv0810a</code>\\n\\n' +\n   '🧠 <b>Instruir a los Agentes IA de Chatwoot:</b>\\n' +\n   '• <code>/agent &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\n\\n' +\n   '<i>Ejemplo de agente:</i>\\n' +\n   '<code>/agent 1323 envia instrucciones para instalar en iphone</code>' }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -499,6 +533,52 @@
       "id": "339ad9cf-401f-40ce-bf34-ee19b0fbb5f6",
       "name": "Enviar PdCash Link1",
       "webhookId": "fe1983e9-6705-4883-b8c2-76e6859527b8",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "BcTU267LxCJZIB3v",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/BcTU267LxCJZIB3v",
+          "cachedResultName": "Agent - Ejecutar Instrucción Chatwoot"
+        },
+        "options": {}
+      },
+      "id": "subwf-exec-agent-01",
+      "name": "Ejecutar Agente Sub-Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        32,
+        440
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Parsear y Calcular Comando').item.json.chatId }}",
+        "text": "={{ $json.success ? ('✅ <b>Instrucción Ejecutada por el Agente IA</b>\\n\\n' +\n   '💬 <b>Conversación:</b> #' + $json.conversation_id + '\\n' +\n   '👤 <b>Cliente:</b> ' + $json.contact_name + '\\n' +\n   '🏢 <b>Marca/Canal:</b> ' + $json.brand + ' (' + $json.channel + ')\\n' +\n   '🌐 <b>Idioma:</b> ' + $json.language + '\\n' +\n   '📋 <b>Instrucción:</b> <i>' + $json.instruction + '</i>\\n\\n' +\n   '📝 <b>Mensaje Enviado al Cliente en Chatwoot:</b>\\n' + $json.message_sent) : ('⚠️ <b>Error al Ejecutar Instrucción</b>\\n\\n' + ($json.error || 'Ocurrió un error al procesar la conversación en Chatwoot.')) }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "tele-confirm-agent-02",
+      "name": "Enviar Confirmación Agente",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        440
+      ],
+      "webhookId": "66be3f14-ed67-4d61-a657-344b5d3f3fdd",
       "credentials": {
         "telegramApi": {
           "id": "uHQc4bCyyOMScQEr",
