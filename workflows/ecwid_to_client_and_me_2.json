@@ -3,12 +3,12 @@
   "name": "Ecwid to Client & me 2.0",
   "active": true,
   "isArchived": false,
-  "versionId": "9b89a278-b7cf-4608-a79d-e96e1d41f6d7",
-  "activeVersionId": "9b89a278-b7cf-4608-a79d-e96e1d41f6d7",
+  "versionId": "1a70991e-ea39-4062-b8a6-72b0ee83b577",
+  "activeVersionId": "1a70991e-ea39-4062-b8a6-72b0ee83b577",
   "triggerCount": 1,
   "nodeCount": 33,
   "createdAt": "2026-07-27T01:52:27.063Z",
-  "updatedAt": "2026-09-16T14:58:09.353Z",
+  "updatedAt": "2026-09-29T01:40:42.865Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -388,7 +388,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const telnyxApiKey = 'KEY_TELNYX_REDACTED';\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const html = item.json.html || \"\";\n  const subject = item.json.headers?.subject || \"\";\n\n  const cleanText = html\n    .replace(/<style([\\s\\S]*?)<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&nbsp;/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n  const extract = (regex, text, index = 1, fallback = \".\") => {\n    const match = text.match(regex);\n    return (match && match[index] && match[index].trim()) ? match[index].trim() : fallback;\n  };\n\n  const orderID = extract(/#([A-Z0-9]+)/, subject, 1, \".\");\n  const rawCustomerName = extract(/from\\s+([^!$]+)/i, subject, 1, \"Customer\");\n  const customerName = (rawCustomerName && rawCustomerName !== \"No encontrado\" && rawCustomerName !== \".\") ? rawCustomerName : \"Customer\";\n\n  const email = extract(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/, cleanText, 1, \".\");\n  const phone = extract(/Phone\\s+([\\+\\d\\s-]{7,20})/, cleanText, 1, \".\");\n\n  const rawAmount = extract(/Total\\s+\\$([\\d.]+)/, cleanText, 1, \".\");\n  const totalAmount = (rawAmount !== \".\" && rawAmount !== \"No encontrado\" && !isNaN(parseFloat(rawAmount))) \n    ? Math.round(parseFloat(rawAmount)).toString() \n    : \".\";\n  \n  const months = extract(/(\\d+)\\s*Months?/i, cleanText, 1, \".\");\n  const conns = extract(/Conns:\\s*(\\d+)/i, cleanText, 1, \".\");\n  const adult = extract(/Adult:\\s*(Yes|No)/i, cleanText, 1, \".\");\n  const paymentPart = extract(/Payment method\\s+(.+?)(?:View order details|$)/i, cleanText, 1, \".\");\n\n  let canSendSms = true;\n  let phoneLineType = \"unknown\";\n\n  if (phone && phone !== \".\") {\n    try {\n      const digits = phone.replace(/\\D/g, \"\");\n      let cleanLookupPhone = digits;\n      if (digits.length === 10) {\n        cleanLookupPhone = `+1${digits}`;\n      } else if (digits.length === 11 && digits.startsWith(\"1\")) {\n        cleanLookupPhone = `+${digits}`;\n      } else if (digits.length > 0) {\n        cleanLookupPhone = phone.trim().startsWith(\"+\") ? phone.trim() : `+${digits}`;\n      }\n\n      const lookupRes = await this.helpers.httpRequest({\n        method: \"GET\",\n        url: `https://api.telnyx.com/v2/number_lookup/${encodeURIComponent(cleanLookupPhone)}?type=carrier`,\n        headers: {\n          \"Authorization\": `Bearer ${telnyxApiKey}`,\n          \"Accept\": \"application/json\"\n        },\n        json: true\n      });\n\n      const carrierType = (lookupRes?.data?.carrier?.type || \"\").toLowerCase();\n      const lineType = (lookupRes?.data?.portability?.line_type || \"\").toLowerCase();\n      phoneLineType = lineType || carrierType || \"unknown\";\n\n      if (carrierType === \"fixed line\" || carrierType === \"landline\" || lineType === \"fixed line\" || lineType === \"landline\") {\n        canSendSms = false;\n      } else {\n        canSendSms = true;\n      }\n    } catch (e) {\n      canSendSms = true;\n    }\n  }\n\n  results.push({\n    json: {\n      OrderID: orderID,\n      TotalAmount: totalAmount,\n      CustomerName: customerName,\n      Email: email,\n      Phone: phone,\n      can_send_sms: canSendSms,\n      phone_line_type: phoneLineType,\n      PaymentMethod: paymentPart,\n      Months: months,\n      Conns: conns,\n      Adult: adult\n    }\n  });\n}\n\nreturn results;"
+        "jsCode": "const telnyxApiKey = 'KEY_TELNYX_REDACTED';\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const html = item.json.html || \"\";\n  const subject = item.json.headers?.subject || \"\";\n\n  const cleanText = html\n    .replace(/<style([\\s\\S]*?)<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&nbsp;/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n  const extract = (regex, text, index = 1, fallback = \".\") => {\n    const match = text.match(regex);\n    return (match && match[index] && match[index].trim()) ? match[index].trim() : fallback;\n  };\n\n  const orderID = extract(/#([A-Z0-9]+)/, subject, 1, \".\");\n  const rawCustomerName = extract(/from\\s+([^!$]+)/i, subject, 1, \"Customer\");\n  const customerName = (rawCustomerName && rawCustomerName !== \"No encontrado\" && rawCustomerName !== \".\") ? rawCustomerName : \"Customer\";\n\n  const email = extract(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/, cleanText, 1, \".\");\n  const phone = extract(/Phone\\s+([\\+\\d\\s-]{7,20})/, cleanText, 1, \".\");\n\n  const rawAmount = extract(/Total\\s+\\$([\\d.]+)/, cleanText, 1, \".\");\n  const totalAmount = (rawAmount !== \".\" && rawAmount !== \"No encontrado\" && !isNaN(parseFloat(rawAmount))) \n    ? Math.round(parseFloat(rawAmount)).toString() \n    : \".\";\n  \n  const months = extract(/(\\d+)\\s*Months?/i, cleanText, 1, \".\");\n  const conns = extract(/Conns:\\s*(\\d+)/i, cleanText, 1, \".\");\n  const adult = extract(/Adult:\\s*(Yes|No)/i, cleanText, 1, \".\");\n  const paymentPart = extract(/Payment method\\s+(.+?)(?:View order details|$)/i, cleanText, 1, \".\");\n\n  let canSendSms = false;\n  let phoneLineType = \"unknown\";\n\n  if (phone && phone !== \".\") {\n    try {\n      const digits = phone.replace(/\\D/g, \"\");\n      let cleanLookupPhone = digits;\n      if (digits.length === 10) {\n        cleanLookupPhone = `+1${digits}`;\n      } else if (digits.length === 11 && digits.startsWith(\"1\")) {\n        cleanLookupPhone = `+${digits}`;\n      } else if (digits.length > 0) {\n        cleanLookupPhone = phone.trim().startsWith(\"+\") ? phone.trim() : `+${digits}`;\n      }\n\n      const lookupRes = await this.helpers.httpRequest({\n        method: \"GET\",\n        url: `https://api.telnyx.com/v2/number_lookup/${encodeURIComponent(cleanLookupPhone)}?type=carrier`,\n        headers: {\n          \"Authorization\": `Bearer ${telnyxApiKey}`,\n          \"Accept\": \"application/json\"\n        },\n        json: true\n      });\n\n      const carrierType = (lookupRes?.data?.carrier?.type || \"\").toLowerCase();\n      const lineType = (lookupRes?.data?.portability?.line_type || \"\").toLowerCase();\n      phoneLineType = lineType || carrierType || \"unknown\";\n\n      const isNonMobile = /wireline|landline|fixed/i.test(carrierType) || /wireline|landline|fixed/i.test(lineType);\n      const isMobile = /mobile|wireless|cellular/i.test(carrierType) || /mobile|wireless|cellular/i.test(lineType);\n\n      if (isNonMobile || (!isMobile && (carrierType || lineType))) {\n        canSendSms = false;\n      } else {\n        canSendSms = true;\n      }\n    } catch (e) {\n      canSendSms = false;\n    }\n  }\n\n  results.push({\n    json: {\n      OrderID: orderID,\n      TotalAmount: totalAmount,\n      CustomerName: customerName,\n      Email: email,\n      Phone: phone,\n      can_send_sms: canSendSms,\n      phone_line_type: phoneLineType,\n      PaymentMethod: paymentPart,\n      Months: months,\n      Conns: conns,\n      Adult: adult\n    }\n  });\n}\n\nreturn results;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -949,7 +949,8 @@
       ],
       "id": "919aea41-e03b-40af-8f68-177c1af03c2e",
       "name": "EnviarTextoZelle",
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "retryOnFail": false
     },
     {
       "parameters": {
@@ -991,7 +992,8 @@
       ],
       "id": "3fe7810a-be77-43d2-8c75-205eb90ddb85",
       "name": "EnviarTextoCashapp",
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "retryOnFail": false
     },
     {
       "parameters": {
@@ -1150,7 +1152,8 @@
       ],
       "id": "87e817b5-5aa1-428d-8b37-5a5f5711e9e8",
       "name": "EnviarTextoNowPay",
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "retryOnFail": false
     },
     {
       "parameters": {

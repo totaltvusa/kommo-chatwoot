@@ -22,11 +22,12 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
    - Si el cliente insiste en que no puede instalar la aplicación nativa o Downloader en su dispositivo:
      * Recomendar instalar **SmartOne IPTV** directamente desde la tienda de aplicaciones de su equipo.
      * SmartOne brinda **15 días de prueba gratuita** y luego se activa por **$4 USD/año** (o $20 lifetime).
-     * *(🎁 Promoción Anual)*: Si el cliente adquiere cualquier suscripción de **1 Año de TotalTv USA**, se le **obsequia la activación de 1 año de SmartOne para 1 dispositivo gratis**.
+     * *(🎁 Promoción Anual)*: Si el cliente adquiere cualquier suscripción de **1 Año de TotalTv USA**, se le **obsequia la activación de 1 año de SmartOne para 1 dispositivo gratis** *(Válido únicamente en este contexto de alternativa de instalación; nunca mencionar en cotización de precios/planes ni en Apple)*.
      * En SmartOne ingresará sus credenciales de TotalTv USA y el DNS `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac con Apple Silicon)
 > ⛔ **Mandato Crítico — Exclusividad de Android y Cero App Nativa en iOS**: La app oficial nativa TotalTv USA **SOLO existe para dispositivos Android**. **NO existe ninguna app de TotalTv en la App Store de Apple**. Está terminantemente prohibido indicar al cliente buscar "TotalTv" en la App Store o decir "Descarga la app TotalTv en tu iPhone".
+> ⛔ **Prohibición Estricta de SmartOne en Apple**: La aplicación **SmartOne IPTV NO existe en la App Store de Apple**. Jamás se recomienda, menciona ni ofrece SmartOne IPTV a usuarios de iPhone, iPad, Apple TV o Mac. En Apple se utiliza exclusivamente **"Smarters Player Lite"** (o "IPTV Smarters Pro") u otros reproductores disponibles en la App Store.
 
 1. En dispositivos Apple, el cliente **debe instalar un reproductor de terceros compatible** desde la **App Store** oficial de Apple.
 2. Buscar e instalar la aplicación gratuita **"Smarters Player Lite"** (o **"IPTV Smarters Pro"**).
@@ -50,7 +51,7 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
 3. *(Servicio de Activación de Aplicaciones de Terceros)*:
    - Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., ofrecen un período de prueba gratuito por parte de sus desarrolladores.
    - **Asistencia de Activación por nuestro equipo**: Podemos ayudar al cliente a tramitar y activar su aplicación de forma directa:
-     * **SmartOne IPTV**: **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier compra de suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis!)*.
+     * **SmartOne IPTV**: **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier compra de suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis! NOTA: Este regalo SOLO se menciona durante la asesoría de instalación en televisores compatibles o fallback de Android, NUNCA en la presentación general de planes/precios ni en dispositivos Apple)*.
      * **IBO Player**: **$20 USD** (pago único de por vida).
      * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: **$25 USD** (pago único de por vida).
    - **Condiciones Clave y Reglas de Pago**:
@@ -101,7 +102,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 1. Si el cliente insiste en que no logra instalar la aplicación oficial nativa TotalTv USA o Downloader en su equipo:
    - Recomendar la instalación directa de **SmartOne IPTV** desde la tienda de su dispositivo.
    - SmartOne ofrece **15 días de prueba gratuita** y luego activación por **$4 USD/año** (o $20 lifetime).
-   - *(🎁 Promoción Anual)*: Recordar que con la compra de cualquier suscripción de **1 Año de TotalTv USA**, ¡se le **obsequia 1 año de activación de SmartOne para 1 dispositivo gratis**!
+   - *(🎁 Promoción Anual)*: Recordar que con la compra de cualquier suscripción de **1 Año de TotalTv USA**, ¡se le **obsequia 1 año de activación de SmartOne para 1 dispositivo gratis**! *(Válido exclusivamente para usuarios que usan SmartOne por soporte técnico o Smart TV; prohibido en cotizaciones de planes o en iOS)*.
    - Configurar en SmartOne con Usuario, Contraseña y DNS `http://hbptsjrw.sljur.com` (o `http://hbptsjrw.smrtchin.com`).
 
 ---
@@ -134,7 +135,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
   - *(Excepción app gratuita)*: Si el cliente solicita explícitamente una opción gratuita, se le recomienda **IPTV Smarters** (o IPTV Smarters Pro).
   - Otras opciones compatibles de la tienda: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
   - **Activación**: Estas aplicaciones ofrecen una prueba gratuita inicial. Si el cliente desea, **nosotros podemos ayudarle con la activación**:
-    * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis!)*.
+    * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida). *(🎁 Especial: Con cualquier suscripción de 1 Año de TotalTv USA de 1, 2 o 3 dispositivos, ¡le regalamos 1 año de activación de SmartOne para 1 dispositivo gratis! NOTA: Válido exclusivamente durante la asistencia de instalación en televisores compatibles o fallback de Android; estrictamente prohibido mencionarlo al explicar o cotizar planes/precios generales, o en dispositivos Apple)*.
     * **IBO Player:** **$20 USD** (de por vida).
     * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** **$25 USD** (de por vida).
     *(Precios netos: A las activaciones NO aplica ningún descuento, incluso si paga con Crypto. En métodos con comisión como CashApp o Card2Crypto/PayPal se suma el 10% de recargo. Son pagos exclusivos para ese dispositivo específico, no transferibles)*.
@@ -142,8 +143,10 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 
+- **Caso — Presentación Limpia de Planes y Precios (Cero mención de SmartOne o regalos de apps):**
+  - *Instrucción:* Al presentar o explicar planes de suscripción, precios, conexiones simultáneas o contenido de adultos, está TERMINANTEMENTE PROHIBIDO mencionar SmartOne IPTV o el regalo de activación anual. La explicación de planes y precios debe ser 100% limpia y circunscrita a duración, dispositivos y costos. El obsequio de 1 año de SmartOne en planes de 12 meses SOLO se menciona cuando el cliente esté en fase de instalación en un equipo compatible (Samsung, LG, VIDAA) o si no logra instalar en Android. En dispositivos Apple (iPhone, iPad, Apple TV, Mac), JAMÁS se menciona SmartOne (no existe en iOS). En dispositivos Android, la opción primordial y recomendada siempre es la app nativa TotalTv USA.
 - **Caso — Dispositivos Apple (iPhone, iPad, Apple TV, Mac) y Exclusividad de Android:**
-  - *Instrucción:* La aplicación nativa oficial de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales con DNS `http://hbptsjrw.sljur.com`.
+  - *Instrucción:* La aplicación nativa oficial de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. Tampoco existe SmartOne IPTV para iOS. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales con DNS `http://hbptsjrw.sljur.com`.
 - **Caso — Dificultad para instalar con Downloader / Fallback a SmartOne IPTV:**
   - *Instrucción:* Si el cliente no logra o insiste en que no puede instalar la app con Downloader en su dispositivo Android/Firestick, se le recomienda instalar directamente SmartOne IPTV (15 días de prueba gratis, activación $4/año, y gratis por 1 año si compra cualquier plan anual de TotalTv USA).
 - **Caso — Incentivo Especial: Descuento del 5% en Zelle para planes mayores a $30 USD:**

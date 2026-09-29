@@ -2227,3 +2227,35 @@
   2. **Repository Synchronization**:
      - Exported updated workflow definition to `workflows/router_chatwoot_ia.json`.
      - Zero messages sent to customers.
+
+---
+
+### 69. Clean Subscription Plans & Pricing Presentation: Zero SmartOne Mention & Strict Device-Gated Policy (2026-09-29)
+
+* **Requirement & Business Rule**:
+  - **Issue Identified**: When presenting subscription plans, durations, device connections, and adult content pricing, the AI agent for TotalTv USA was proactively including the 1-year SmartOne IPTV activation bonus in the 12-month plan bullet point.
+  - **Core Problem & Friction**:
+    1. Presenting SmartOne during pricing is premature and distracting; the customer is only asking about prices and plan durations.
+    2. If the customer uses **Apple / iOS** (iPhone, iPad, Apple TV, Mac), SmartOne IPTV is completely incompatible and non-existent on the App Store (Apple users must use **Smarters Player Lite**). Recommending or mentioning SmartOne creates severe confusion.
+    3. If the customer uses **Android** (Firestick, Google TV, Android TV, Onn Box, Android phones), the agent must ALWAYS prioritize and recommend the **native TotalTv USA app** via Downloader (`5533902`). SmartOne on Android is only a secondary fallback if the native app cannot be installed.
+  - **Policy Mandate**:
+    - **Clean Plans Presentation**: The subscription plans and pricing template MUST be 100% clean and strictly limited to: plan duration, number of devices (1, 2, 3), price, and optional adult content cost. ZERO mention of SmartOne IPTV or app activation gifts.
+    - **Device-Gated SmartOne Gift**: The 1-Year SmartOne IPTV activation gift for 12-month subscriptions is STRICTLY ON-DEMAND AND DEVICE-CONTINGENT. It is ONLY to be mentioned when the customer is actively discussing installation on their specific device AND that device is compatible with SmartOne (e.g. non-Android Smart TVs like Samsung Tizen, LG WebOS, Hisense VIDAA, or as an alternative fallback on Android ONLY IF Downloader fails).
+    - **Strict Prohibition on Apple**: SmartOne IPTV MUST NEVER be mentioned to Apple/iOS users.
+    - **Default Priority on Android**: Android users are ALWAYS directed to the native TotalTv USA app first.
+
+* **Changes Implemented**:
+  1. **System Prompts (`prompts/agent_prompt.md`)**:
+     - Removed `*(🎁 BONUS: Includes 1 Year of SmartOne IPTV activation for 1 device FREE!)*` from the 12-month English pricing template.
+     - Removed `*(🎁 BENEFICIO: ¡Incluye 1 Año de activación de SmartOne IPTV para 1 dispositivo GRATIS!)*` from the 12-month Spanish pricing template.
+     - Added top-level invariant `⛔ CRITICAL MANDATE — ZERO MENTION OF SMARTONE OR APP ACTIVATION GIFTS DURING PLANS/PRICING` forbidding SmartOne mentions during pricing.
+     - Reinforced Android native app default mandate and explicit prohibition of SmartOne for Apple in installation instructions.
+  2. **Knowledge Base Support Document (`knowledge/totaltv_usa_support.md`)**:
+     - Updated Section 1.B (Dispositivos Apple) with explicit prohibition of SmartOne.
+     - Updated Section 1.A.7, Section 1.C.3, Section 2.D, and FAQ P6 to clarify that the 1-Year SmartOne gift is only discussed during installation on compatible devices or Android fallback, and never during general pricing or on Apple devices.
+     - Added new learned case in Section 4 documenting the clean pricing presentation policy.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Updated live n8n workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`) via MCP (`update_workflow` setting `AI Agent` `/options/systemMessage` and `publish_workflow` to active version `2d15f620-9322-4edc-a376-b8b8de259688`).
+     - Synchronized local workflows via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.
+
