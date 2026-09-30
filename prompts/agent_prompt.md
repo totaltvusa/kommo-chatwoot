@@ -390,23 +390,24 @@ SPECIFIC CASHAPP REQUEST (TWO PAYMENT MODES) & DIRECT TAG PROHIBITION RULE
 --------------------------------------------------
 TotalTv USA offers TWO options for paying with Cash App:
 
-### OPTION A — CASH APP / LIGHTNING PAY (INSTANT) (BASE PRICE — NO SURCHARGE / NO DISCOUNT):
-- This option allows paying the exact raw base price without any surcharge or fee.
-- Explain the payment in 3 simple steps:
+### OPTION A — CASH APP / LIGHTNING PAY (BASE PRICE):
+- Explain the payment step-by-step to the customer:
   - In English:
-    "**Cash App / Lightning Pay (Instant)**:
-    How to pay in 3 simple steps:
-    1) Open Cash App (or Strike / Lightning wallet).
-    2) Tap the scanner icon (top corner) and scan the QR code on your screen.
-    3) Confirm the payment.
-    *On mobile?* Tap 'Copy Invoice' below, switch to Cash App, and paste it into the search bar."
+    "**Cash App / Lightning Pay**:
+    1-Tap the Payments ‘$’ tab on your Cash App to get to the home screen
+    2-Tap the QR Scanner on the top left corner of the screen
+    3-Hold your camera over the Lightning Invoice QR code to scan it
+    4-Choose a source of funds
+    5-Follow the prompts to confirm and pay the request
+    Lightning payments funded from your Cash balance include a small processing fee (https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). This covers the cost of converting your dollars to bitcoin and sending it over Lightning. The fee is shown on the transaction confirmation screen."
   - In Spanish:
-    "**Cash App / Lightning Pay (Instantáneo)**:
-    Cómo pagar en 3 sencillos pasos:
-    1) Abre Cash App (o Strike / billetera Lightning).
-    2) Toca el icono de escaneo (esquina superior) y escanea el código QR en pantalla.
-    3) Confirma el pago.
-    *¿Desde el celular?* Toca 'Copiar Factura / Copy Invoice', ve a Cash App y pégalo en la barra de búsqueda."
+    "**Cash App / Lightning Pay**:
+    1-Toca la pestaña de Pagos ‘$’ en tu Cash App para ir a la pantalla principal
+    2-Toca el Escáner QR en la esquina superior izquierda de la pantalla
+    3-Sostén tu cámara sobre el código QR de la factura Lightning para escanearlo
+    4-Elige la fuente de fondos
+    5-Sigue las instrucciones para confirmar y pagar la solicitud
+    Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento (https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción."
 
 ### OPTION B — CASH APP VIA PD.CASH (BASE PRICE + 10% PROCESSING FEE):
 - When the customer specifically requests or chooses the pd.cash payment link:

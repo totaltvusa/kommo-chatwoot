@@ -150,10 +150,14 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
   - *Fallback*: Si no es posible realizar la consulta o el usuario no se encuentra, el agente responde educadamente indicando al cliente que utilice las credenciales y URLs de servidor con las que debe contar (las suministradas al momento de su activación). Si requiere asistencia adicional, se transfiere a soporte humano.
 
 - **Caso — Dos modalidades de pago con Cash App en TotalTv USA:**
-  - *Modalidad 1 — Cash App / Lightning Pay (Instantáneo)*: Precio Base (sin recargo ni descuento). Se explica al cliente en 3 pasos sencillos:
-    1) Abre Cash App (o Strike / billetera Lightning).
-    2) Toca el icono del escáner (esquina superior) y escanea el código QR en pantalla.
-    3) Confirma el pago. (¿Desde el celular? Toca "Copiar Factura / Copy Invoice", entra a Cash App y pégalo en la barra de búsqueda).
+  - *Modalidad 1 — Cash App / Lightning Pay*:
+    Instrucciones de pago:
+    1-Toca la pestaña de Pagos ‘$’ en tu Cash App para ir a la pantalla principal
+    2-Toca el Escáner QR en la esquina superior izquierda de la pantalla
+    3-Sostén tu cámara sobre el código QR de la factura Lightning para escanearlo
+    4-Elige la fuente de fondos
+    5-Sigue las instrucciones para confirmar y pagar la solicitud
+    Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento (https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción.
   - *Modalidad 2 — Cash App (vía pd.cash)*: Precio Base + 10% de recargo por procesamiento mediante enlace generado.
 
 - **Caso — Presentación Limpia de Planes y Precios (Cero mención de SmartOne o regalos de apps):**

@@ -2372,3 +2372,36 @@
      - Added `tool_get_mega_credentials` to `workflows/export_workflows.py`.
      - Exported and synchronized all 20 workflow JSON files.
      - Zero messages sent to live customers.
+
+---
+
+### 73. Cash App Lightning Payment Instructions Update (5-Step Official Flow & Processing Fee Notice) (2026-09-29)
+
+* **Requirement & Business Rule**:
+  - The payment instructions for **Cash App / Lightning Pay** in **TotalTv USA** have been updated to the official 5-step flow:
+    * *English*:
+      "**Cash App / Lightning Pay**:
+      1-Tap the Payments ‘$’ tab on your Cash App to get to the home screen
+      2-Tap the QR Scanner on the top left corner of the screen
+      3-Hold your camera over the Lightning Invoice QR code to scan it
+      4-Choose a source of funds
+      5-Follow the prompts to confirm and pay the request
+      Lightning payments funded from your Cash balance include a small [processing fee](https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). This covers the cost of converting your dollars to bitcoin and sending it over Lightning. The fee is shown on the transaction confirmation screen."
+    * *Spanish*:
+      "**Cash App / Lightning Pay**:
+      1-Toca la pestaña de Pagos ‘$’ en tu Cash App para ir a la pantalla principal
+      2-Toca el Escáner QR en la esquina superior izquierda de la pantalla
+      3-Sostén tu cámara sobre el código QR de la factura Lightning para escanearlo
+      4-Elige la fuente de fondos
+      5-Sigue las instrucciones para confirmar y pagar la solicitud
+      Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento (https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción."
+
+* **Changes Implemented**:
+  1. **System Prompt (`prompts/agent_prompt.md`)**:
+     - Updated Section `SPECIFIC CASHAPP REQUEST (TWO PAYMENT MODES)` under `OPTION A — CASH APP / LIGHTNING PAY (BASE PRICE)`.
+  2. **Knowledge Base Support Document (`knowledge/totaltv_usa_support.md`)**:
+     - Updated Section 4 learned cases.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Updated live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) node `AI Agent` systemMessage via MCP and published active version (`d82b6226-e1f4-4a77-9c58-c812bd7e9bb0`).
+     - Exported and synchronized workflow JSON files via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers.
