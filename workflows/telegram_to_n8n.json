@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "40643ea6-94b0-49c7-9da3-305d3e667131",
-  "activeVersionId": "40643ea6-94b0-49c7-9da3-305d3e667131",
+  "versionId": "0b5a3b72-5b69-4694-b699-57dbbc58d00d",
+  "activeVersionId": "0b5a3b72-5b69-4694-b699-57dbbc58d00d",
   "triggerCount": 1,
-  "nodeCount": 13,
+  "nodeCount": 17,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-09-29T15:02:38.257Z",
+  "updatedAt": "2026-09-30T00:51:49.457Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -90,6 +90,13 @@
         ],
         [
           {
+            "node": "BlinkLink",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Ejecutar Agente Sub-Workflow",
             "type": "main",
             "index": 0
@@ -147,6 +154,27 @@
           }
         ]
       ]
+    },
+    "BlinkLink": {
+      "main": [
+        [
+          {
+            "node": "Enviar Blink Link",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar WhatsApp Blink Link",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar Blink Link Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodes": [
@@ -175,7 +203,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extraer datos del mensaje recibido\nconst messageText = $json.message?.text ? $json.message.text.trim() : '';\nconst chatId = $json.message?.chat?.id;\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/pdcash@MiBot -> /pdcash)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\nlet isAgent = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet conversationId = null;\nlet instruction = '';\nlet errorMessage = '';\n\nif (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 30 10 ttv0810a</code>\\n<code>${command} 100 -20</code>`;\n  }\n} else if (command === '/agent' || command === '/agente') {\n  isAgent = true;\n  if (parts.length >= 3) {\n    const rawConvId = parts[1];\n    const convId = parseInt(rawConvId, 10);\n    const instructionText = parts.slice(2).join(' ').trim();\n    \n    if (isNaN(convId) || convId <= 0) {\n      errorMessage = `⚠️ El número de conversación debe ser un valor numérico entero (ej. 1323).\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else if (!instructionText) {\n      errorMessage = `⚠️ Debes indicar la instrucción que el Agente IA debe ejecutar.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else {\n      conversationId = convId;\n      instruction = instructionText;\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para /agent.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isAgent,\n    conversation_id: conversationId,\n    instruction,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash || isAgent) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
+        "jsCode": "// Extraer datos del mensaje recibido\nconst messageText = $json.message?.text ? $json.message.text.trim() : '';\nconst chatId = $json.message?.chat?.id;\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/pdcash@MiBot -> /pdcash)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\nlet isBlink = false;\nlet isAgent = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet conversationId = null;\nlet instruction = '';\nlet errorMessage = '';\n\nif (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash' || command === '/blink') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  if (command === '/blink') isBlink = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 24 10 Alvez</code>\\n<code>${command} 15 -20 250150</code>`;\n  }\n} else if (command === '/agent' || command === '/agente') {\n  isAgent = true;\n  if (parts.length >= 3) {\n    const rawConvId = parts[1];\n    const convId = parseInt(rawConvId, 10);\n    const instructionText = parts.slice(2).join(' ').trim();\n    \n    if (isNaN(convId) || convId <= 0) {\n      errorMessage = `⚠️ El número de conversación debe ser un valor numérico entero (ej. 1323).\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else if (!instructionText) {\n      errorMessage = `⚠️ Debes indicar la instrucción que el Agente IA debe ejecutar.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else {\n      conversationId = convId;\n      instruction = instructionText;\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para /agent.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isBlink,\n    isAgent,\n    conversation_id: conversationId,\n    instruction,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash || isBlink || isAgent) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -298,6 +326,31 @@
                 },
                 "conditions": [
                   {
+                    "id": "blink-rule-output-06",
+                    "leftValue": "={{ $json.isValid && $json.isBlink }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Blink"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
                     "id": "agent-rule-output-05",
                     "leftValue": "={{ $json.isValid && $json.isAgent }}",
                     "rightValue": "",
@@ -376,7 +429,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chatId }}",
-        "text": "={{ '🤖 <b>Comandos Disponibles en AlvezN8Nbot</b>\\n\\n' +\n   '💳 <b>Generación de Enlaces de Pago:</b>\\n' +\n   '• <code>/card2crypto monto porcentaje [orden]</code>\\n' +\n   '• <code>/nowpayments monto porcentaje [orden]</code>\\n' +\n   '• <code>/pdcash monto porcentaje [orden]</code>\\n\\n' +\n   '<i>Ejemplo de pago:</i> <code>/card2crypto 30 10 ttv0810a</code>\\n\\n' +\n   '🧠 <b>Instruir a los Agentes IA de Chatwoot:</b>\\n' +\n   '• <code>/agent &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\n\\n' +\n   '<i>Ejemplo de agente:</i>\\n' +\n   '<code>/agent 1323 envia instrucciones para instalar en iphone</code>' }}",
+        "text": "🤖 <b>Comandos disponibles en @AlvezN8Nbot:</b>\n\n💳 <b>Generación de Links de Pago:</b>\n• <code>/card2crypto monto porcentaje [orden]</code>\n  (Alias: <code>/c2c</code>)\n• <code>/nowpayments monto porcentaje [orden]</code>\n• <code>/pdcash monto porcentaje [orden]</code>\n• <code>/blink monto porcentaje [orden]</code>\n\n<b>Ejemplos /blink:</b>\n• <code>/blink 24 10 Alvez</code> - $24 + 10% de comisión ($26.40), Orden: Alvez\n• <code>/blink 15 -20 250150</code> - $15 - 20% de descuento ($12.00), Orden: 250150\n\n🤖 <b>Instruir Agente IA de Chatwoot:</b>\n• <code>/agent &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\n  (Alias: <code>/agente</code>)\n<b>Ejemplo:</b>\n• <code>/agent 1323 envía la prueba de 2 horas</code>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -583,6 +636,114 @@
         "telegramApi": {
           "id": "uHQc4bCyyOMScQEr",
           "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "id": "blink-link-httprequest",
+      "name": "BlinkLink",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        -100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.blink.sv/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "blink_UUV73Rc9ihd3eNaoQ84nrHe108CiP8LKnTSC2q4r9yJOniXGpLPsBjNyGNNMFJp0"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  JSON.stringify({\n    query: \"mutation lnUsdInvoiceCreate($input: LnUsdInvoiceCreateInput!) { lnUsdInvoiceCreate(input: $input) { errors { message } invoice { paymentRequest paymentHash satoshis } } }\",\n    variables: {\n      input: {\n        walletId: \"ea0a30f1-0325-4e72-9453-eb07a1351b52\",\n        amount: Math.round($json.amount * 100),\n        memo: \"Order \" + String($json.orderid)\n      }\n    }\n  })\n}}",
+        "options": {
+          "response": {
+            "neverError": true
+          }
+        }
+      }
+    },
+    {
+      "id": "enviar-blink-telegram",
+      "name": "Enviar Blink Link",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -100
+      ],
+      "parameters": {
+        "chatId": "={{ $('Parsear y Calcular Comando').item.json.chatId }}",
+        "text": "=⚡️ <b>Invoice de Pago Blink (Lightning USD) Generado:</b>\n\n💰 <b>Monto Original:</b> ${{ $('Parsear y Calcular Comando').item.json.baseAmount }}\n📈 <b>Porcentaje:</b> {{ $('Parsear y Calcular Comando').item.json.percentage }}%\n💵 <b>Monto a Pagar:</b> ${{ $('Parsear y Calcular Comando').item.json.amount }} USD\n🆔 <b>Orden ID:</b> {{ $('Parsear y Calcular Comando').item.json.orderid }}\n\n🔲 <a href=\"https://api.qrserver.com/v1/create-qr-code/?size=350x350&data={{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}\">👉 Ver / Escanear Código QR de Pago</a>\n\n⚡️ <a href=\"lightning:{{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}\">👉 Abrir directamente en App Lightning</a>\n\n📋 <b>Código de Factura (Copiar y Pegar en App):</b>\n<code>{{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}</code>\n\n👤 <b>Lightning Address:</b> totaltvusa@blink.sv",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "webhookId": "b0370a21-2c71-4214-bdc1-e30a968fc5e2",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
+        }
+      }
+    },
+    {
+      "id": "enviar-whatsapp-blink",
+      "name": "Enviar WhatsApp Blink Link",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        100
+      ],
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "=⚡️ *Invoice de Pago Blink (Lightning USD) Generado:*\n\n💰 *Monto Original:* ${{ $('Parsear y Calcular Comando').item.json.baseAmount }}\n📈 *Porcentaje:* {{ $('Parsear y Calcular Comando').item.json.percentage }}%\n💵 *Monto a Pagar:* ${{ $('Parsear y Calcular Comando').item.json.amount }} USD\n🆔 *Orden ID:* {{ $('Parsear y Calcular Comando').item.json.orderid }}\n\n🔲 *Ver / Escanear Código QR:*\nhttps://api.qrserver.com/v1/create-qr-code/?size=350x350&data={{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}\n\n📋 *Código de Factura (Copiar en App Lightning):*\n{{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}\n\n👤 *Lightning Address:* totaltvusa@blink.sv",
+        "options_message": {}
+      },
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "id": "enviar-blink-link-admin",
+      "name": "Enviar Blink Link Admin",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -300
+      ],
+      "parameters": {
+        "chatId": "40371837",
+        "text": "=⚡️ <b>Invoice de Pago Blink (Lightning USD) Generado:</b>\n\n💰 <b>Monto Original:</b> ${{ $('Parsear y Calcular Comando').item.json.baseAmount }}\n📈 <b>Porcentaje:</b> {{ $('Parsear y Calcular Comando').item.json.percentage }}%\n💵 <b>Monto a Pagar:</b> ${{ $('Parsear y Calcular Comando').item.json.amount }} USD\n🆔 <b>Orden ID:</b> {{ $('Parsear y Calcular Comando').item.json.orderid }}\n\n🔲 <a href=\"https://api.qrserver.com/v1/create-qr-code/?size=350x350&data={{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}\">👉 Ver / Escanear Código QR de Pago</a>\n\n⚡️ <a href=\"lightning:{{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}\">👉 Abrir directamente en App Lightning</a>\n\n📋 <b>Código de Factura (Copiar y Pegar en App):</b>\n<code>{{ $json.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest }}</code>\n\n👤 <b>Lightning Address:</b> totaltvusa@blink.sv",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "webhookId": "8eb3712b-718b-4d88-bdd9-64615c720aba",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
         }
       }
     }

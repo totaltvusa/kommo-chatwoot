@@ -119,11 +119,12 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 - **R:** Ofrecemos una prueba gratuita de 24 horas para 1 dispositivo. El tiempo de 24 horas comienza a correr a partir de tu **primer inicio de sesión** (primer login) en la aplicación, por lo que no pierdes tiempo si la creas y la pruebas más tarde. Para generarla, el asistente de IA solicita Nombre y Apellido, Correo Electrónico y Teléfono con código de país.
 
 ### P4: ¿Cuáles son las formas de pago aceptadas para TotalTv USA?
-- **R:** Aceptamos 4 opciones seguras:
-  1. **Zelle**: Pago directo al correo `acalimanr@gmail.com` (Beneficiario: `Alvez Caliman`). Precio base sin recargo.
-  2. **Criptomonedas (BTC / USDT)**: Pago directo a nuestra billetera BTC `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo` con un **20% de descuento especial**.
-  3. **CashApp**: Vía enlace oficial generado instantáneamente (Precio base + 10% por procesamiento).
-  4. **Tarjetas de Débito/Crédito o PayPal (vía Card2Crypto)**: Vía enlace oficial generado seguro que permite abonar con tarjetas, Apple Pay, Google Pay o PayPal según la ubicación del cliente (Precio base + 10%). También disponible en nuestra web `http://totaltvusa.com`.
+- **R:** Aceptamos las siguientes opciones seguras:
+  1. **Zelle** (Precio Base — Sin recargo / Sin descuento): Pago directo al correo `acalimanr@gmail.com` (Beneficiario: `Alvez Caliman`).
+  2. **Cash App / Lightning Pay (Instant)** (Precio Base — Sin recargo / Sin descuento): Pago directo e instantáneo escaneando el código QR en pantalla o copiando el invoice de Lightning en Cash App (o Strike / wallet Lightning).
+  3. **Criptomonedas (BTC / USDT)** — 🎉 **20% DE DESCUENTO**: Pago directo a nuestra billetera BTC `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo` o enlace con 20% de descuento.
+  4. **Cash App (vía pd.cash)** — Precio Base + 10% de recargo por procesamiento: Enlace oficial generado.
+  5. **Tarjetas de Débito/Crédito o PayPal (vía Card2Crypto)** — Precio Base + 10% de recargo: Enlace oficial seguro para pagar con tarjetas, Apple Pay, Google Pay o PayPal. También disponible en nuestra web `http://totaltvusa.com`.
 
 ### P5: ¿TotalTv USA tiene canales de eventos deportivos en vivo y Pay-Per-View (PPV)?
 - **R:** Sí, todos los eventos deportivos estelares (UFC, Boxeo PPV, NFL Sunday Ticket, NBA Pass, MLB Extra Innings, Premier League, Champions League, Formula 1, LaLiga, etc.) están incluidos sin costo adicional en nuestras categorías de Deportes y PPV.
@@ -142,6 +143,13 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
   - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor utilizar nuestra app nativa oficial TotalTv USA descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
+
+- **Caso — Dos modalidades de pago con Cash App en TotalTv USA:**
+  - *Modalidad 1 — Cash App / Lightning Pay (Instantáneo)*: Precio Base (sin recargo ni descuento). Se explica al cliente en 3 pasos sencillos:
+    1) Abre Cash App (o Strike / billetera Lightning).
+    2) Toca el icono del escáner (esquina superior) y escanea el código QR en pantalla.
+    3) Confirma el pago. (¿Desde el celular? Toca "Copiar Factura / Copy Invoice", entra a Cash App y pégalo en la barra de búsqueda).
+  - *Modalidad 2 — Cash App (vía pd.cash)*: Precio Base + 10% de recargo por procesamiento mediante enlace generado.
 
 - **Caso — Presentación Limpia de Planes y Precios (Cero mención de SmartOne o regalos de apps):**
   - *Instrucción:* Al presentar o explicar planes de suscripción, precios, conexiones simultáneas o contenido de adultos, está TERMINANTEMENTE PROHIBIDO mencionar SmartOne IPTV o el regalo de activación anual. La explicación de planes y precios debe ser 100% limpia y circunscrita a duración, dispositivos y costos. El obsequio de 1 año de SmartOne en planes de 12 meses SOLO se menciona cuando el cliente esté en fase de instalación en un equipo compatible (Samsung, LG, VIDAA) o si no logra instalar en Android. En dispositivos Apple (iPhone, iPad, Apple TV, Mac), JAMÁS se menciona SmartOne (no existe en iOS). En dispositivos Android, la opción primordial y recomendada siempre es la app nativa TotalTv USA.

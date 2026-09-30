@@ -2290,3 +2290,47 @@
      - Deployed prompt updates live to n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via MCP and published workflow.
      - Exported workflows via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 71. TotalTv USA Two Cash App Payment Modes: Cash App / Lightning Pay Instant (No Fee) and pd.cash (+10%) (2026-09-29)
+
+* **Requirement & Business Rule**:
+  - TotalTv USA now supports **TWO distinct payment options** when paying with Cash App:
+    1. **Cash App / Lightning Pay (Instant)** (NEW):
+       - **Raw Base Price** with **NO surcharges and NO discounts** (just like Zelle).
+       - Operates via Lightning network QR code or Lightning invoice.
+       - Explained to the customer in 3 simple steps:
+         * *English*:
+           "**Cash App / Lightning Pay (Instant)**:
+           How to pay in 3 simple steps:
+           1) Open Cash App (or Strike / Lightning wallet).
+           2) Tap the scanner icon (top corner) and scan the QR code on your screen.
+           3) Confirm the payment.
+           *On mobile?* Tap 'Copy Invoice' below, switch to Cash App, and paste it into the search bar."
+         * *Spanish*:
+           "**Cash App / Lightning Pay (Instantáneo)**:
+           Cómo pagar en 3 sencillos pasos:
+           1) Abre Cash App (o Strike / billetera Lightning).
+           2) Toca el icono de escaneo (esquina superior) y escanea el código QR en pantalla.
+           3) Confirma el pago.
+           *¿Desde el celular?* Toca 'Copiar Factura / Copy Invoice', ve a Cash App y pégalo en la barra de búsqueda."
+    2. **Cash App via pd.cash** (Existing):
+       - **Base Price + 10% processing fee** via generated payment link.
+  - **Payment Options Presentation**:
+    - Updated payment lists (Spanish & English) in prompts and support knowledge base to present Cash App / Lightning Pay Instant and Cash App (via pd.cash) clearly.
+  - **Invariants**:
+    - Strict Cashtag / personal account prohibition remains (we do not have a `$tag` or static account).
+
+* **Changes Implemented**:
+  1. **Knowledge Base Support Document (`knowledge/totaltv_usa_support.md`)**:
+     - Updated FAQ P4 to list both Cash App modalities.
+     - Added new learned case in Section 4 detailing both options and the 3-step instructions.
+  2. **System Prompt (`prompts/agent_prompt.md`)**:
+     - Updated payment method overview.
+     - Updated general payment list (English & Spanish).
+     - Expanded `SPECIFIC CASHAPP REQUEST` into `OPTION A (Cash App / Lightning Pay Instant)` and `OPTION B (Cash App via pd.cash +10%)`.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Live n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) updated via MCP (`update_workflow` setting node `AI Agent` system prompt).
+     - Exported workflows via `workflows/export_workflows.py`.
+     - Zero messages sent to customers.
