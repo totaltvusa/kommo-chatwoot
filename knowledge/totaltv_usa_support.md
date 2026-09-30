@@ -157,7 +157,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
     3-Sostén tu cámara sobre el código QR de la factura Lightning para escanearlo
     4-Elige la fuente de fondos
     5-Sigue las instrucciones para confirmar y pagar la solicitud
-    Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento (https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción.
+    Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento. Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción.
   - *Modalidad 2 — Cash App (vía pd.cash)*: Precio Base + 10% de recargo por procesamiento mediante enlace generado.
 
 - **Caso — Presentación Limpia de Planes y Precios (Cero mención de SmartOne o regalos de apps):**

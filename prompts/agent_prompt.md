@@ -399,7 +399,7 @@ TotalTv USA offers TWO options for paying with Cash App:
     3-Hold your camera over the Lightning Invoice QR code to scan it
     4-Choose a source of funds
     5-Follow the prompts to confirm and pay the request
-    Lightning payments funded from your Cash balance include a small processing fee (https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). This covers the cost of converting your dollars to bitcoin and sending it over Lightning. The fee is shown on the transaction confirmation screen."
+    Lightning payments funded from your Cash balance include a small processing fee. This covers the cost of converting your dollars to bitcoin and sending it over Lightning. The fee is shown on the transaction confirmation screen."
   - In Spanish:
     "**Cash App / Lightning Pay**:
     1-Toca la pestaña de Pagos ‘$’ en tu Cash App para ir a la pantalla principal
@@ -407,7 +407,7 @@ TotalTv USA offers TWO options for paying with Cash App:
     3-Sostén tu cámara sobre el código QR de la factura Lightning para escanearlo
     4-Elige la fuente de fondos
     5-Sigue las instrucciones para confirmar y pagar la solicitud
-    Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento (https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing). Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción."
+    Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento. Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción."
 
 ### OPTION B — CASH APP VIA PD.CASH (BASE PRICE + 10% PROCESSING FEE):
 - When the customer specifically requests or chooses the pd.cash payment link:

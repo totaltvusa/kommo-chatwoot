@@ -2405,3 +2405,23 @@
      - Updated live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) node `AI Agent` systemMessage via MCP and published active version (`d82b6226-e1f4-4a77-9c58-c812bd7e9bb0`).
      - Exported and synchronized workflow JSON files via `workflows/export_workflows.py`.
      - Zero messages sent to live customers.
+
+---
+
+### 74. Removal of External Help Link from Cash App Lightning Instructions (2026-09-29)
+
+* **Requirement & Modification**:
+  - Removed the external URL link (`https://cash.app/help/us/en-us/3103-bitcoin-fees?searchText=bitcoin%20pricing`) from the Cash App Lightning payment instructions across prompts, knowledge base, and live n8n workflows.
+  - The instruction text is preserved cleanly:
+    * *English*: `"Lightning payments funded from your Cash balance include a small processing fee. This covers the cost of converting your dollars to bitcoin and sending it over Lightning. The fee is shown on the transaction confirmation screen."`
+    * *Spanish*: `"Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento. Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción."`
+
+* **Changes Implemented**:
+  1. **System Prompt (`prompts/agent_prompt.md`)**:
+     - Updated `OPTION A — CASH APP / LIGHTNING PAY (BASE PRICE)`.
+  2. **Knowledge Base Support Document (`knowledge/totaltv_usa_support.md`)**:
+     - Updated Section 4 learned cases.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Live n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) node `AI Agent` updated via MCP and published active version (`456a94c9-781d-4e09-af12-109dadb31acd`).
+     - Exported and synchronized workflow files via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers.
