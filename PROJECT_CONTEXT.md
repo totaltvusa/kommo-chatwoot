@@ -2425,3 +2425,40 @@
      - Live n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) node `AI Agent` updated via MCP and published active version (`456a94c9-781d-4e09-af12-109dadb31acd`).
      - Exported and synchronized workflow files via `workflows/export_workflows.py`.
      - Zero messages sent to live customers.
+
+---
+
+### 75. Strict Language Continuity for Emojis/Reactions & Affirmative Follow-up Handling (2026-09-30)
+
+* **Problem & Incident Analysis**:
+  - In Chatwoot Conversation `1509` (Inbox 18, WhatsApp TotalTv USA, contact "anouar"), the interaction was 100% in English. The automated follow-up cron (`stage-want-to-join`) sent an English follow-up: *"Hello! 👋 We hope you enjoyed the *TotalTv* trial we provided. How did you like the service? Would you be interested in subscribing to one of our plans? 😊"*.
+  - The client replied with a thumbs-up emoji (`👍`).
+  - TotalTv USA's AI Agent unexpectedly switched to Spanish, reintroduced itself as if starting a new conversation, and offered another 24-hour free trial (`¡Hola! Soy Toto, agente de IA de Total TV. 👋\n\n¿En qué puedo ayudarte hoy? Con gusto te oriento con nuestros planes de suscripción, una prueba gratuita de 24 horas, o cualquier consulta sobre el servicio.`).
+  - **Root Causes**:
+    1. Emojis and reactions contain zero linguistic characters. Under low or default temperature, DeepSeek Chat fell back to the Spanish system prompt framing.
+    2. Follow-up cron messages sent directly from Chatwoot API were not saved in n8n `Simple Memory`, but were present in Chatwoot message history. The injected `[HISTORIAL RECIENTE...]` block in `Preparar Mensaje` was always formatted in Spanish (`• [Asistente (hace ...)]: ...`), priming the LLM in Spanish.
+    3. The system prompt allowed the agent to re-introduce itself ("Soy Toto...") when greeting without strictly prohibiting greetings in active ongoing chats.
+    4. Affirmative replies (`👍`, `ok`, `yes`) to automated follow-up questions were not explicitly bound to mean "yes, show me the subscription plans".
+
+* **Multi-Layer Remediation Implemented**:
+  1. **System Prompts (`prompts/agent_prompt.md` & `prompts/tvtotal24_prompt.md`)**:
+     - Added `⛔ STRICT RULE ON INTRODUCTIONS AND GREETINGS`: Introductions ("I'm Toto / Soy Toto / Soy Tivi") are strictly prohibited when previous message history exists.
+     - Added `⛔ CRITICAL INVARIANT — HANDLING AFFIRMATIVE REPLIES & EMOJIS TO FOLLOW-UP QUESTIONS`: Affirmative replies (`👍`, `ok`, `yes`, `sure`, etc.) to follow-up messages are directly interpreted as "yes, I want to subscribe", triggering immediate presentation of subscription plans without offering duplicate free trials.
+     - Added `⛔ CRITICAL INVARIANT — EMOJIS, REACTIONS, PUNCTUATION & NON-VERBAL INPUTS (NEVER A LANGUAGE SWITCH)`: Emojis have no language and MUST strictly preserve the language of the preceding conversation.
+  2. **Workflow Node `Preparar Mensaje` (`router_chatwoot_ia.json`)**:
+     - Added dynamic language detection analyzing incoming message and previous visible messages for English vs Spanish keywords.
+     - Detects non-verbal/emoji messages (`isEmojiOrNonVerbal`) and injects a explicit top-priority directive: `[MANDATORY CONVERSATION DIRECTIVE: The customer replied with an emoji... Active language is ENGLISH. DO NOT SWITCH TO SPANISH...]`.
+     - Automatically localizes the `historyBlock` headers (`[RECENT CHATWOOT CONVERSATION HISTORY: ...]`) and metadata (`Customer` / `Assistant`, `... ago`) into English when `convLanguage === 'en'`.
+     - Passes `conversation_language: convLanguage` and `language_directive` to subsequent nodes.
+  3. **Workflow Sheet Evaluation Nodes (`Evaluar Cliente DnSpace`, `Evaluar Cliente Mega`, Fallbacks)**:
+     - Preserved `(prepData.language_directive || '') + (prepData.history_block || '')` in `content` output so history context is never dropped during sheet lookups.
+  4. **Workflow Node `Formatear Respuesta` (`router_chatwoot_ia.json`)**:
+     - Reads `prepData.conversation_language` for accurate `isClientEnglish` detection.
+     - Added safety interceptor: If `isClientEnglish` is true and the model produces an accidental Spanish Toto greeting, replaces it with the English TotalTv USA subscription plans if the client's message was affirmative/emoji, or translates the greeting to English without offering duplicate trials.
+  5. **Knowledge Base Documentation (`knowledge/totaltv_usa_support.md`)**:
+     - Added learned case in Section 4 for emoji language persistence and follow-up handling.
+  6. **Deployment & Synchronization**:
+     - Deployed live updates to n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via MCP `update_workflow` with 8 atomic operations and published active version `3ee98eb8-580c-44b2-a406-0fc486cf1922`.
+     - Synchronized workflow JSON files via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers.
+
