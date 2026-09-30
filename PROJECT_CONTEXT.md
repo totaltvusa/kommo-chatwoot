@@ -2334,3 +2334,41 @@
      - Live n8n workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) updated via MCP (`update_workflow` setting node `AI Agent` system prompt).
      - Exported workflows via `workflows/export_workflows.py`.
      - Zero messages sent to customers.
+
+---
+
+### 72. Dynamic Per-User Subdomains and Mega Credentials / DNS Lookup Tool for TotalTv USA (2026-09-29)
+
+* **Context & Problem Statement**:
+  - In Conversation #1511, a TotalTv USA existing customer (Rodrigo Aguirre, username `64764856172`) reported authentication issues on Smarters Player Lite on iPad. The AI Agent provided a static DNS (`http://hbptsjrw.smrtchin.com`), which failed because the customer's line in Mega OTT is actually configured under `http://xtrzdnsz.smrtchin.com`.
+  - In TotalTv USA, server subdomains and DNS links are **dynamic and depend on each individual user** (registered in the Google Sheet "Clientes TotalTv", tab `Mega`, and the Mega OTT platform).
+  - Previously, the AI Agent for TotalTv USA had no lookup tool to query existing customer lines from the Mega database (unlike TVTotal24 which has `tool_get_mvplay_credentials`), forcing it to rely on static DNS assumptions.
+
+* **Business Rule & Solution**:
+  1. **Dynamic DNS Architecture**: TotalTv USA server subdomains and DNS endpoints are dynamic per user.
+  2. **Lookup Protocol (`obtener_credenciales_totaltv_usa`)**:
+     - When an existing customer asks for credentials, forgotten password, DNS server addresses, or reports login/authentication issues on Smarters, SmartOne, or other apps:
+       * The agent invokes `Call 'obtener_credenciales_totaltv_usa'` passing the customer's identifier (`Usuario`, `Nombre`, `Teléfono`, or `Email`).
+       * The tool searches the Google Sheet "Clientes TotalTV" (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`, tab `Mega`) and queries the Mega OTT API (`https://megaott.net/api/v1/subscriptions/{id}`) to obtain:
+         - `Usuario` and `Clave`.
+         - `🌐 DNS General` (`dns_link` / `http://<subdominio>.sljur.com`).
+         - `📺 DNS Smarters` (`dns_link_for_samsung_lg` / `http://<subdominio>.smrtchin.com`).
+         - Expiration date.
+       * If found: Delivers the exact credentials and DNS URLs corresponding to that specific customer.
+       * If the query cannot be performed or the user is not found: The agent politely instructs the customer to verify and use the login credentials and server URLs that were originally provided to them / with which they must count on. If they don't have them or require manual help, it transfers to human support.
+
+* **Changes Implemented**:
+  1. **New n8n Tool Workflow (`Ub1ZMCeelck3kAiW` - `Tool - Obtener Credenciales Mega (TotalTv USA)`)**:
+     - Implemented `Execute Workflow Trigger` -> `Preparar Busqueda` -> `Leer Sheet Mega` (Google Sheets v4.5) -> `Buscar y Obtener DNS Mega` (matches row, calls Mega OTT API, sends Chatwoot private note) -> `Respuesta Tool`.
+     - Published active live version in n8n.
+     - Saved locally in `workflows/tool_get_mega_credentials.json`.
+  2. **Router Integration (`router_chatwoot_ia.json` - `n0zgnS1vlOGNcGNY`)**:
+     - Added tool node `obtener_credenciales_totaltv_usa` and connected to `AI Agent` (TotalTv USA) via `ai_tool`.
+     - Deployed and published active version in n8n.
+  3. **Prompts & Knowledge Base**:
+     - `prompts/agent_prompt.md`: Updated `⛔ CRITICAL MANDATE — DYNAMIC PER-USER DNS SUBDOMAINS & LOOKUP PROTOCOL` and `EXISTING CLIENT CREDENTIALS & DNS LOOKUP PROTOCOL`.
+     - `knowledge/totaltv_usa_support.md`: Updated DNS setup section and added learned case in Section 4.
+  4. **Repository Synchronization**:
+     - Added `tool_get_mega_credentials` to `workflows/export_workflows.py`.
+     - Exported and synchronized all 20 workflow JSON files.
+     - Zero messages sent to live customers.

@@ -144,6 +144,11 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
 
+- **Caso — Subdominios y URLs de servidor específicos por usuario en TotalTv USA:**
+  - *Regla Fundamental*: En TotalTv USA, el subdominio del servidor y los enlaces DNS no son genéricos fijos; dependen de cada usuario según su registro en la plataforma Mega (hoja Mega en el documento "Clientes TotalTv").
+  - *Protocolo de Consulta*: Cuando un cliente existente solicita credenciales, cambio de clave, o reporta fallas de autenticación en Smarters u otras aplicaciones, el agente consulta la plataforma Mega mediante la herramienta de búsqueda (`obtener_credenciales_totaltv_usa`) para conocer su URL general (`dns_general`) y su URL Smarters (`dns_smarters`), y entonces entregarlos.
+  - *Fallback*: Si no es posible realizar la consulta o el usuario no se encuentra, el agente responde educadamente indicando al cliente que utilice las credenciales y URLs de servidor con las que debe contar (las suministradas al momento de su activación). Si requiere asistencia adicional, se transfiere a soporte humano.
+
 - **Caso — Dos modalidades de pago con Cash App en TotalTv USA:**
   - *Modalidad 1 — Cash App / Lightning Pay (Instantáneo)*: Precio Base (sin recargo ni descuento). Se explica al cliente en 3 pasos sencillos:
     1) Abre Cash App (o Strike / billetera Lightning).
