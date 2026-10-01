@@ -159,5 +159,8 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
     2. **Servidor / DNS General (`http://wk.mvpl.uk:2082`)**: Para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
 - **Caso — Dificultad para instalar aplicación con Downloader:**
   - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $4/año).
-- **Caso — Consulta sobre canales deportivos de fútbol latinoamericano:**
-  - *Instrucción:* Contamos con cobertura de Liga BetPlay Colombia, Liga Venezolana (FUTVE y Béisbol LVBP), Liga MX México, Liga Argentina, Brasileirao, Copa Libertadores, Copa Sudamericana, Champions League y ligas europeas en señales FHD y HD.
+- **Caso — Consulta de Tasa de Cambio para Pago Móvil (Tasa Oficial BCV):**
+  - *Instrucción:*
+    * **Si el cliente NO pregunta la tasa**: Se calcula el monto en Bolívares con las reglas estándar y se entrega únicamente el monto total en Bs y los datos bancarios. No se menciona la tasa proactivamente.
+    * **Si y ÚNICAMENTE SI el cliente pregunta directamente qué tasa se usa** (ej. "¿A qué tasa reciben?", "¿Cuál es la tasa de cambio?", "¿Usan BCV?"): Se le informa con total claridad que se usa la **tasa oficial del Banco Central de Venezuela (BCV)**.
+    * **Cálculo con tasa BCV**: Si el cliente preguntó la tasa o ya se le indicó que es BCV, al calcular el monto en Bolívares para el Pago Móvil se debe usar obligatoriamente la tasa oficial del BCV del dólar (`usar_bcv: true` en la herramienta `calcular_pago_movil`).

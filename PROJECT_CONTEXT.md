@@ -2462,3 +2462,41 @@
      - Synchronized workflow JSON files via `workflows/export_workflows.py`.
      - Zero messages sent to live customers.
 
+---
+
+### 76. TVTotal24 Pago Móvil Rate Policy: Official BCV Rate Disclosure and Calculation upon Explicit Inquiry (2026-09-30)
+
+* **Context & User Mandate**:
+  - In **TVTotal24 Latina**, regarding the exchange rate used for Bolívares payment via **Pago Móvil**:
+    1. **Default Rule (Customer does not ask about the rate)**:
+       - The agent continues calculating the Bolívares amount with the standard rules (Binance P2P / market rate via `calcular_pago_movil` with `usar_bcv: false`).
+       - Delivers strictly the total amount in Bolívares (`total_bs`) and bank details (`Bancamiga`, `04246861135`, RIF `J405259221`, `ArialStore C.A.`).
+       - Prohibited from mentioning the exchange rate pro-actively.
+    2. **Explicit Inquiry Rule (Customer asks directly what rate is used)**:
+       - **ÚNICAMENTE SI UN CLIENTE LO PREGUNTA DIRECTAMENTE** (e.g. "¿A qué tasa reciben?", "¿Cuál es la tasa de cambio?", "¿Qué tasa usan para el pago móvil?", "¿A cuánto calculan el dólar?", "¿Usan tasa BCV o paralelo?"):
+       - The agent clearly and politely informs that the rate used for Bolívares payments with Pago Móvil is the **tasa oficial del Banco Central de Venezuela (BCV)** (*"Para los pagos en Bolívares por Pago Móvil utilizamos la tasa oficial del Banco Central de Venezuela (BCV)."*).
+    3. **Mandatory BCV Calculation**:
+       - If the customer has asked about the rate (or if the agent has confirmed BCV rate, or if the customer asks for the rate and amount simultaneously):
+       - When calculating the amount in Bolívares for Pago Móvil, the system **MUST use the official BCV dollar exchange rate** (la tasa que da el Banco Central de Venezuela) by invoking `calcular_pago_movil` with `usar_bcv: true`.
+
+* **Changes Implemented**:
+  1. **Sub-Workflow `Tool - Calcular Pago Movil` (`4AYo7CX3Ou1K2yXH` / `tool_calcular_pago_movil.json`)**:
+     - Updated node `Obtener Tasa y Calcular` to check `item.usar_bcv === true`, `item.tipo_tasa === 'bcv'`, or `bcv`/`oficial` in `query`.
+     - When BCV is requested:
+       * Fetches the live official rate from `https://ve.dolarapi.com/v1/dolares/oficial`.
+       * Calculates `total_bs = (usdAmount * bcvRate).toFixed(2)`.
+       * Returns `fuente_tasa: 'Tasa Oficial Banco Central de Venezuela (BCV)'`, `tipo_tasa: 'bcv'`, and full plan price breakdown.
+     - When not requested:
+       * Retains the default calculation (Binance P2P / Paralelo fallback).
+     - Published active live version in n8n (`711c436c-0ad9-4ed8-b718-7b754a17a81b`).
+  2. **Router Workflow `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`)**:
+     - Updated LangChain tool node `calcular_pago_movil` parameter schema exposing `usar_bcv` (boolean) and updated tool description.
+     - Updated `AI Agent - TVTotal24` system prompt with the new Pago Móvil rate rules.
+     - Published active live version in n8n (`d1dfa586-6a36-43c9-890b-8a49346987e1`).
+  3. **Prompts & Knowledge Base**:
+     - `prompts/tvtotal24_prompt.md`: Updated Section `RULE 2 — C) IF THE CUSTOMER SELECTS OR ASKS SPECIFICALLY FOR PAGO MÓVIL` with explicit rules for default vs explicit BCV rate inquiry and calculation.
+     - `knowledge/tvtotal24_latina_support.md`: Updated Section 4 with learned case on BCV rate policy.
+     - `workflows/agent_tvtotal24_latina.json`: Synchronized standalone agent definition.
+  4. **Repository Synchronization**:
+     - Exported and synchronized all 20 workflows via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers.
