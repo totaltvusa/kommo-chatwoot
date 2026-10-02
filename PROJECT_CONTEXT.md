@@ -2600,4 +2600,45 @@
   3. **Repository Synchronization**:
      - Workflows published in n8n and synchronized locally.
      - Zero messages sent to live customers.
+---
 
+### 79. Incident Diagnosis & Resolution: SyntaxError in `Formatear Respuesta` Node (Conversations #1518 and #1378) (2026-10-02)
+
+* **Incident Summary & Scope**:
+  - The user reported that the AI agents stopped responding to inbound customer requests in recent conversations (e.g. Conversation #1518 - Johnny on WhatsApp USA / TotalTv USA, and Conversation #1378 - Juan Carlos on WhatsApp Latina / TVTotal24).
+  - Both conversations stalled after the customer sent their inquiry without receiving any automated response from Toto or Tivi.
+
+* **Root Cause Analysis (RCA)**:
+  - Inspection of recent execution logs in n8n for workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+    * **Execution 17701 & 17695** (Conversation #1518): Toto generated the 24h free trial onboarding response, but the execution failed before message delivery.
+    * **Execution 17687** (Conversation #1378): Tivi generated the technical troubleshooting triage response, but the execution failed before message delivery.
+  - **Error Mechanism**:
+    * Node `Formatear Respuesta` threw `SyntaxError: Invalid or unexpected token` during script parsing.
+    * Line 362 contained literal escaped newline escape sequences (`{\n content: formattedText,\n ... }`) instead of standard multi-line JavaScript formatting.
+    * Because JavaScript execution in the n8n VM aborted immediately upon evaluating the syntax error, the execution terminated and downstream nodes (`Wait Typing Delay`, `Enviar Mensaje Chatwoot`) never executed.
+
+* **Resolution & Verification**:
+  1. **Node Code Repair**:
+     - Corrected the `return` statement in node `Formatear Respuesta` (`workflows/router_chatwoot_ia.json` and in n8n) to standard valid JavaScript object return syntax:
+       ```javascript
+       return [{
+         json: {
+           content: formattedText,
+           conversation_id: conversationId,
+           account_id: accountId,
+           inbox_id: inboxId,
+           channel: channel,
+           delay_seconds: randomDelaySeconds,
+           execute_auto_transfer: shouldExecuteAutoTransfer,
+           auto_transfer_reason: autoTransferReason,
+           auto_transfer_details: autoTransferDetails
+         }
+       }];
+       ```
+  2. **Syntax Validation**:
+     - Verified all project JavaScript files and workflow code with `node --check` / linter to ensure 0 syntax errors across all workflows.
+  3. **Production Deployment & Synchronization**:
+     - Updated workflow `n0zgnS1vlOGNcGNY` via MCP `update_workflow`.
+     - Published workflow in n8n via `publish_workflow`.
+     - Synchronized all workflow JSON files with `export_workflows.py`.
+     - Maintained strict rule: Zero unauthorized messages dispatched to live customers during diagnostics.
