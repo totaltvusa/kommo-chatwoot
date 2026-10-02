@@ -2557,3 +2557,47 @@
      - Updated and published `0Go7n1S2CQZr548G` and `n0zgnS1vlOGNcGNY` via n8n MCP.
      - Exported all 21 workflows locally via `workflows/export_workflows.py`.
      - Zero messages sent to live customers.
+
+---
+
+### 78. Post-Incident Hardening: Conversation 1310, If-Node Boolean Syntax, Background Step Resilience & Outbound Deduplication (2026-10-02)
+
+* **Context & Incident RCA (Conversation 1310 - Luz De la Cruz)**:
+  - Client sent an $8 Zelle payment receipt at `12:51:49`, followed 13 seconds later (`12:52:02`) by a text message stating *"Usuario: luz..."*.
+  - Execution 1 successfully renewed line ID `48739` (`LuzdelaCruz`) in MVPlay until `2026-11-02` with 3 screens, consuming 1 credit.
+  - However, the client received two duplicate messages transferring her to human support, and administrator alerts / Google Sheet entries did not fire initially.
+  - **Root Cause 1 (If-Node Condition Syntax Error)**:
+    * In sub-workflow `Tool - Renovacion Automatica MVPlay TVTotal24` (`0Go7n1S2CQZr548G`), the If node `¿Renovacion Exitosa?` was configured with `operator: { type: "boolean", operation: "equals", singleValue: true }` without `rightValue`.
+    * In n8n v2 strict evaluation, comparing against an undefined rightValue evaluated to `false`.
+    * As a result, execution bypassed the entire success branch (`Actualizar Hoja DnSpace`, `Registrar en PAGOS Chatwoot`, `Notificar Telegram Admin`, `Notificar WhatsApp Admin`, `Nota Privada Chatwoot`) and routed to `Respuesta Tool Fallback`.
+  - **Root Cause 2 (False Human Transfer Guardrail)**:
+    * `Formatear Respuesta` in `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`) checked `item.json.renewed === true || item.json.status === 'success'`, while the fallback output returned `fallback_to_human: true`. This triggered an auto-guardrail human transfer message to the customer.
+  - **Root Cause 3 (Concurrent Burst Messages & Duplicate Dispatches)**:
+    * The second execution (triggered by the user's text message 13s later) ran concurrently.
+    * When it reached the renewal tool, it found the reference `wv5fumiud` already stored on the Chatwoot contact from Execution 1, interpreted it as *"already processed"*, and triggered a second transfer-to-human message with only a 5-second interval.
+
+* **Remediation & Regularization (Backfill)**:
+  1. **Conversation 1310 Remediation**:
+     - Removed `human` tag, kept funnel tags, and restored `stage-leads-ganados`.
+     - Dispatched the official renewal confirmation message with active credentials (`Usuario: LuzdelaCruz`, `Contraseña: c26de44d82cd4dac`, DNS links).
+  2. **Regularization Execution (Execution 17678)**:
+     - Executed backfill pipeline without duplicate credit consumption:
+       * **Google Sheet `DnSpace`**: Updated row for `LuzdelaCruz` with `PLAY: RENOVADO(Zelle)` and `Vence: 2026-11-02`.
+       * **Google Sheet `PAGOS` (Chatwoot)**: Appended row for reference `wv5fumiud` ($8 Zelle, conversation 1310).
+       * **Telegram Admin**: Sent notification to Chat ID `40371837`.
+       * **WhatsApp Admin**: Sent notification via Evolution API `TTvAlertsMovistar` to `584146130135`.
+       * **Private Note**: Inserted audit note into Chatwoot conversation 1310.
+
+* **Architectural Hardening**:
+  1. **Sub-Workflow `0Go7n1S2CQZr548G` (`Tool - Renovacion Automatica MVPlay TVTotal24`)**:
+     - Corrected node `¿Renovacion Exitosa?` condition to `operator: { type: "boolean", operation: "true" }`.
+     - Enabled `onError: "continueRegularOutput"` on all background nodes (`Actualizar Hoja DnSpace`, `Registrar en PAGOS Chatwoot`, `Notificar Telegram Admin`, `Notificar WhatsApp Admin`, `Nota Privada Chatwoot`) so network blips never block the renewal response.
+     - Homologated output schema: guaranteed `success: true, renewed: true, status: 'success'` and `client_message`.
+     - Concurrency tolerance: if the reference was already processed for this contact within 5 minutes, returns success immediately instead of failing.
+  2. **Router Workflow `n0zgnS1vlOGNcGNY` (`router_chatwoot_ia.json`)**:
+     - Contact inspection fallback in `Formatear Respuesta`: if `last_renewed_at` is within the last 3 minutes, guarantees `renewalSucceeded = true`.
+     - Outbound deduplicator: inspects recent outgoing messages in Chatwoot (last 25s); if an equivalent public message was just dispatched, suppresses the duplicate message automatically.
+  3. **Repository Synchronization**:
+     - Workflows published in n8n and synchronized locally.
+     - Zero messages sent to live customers.
+
