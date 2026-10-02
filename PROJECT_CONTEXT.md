@@ -2500,3 +2500,60 @@
   4. **Repository Synchronization**:
      - Exported and synchronized all 20 workflows via `workflows/export_workflows.py`.
      - Zero messages sent to live customers.
+
+---
+
+### 77. TVTotal24 Automated MVPlay Renewal (Zelle, Binance Pay, Pago Móvil), Anti-Double Use & Global Google Sheets Audit (2026-10-02)
+
+* **Context & Objective**:
+  - Automate the end-to-end subscription renewal process for **TVTotal24** on the **MVPlay (Xtream-Masters)** panel when customers send payment receipts via **Zelle**, **Binance Pay**, or **Pago Móvil (Venezuela)** for **1 Month** or **3 Months**.
+  - Prevent receipt double-usage through pre-renewal verification against a global payment registry in Google Sheets.
+  - Automatically audit every processed renewal into Google Sheets, update CRM/DnSpace status, dispatch administrator alerts (Telegram & WhatsApp), record private Chatwoot notes, and send the official confirmation to the customer with active credential reminders.
+
+* **Business Rules & Pricing Matrix**:
+  | Payment Method | Plan | Price / Criteria | Tolerance | MVPlay Package ID | Credits |
+  | :--- | :--- | :--- | :--- | :--- | :--- |
+  | **Zelle** (`pagos@totaltvlatina.com`) | 1 Month | **$8 USD** | Exact | `129` (⚡ 1 Mes) | 1 |
+  | **Zelle** (`pagos@totaltvlatina.com`) | 3 Months | **$24 USD** | Exact | `130` (⚡ 3 Meses) | 2 |
+  | **Binance Pay** (Pay ID `22628239`) | 1 Month | **5 USDT** | Exact | `129` (⚡ 1 Mes) | 1 |
+  | **Binance Pay** (Pay ID `22628239`) | 3 Months | **14 USDT** | Exact | `130` (⚡ 3 Meses) | 2 |
+  | **Pago Móvil** (`04246861135` / `J405259221`) | 1 Month | **$8 USD in Bs** | **Up to +/- 2%** | `129` (⚡ 1 Mes) | 1 |
+  | **Pago Móvil** (`04246861135` / `J405259221`) | 3 Months | **$24 USD in Bs** | **Up to +/- 2%** | `130` (⚡ 3 Meses) | 2 |
+
+* **Technical Architecture & Implementations**:
+  1. **Sub-Workflow `Tool - Renovacion Automatica MVPlay TVTotal24` (`0Go7n1S2CQZr548G` / `tool_renovar_mvplay_tvtotal24.json`)**:
+     - **Pre-check Node `Consultar PAGOS Chatwoot`** (HTTP Request GET to Google Sheets REST API `values/PAGOS!A:Z`):
+       * Retrieves all existing transaction records in a single object without node-item multiplication.
+       * If `cleanRef` matches any existing reference in the sheet, immediately aborts auto-renewal and returns `fallback_to_human: true` (*"La referencia [ref] ya fue procesada anteriormente en el registro histórico global de pagos"*).
+     - **Node `Validar y Procesar Renovacion`**:
+       * Pure JavaScript HMAC-SHA256 implementation to query Binance Pay API (`GET /sapi/v1/pay/transactions`) for Binance receipts.
+       * Live exchange rate fetch (Binance P2P, DolarAPI Paralelo, and DolarAPI Oficial BCV) with 2% tolerance evaluation for Pago Móvil receipts.
+       * Multi-criteria customer line search in MVPlay (`action=get_lines`).
+       * Line extension (`action=extend_line&id={line_id}&package={pkg_id}`) and 3-connection enforcement (`action=edit_line&max_connections=3`).
+       * Chatwoot contact attribute enrichment (`usuario`, `last_payment_ref`, `last_renewed_at`, `last_plan`).
+     - **Post-renewal Node `Actualizar Hoja DnSpace`** (Google Sheets update on *Clientes TotalTv*):
+       * Updates `Vence` with new expiration date (`YYYY-MM-DD`).
+       * Marks column `PLAY` with `RENOVADO(Zelle)`, `RENOVADO(Binance)`, or `RENOVADO(Pago Móvil)`.
+     - **Post-renewal Node `Registrar en PAGOS Chatwoot`** (HTTP Request POST to Google Sheets REST API `values/PAGOS!A1:append`):
+       * Appends audit row to spreadsheet *Chatwoot* (`1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY`), sheet `PAGOS` (`85956231`): `Fecha`, `Plataforma` (`TVTotal24`), `Cliente`, `Usuario`, `Metodo`, `Monto`, `Plan`, `Referencia`, `Vence`, `ID_Conversacion`.
+       * Resilient self-initialization of header row if sheet is empty.
+     - **Instant Admin Alerts**:
+       * Telegram Push to Chat ID `40371837`.
+       * WhatsApp Evolution API (`TTvAlertsMovistar`) to `584146130135`.
+     - **Private Chatwoot Note & Customer Response**:
+       * Registers internal private audit note with line ID, plan, package ID, amount, and reference.
+       * Delivers official customer message with reminder of active credentials (`Usuario` and `Contraseña`).
+  2. **Router Integration `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`)**:
+     - **`Procesar Resultado Visión`**:
+       * Detects qualifying receipts for TVTotal24 (Zelle, Binance Pay, and Pago Móvil with official destination verification).
+       * Injects top-priority mandate for the AI Agent to immediately execute `renovar_cuenta_mvplay_tvtotal24` before any human transfer.
+     - **Tool Node `renovar_cuenta_mvplay_tvtotal24`**:
+       * Registered as an AI tool for `AI Agent - TVTotal24` with parameters for method, amount, and reference.
+     - **`Formatear Respuesta`**:
+       * Seamlessly catches successful renewal tool executions (`renewalSucceeded = true`), suppressing auto-guardrail human transfer and delivering the approved confirmation message.
+  3. **Prompt Hardening (`prompts/tvtotal24_prompt.md`)**:
+     - Configured explicit rules for Zelle, Binance Pay, and Pago Móvil auto-renewals in `AI Agent - TVTotal24`.
+  4. **Deployment & Synchronization**:
+     - Updated and published `0Go7n1S2CQZr548G` and `n0zgnS1vlOGNcGNY` via n8n MCP.
+     - Exported all 21 workflows locally via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers.
