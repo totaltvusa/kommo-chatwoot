@@ -2642,3 +2642,37 @@
      - Published workflow in n8n via `publish_workflow`.
      - Synchronized all workflow JSON files with `export_workflows.py`.
      - Maintained strict rule: Zero unauthorized messages dispatched to live customers during diagnostics.
+---
+
+### 80. Google Sheets Maintenance: NOVA vs. DnSpace Cross-Reference & Phone Sanitization (2026-10-02)
+
+* **Context & Objective**:
+  - In Google Sheets spreadsheet  (), audit the  tab against the active subscriber catalog in tab .
+  - Mark matching active customers in Column N of tab  with the keyword .
+  - Sanitize phone numbers with formatting artifacts (spaces, parentheses, hyphens, dots) in Column C of  starting from row 79.
+
+* **Audit Results & Applied Changes**:
+  1. **Cross-Referencing & Status Marking (Column N = 'ACTIVO')**:
+     - 12 active clients in  were identified as active subscribers in :
+       1. **Row 2**: Rolando Garcia () ->  Row 77
+       2. **Row 3**: David Gudiño () ->  Row 21
+       3. **Row 7**: Wilfredo Cabas () ->  Row 22
+       4. **Row 13**: Fran Escorcia () ->  Row 20
+       5. **Row 26**: Eddy Figueredo () ->  Row 51
+       6. **Row 35**: Luis Molina () ->  Row 30
+       7. **Row 41**: Amilcar Perez () ->  Row 29
+       8. **Row 46**: Roberto Amaya () ->  Row 63
+       9. **Row 55**: Jorge Fernandes () ->  Row 31
+       10. **Row 93**: Luis Villar () ->  Row 18
+       11. **Row 97**: Julio Ricardo Villarroel () ->  Row 5
+       12. **Row 98**: Lorena Olivares () ->  Row 49
+  2. **Phone Number Sanitization (Column C, Row 79+)**:
+     - 5 rows with formatting characters were normalized to clean E.164 digits:
+       * **Row 80** (Carlos Puche):  -> 
+       * **Row 102** (Deivis Gonzalez):  -> 
+       * **Row 112** (Juan Jorge Blanco):  -> 
+       * **Row 113** (Pedro Salgado):  -> 
+       * **Row 114** (John Salgado):  -> 
+
+* **Execution Method**:
+  - Executed atomically via Google Sheets API  in n8n with OAuth2 credentials (). All 17 cell ranges updated in a single operation.

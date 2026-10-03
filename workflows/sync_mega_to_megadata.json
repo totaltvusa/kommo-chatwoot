@@ -3,12 +3,12 @@
   "name": "Sync Mega to MegaData",
   "active": true,
   "isArchived": false,
-  "versionId": "2cd416ab-c67e-40fc-89df-2b5bb3dab5b4",
-  "activeVersionId": "2cd416ab-c67e-40fc-89df-2b5bb3dab5b4",
+  "versionId": "4653fdee-8cc1-41d3-b6dd-fdb0448b1943",
+  "activeVersionId": "4653fdee-8cc1-41d3-b6dd-fdb0448b1943",
   "triggerCount": 1,
   "nodeCount": 7,
   "createdAt": "2026-09-14T14:58:51.763Z",
-  "updatedAt": "2026-09-14T15:00:01.484Z",
+  "updatedAt": "2026-10-03T00:07:35.901Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -41,7 +41,7 @@
       "main": [
         [
           {
-            "node": "Leer Sheet Mega",
+            "node": "Leer NOVA",
             "type": "main",
             "index": 0
           }
@@ -52,51 +52,51 @@
       "main": [
         [
           {
-            "node": "Leer Sheet Mega",
+            "node": "Leer NOVA",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Leer Sheet Mega": {
+    "Leer NOVA": {
       "main": [
         [
           {
-            "node": "Procesar y Estructurar MegaData",
+            "node": "Leer DnSpace",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Procesar y Estructurar MegaData": {
+    "Leer DnSpace": {
       "main": [
         [
           {
-            "node": "Crear Pestana MegaData",
+            "node": "Procesar y Preparar BatchUpdate",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Crear Pestana MegaData": {
+    "Procesar y Preparar BatchUpdate": {
       "main": [
         [
           {
-            "node": "Escribir Datos en MegaData",
+            "node": "Aplicar BatchUpdate Sheets",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Escribir Datos en MegaData": {
+    "Aplicar BatchUpdate Sheets": {
       "main": [
         [
           {
-            "node": "Resumen Sincronizacion",
+            "node": "Reportar Resumen",
             "type": "main",
             "index": 0
           }
@@ -117,19 +117,6 @@
       "parameters": {}
     },
     {
-      "id": "3a06b55f-d10e-41c4-88a5-c5e8adb62725",
-      "name": "Procesar y Estructurar MegaData",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 1,
-      "position": [
-        224,
-        0
-      ],
-      "parameters": {
-        "jsCode": "// 1. Obtener todas las filas de la hoja Mega\nconst rows = $input.all();\nconst megaToken = '1655|Uk2GI2EUH0v8NIcUFjGwLeKLlp14bVmEi2rcGSuJ48ec8236';\nconst megaApiBase = 'https://megaott.net/api/v1';\n\nconst getField = (obj, regex) => {\n  if (!obj) return '';\n  for (const k of Object.keys(obj)) {\n    if (regex.test(k.trim())) {\n      const v = obj[k];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();\n    }\n  }\n  return '';\n};\n\n// 2. Extraer identificadores / usuarios / IDs\nconst extractedList = [];\nfor (let i = 0; i < rows.length; i++) {\n  const row = rows[i].json || {};\n  const idVal = getField(row, /^(id|sub_id|subscription_id)/i);\n  const usuario = getField(row, /^(usuario|username|user)/i);\n  const nombre = getField(row, /^(nombre|name|cliente)/i);\n  const apellido = getField(row, /^(apellido|last_name)/i);\n  const tel = getField(row, /^(tel|phone|cel|movil|whats)/i);\n  const email = getField(row, /^(email|correo)/i);\n  const vence = getField(row, /^(vence|expire)/i);\n\n  extractedList.push({\n    row_index: i + 2,\n    id: idVal,\n    usuario: usuario,\n    nombre: [nombre, apellido].filter(Boolean).join(' '),\n    telefono: tel,\n    email: email,\n    vence: vence,\n    original_row: row\n  });\n}\n\n// 3. Consultar la API de MegaOTT para cada registro con ID\nconst processedRecords = [];\nconst allKeysSet = new Set(['sheet_row', 'sheet_usuario', 'sheet_nombre', 'sheet_telefono', 'sheet_email', 'sheet_vence']);\n\nfor (let j = 0; j < extractedList.length; j++) {\n  const item = extractedList[j];\n  let apiData = null;\n  \n  if (item.id && /^\\d+$/.test(item.id)) {\n    try {\n      const res = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${megaApiBase}/subscriptions/${item.id}`,\n        headers: {\n          'Authorization': `Bearer ${megaToken}`,\n          'Accept': 'application/json',\n          'User-Agent': 'Mozilla/5.0'\n        },\n        json: true\n      });\n      if (res && res.data) {\n        apiData = res.data;\n      } else if (res && typeof res === 'object') {\n        apiData = res;\n      }\n    } catch (e) {\n      // Ignorar 404\n    }\n  }\n\n  const record = {\n    sheet_row: item.row_index,\n    sheet_usuario: item.usuario,\n    sheet_nombre: item.nombre,\n    sheet_telefono: item.telefono,\n    sheet_email: item.email,\n    sheet_vence: item.vence\n  };\n\n  if (apiData) {\n    for (const [k, v] of Object.entries(apiData)) {\n      allKeysSet.add(k);\n      record[k] = (v !== null && typeof v === 'object') ? JSON.stringify(v) : v;\n    }\n  } else {\n    for (const [k, v] of Object.entries(item.original_row)) {\n      const cleanK = 'orig_' + k.replace(/\\s+/g, '_');\n      allKeysSet.add(cleanK);\n      record[cleanK] = (v !== null && typeof v === 'object') ? JSON.stringify(v) : v;\n    }\n  }\n\n  processedRecords.push(record);\n}\n\nconst headersList = Array.from(allKeysSet);\n\nconst sheetValues = [\n  headersList,\n  ...processedRecords.map(rec => headersList.map(h => rec[h] !== undefined && rec[h] !== null ? String(rec[h]) : ''))\n];\n\nreturn [{\n  json: {\n    total_records: processedRecords.length,\n    total_columns: headersList.length,\n    headers: headersList,\n    values: sheetValues,\n    spreadsheet_id: '1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0',\n    sheet_name: 'MegaData'\n  }\n}];"
-      }
-    },
-    {
       "id": "7d5cbdaa-eb96-4991-8446-29b73b7d19b3",
       "name": "Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
@@ -146,58 +133,21 @@
       "webhookId": "367eb179-bc47-4801-baa9-8758aaba21a5"
     },
     {
-      "id": "40f3c7c6-57ba-4023-815d-d6977c9bcb66",
-      "name": "Leer Sheet Mega",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
-      "position": [
-        100,
-        0
-      ],
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0",
-          "mode": "list",
-          "cachedResultName": "Clientes TotalTV",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": 51202947,
-          "mode": "list",
-          "cachedResultName": "Mega",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/edit#gid=51202947"
-        },
-        "options": {}
-      },
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "Pw5wN2L5UopOruaj",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "id": "9afa704a-b72e-4ae8-94d2-b3a6b58b5204",
-      "name": "Crear Pestana MegaData",
+      "id": "leer-nova",
+      "name": "Leer NOVA",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        500,
+        240,
         0
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0:batchUpdate",
         "authentication": "predefinedCredentialType",
+        "method": "GET",
         "nodeCredentialType": "googleSheetsOAuth2Api",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ requests: [ { addSheet: { properties: { title: \"MegaData\" } } } ] }) }}",
-        "options": {}
+        "options": {},
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values/NOVA!A1:Z1000"
       },
-      "onError": "continueRegularOutput",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "Pw5wN2L5UopOruaj",
@@ -206,23 +156,20 @@
       }
     },
     {
-      "id": "5bb9d0ed-e317-45ea-971a-88e36910e341",
-      "name": "Escribir Datos en MegaData",
+      "id": "leer-dnspace",
+      "name": "Leer DnSpace",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        700,
+        480,
         0
       ],
       "parameters": {
-        "method": "PUT",
-        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values/MegaData!A1?valueInputOption=USER_ENTERED",
         "authentication": "predefinedCredentialType",
+        "method": "GET",
         "nodeCredentialType": "googleSheetsOAuth2Api",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ range: \"MegaData!A1\", majorDimension: \"ROWS\", values: $(\"Procesar y Estructurar MegaData\").first().json.values }) }}",
-        "options": {}
+        "options": {},
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values/DnSpace!A1:Z1000"
       },
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -232,16 +179,55 @@
       }
     },
     {
-      "id": "172ea446-e67b-4247-ae24-4552a9c75a46",
-      "name": "Resumen Sincronizacion",
+      "id": "procesar-batch",
+      "name": "Procesar y Preparar BatchUpdate",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        900,
+        720,
         0
       ],
       "parameters": {
-        "jsCode": "const summary = $(\"Procesar y Estructurar MegaData\").first().json;\nconst apiResponse = $input.first().json;\n\nreturn [{\n  json: {\n    status: \"success\",\n    message: \"MegaData synchronization completed successfully.\",\n    spreadsheet_id: summary.spreadsheet_id,\n    sheet_name: summary.sheet_name,\n    total_records_processed: summary.total_records,\n    total_columns_generated: summary.total_columns,\n    columns_list: summary.headers,\n    updated_range: apiResponse.updatedRange || \"MegaData!A1\",\n    updated_rows: apiResponse.updatedRows || summary.total_records + 1,\n    updated_columns: apiResponse.updatedColumns || summary.total_columns\n  }\n}];"
+        "jsCode": "const novaData = $('Leer NOVA').first().json.values || [];\nconst dnspaceData = $('Leer DnSpace').first().json.values || [];\n\nfunction cleanPhone(p) {\n  if (!p) return '';\n  let digits = String(p).replace(/\\D/g, '');\n  if (digits.length === 10 && ['3', '4', '7', '8', '9'].includes(digits[0])) {\n    digits = '1' + digits;\n  }\n  return digits;\n}\n\nfunction cleanStr(s) {\n  return String(s || '').trim().toLowerCase();\n}\n\n// 1. Index DnSpace records\nconst dnUsers = {};\nconst dnPhones = {};\nconst dnEmails = {};\nconst dnNames = {};\n\nfor (let idx = 1; idx < dnspaceData.length; idx++) {\n  const r = dnspaceData[idx];\n  if (!r || r.length === 0) continue;\n  const rowNum = idx + 1;\n  const nombre = r[0] || '';\n  const apellido = r[1] || '';\n  const tel = r[2] || '';\n  const usuario = r[3] || '';\n  const email = r[11] || '';\n  const vence = r[5] || '';\n  const play = r[12] || '';\n\n  const fullName = `${cleanStr(nombre)} ${cleanStr(apellido)}`.trim();\n  const cUser = cleanStr(usuario);\n  const cPhone = cleanPhone(tel);\n  const cEmail = cleanStr(email);\n\n  const entry = { rowNum, nombre, apellido, fullName, usuario, cUser, tel, cPhone, email, cEmail, vence, play };\n\n  if (cUser) dnUsers[cUser] = entry;\n  if (cPhone) dnPhones[cPhone] = entry;\n  if (cEmail && cEmail.includes('@')) dnEmails[cEmail] = entry;\n  if (fullName) dnNames[fullName] = entry;\n}\n\n// 2. Cross-reference NOVA against DnSpace and clean phones from row 79\nconst matches = [];\nconst phoneCleanups = [];\nconst dataEntries = [];\n\nfor (let idx = 1; idx < novaData.length; idx++) {\n  const r = novaData[idx];\n  const rowNum = idx + 1;\n  if (!r || r.length === 0) continue;\n\n  const nombre = r[0] || '';\n  const apellido = r[1] || '';\n  const tel = r[2] || '';\n  const usuario = r[3] || '';\n  const email = r[11] || '';\n\n  const fullName = `${cleanStr(nombre)} ${cleanStr(apellido)}`.trim();\n  const cUser = cleanStr(usuario);\n  const cPhone = cleanPhone(tel);\n  const cEmail = cleanStr(email);\n\n  let dnMatch = null;\n  const matchReasons = [];\n\n  if (cUser && dnUsers[cUser]) {\n    matchReasons.push(`Usuario exacto (${usuario})`);\n    dnMatch = dnUsers[cUser];\n  }\n  if (cPhone && dnPhones[cPhone]) {\n    matchReasons.push(`Teléfono exacto (${cPhone})`);\n    dnMatch = dnMatch || dnPhones[cPhone];\n  }\n  if (cEmail && cEmail.includes('@') && dnEmails[cEmail]) {\n    matchReasons.push(`Email exacto (${email})`);\n    dnMatch = dnMatch || dnEmails[cEmail];\n  }\n  if (!dnMatch && fullName && dnNames[fullName]) {\n    matchReasons.push(`Nombre completo (${fullName})`);\n    dnMatch = dnNames[fullName];\n  }\n\n  if (dnMatch) {\n    matches.push({\n      nova_row: rowNum,\n      cliente: `${nombre} ${apellido}`.trim(),\n      usuario: usuario,\n      telefono: tel,\n      email: email,\n      dnspace_row: dnMatch.rowNum,\n      dnspace_usuario: dnMatch.usuario,\n      dnspace_vence: dnMatch.vence,\n      reasons: matchReasons\n    });\n\n    dataEntries.push({\n      range: `NOVA!N${rowNum}`,\n      majorDimension: 'ROWS',\n      values: [['ACTIVO']]\n    });\n  }\n\n  // Check phone cleaning for row 79 onwards (rowNum >= 79)\n  if (rowNum >= 79) {\n    const hasDigits = /\\d/.test(tel);\n    if (hasDigits) {\n      const cleanedPhone = tel.replace(/[\\s\\(\\)\\-\\.\\+]/g, '');\n      if (cleanedPhone !== tel) {\n        phoneCleanups.push({\n          row: rowNum,\n          cliente: `${nombre} ${apellido}`.trim(),\n          original: tel,\n          cleaned: cleanedPhone\n        });\n\n        dataEntries.push({\n          range: `NOVA!C${rowNum}`,\n          majorDimension: 'ROWS',\n          values: [[cleanedPhone]]\n        });\n      }\n    }\n  }\n}\n\nconst batchPayload = {\n  valueInputOption: 'USER_ENTERED',\n  data: dataEntries\n};\n\nreturn [{\n  json: {\n    total_matches: matches.length,\n    matches: matches,\n    total_phone_cleanups: phoneCleanups.length,\n    phone_cleanups: phoneCleanups,\n    total_updates_to_send: dataEntries.length,\n    batch_payload: batchPayload\n  }\n}];"
+      }
+    },
+    {
+      "id": "aplicar-batch",
+      "name": "Aplicar BatchUpdate Sheets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "method": "POST",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values:batchUpdate",
+        "jsonBody": "={{ JSON.stringify($json.batch_payload) }}"
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "id": "reportar-resumen",
+      "name": "Reportar Resumen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const processor = $('Procesar y Preparar BatchUpdate').first().json;\nconst apiResponse = $('Aplicar BatchUpdate Sheets').first().json;\n\nreturn [{\n  json: {\n    status: 'success',\n    spreadsheet_id: '1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0',\n    sheet_name: 'NOVA',\n    total_active_clients_marked: processor.total_matches,\n    active_clients_list: processor.matches,\n    total_phones_formatted: processor.total_phone_cleanups,\n    formatted_phones_list: processor.phone_cleanups,\n    total_ranges_updated: processor.total_updates_to_send,\n    api_updated_cells: apiResponse.totalUpdatedCells || processor.total_updates_to_send,\n    api_updated_rows: apiResponse.totalUpdatedRows || processor.total_updates_to_send,\n    api_response: apiResponse\n  }\n}];"
       }
     }
   ],
