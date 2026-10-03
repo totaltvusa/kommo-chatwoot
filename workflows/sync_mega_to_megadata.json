@@ -3,12 +3,12 @@
   "name": "Sync Mega to MegaData",
   "active": true,
   "isArchived": false,
-  "versionId": "4653fdee-8cc1-41d3-b6dd-fdb0448b1943",
-  "activeVersionId": "4653fdee-8cc1-41d3-b6dd-fdb0448b1943",
+  "versionId": "76855a0f-9f16-4bf9-91c8-e8892b1d6d30",
+  "activeVersionId": "76855a0f-9f16-4bf9-91c8-e8892b1d6d30",
   "triggerCount": 1,
-  "nodeCount": 7,
+  "nodeCount": 8,
   "createdAt": "2026-09-14T14:58:51.763Z",
-  "updatedAt": "2026-10-03T00:07:35.901Z",
+  "updatedAt": "2026-10-03T00:14:14.744Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -41,7 +41,7 @@
       "main": [
         [
           {
-            "node": "Leer NOVA",
+            "node": "Leer Copia de Clientes",
             "type": "main",
             "index": 0
           }
@@ -52,14 +52,25 @@
       "main": [
         [
           {
-            "node": "Leer NOVA",
+            "node": "Leer Copia de Clientes",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Leer NOVA": {
+    "Leer Copia de Clientes": {
+      "main": [
+        [
+          {
+            "node": "Leer Mega",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Mega": {
       "main": [
         [
           {
@@ -74,14 +85,14 @@
       "main": [
         [
           {
-            "node": "Procesar y Preparar BatchUpdate",
+            "node": "Procesar Copia y Preparar BatchUpdate",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Procesar y Preparar BatchUpdate": {
+    "Procesar Copia y Preparar BatchUpdate": {
       "main": [
         [
           {
@@ -96,7 +107,7 @@
       "main": [
         [
           {
-            "node": "Reportar Resumen",
+            "node": "Reportar Resumen Copia",
             "type": "main",
             "index": 0
           }
@@ -133,29 +144,6 @@
       "webhookId": "367eb179-bc47-4801-baa9-8758aaba21a5"
     },
     {
-      "id": "leer-nova",
-      "name": "Leer NOVA",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        240,
-        0
-      ],
-      "parameters": {
-        "authentication": "predefinedCredentialType",
-        "method": "GET",
-        "nodeCredentialType": "googleSheetsOAuth2Api",
-        "options": {},
-        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values/NOVA!A1:Z1000"
-      },
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "Pw5wN2L5UopOruaj",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
       "id": "leer-dnspace",
       "name": "Leer DnSpace",
       "type": "n8n-nodes-base.httpRequest",
@@ -179,36 +167,20 @@
       }
     },
     {
-      "id": "procesar-batch",
-      "name": "Procesar y Preparar BatchUpdate",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        720,
-        0
-      ],
-      "parameters": {
-        "jsCode": "const novaData = $('Leer NOVA').first().json.values || [];\nconst dnspaceData = $('Leer DnSpace').first().json.values || [];\n\nfunction cleanPhone(p) {\n  if (!p) return '';\n  let digits = String(p).replace(/\\D/g, '');\n  if (digits.length === 10 && ['3', '4', '7', '8', '9'].includes(digits[0])) {\n    digits = '1' + digits;\n  }\n  return digits;\n}\n\nfunction cleanStr(s) {\n  return String(s || '').trim().toLowerCase();\n}\n\n// 1. Index DnSpace records\nconst dnUsers = {};\nconst dnPhones = {};\nconst dnEmails = {};\nconst dnNames = {};\n\nfor (let idx = 1; idx < dnspaceData.length; idx++) {\n  const r = dnspaceData[idx];\n  if (!r || r.length === 0) continue;\n  const rowNum = idx + 1;\n  const nombre = r[0] || '';\n  const apellido = r[1] || '';\n  const tel = r[2] || '';\n  const usuario = r[3] || '';\n  const email = r[11] || '';\n  const vence = r[5] || '';\n  const play = r[12] || '';\n\n  const fullName = `${cleanStr(nombre)} ${cleanStr(apellido)}`.trim();\n  const cUser = cleanStr(usuario);\n  const cPhone = cleanPhone(tel);\n  const cEmail = cleanStr(email);\n\n  const entry = { rowNum, nombre, apellido, fullName, usuario, cUser, tel, cPhone, email, cEmail, vence, play };\n\n  if (cUser) dnUsers[cUser] = entry;\n  if (cPhone) dnPhones[cPhone] = entry;\n  if (cEmail && cEmail.includes('@')) dnEmails[cEmail] = entry;\n  if (fullName) dnNames[fullName] = entry;\n}\n\n// 2. Cross-reference NOVA against DnSpace and clean phones from row 79\nconst matches = [];\nconst phoneCleanups = [];\nconst dataEntries = [];\n\nfor (let idx = 1; idx < novaData.length; idx++) {\n  const r = novaData[idx];\n  const rowNum = idx + 1;\n  if (!r || r.length === 0) continue;\n\n  const nombre = r[0] || '';\n  const apellido = r[1] || '';\n  const tel = r[2] || '';\n  const usuario = r[3] || '';\n  const email = r[11] || '';\n\n  const fullName = `${cleanStr(nombre)} ${cleanStr(apellido)}`.trim();\n  const cUser = cleanStr(usuario);\n  const cPhone = cleanPhone(tel);\n  const cEmail = cleanStr(email);\n\n  let dnMatch = null;\n  const matchReasons = [];\n\n  if (cUser && dnUsers[cUser]) {\n    matchReasons.push(`Usuario exacto (${usuario})`);\n    dnMatch = dnUsers[cUser];\n  }\n  if (cPhone && dnPhones[cPhone]) {\n    matchReasons.push(`Teléfono exacto (${cPhone})`);\n    dnMatch = dnMatch || dnPhones[cPhone];\n  }\n  if (cEmail && cEmail.includes('@') && dnEmails[cEmail]) {\n    matchReasons.push(`Email exacto (${email})`);\n    dnMatch = dnMatch || dnEmails[cEmail];\n  }\n  if (!dnMatch && fullName && dnNames[fullName]) {\n    matchReasons.push(`Nombre completo (${fullName})`);\n    dnMatch = dnNames[fullName];\n  }\n\n  if (dnMatch) {\n    matches.push({\n      nova_row: rowNum,\n      cliente: `${nombre} ${apellido}`.trim(),\n      usuario: usuario,\n      telefono: tel,\n      email: email,\n      dnspace_row: dnMatch.rowNum,\n      dnspace_usuario: dnMatch.usuario,\n      dnspace_vence: dnMatch.vence,\n      reasons: matchReasons\n    });\n\n    dataEntries.push({\n      range: `NOVA!N${rowNum}`,\n      majorDimension: 'ROWS',\n      values: [['ACTIVO']]\n    });\n  }\n\n  // Check phone cleaning for row 79 onwards (rowNum >= 79)\n  if (rowNum >= 79) {\n    const hasDigits = /\\d/.test(tel);\n    if (hasDigits) {\n      const cleanedPhone = tel.replace(/[\\s\\(\\)\\-\\.\\+]/g, '');\n      if (cleanedPhone !== tel) {\n        phoneCleanups.push({\n          row: rowNum,\n          cliente: `${nombre} ${apellido}`.trim(),\n          original: tel,\n          cleaned: cleanedPhone\n        });\n\n        dataEntries.push({\n          range: `NOVA!C${rowNum}`,\n          majorDimension: 'ROWS',\n          values: [[cleanedPhone]]\n        });\n      }\n    }\n  }\n}\n\nconst batchPayload = {\n  valueInputOption: 'USER_ENTERED',\n  data: dataEntries\n};\n\nreturn [{\n  json: {\n    total_matches: matches.length,\n    matches: matches,\n    total_phone_cleanups: phoneCleanups.length,\n    phone_cleanups: phoneCleanups,\n    total_updates_to_send: dataEntries.length,\n    batch_payload: batchPayload\n  }\n}];"
-      }
-    },
-    {
-      "id": "aplicar-batch",
-      "name": "Aplicar BatchUpdate Sheets",
+      "id": "leer-copia",
+      "name": "Leer Copia de Clientes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        960,
+        240,
         0
       ],
       "parameters": {
         "authentication": "predefinedCredentialType",
-        "method": "POST",
+        "method": "GET",
         "nodeCredentialType": "googleSheetsOAuth2Api",
         "options": {},
-        "sendBody": true,
-        "specifyBody": "json",
-        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values:batchUpdate",
-        "jsonBody": "={{ JSON.stringify($json.batch_payload) }}"
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values/'Copia de Clientes'!A1:Z2000"
       },
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -218,8 +190,70 @@
       }
     },
     {
-      "id": "reportar-resumen",
-      "name": "Reportar Resumen",
+      "id": "leer-mega",
+      "name": "Leer Mega",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "method": "GET",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {},
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values/Mega!A1:Z2000"
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "id": "procesar-copia",
+      "name": "Procesar Copia y Preparar BatchUpdate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const copiaData = $('Leer Copia de Clientes').first().json.values || [];\nconst megaData = $('Leer Mega').first().json.values || [];\nconst dnspaceData = $('Leer DnSpace').first().json.values || [];\n\nfunction cleanPhone(p) {\n  if (!p) return '';\n  let digits = String(p).replace(/\\D/g, '');\n  if (digits.length === 10 && ['3', '4', '7', '8', '9'].includes(digits[0])) {\n    digits = '1' + digits;\n  }\n  return digits;\n}\n\nfunction cleanStr(s) {\n  return String(s || '').trim().toLowerCase();\n}\n\n// 1. Index Mega\nconst megaByUser = {};\nconst megaByPhone = {};\nconst megaByName = {};\n\nfor (let idx = 1; idx < megaData.length; idx++) {\n  const r = megaData[idx];\n  if (!r || r.length === 0) continue;\n  const rowNum = idx + 1;\n  const nombre = r[0] || '';\n  const apellido = r[1] || '';\n  const tel = r[2] || '';\n  const usuario = r[3] || '';\n  const fn = `${cleanStr(nombre)} ${cleanStr(apellido)}`.trim();\n  const u = cleanStr(usuario);\n  const p = cleanPhone(tel);\n  const entry = { rowNum, nombre, apellido, fullName: fn, tel, phone: p, usuario, u };\n\n  if (u) megaByUser[u] = entry;\n  if (p && p.length >= 7) megaByPhone[p] = entry;\n  if (fn && fn.length >= 4) megaByName[fn] = entry;\n}\n\n// 2. Index DnSpace\nconst dnByUser = {};\nconst dnByPhone = {};\nconst dnByName = {};\n\nfor (let idx = 1; idx < dnspaceData.length; idx++) {\n  const r = dnspaceData[idx];\n  if (!r || r.length === 0) continue;\n  const rowNum = idx + 1;\n  const nombre = r[0] || '';\n  const apellido = r[1] || '';\n  const tel = r[2] || '';\n  const usuario = r[3] || '';\n  const fn = `${cleanStr(nombre)} ${cleanStr(apellido)}`.trim();\n  const u = cleanStr(usuario);\n  const p = cleanPhone(tel);\n  const entry = { rowNum, nombre, apellido, fullName: fn, tel, phone: p, usuario, u };\n\n  if (u) dnByUser[u] = entry;\n  if (p && p.length >= 7) dnByPhone[p] = entry;\n  if (fn && fn.length >= 4) dnByName[fn] = entry;\n}\n\n// 3. Process Copia de Clientes\nconst colCValues = [];\nconst colNValues = [];\nconst phoneCleanups = [];\nconst markedActive = [];\n\nfor (let idx = 1; idx < copiaData.length; idx++) {\n  const row = copiaData[idx];\n  const rowNum = idx + 1;\n\n  if (!row || row.length === 0) {\n    colCValues.push(['']);\n    colNValues.push(['']);\n    continue;\n  }\n\n  const nombre = row[0] || '';\n  const apellido = row[1] || '';\n  const tel = row[2] || '';\n  const usuario = row[4] || '';\n  const obs = row[8] || '';\n\n  // Clean phone number (remove spaces, parens, hyphens, dots, plus signs)\n  let cleanedPhone = tel;\n  if (/\\d/.test(tel) && /[\\s\\(\\)\\-\\.\\+]/.test(tel)) {\n    cleanedPhone = tel.replace(/[\\s\\(\\)\\-\\.\\+]/g, '');\n    phoneCleanups.push({\n      row: rowNum,\n      nombre: `${nombre} ${apellido}`.trim(),\n      original: tel,\n      cleaned: cleanedPhone\n    });\n  }\n  colCValues.push([cleanedPhone]);\n\n  // Match against Mega / DnSpace\n  const fn = `${cleanStr(nombre)} ${cleanStr(apellido)}`.trim();\n  const u = cleanStr(usuario);\n  const p = cleanPhone(tel);\n  const ln = cleanStr(apellido);\n  const firstName = cleanStr(nombre);\n\n  let target = '';\n  let matchInfo = '';\n\n  // A. Check exact user\n  if (u && megaByUser[u]) {\n    target = 'MEGA';\n    matchInfo = `Usuario Mega: ${megaByUser[u].usuario}`;\n  } else if (u && dnByUser[u]) {\n    target = 'DnSPACE';\n    matchInfo = `Usuario DnSpace: ${dnByUser[u].usuario}`;\n  }\n\n  // B. Check phone match\n  if (!target && p) {\n    if (megaByPhone[p]) {\n      const m = megaByPhone[p];\n      if ((ln && ln === cleanStr(m.apellido)) || (firstName && firstName.slice(0, 4) === cleanStr(m.nombre).slice(0, 4)) || fn === m.fullName) {\n        target = 'MEGA';\n        matchInfo = `Teléfono+Nombre Mega: ${m.nombre} ${m.apellido} (${m.usuario})`;\n      }\n    }\n    if (!target && dnByPhone[p]) {\n      const d = dnByPhone[p];\n      if ((ln && ln === cleanStr(d.apellido)) || (firstName && firstName.slice(0, 4) === cleanStr(d.nombre).slice(0, 4)) || fn === d.fullName || (rowNum === 898 && cleanStr(obs).includes('zorak'))) {\n        target = 'DnSPACE';\n        matchInfo = `Teléfono+Nombre DnSpace: ${d.nombre} ${d.apellido} (${d.usuario})`;\n      }\n    }\n  }\n\n  // C. Check full name match\n  if (!target && fn && fn.length > 6) {\n    if (megaByName[fn]) {\n      target = 'MEGA';\n      matchInfo = `Nombre Mega: ${megaByName[fn].nombre} ${megaByName[fn].apellido} (${megaByName[fn].usuario})`;\n    } else if (dnByName[fn]) {\n      target = 'DnSPACE';\n      matchInfo = `Nombre DnSpace: ${dnByName[fn].nombre} ${dnByName[fn].apellido} (${dnByName[fn].usuario})`;\n    }\n  }\n\n  if (target) {\n    markedActive.push({\n      row: rowNum,\n      nombre: `${nombre} ${apellido}`.trim(),\n      usuario: usuario,\n      phone: cleanedPhone,\n      tag: target,\n      match_info: matchInfo\n    });\n  }\n\n  colNValues.push([target]);\n}\n\nconst endRow = copiaData.length;\nconst batchPayload = {\n  valueInputOption: 'USER_ENTERED',\n  data: [\n    {\n      range: `'Copia de Clientes'!C2:C${endRow}`,\n      majorDimension: 'ROWS',\n      values: colCValues\n    },\n    {\n      range: `'Copia de Clientes'!N2:N${endRow}`,\n      majorDimension: 'ROWS',\n      values: colNValues\n    }\n  ]\n};\n\nreturn [{\n  json: {\n    total_rows_processed: colCValues.length,\n    total_phone_cleanups: phoneCleanups.length,\n    phone_cleanups: phoneCleanups,\n    total_tags_marked: markedActive.length,\n    mega_count: markedActive.filter(m => m.tag === 'MEGA').length,\n    dnspace_count: markedActive.filter(m => m.tag === 'DnSPACE').length,\n    marked_active: markedActive,\n    batch_payload: batchPayload\n  }\n}];"
+      }
+    },
+    {
+      "id": "aplicar-batch-copia",
+      "name": "Aplicar BatchUpdate Sheets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        960,
+        0
+      ],
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "jsonBody": "={{ JSON.stringify($json.batch_payload) }}",
+        "method": "POST",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "options": {},
+        "sendBody": true,
+        "specifyBody": "json",
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/values:batchUpdate"
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "id": "reportar-resumen-copia",
+      "name": "Reportar Resumen Copia",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -227,7 +261,7 @@
         0
       ],
       "parameters": {
-        "jsCode": "const processor = $('Procesar y Preparar BatchUpdate').first().json;\nconst apiResponse = $('Aplicar BatchUpdate Sheets').first().json;\n\nreturn [{\n  json: {\n    status: 'success',\n    spreadsheet_id: '1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0',\n    sheet_name: 'NOVA',\n    total_active_clients_marked: processor.total_matches,\n    active_clients_list: processor.matches,\n    total_phones_formatted: processor.total_phone_cleanups,\n    formatted_phones_list: processor.phone_cleanups,\n    total_ranges_updated: processor.total_updates_to_send,\n    api_updated_cells: apiResponse.totalUpdatedCells || processor.total_updates_to_send,\n    api_updated_rows: apiResponse.totalUpdatedRows || processor.total_updates_to_send,\n    api_response: apiResponse\n  }\n}];"
+        "jsCode": "const processor = $('Procesar Copia y Preparar BatchUpdate').first().json;\nconst apiResponse = $('Aplicar BatchUpdate Sheets').first().json;\n\nreturn [{\n  json: {\n    status: 'success',\n    spreadsheet_id: '1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0',\n    sheet_name: 'Copia de Clientes',\n    total_rows_processed: processor.total_rows_processed,\n    total_phones_formatted: processor.total_phone_cleanups,\n    sample_phone_cleanups: processor.phone_cleanups.slice(0, 10),\n    total_tags_marked: processor.total_tags_marked,\n    mega_tags_count: processor.mega_count,\n    dnspace_tags_count: processor.dnspace_count,\n    all_marked_clients: processor.marked_active,\n    api_updated_cells: apiResponse.totalUpdatedCells,\n    api_updated_rows: apiResponse.totalUpdatedRows,\n    api_updated_columns: apiResponse.totalUpdatedColumns,\n    api_updated_sheets: apiResponse.totalUpdatedSheets\n  }\n}];"
       }
     }
   ],

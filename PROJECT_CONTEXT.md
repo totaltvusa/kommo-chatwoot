@@ -2676,3 +2676,25 @@
 
 * **Execution Method**:
   - Executed atomically via Google Sheets API  in n8n with OAuth2 credentials (). All 17 cell ranges updated in a single operation.
+---
+
+### 81. Google Sheets Maintenance:  Phone Sanitization & MEGA / DnSPACE Tagging (2026-10-02)
+
+* **Context & Objective**:
+  - In Google Sheets document  (), audit and update the historical backup tab  (1,526 rows).
+  - Normalize and sanitize all phone numbers in Column C (removing spaces, parentheses, hyphens, dots, plus signs) across all rows.
+  - Cross-reference each client against active databases:
+    * Tag Column N with  if the client appears in the  sheet.
+    * Tag Column N with  if the client appears in the  sheet.
+
+* **Audit Results & Applied Changes**:
+  1. **Phone Number Sanitization (Column C)**:
+     - **651 phone numbers** containing formatting artifacts were cleaned and standardized to clean numeric strings.
+  2. **Active Database Cross-Referencing & Status Tagging (Column N)**:
+     - **45 matching subscriber accounts** were identified and tagged in Column N:
+       * **16 accounts** tagged as  (e.g. Jimmy James, Ken OBrien, Jerry Peralta, Richard Simpson, Peter Galecki, Michelle Moore, Rodrigo Aguirre, Masud Chowdhury, Spurgeon Watson, Ben Glenn, Benjamin Kistler, Mary Jordan, Lincoln Holliday, Mitchell Lovett).
+       * **29 accounts** tagged as  (e.g. Lorena Olivares, Marcos Rebruj, Frankie Alvarez, Marianny Diaz, Carlos Rodriguez, Benito Osorio, Andres Camous, Juan Fonseca, Clemente Marquez, Noel Izarra, Luis Villar, Juan Carlos Garcia, Humberto Hurtado, Julio Ricardo Villarroel, User250711, Angelina Montes, Wilfredo Cabas, Roberto Amaya, Luis Molina, Andres Tablante, Eddy Figueredo).
+
+* **Execution Details**:
+  - Executed atomically via Google Sheets API  in n8n ().
+  - Total updated cells: **3,050 cells** across Columns C and N in a single operation.
