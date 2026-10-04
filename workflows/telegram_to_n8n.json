@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "0b5a3b72-5b69-4694-b699-57dbbc58d00d",
-  "activeVersionId": "0b5a3b72-5b69-4694-b699-57dbbc58d00d",
+  "versionId": "106a0485-8135-4b09-be35-ea5f5ee35633",
+  "activeVersionId": "106a0485-8135-4b09-be35-ea5f5ee35633",
   "triggerCount": 1,
-  "nodeCount": 17,
+  "nodeCount": 20,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-09-30T00:51:49.457Z",
+  "updatedAt": "2026-10-04T02:44:10.930Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -104,6 +104,13 @@
         ],
         [
           {
+            "node": "Card2TrackStatusHttpRequest",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Enviar Ayuda Comando",
             "type": "main",
             "index": 0
@@ -175,6 +182,28 @@
           }
         ]
       ]
+    },
+    "Card2TrackStatusHttpRequest": {
+      "main": [
+        [
+          {
+            "node": "Procesar Respuesta Card2Track",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Respuesta Card2Track": {
+      "main": [
+        [
+          {
+            "node": "Enviar Card2Track Status Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodes": [
@@ -203,7 +232,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extraer datos del mensaje recibido\nconst messageText = $json.message?.text ? $json.message.text.trim() : '';\nconst chatId = $json.message?.chat?.id;\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/pdcash@MiBot -> /pdcash)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\nlet isBlink = false;\nlet isAgent = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet conversationId = null;\nlet instruction = '';\nlet errorMessage = '';\n\nif (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash' || command === '/blink') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  if (command === '/blink') isBlink = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 24 10 Alvez</code>\\n<code>${command} 15 -20 250150</code>`;\n  }\n} else if (command === '/agent' || command === '/agente') {\n  isAgent = true;\n  if (parts.length >= 3) {\n    const rawConvId = parts[1];\n    const convId = parseInt(rawConvId, 10);\n    const instructionText = parts.slice(2).join(' ').trim();\n    \n    if (isNaN(convId) || convId <= 0) {\n      errorMessage = `⚠️ El número de conversación debe ser un valor numérico entero (ej. 1323).\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else if (!instructionText) {\n      errorMessage = `⚠️ Debes indicar la instrucción que el Agente IA debe ejecutar.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else {\n      conversationId = convId;\n      instruction = instructionText;\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para /agent.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isBlink,\n    isAgent,\n    conversation_id: conversationId,\n    instruction,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash || isBlink || isAgent) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
+        "jsCode": "const messageText = $json.message?.text || '';\nconst chatId = $json.message?.chat?.id;\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/pdcash@MiBot -> /pdcash)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\nlet isBlink = false;\nlet isAgent = false;\nlet isCard2Track = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet conversationId = null;\nlet instruction = '';\nlet trackingAddress = '';\nlet errorMessage = '';\n\nif (command === '/card2track' || command === '/c2track') {\n  isCard2Track = true;\n  if (parts.length >= 2 && parts[1].trim() !== '') {\n    trackingAddress = parts.slice(1).join(' ').trim();\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} &lt;tracking_address&gt;</code>\\nEjemplo: <code>${command} oxVo4FQwRDd...</code>`;\n  }\n} else if (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash' || command === '/blink') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  if (command === '/blink') isBlink = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 24 10 Alvez</code>\\n<code>${command} 15 -20 250150</code>`;\n  }\n} else if (command === '/agent' || command === '/agente') {\n  isAgent = true;\n  if (parts.length >= 3) {\n    const rawConvId = parts[1];\n    const convId = parseInt(rawConvId, 10);\n    const instructionText = parts.slice(2).join(' ').trim();\n    \n    if (isNaN(convId) || convId <= 0) {\n      errorMessage = `⚠️ El número de conversación debe ser un valor numérico entero (ej. 1323).\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else if (!instructionText) {\n      errorMessage = `⚠️ Debes indicar la instrucción que el Agente IA debe ejecutar.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else {\n      conversationId = convId;\n      instruction = instructionText;\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para /agent.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isBlink,\n    isAgent,\n    isCard2Track,\n    trackingAddress,\n    conversation_id: conversationId,\n    instruction,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash || isBlink || isAgent || isCard2Track) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -219,152 +248,175 @@
         "rules": {
           "values": [
             {
+              "combinator": "and",
               "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
                 "conditions": [
                   {
+                    "id": "3e9981e3-3439-44b1-a537-fc9d38258963",
                     "leftValue": "={{ $json.isValid && $json.isCard2Crypto }}",
-                    "rightValue": true,
                     "operator": {
-                      "type": "boolean",
-                      "operation": "true"
-                    },
-                    "id": "3e9981e3-3439-44b1-a537-fc9d38258963"
+                      "operation": "true",
+                      "type": "boolean"
+                    }
                   }
                 ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "Ejecutar Card2Crypto"
-            },
-            {
-              "conditions": {
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 2
-                },
+                }
+              },
+              "outputKey": "Ejecutar Card2Crypto",
+              "renameOutput": true
+            },
+            {
+              "combinator": "and",
+              "conditions": {
                 "conditions": [
                   {
+                    "id": "3b99de12-2110-42c2-8444-8a7d5c8c3f84",
                     "leftValue": "={{ !$json.isValid && !!$json.errorMessage }}",
-                    "rightValue": true,
                     "operator": {
-                      "type": "boolean",
-                      "operation": "true"
-                    },
-                    "id": "3b99de12-2110-42c2-8444-8a7d5c8c3f84"
+                      "operation": "true",
+                      "type": "boolean"
+                    }
                   }
                 ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "Error de Sintaxis"
-            },
-            {
-              "conditions": {
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 2
-                },
+                }
+              },
+              "outputKey": "Error de Sintaxis",
+              "renameOutput": true
+            },
+            {
+              "combinator": "and",
+              "conditions": {
                 "conditions": [
                   {
                     "id": "8491f978-9b2e-4403-b88d-e8008cbe7707",
                     "leftValue": "={{ $json.isValid && $json.isNowPayments }}",
-                    "rightValue": "",
                     "operator": {
-                      "type": "boolean",
                       "operation": "true",
-                      "singleValue": true
-                    }
+                      "singleValue": true,
+                      "type": "boolean"
+                    },
+                    "rightValue": ""
                   }
                 ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "NowPayments"
-            },
-            {
-              "conditions": {
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 2
-                },
+                }
+              },
+              "outputKey": "NowPayments",
+              "renameOutput": true
+            },
+            {
+              "combinator": "and",
+              "conditions": {
                 "conditions": [
                   {
                     "id": "4b67b00f-6162-4204-9354-e65ae21939fa",
                     "leftValue": "={{ $json.isValid && $json.isPdCash }}",
-                    "rightValue": "",
                     "operator": {
-                      "type": "boolean",
                       "operation": "true",
-                      "singleValue": true
-                    }
+                      "singleValue": true,
+                      "type": "boolean"
+                    },
+                    "rightValue": ""
                   }
                 ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "pdCash"
-            },
-            {
-              "conditions": {
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 2
-                },
+                }
+              },
+              "outputKey": "pdCash",
+              "renameOutput": true
+            },
+            {
+              "combinator": "and",
+              "conditions": {
                 "conditions": [
                   {
                     "id": "blink-rule-output-06",
                     "leftValue": "={{ $json.isValid && $json.isBlink }}",
-                    "rightValue": "",
                     "operator": {
-                      "type": "boolean",
                       "operation": "true",
-                      "singleValue": true
-                    }
+                      "singleValue": true,
+                      "type": "boolean"
+                    },
+                    "rightValue": ""
                   }
                 ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "Blink"
-            },
-            {
-              "conditions": {
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 2
-                },
+                }
+              },
+              "outputKey": "Blink",
+              "renameOutput": true
+            },
+            {
+              "combinator": "and",
+              "conditions": {
                 "conditions": [
                   {
                     "id": "agent-rule-output-05",
                     "leftValue": "={{ $json.isValid && $json.isAgent }}",
-                    "rightValue": "",
                     "operator": {
-                      "type": "boolean",
                       "operation": "true",
-                      "singleValue": true
-                    }
+                      "singleValue": true,
+                      "type": "boolean"
+                    },
+                    "rightValue": ""
                   }
                 ],
-                "combinator": "and"
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                }
               },
-              "renameOutput": true,
-              "outputKey": "Ejecutar Agente Chatwoot"
+              "outputKey": "Ejecutar Agente Chatwoot",
+              "renameOutput": true
+            },
+            {
+              "combinator": "and",
+              "conditions": {
+                "conditions": [
+                  {
+                    "id": "c2track-rule-output-07",
+                    "leftValue": "={{ $json.isValid && $json.isCard2Track }}",
+                    "operator": {
+                      "operation": "true",
+                      "singleValue": true,
+                      "type": "boolean"
+                    },
+                    "rightValue": ""
+                  }
+                ],
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                }
+              },
+              "outputKey": "Card2Track Status",
+              "renameOutput": true
             }
           ]
         },
@@ -429,7 +481,7 @@
     {
       "parameters": {
         "chatId": "={{ $json.chatId }}",
-        "text": "🤖 <b>Comandos disponibles en @AlvezN8Nbot:</b>\n\n💳 <b>Generación de Links de Pago:</b>\n• <code>/card2crypto monto porcentaje [orden]</code>\n  (Alias: <code>/c2c</code>)\n• <code>/nowpayments monto porcentaje [orden]</code>\n• <code>/pdcash monto porcentaje [orden]</code>\n• <code>/blink monto porcentaje [orden]</code>\n\n<b>Ejemplos /blink:</b>\n• <code>/blink 24 10 Alvez</code> - $24 + 10% de comisión ($26.40), Orden: Alvez\n• <code>/blink 15 -20 250150</code> - $15 - 20% de descuento ($12.00), Orden: 250150\n\n🤖 <b>Instruir Agente IA de Chatwoot:</b>\n• <code>/agent &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\n  (Alias: <code>/agente</code>)\n<b>Ejemplo:</b>\n• <code>/agent 1323 envía la prueba de 2 horas</code>",
+        "text": "🤖 <b>Comandos disponibles en @AlvezN8Nbot:</b>\n\n💳 <b>Generación de Links de Pago:</b>\n• <code>/card2crypto monto porcentaje [orden]</code>\n  (Alias: <code>/c2c</code>)\n• <code>/nowpayments monto porcentaje [orden]</code>\n• <code>/pdcash monto porcentaje [orden]</code>\n• <code>/blink monto porcentaje [orden]</code>\n\n<b>Ejemplos /blink:</b>\n• <code>/blink 24 10 Alvez</code> - $24 + 10% de comisión ($26.40), Orden: Alvez\n• <code>/blink 15 -20 250150</code> - $15 - 20% de descuento ($12.00), Orden: 250150\n\n🔍 <b>Tracking de Pago Card2Crypto:</b>\n• <code>/card2track &lt;tracking_address&gt;</code>\n  (Alias: <code>/c2track</code>)\n<b>Ejemplo:</b>\n• <code>/card2track oxVo4FQwRDd...</code>\n\n🤖 <b>Instruir Agente IA de Chatwoot:</b>\n• <code>/agent &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\n  (Alias: <code>/agente</code>)\n<b>Ejemplo:</b>\n• <code>/agent 1323 envía la prueba de 2 horas</code>",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -744,6 +796,69 @@
         "telegramApi": {
           "id": "IWiCwNsfWPaJGIsw",
           "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "id": "53f8ac03-10ea-4f27-873a-95970416d87a",
+      "name": "Card2TrackStatusHttpRequest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        448,
+        480
+      ],
+      "parameters": {
+        "options": {
+          "neverError": true
+        },
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ipn_token",
+              "value": "={{ $json.trackingAddress }}"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "url": "https://api.card2crypto.org/control/payment-status.php"
+      }
+    },
+    {
+      "id": "5cb174c3-742f-422f-b250-c90fb0eeb2a4",
+      "name": "Procesar Respuesta Card2Track",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        480
+      ],
+      "parameters": {
+        "jsCode": "const item = $input.item.json;\nconst trackingAddr = $('Parsear y Calcular Comando').item.json.trackingAddress;\nconst chatId = $('Parsear y Calcular Comando').item.json.chatId;\n\nconst status = (item.status || 'desconocido').toUpperCase();\nconst coin = (item.coin || item.currency || 'USDC').toUpperCase();\n\nlet statusEmoji = '🔍';\nif (['PAID', 'CONFIRMED', 'FORWARDED', 'COMPLETED', 'SUCCESS'].includes(status)) {\n  statusEmoji = '✅';\n} else if (['UNPAID', 'PENDING', 'WAITING', 'IN_PROGRESS'].includes(status)) {\n  statusEmoji = '⏳';\n} else if (['EXPIRED', 'FAILED', 'CANCELLED', 'ERROR'].includes(status)) {\n  statusEmoji = '❌';\n}\n\nconst valueCoin = item.value_coin !== undefined && item.value_coin !== '' ? item.value_coin : (item.amount || '0');\nconst valueNet = item.value_forwarded_coin !== undefined && item.value_forwarded_coin !== '' ? item.value_forwarded_coin : (item.value_forwarded || 'Pendiente');\nconst addressIn = item.address_in || item.polygon_address_in || item.address || 'No especificada';\nconst txidIn = item.txid_in || 'N/A';\nconst txidOut = item.txid_out || 'N/A';\n\nlet text = `${statusEmoji} <b>Estado de Pago Card2Crypto</b>\\n\\n`;\ntext += `📊 <b>Estado:</b> <code>${status}</code>\\n`;\ntext += `💵 <b>Monto Recibido:</b> $${valueCoin} ${coin}\\n`;\ntext += `📥 <b>Monto Payout / Neto:</b> $${valueNet} ${coin}\\n`;\ntext += `👛 <b>Dirección Depósito:</b>\\n<code>${addressIn}</code>\\n`;\n\nif (txidIn !== 'N/A') {\n  text += `🔗 <b>TXID Entrada:</b>\\n<code>${txidIn}</code>\\n`;\n}\n\nif (txidOut !== 'N/A') {\n  text += `🆔 <b>TXID Payout / Salida:</b>\\n<code>${txidOut}</code>\\n`;\n}\n\ntext += `\\n🔑 <b>Tracking Token:</b>\\n<code>${trackingAddr}</code>`;\n\nreturn {\n  json: {\n    chatId,\n    text,\n    status,\n    rawResponse: item\n  }\n};"
+      }
+    },
+    {
+      "id": "8a71452a-f6a3-466a-b10d-1b0d3fbf3d0a",
+      "name": "Enviar Card2Track Status Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        480
+      ],
+      "parameters": {
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        },
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.text }}"
+      },
+      "webhookId": "825b2696-2af6-43c0-81d9-99d1ff7fc91e",
+      "credentials": {
+        "telegramApi": {
+          "id": "uHQc4bCyyOMScQEr",
+          "name": "Alvezn8nbot"
         }
       }
     }
