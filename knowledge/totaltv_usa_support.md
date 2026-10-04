@@ -120,7 +120,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ### P4: ¿Cuáles son las formas de pago aceptadas para TotalTv USA?
 - **R:** Aceptamos las siguientes opciones seguras:
-  1. **Zelle** (Precio Base — Sin recargo / Sin descuento): Pago directo al correo `acalimanr@gmail.com` (Beneficiario: `Alvez Caliman`).
+  1. **Zelle** (Precio Base — Sin recargo / Sin descuento): Pago directo al correo `acalimanr@gmail.com` (Beneficiario: `ACR Enterprises LLC.`).
   2. **Cash App / Lightning Pay (Instant)** (Precio Base — Sin recargo / Sin descuento): Pago directo e instantáneo escaneando el código QR en pantalla o copiando el invoice de Lightning en Cash App (o Strike / wallet Lightning).
   3. **Criptomonedas (BTC / USDT)** — 🎉 **20% DE DESCUENTO**: Pago directo a nuestra billetera BTC `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo` o enlace con 20% de descuento.
   4. **Cash App (vía pd.cash)** — Precio Base + 10% de recargo por procesamiento: Enlace oficial generado.

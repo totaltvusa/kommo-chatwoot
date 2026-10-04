@@ -1758,7 +1758,7 @@
        - Explicitly declares:
          * **Zelle TVTotal24 (`pagos@totaltvlatina.com`)**: Titular / Beneficiario registrado es EXCLUSIVAMENTE **`ACR Enterprises`** (o `ACR ENTERPRISES LLC`).
          * **Pago Móvil (Bancamiga / Bolívares)**: Beneficiario registrado es EXCLUSIVAMENTE **`ArialStore C.A.`** (RIF: `J405259221`, Tel: `04246861135`).
-         * **Zelle TotalTv USA (`acalimanr@gmail.com`)**: Beneficiario registrado es EXCLUSIVAMENTE **`Alvez Caliman`**.
+         * **Zelle TotalTv USA (`acalimanr@gmail.com`)**: Beneficiario registrado es EXCLUSIVAMENTE **`ACR Enterprises LLC.`**.
        - Mandates that `ArialStore C.A.` belongs SOLELY to Pago Móvil, with absolute prohibition of associating it with Zelle or Binance.
        - Reenforces the rule that any attribute not listed in the prompt has a status of "no tengo información sobre eso" and must never be guessed or borrowed from other sections.
   2. **Workflow Deployment & Publishing**:
