@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "02351878-c1d7-4993-ae23-e925e7a145ca",
-  "activeVersionId": "02351878-c1d7-4993-ae23-e925e7a145ca",
+  "versionId": "170a5c15-5dd3-4691-99f1-3f3ffef58680",
+  "activeVersionId": "170a5c15-5dd3-4691-99f1-3f3ffef58680",
   "triggerCount": 1,
-  "nodeCount": 25,
+  "nodeCount": 28,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-10-05T01:00:08.240Z",
+  "updatedAt": "2026-10-05T01:18:50.731Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -111,12 +111,21 @@
         ],
         [
           {
+            "node": "Obtener Situaciones (Update)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Enviar Ayuda Comando",
             "type": "main",
             "index": 0
-          },
+          }
+        ],
+        [
           {
-            "node": "Obtener Situaciones (Update)",
+            "node": "Enviar Ayuda Comando",
             "type": "main",
             "index": 0
           }
@@ -243,7 +252,7 @@
         ],
         [
           {
-            "node": "Enviar Confirmación Update",
+            "node": "¿Requiere Eliminar Situación?",
             "type": "main",
             "index": 0
           }
@@ -251,6 +260,46 @@
       ]
     },
     "Insertar Fila Situación": {
+      "main": [
+        [
+          {
+            "node": "Enviar Confirmación Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Requiere Eliminar Situación?": {
+      "main": [
+        [
+          {
+            "node": "Preparar Filas a Borrar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Confirmación Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Filas a Borrar": {
+      "main": [
+        [
+          {
+            "node": "Eliminar Filas Situación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Eliminar Filas Situación": {
       "main": [
         [
           {
@@ -288,7 +337,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const messageText = $json.message?.text || '';\nconst chatId = $json.message?.chat?.id;\n\n// Catálogo estructurado de comandos para el bot\nconst COMMAND_REGISTRY = [\n  {\n    category: \"📢 <b>Situaciones Temporales de Agentes IA:</b>\",\n    commands: [\n      {\n        name: \"/update\",\n        syntax: \"/update <usa|lat|all> <situación / directiva>\",\n        aliases: [\"/situacion\", \"/situaciones\"],\n        description: \"Establece o limpia una directiva/situación temporal con vigencia (ej. 'por 24 horas', 'por 3 días', 'hasta nuevo aviso', 'clear') para orientar a los agentes IA ante fallas o contingencias.\",\n        example: \"/update usa El webplayer web.ip365.cx está en mantenimiento por 24 horas. Indicar a los clientes que usen la app.\"\n      },\n      {\n        name: \"/update status\",\n        syntax: \"/update status\",\n        aliases: [\"/situaciones\"],\n        description: \"Muestra el estado de las situaciones y directivas temporales activas en ambos agentes.\",\n        example: \"/update status\"\n      }\n    ]\n  },\n  {\n    category: \"💳 <b>Generación de Enlaces de Pago:</b>\",\n    commands: [\n      {\n        name: \"/card2crypto\",\n        syntax: \"/card2crypto monto porcentaje [orden]\",\n        aliases: [\"/c2c\"],\n        description: \"Genera link de pago con tarjeta a cripto (Card2Crypto).\",\n        example: \"/card2crypto 30 10 ttv0810a\"\n      },\n      {\n        name: \"/nowpayments\",\n        syntax: \"/nowpayments monto porcentaje [orden]\",\n        aliases: [],\n        description: \"Genera invoice de pago multimoneda en NOWPayments.\",\n        example: \"/nowpayments 50 0 miorden\"\n      },\n      {\n        name: \"/pdcash\",\n        syntax: \"/pdcash monto porcentaje [orden]\",\n        aliases: [],\n        description: \"Genera enlace de pago en pd.cash.\",\n        example: \"/pdcash 20 5 pedido12\"\n      },\n      {\n        name: \"/blink\",\n        syntax: \"/blink monto porcentaje [orden]\",\n        aliases: [],\n        description: \"Genera factura Lightning USD / Bitcoin en Blink.\",\n        example: \"/blink 24 10 Alvez\"\n      }\n    ]\n  },\n  {\n    category: \"🔍 <b>Tracking de Pago Card2Crypto:</b>\",\n    commands: [\n      {\n        name: \"/card2track\",\n        syntax: \"/card2track <tracking_address>\",\n        aliases: [\"/c2track\"],\n        description: \"Consulta el estado en tiempo real de una transacción en Card2Crypto.\",\n        example: \"/card2track oxVo4FQwRDd...\"\n      }\n    ]\n  },\n  {\n    category: \"🤖 <b>Instruir Agente IA de Chatwoot:</b>\",\n    commands: [\n      {\n        name: \"/agent\",\n        syntax: \"/agent <id_conversacion> <instruccion>\",\n        aliases: [\"/agente\"],\n        description: \"Envía una orden al Agente IA para responder al cliente en Chatwoot respetando nombre e idioma.\",\n        example: \"/agent 1323 envia instrucciones para instalar en iphone\"\n      }\n    ]\n  },\n  {\n    category: \"ℹ️ <b>Ayuda y Comandos:</b>\",\n    commands: [\n      {\n        name: \"/help\",\n        syntax: \"/help\",\n        aliases: [\"/?\"],\n        description: \"Muestra la lista de todos los comandos disponibles y su sintaxis.\",\n        example: \"/help\"\n      }\n    ]\n  }\n];\n\nfunction escapeHtml(str) {\n  if (!str) return '';\n  return String(str)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\n// Función para generar dinámicamente el mensaje de ayuda en HTML\nfunction generateHelpText() {\n  let output = \"🤖 <b>Comandos disponibles en @AlvezN8Nbot:</b>\\n\\n\";\n  for (const cat of COMMAND_REGISTRY) {\n    output += `${cat.category}\\n`;\n    for (const cmd of cat.commands) {\n      output += `• <code>${escapeHtml(cmd.syntax)}</code>\\n`;\n      if (cmd.aliases && cmd.aliases.length > 0) {\n        output += `  <i>(Alias: ${cmd.aliases.map(a => `<code>${escapeHtml(a)}</code>`).join(', ')})</i>\\n`;\n      }\n      if (cmd.description) {\n        output += `  ${escapeHtml(cmd.description)}\\n`;\n      }\n      if (cmd.example) {\n        output += `  <b>Ejemplo:</b> <code>${escapeHtml(cmd.example)}</code>\\n`;\n      }\n      output += `\\n`;\n    }\n  }\n  return output.trim();\n}\n\nconst helpText = generateHelpText();\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/help@MiBot -> /help)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\nlet isBlink = false;\nlet isAgent = false;\nlet isCard2Track = false;\nlet isUpdate = false;\nlet isHelp = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet conversationId = null;\nlet instruction = '';\nlet trackingAddress = '';\nlet errorMessage = '';\n\nlet updateAction = '';\nlet updateAgent = '';\nlet updateSituation = '';\nlet updateDurationText = '';\nlet updateCreatedAt = '';\nlet updateExpiresAt = '';\n\nif (command === '/help' || command === '/?' || command === '/start') {\n  isHelp = true;\n} else if (command === '/update' || command === '/situacion' || command === '/situaciones') {\n  isUpdate = true;\n  if (parts.length === 1 || (parts.length > 1 && ['status', 'list', 'ver', 'info'].includes(parts[1].toLowerCase()))) {\n    updateAction = 'status';\n  } else {\n    const rawAgent = parts[1].toLowerCase();\n    if (['usa', 'totaltvusa', 'totaltv_usa'].includes(rawAgent)) {\n      updateAgent = 'usa';\n    } else if (['lat', 'latina', 'tvtotal24', 'tvtotal'].includes(rawAgent)) {\n      updateAgent = 'lat';\n    } else if (['all', 'todos', 'ambos'].includes(rawAgent)) {\n      updateAgent = 'all';\n    } else {\n      errorMessage = `⚠️ Agente no válido: \"<code>${escapeHtml(parts[1])}</code>\".\\nUso: <code>/update &lt;usa|lat|all&gt; &lt;situación / directiva&gt;</code>\\nEjemplos:\\n<code>/update usa El webplayer está caído por 24 horas.</code>\\n<code>/update lat Intermitencia en canales por 3 días.</code>\\n<code>/update all Mantenimiento general hasta nuevo aviso.</code>\\n<code>/update usa clear</code>\\n<code>/update status</code>`;\n    }\n\n    if (!errorMessage) {\n      if (parts.length === 2 && ['clear', 'off', 'none', 'borrar', 'eliminar', 'desactivar', 'clean'].includes(parts[2].toLowerCase())) {\n        updateAction = 'clear';\n      } else if (parts.length >= 3 && ['clear', 'off', 'none', 'borrar', 'eliminar', 'desactivar', 'clean'].includes(parts[2].toLowerCase())) {\n        updateAction = 'clear';\n      } else {\n        updateAction = 'set';\n        updateSituation = parts.slice(2).join(' ').trim();\n\n        if (!updateSituation) {\n          errorMessage = `⚠️ Debes indicar la situación o directiva a transmitir.\\nUso: <code>/update ${updateAgent} &lt;descripción de la situación&gt;</code>\\nEjemplo: <code>/update ${updateAgent} El webplayer está caído por 24 horas. Indicar que usen la app.</code>`;\n        } else {\n          // Parse duration\n          const now = new Date();\n          updateCreatedAt = now.toISOString();\n\n          const minMatch = updateSituation.match(/\\b(?:por|for)\\s+(\\d+)\\s*(?:minutos?|mins?|m)\\b/i);\n          const hrMatch = updateSituation.match(/\\b(?:por|for)\\s+(\\d+)\\s*(?:horas?|hrs?|h)\\b/i) || updateSituation.match(/\\b(\\d+)\\s*(?:horas?|hrs?|h)\\b/i);\n          const dayMatch = updateSituation.match(/\\b(?:por|for)\\s+(\\d+)\\s*(?:d[ií]as?|days?|d)\\b/i) || updateSituation.match(/\\b(\\d+)\\s*(?:d[ií]as?|days?|d)\\b/i);\n\n          if (minMatch) {\n            const mins = parseInt(minMatch[1], 10);\n            updateDurationText = `${mins} minutos`;\n            const exp = new Date(now.getTime() + mins * 60 * 1000);\n            updateExpiresAt = exp.toISOString();\n          } else if (hrMatch) {\n            const hrs = parseInt(hrMatch[1], 10);\n            updateDurationText = `${hrs} horas`;\n            const exp = new Date(now.getTime() + hrs * 60 * 60 * 1000);\n            updateExpiresAt = exp.toISOString();\n          } else if (dayMatch) {\n            const days = parseInt(dayMatch[1], 10);\n            updateDurationText = `${days} días`;\n            const exp = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);\n            updateExpiresAt = exp.toISOString();\n          } else if (/\\b(hasta nuevo aviso|indefinido|sin vencimiento|until further notice)\\b/i.test(updateSituation)) {\n            updateDurationText = 'hasta nuevo aviso';\n            updateExpiresAt = '';\n          } else {\n            updateDurationText = 'hasta nuevo aviso';\n            updateExpiresAt = '';\n          }\n        }\n      }\n    }\n  }\n} else if (command === '/card2track' || command === '/c2track') {\n  isCard2Track = true;\n  if (parts.length >= 2 && parts[1].trim() !== '') {\n    trackingAddress = parts.slice(1).join(' ').trim();\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} &lt;tracking_address&gt;</code>\\nEjemplo: <code>${command} oxVo4FQwRDd...</code>`;\n  }\n} else if (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash' || command === '/blink') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  if (command === '/blink') isBlink = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 24 10 Alvez</code>\\n<code>${command} 15 -20 250150</code>`;\n  }\n} else if (command === '/agent' || command === '/agente') {\n  isAgent = true;\n  if (parts.length >= 3) {\n    const rawConvId = parts[1];\n    const convId = parseInt(rawConvId, 10);\n    const instructionText = parts.slice(2).join(' ').trim();\n    \n    if (isNaN(convId) || convId <= 0) {\n      errorMessage = `⚠️ El número de conversación debe ser un valor numérico entero (ej. 1323).\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else if (!instructionText) {\n      errorMessage = `⚠️ Debes indicar la instrucción que el Agente IA debe ejecutar.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else {\n      conversationId = convId;\n      instruction = instructionText;\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para /agent.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isBlink,\n    isAgent,\n    isCard2Track,\n    isUpdate,\n    updateAction,\n    updateAgent,\n    updateSituation,\n    updateDurationText,\n    updateCreatedAt,\n    updateExpiresAt,\n    isHelp,\n    helpText,\n    trackingAddress,\n    conversation_id: conversationId,\n    instruction,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash || isBlink || isAgent || isCard2Track || isUpdate) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
+        "jsCode": "const messageText = $json.message?.text || '';\nconst chatId = $json.message?.chat?.id;\n\n// Catálogo estructurado de comandos para el bot\nconst COMMAND_REGISTRY = [\n  {\n    category: \"📢 <b>Situaciones Temporales de Agentes IA:</b>\",\n    commands: [\n      {\n        name: \"/update\",\n        syntax: \"/update <usa|lat|all> <situación>\",\n        aliases: [\"/situacion\", \"/situaciones\"],\n        description: \"Establece una directiva/situación temporal con vigencia (ej. 'por 24 horas', 'por 3 días', 'hasta nuevo aviso') para orientar a los agentes IA ante contingencias.\",\n        example: \"/update usa El webplayer web.ip365.cx está en mantenimiento por 24 horas. Indicar a los clientes que usen la app.\"\n      },\n      {\n        name: \"/update status\",\n        syntax: \"/update status\",\n        aliases: [\"/situaciones\"],\n        description: \"Muestra el estado de todas las directivas activas y sus respectivos [ID] asignados.\",\n        example: \"/update status\"\n      },\n      {\n        name: \"/update clear\",\n        syntax: \"/update clear <ID> | /update <usa|lat|all> clear\",\n        aliases: [\"/update del\", \"/update borrar\"],\n        description: \"Desactiva una directiva específica mediante su ID (ej. /update clear 2) o todas las directivas de un agente.\",\n        example: \"/update clear 2\"\n      }\n    ]\n  },\n  {\n    category: \"💳 <b>Generación de Enlaces de Pago:</b>\",\n    commands: [\n      {\n        name: \"/card2crypto\",\n        syntax: \"/card2crypto monto porcentaje [orden]\",\n        aliases: [\"/c2c\"],\n        description: \"Genera link de pago con tarjeta a cripto (Card2Crypto).\",\n        example: \"/card2crypto 30 10 ttv0810a\"\n      },\n      {\n        name: \"/nowpayments\",\n        syntax: \"/nowpayments monto porcentaje [orden]\",\n        aliases: [],\n        description: \"Genera invoice de pago multimoneda en NOWPayments.\",\n        example: \"/nowpayments 50 0 miorden\"\n      },\n      {\n        name: \"/pdcash\",\n        syntax: \"/pdcash monto porcentaje [orden]\",\n        aliases: [],\n        description: \"Genera enlace de pago en pd.cash.\",\n        example: \"/pdcash 20 5 pedido12\"\n      },\n      {\n        name: \"/blink\",\n        syntax: \"/blink monto porcentaje [orden]\",\n        aliases: [],\n        description: \"Genera factura Lightning USD / Bitcoin en Blink.\",\n        example: \"/blink 24 10 Alvez\"\n      }\n    ]\n  },\n  {\n    category: \"🔍 <b>Tracking de Pago Card2Crypto:</b>\",\n    commands: [\n      {\n        name: \"/card2track\",\n        syntax: \"/card2track <tracking_address>\",\n        aliases: [\"/c2track\"],\n        description: \"Consulta el estado en tiempo real de una transacción en Card2Crypto.\",\n        example: \"/card2track oxVo4FQwRDd...\"\n      }\n    ]\n  },\n  {\n    category: \"🤖 <b>Instruir Agente IA de Chatwoot:</b>\",\n    commands: [\n      {\n        name: \"/agent\",\n        syntax: \"/agent <id_conversacion> <instruccion>\",\n        aliases: [\"/agente\"],\n        description: \"Envía una orden al Agente IA para responder al cliente en Chatwoot respetando nombre e idioma.\",\n        example: \"/agent 1323 envia instrucciones para instalar en iphone\"\n      }\n    ]\n  },\n  {\n    category: \"ℹ️ <b>Ayuda y Comandos:</b>\",\n    commands: [\n      {\n        name: \"/help\",\n        syntax: \"/help\",\n        aliases: [\"/?\"],\n        description: \"Muestra la lista de todos los comandos disponibles y su sintaxis.\",\n        example: \"/help\"\n      }\n    ]\n  }\n];\n\nfunction escapeHtml(str) {\n  if (!str) return '';\n  return String(str)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\n// Función para generar dinámicamente el mensaje de ayuda en HTML\nfunction generateHelpText() {\n  let output = \"🤖 <b>Comandos disponibles en @AlvezN8Nbot:</b>\\n\\n\";\n  for (const cat of COMMAND_REGISTRY) {\n    output += `${cat.category}\\n`;\n    for (const cmd of cat.commands) {\n      output += `• <code>${escapeHtml(cmd.syntax)}</code>\\n`;\n      if (cmd.aliases && cmd.aliases.length > 0) {\n        output += `  <i>(Alias: ${cmd.aliases.map(a => `<code>${escapeHtml(a)}</code>`).join(', ')})</i>\\n`;\n      }\n      if (cmd.description) {\n        output += `  ${escapeHtml(cmd.description)}\\n`;\n      }\n      if (cmd.example) {\n        output += `  <b>Ejemplo:</b> <code>${escapeHtml(cmd.example)}</code>\\n`;\n      }\n      output += `\\n`;\n    }\n  }\n  return output.trim();\n}\n\nconst helpText = generateHelpText();\n\n// Separar por espacios en blanco y limpiar el comando si incluye @bot\nconst parts = messageText.trim().split(/\\s+/);\nlet rawCommand = parts[0] ? parts[0].toLowerCase() : '';\nconst command = rawCommand.split('@')[0]; // Elimina el username del bot si viniera (/help@MiBot -> /help)\n\nlet isCard2Crypto = false;\nlet isNowPayments = false;\nlet isPdCash = false;\nlet isBlink = false;\nlet isAgent = false;\nlet isCard2Track = false;\nlet isUpdate = false;\nlet isHelp = false;\n\nlet baseAmount = null;\nlet percentage = 0;\nlet finalAmount = null;\nlet orderid = '';\nlet conversationId = null;\nlet instruction = '';\nlet trackingAddress = '';\nlet errorMessage = '';\n\nlet updateAction = '';\nlet updateAgent = '';\nlet updateSituation = '';\nlet updateDurationText = '';\nlet updateCreatedAt = '';\nlet updateExpiresAt = '';\nlet updateTargetId = null;\n\nif (command === '/help' || command === '/?' || command === '/start' || command === 'help' || command === 'ayuda') {\n  isHelp = true;\n} else if (command === '/update' || command === '/situacion' || command === '/situaciones') {\n  isUpdate = true;\n  if (parts.length === 1 || (parts.length > 1 && ['status', 'list', 'ver', 'info', 'listar', 'estado'].includes(parts[1].toLowerCase()))) {\n    updateAction = 'status';\n  } else {\n    const p1 = parts[1].toLowerCase();\n    \n    // Case: /update clear [id|agent] OR /update del [id] OR /update borrar [id]\n    if (['clear', 'off', 'del', 'delete', 'borrar', 'eliminar', 'desactivar', 'clean'].includes(p1)) {\n      if (parts.length >= 3) {\n        const p2 = parts[2].toLowerCase();\n        if (!isNaN(parseInt(p2, 10))) {\n          updateAction = 'clear_by_id';\n          updateTargetId = parseInt(p2, 10);\n        } else if (['usa', 'totaltvusa', 'totaltv_usa'].includes(p2)) {\n          updateAction = 'clear_agent';\n          updateAgent = 'usa';\n        } else if (['lat', 'latina', 'tvtotal24', 'tvtotal'].includes(p2)) {\n          updateAction = 'clear_agent';\n          updateAgent = 'lat';\n        } else if (['all', 'todos', 'ambos'].includes(p2)) {\n          updateAction = 'clear_all';\n          updateAgent = 'all';\n        } else {\n          errorMessage = `⚠️ Parámetro de eliminación no válido: \"<code>${escapeHtml(parts[2])}</code>\".\\nUso: <code>/update clear &lt;ID&gt;</code> (ej: <code>/update clear 2</code>)\\nO: <code>/update &lt;usa|lat|all&gt; clear</code>`;\n        }\n      } else {\n        updateAction = 'clear_all';\n        updateAgent = 'all';\n      }\n    } else if (!isNaN(parseInt(p1, 10))) {\n      // Case: /update <id> (e.g. /update 2 clear or /update 2)\n      updateAction = 'clear_by_id';\n      updateTargetId = parseInt(p1, 10);\n    } else if (['usa', 'totaltvusa', 'totaltv_usa'].includes(p1) || ['lat', 'latina', 'tvtotal24', 'tvtotal'].includes(p1) || ['all', 'todos', 'ambos'].includes(p1)) {\n      if (['usa', 'totaltvusa', 'totaltv_usa'].includes(p1)) updateAgent = 'usa';\n      if (['lat', 'latina', 'tvtotal24', 'tvtotal'].includes(p1)) updateAgent = 'lat';\n      if (['all', 'todos', 'ambos'].includes(p1)) updateAgent = 'all';\n\n      if (parts.length === 2) {\n        updateAction = 'clear_agent';\n      } else {\n        const p2 = parts[2].toLowerCase();\n        if (['clear', 'off', 'del', 'delete', 'borrar', 'eliminar', 'desactivar', 'clean'].includes(p2)) {\n          if (parts.length >= 4 && !isNaN(parseInt(parts[3], 10))) {\n            updateAction = 'clear_by_id';\n            updateTargetId = parseInt(parts[3], 10);\n          } else {\n            updateAction = 'clear_agent';\n          }\n        } else {\n          updateAction = 'set';\n          updateSituation = parts.slice(2).join(' ').trim();\n\n          if (!updateSituation) {\n            errorMessage = `⚠️ Debes indicar la situación o directiva a transmitir.\\nUso: <code>/update ${updateAgent} &lt;descripción de la situación&gt;</code>\\nEjemplo: <code>/update ${updateAgent} El webplayer está caído por 24 horas. Indicar que usen la app.</code>`;\n          } else {\n            // Parse duration\n            const now = new Date();\n            updateCreatedAt = now.toISOString();\n\n            const minMatch = updateSituation.match(/\\b(?:por|for)\\s+(\\d+)\\s*(?:minutos?|mins?|m)\\b/i);\n            const hrMatch = updateSituation.match(/\\b(?:por|for)\\s+(\\d+)\\s*(?:horas?|hrs?|h)\\b/i) || updateSituation.match(/\\b(\\d+)\\s*(?:horas?|hrs?|h)\\b/i);\n            const dayMatch = updateSituation.match(/\\b(?:por|for)\\s+(\\d+)\\s*(?:d[ií]as?|days?|d)\\b/i) || updateSituation.match(/\\b(\\d+)\\s*(?:d[ií]as?|days?|d)\\b/i);\n\n            if (minMatch) {\n              const mins = parseInt(minMatch[1], 10);\n              updateDurationText = `${mins} minutos`;\n              const exp = new Date(now.getTime() + mins * 60 * 1000);\n              updateExpiresAt = exp.toISOString();\n            } else if (hrMatch) {\n              const hrs = parseInt(hrMatch[1], 10);\n              updateDurationText = `${hrs} horas`;\n              const exp = new Date(now.getTime() + hrs * 60 * 60 * 1000);\n              updateExpiresAt = exp.toISOString();\n            } else if (dayMatch) {\n              const days = parseInt(dayMatch[1], 10);\n              updateDurationText = `${days} días`;\n              const exp = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);\n              updateExpiresAt = exp.toISOString();\n            } else if (/\\b(hasta nuevo aviso|indefinido|sin vencimiento|until further notice)\\b/i.test(updateSituation)) {\n              updateDurationText = 'hasta nuevo aviso';\n              updateExpiresAt = '';\n            } else {\n              updateDurationText = 'hasta nuevo aviso';\n              updateExpiresAt = '';\n            }\n          }\n        }\n      }\n    } else {\n      errorMessage = `⚠️ Parámetro no reconocido: \"<code>${escapeHtml(parts[1])}</code>\".\\nUso: <code>/update &lt;usa|lat|all&gt; &lt;situación / directiva&gt;</code>\\nOpciones:\\n• <code>/update status</code> (ver directivas e IDs activos)\\n• <code>/update clear &lt;ID&gt;</code> (eliminar una directiva específica)\\n• <code>/update &lt;usa|lat|all&gt; clear</code> (eliminar directivas de un agente)\\n• <code>/update usa El webplayer está caído por 24 horas.</code>`;\n    }\n  }\n} else if (command === '/card2track' || command === '/c2track') {\n  isCard2Track = true;\n  if (parts.length >= 2 && parts[1].trim() !== '') {\n    trackingAddress = parts.slice(1).join(' ').trim();\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} &lt;tracking_address&gt;</code>\\nEjemplo: <code>${command} oxVo4FQwRDd...</code>`;\n  }\n} else if (command === '/card2crypto' || command === '/c2c' || command === '/nowpayments' || command === '/pdcash' || command === '/blink') {\n  if (command === '/card2crypto' || command === '/c2c') isCard2Crypto = true;\n  if (command === '/nowpayments') isNowPayments = true;\n  if (command === '/pdcash') isPdCash = true;\n  if (command === '/blink') isBlink = true;\n  \n  if (parts.length >= 3) {\n    baseAmount = parseFloat(parts[1]);\n    percentage = parseFloat(parts[2]);\n    \n    // Validar números\n    if (isNaN(baseAmount) || baseAmount <= 0) {\n      errorMessage = `⚠️ El monto debe ser un número mayor a 0.\\nEjemplo: <code>${command} 30 10 ttv0810a</code>`;\n    } else if (isNaN(percentage)) {\n      errorMessage = `⚠️ El porcentaje debe ser un número válido (ej. 10 o -20).\\nEjemplo: <code>${command} 100 -20 ttv0810b</code>`;\n    } else {\n      // Calcular monto final\n      finalAmount = parseFloat((baseAmount * (1 + percentage / 100)).toFixed(2));\n      \n      // Asignar u obtener orden opcional\n      if (parts.length >= 4 && parts[3].trim() !== '') {\n        orderid = parts[3].trim();\n      } else {\n        const now = new Date();\n        const mm = String(now.getMonth() + 1).padStart(2, '0');\n        const dd = String(now.getDate()).padStart(2, '0');\n        orderid = `ttv-${mm}${dd}`;\n      }\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para ${command}.\\nUso: <code>${command} monto porcentaje [orden]</code>\\nEjemplos:\\n<code>${command} 24 10 Alvez</code>\\n<code>${command} 15 -20 250150</code>`;\n  }\n} else if (command === '/agent' || command === '/agente') {\n  isAgent = true;\n  if (parts.length >= 3) {\n    const rawConvId = parts[1];\n    const convId = parseInt(rawConvId, 10);\n    const instructionText = parts.slice(2).join(' ').trim();\n    \n    if (isNaN(convId) || convId <= 0) {\n      errorMessage = `⚠️ El número de conversación debe ser un valor numérico entero (ej. 1323).\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else if (!instructionText) {\n      errorMessage = `⚠️ Debes indicar la instrucción que el Agente IA debe ejecutar.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n    } else {\n      conversationId = convId;\n      instruction = instructionText;\n    }\n  } else {\n    errorMessage = `⚠️ Sintaxis incompleta para /agent.\\nUso: <code>${command} &lt;id_conversacion&gt; &lt;instruccion&gt;</code>\\nEjemplo: <code>${command} 1323 envia instrucciones para instalar en iphone</code>`;\n  }\n}\n\nreturn {\n  json: {\n    chatId,\n    command,\n    isCard2Crypto,\n    isNowPayments,\n    isPdCash,\n    isBlink,\n    isAgent,\n    isCard2Track,\n    isUpdate,\n    updateAction,\n    updateAgent,\n    updateSituation,\n    updateDurationText,\n    updateCreatedAt,\n    updateExpiresAt,\n    updateTargetId,\n    isHelp,\n    helpText,\n    trackingAddress,\n    conversation_id: conversationId,\n    instruction,\n    isValid: (isCard2Crypto || isNowPayments || isPdCash || isBlink || isAgent || isCard2Track || isUpdate || isHelp) && !errorMessage,\n    baseAmount,\n    percentage,\n    amount: finalAmount,\n    orderid,\n    errorMessage,\n    rawText: messageText\n  }\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -497,6 +546,31 @@
                 }
               },
               "outputKey": "Actualizar Situación",
+              "renameOutput": true
+            },
+            {
+              "combinator": "and",
+              "conditions": {
+                "conditions": [
+                  {
+                    "id": "help-rule-output-09",
+                    "leftValue": "={{ $json.isHelp }}",
+                    "operator": {
+                      "operation": "true",
+                      "singleValue": true,
+                      "type": "boolean"
+                    },
+                    "rightValue": ""
+                  }
+                ],
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                }
+              },
+              "outputKey": "Ayuda y Comandos",
               "renameOutput": true
             }
           ]
@@ -973,7 +1047,7 @@
         600
       ],
       "parameters": {
-        "jsCode": "const cmdData = $('Parsear y Calcular Comando').first().json || {};\nconst action = cmdData.updateAction || 'status';\nconst targetAgent = cmdData.updateAgent || 'all';\nconst targetSituation = cmdData.updateSituation || '';\nconst durationText = cmdData.updateDurationText || 'hasta nuevo aviso';\nconst createdAt = cmdData.updateCreatedAt || new Date().toISOString();\nconst expiresAt = cmdData.updateExpiresAt || '';\nconst chatId = cmdData.chatId;\n\n// Get all rows from previous dataTable node\nlet allRows = [];\ntry {\n  allRows = $input.all().map(item => item.json).filter(r => r && r.id);\n} catch (e) {}\n\nconst now = new Date();\n\nfunction escapeHtml(str) {\n  if (!str) return '';\n  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n}\n\nfunction formatAgent(agent) {\n  if (agent === 'usa') return '🇺🇸 TotalTv USA';\n  if (agent === 'lat') return '🌎 TVTotal24 Latina';\n  return '🌐 Ambos Agentes (ALL)';\n}\n\nfunction formatDate(isoStr) {\n  if (!isoStr) return 'Hasta nuevo aviso (Sin vencimiento)';\n  try {\n    const d = new Date(isoStr);\n    return d.toLocaleString('es-ES', { timeZone: 'America/Caracas', dateStyle: 'short', timeStyle: 'short' }) + ' (Hora Caracas)';\n  } catch (e) {\n    return isoStr;\n  }\n}\n\n// Identify active rows\nconst activeRows = allRows.filter(r => {\n  if (r.is_active === false || r.is_active === 'false') return false;\n  if (r.expires_at && r.expires_at.trim() !== '') {\n    const exp = new Date(r.expires_at);\n    if (!isNaN(exp.getTime()) && now > exp) return false;\n  }\n  return true;\n});\n\nlet messageText = '';\nlet deleteRowId = null;\nlet insertRow = null;\n\nif (action === 'status') {\n  const usaRows = activeRows.filter(r => r.agent === 'usa');\n  const latRows = activeRows.filter(r => r.agent === 'lat');\n  const allAgentsRows = activeRows.filter(r => r.agent === 'all');\n\n  let output = '📢 <b>Estado Actual de Situaciones Temporales de Agentes IA:</b>\\n\\n';\n\n  output += '🇺🇸 <b>TotalTv USA:</b>\\n';\n  if (usaRows.length > 0) {\n    for (const r of usaRows) {\n      output += `• <i>\"${escapeHtml(r.situation)}\"</i>\\n  ⏳ Vigencia: <code>${r.duration_text || 'Activa'}</code> | Vence: <code>${formatDate(r.expires_at)}</code>\\n`;\n    }\n  } else {\n    output += '• <i>Operación normal estándar (sin directivas especiales activas).</i>\\n';\n  }\n  output += '\\n';\n\n  output += '🌎 <b>TVTotal24 Latina:</b>\\n';\n  if (latRows.length > 0) {\n    for (const r of latRows) {\n      output += `• <i>\"${escapeHtml(r.situation)}\"</i>\\n  ⏳ Vigencia: <code>${r.duration_text || 'Activa'}</code> | Vence: <code>${formatDate(r.expires_at)}</code>\\n`;\n    }\n  } else {\n    output += '• <i>Operación normal estándar (sin directivas especiales activas).</i>\\n';\n  }\n  output += '\\n';\n\n  output += '🌐 <b>Ambos Agentes (Global / ALL):</b>\\n';\n  if (allAgentsRows.length > 0) {\n    for (const r of allAgentsRows) {\n      output += `• <i>\"${escapeHtml(r.situation)}\"</i>\\n  ⏳ Vigencia: <code>${r.duration_text || 'Activa'}</code> | Vence: <code>${formatDate(r.expires_at)}</code>\\n`;\n    }\n  } else {\n    output += '• <i>Ninguna directiva global activa.</i>\\n';\n  }\n  output += '\\n';\n\n  output += 'ℹ️ <i>Para agregar o actualizar:</i> <code>/update &lt;usa|lat|all&gt; &lt;situación&gt;</code>\\n';\n  output += 'ℹ️ <i>Para desactivar:</i> <code>/update &lt;usa|lat|all&gt; clear</code>';\n\n  messageText = output;\n  return [{ json: { action: 'status', message_text: messageText, chatId, has_insert: false, has_delete: false } }];\n\n} else if (action === 'clear') {\n  const rowsToDelete = allRows.filter(r => (targetAgent === 'all' || r.agent === targetAgent || r.agent === 'all'));\n  const deleteIds = rowsToDelete.map(r => r.id);\n\n  messageText = `✅ <b>Situación Temporal Desactivada:</b>\\n` +\n    `• <b>Agente(s):</b> <code>${formatAgent(targetAgent)}</code>\\n` +\n    `• <b>Estado:</b> Se han limpiado las situaciones temporales activas (${rowsToDelete.length} directivas removidas).\\n` +\n    `• Los agentes han vuelto a su comportamiento y documentación estándar.`;\n\n  return [{\n    json: {\n      action: 'clear',\n      target_agent: targetAgent,\n      delete_ids: deleteIds,\n      delete_count: deleteIds.length,\n      message_text: messageText,\n      chatId,\n      has_insert: false,\n      has_delete: (deleteIds.length > 0)\n    }\n  }];\n\n} else if (action === 'set') {\n  const previousRows = allRows.filter(r => (r.agent === targetAgent));\n  const deleteIds = previousRows.map(r => r.id);\n\n  const newRowData = {\n    agent: targetAgent,\n    situation: targetSituation,\n    duration_text: durationText,\n    created_at: createdAt,\n    expires_at: expiresAt,\n    is_active: true\n  };\n\n  messageText = `✅ <b>Directiva / Situación Temporal Activada:</b>\\n` +\n    `• <b>Agente(s):</b> <code>${formatAgent(targetAgent)}</code>\\n` +\n    `• <b>Vigencia:</b> <code>${durationText}</code>\\n` +\n    `• <b>Vence:</b> <code>${formatDate(expiresAt)}</code>\\n` +\n    `• <b>Directiva configurada:</b>\\n` +\n    `<i>\"${escapeHtml(targetSituation)}\"</i>\\n\\n` +\n    `⚡ <i>Los agentes adoptarán esta instrucción de forma inmediata al responder consultas de clientes.</i>\\n` +\n    `ℹ️ <i>Para desactivar antes de tiempo:</i> <code>/update ${targetAgent} clear</code>`;\n\n  return [{\n    json: {\n      action: 'set',\n      target_agent: targetAgent,\n      delete_ids: deleteIds,\n      delete_count: deleteIds.length,\n      new_row: newRowData,\n      ...newRowData,\n      message_text: messageText,\n      chatId,\n      has_insert: true,\n      has_delete: (deleteIds.length > 0)\n    }\n  }];\n}\n\nreturn [{ json: { action: 'unknown', message_text: '⚠️ Acción no reconocida.', chatId, has_insert: false, has_delete: false } }];"
+        "jsCode": "const cmdData = $('Parsear y Calcular Comando').first().json || {};\nconst action = cmdData.updateAction || 'status';\nconst targetAgent = cmdData.updateAgent || 'all';\nconst targetSituation = cmdData.updateSituation || '';\nconst durationText = cmdData.updateDurationText || 'hasta nuevo aviso';\nconst createdAt = cmdData.updateCreatedAt || new Date().toISOString();\nconst expiresAt = cmdData.updateExpiresAt || '';\nconst targetId = cmdData.updateTargetId;\nconst chatId = cmdData.chatId;\n\n// Get all rows from previous dataTable node\nlet allRows = [];\ntry {\n  allRows = $input.all().map(item => item.json).filter(r => r && (r.id !== undefined || r.situation));\n} catch (e) {}\n\nconst now = new Date();\n\nfunction escapeHtml(str) {\n  if (!str) return '';\n  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n}\n\nfunction formatAgent(agent) {\n  if (agent === 'usa') return '🇺🇸 TotalTv USA';\n  if (agent === 'lat') return '🌎 TVTotal24 Latina';\n  return '🌐 Ambos Agentes (ALL)';\n}\n\nfunction formatDate(isoStr) {\n  if (!isoStr) return 'Hasta nuevo aviso (Sin vencimiento)';\n  try {\n    const d = new Date(isoStr);\n    return d.toLocaleString('es-ES', { timeZone: 'America/Caracas', dateStyle: 'short', timeStyle: 'short' }) + ' (Hora Caracas)';\n  } catch (e) {\n    return isoStr;\n  }\n}\n\n// Identify active non-expired rows\nconst activeRows = allRows.filter(r => {\n  if (r.is_active === false || r.is_active === 'false') return false;\n  if (r.expires_at && String(r.expires_at).trim() !== '') {\n    const exp = new Date(r.expires_at);\n    if (!isNaN(exp.getTime()) && now > exp) return false;\n  }\n  return true;\n});\n\nlet messageText = '';\n\nif (action === 'status') {\n  const usaRows = activeRows.filter(r => r.agent === 'usa');\n  const latRows = activeRows.filter(r => r.agent === 'lat');\n  const allAgentsRows = activeRows.filter(r => r.agent === 'all');\n\n  let output = '📢 <b>Estado Actual de Situaciones Temporales de Agentes IA:</b>\\n\\n';\n\n  output += '🇺🇸 <b>TotalTv USA:</b>\\n';\n  if (usaRows.length > 0) {\n    for (const r of usaRows) {\n      output += `• <b>[ID: ${r.id}]</b> <i>\"${escapeHtml(r.situation)}\"</i>\\n  ⏳ Vigencia: <code>${r.duration_text || 'Activa'}</code> | Vence: <code>${formatDate(r.expires_at)}</code>\\n`;\n    }\n  } else {\n    output += '• <i>Operación normal estándar (sin directivas especiales activas).</i>\\n';\n  }\n  output += '\\n';\n\n  output += '🌎 <b>TVTotal24 Latina:</b>\\n';\n  if (latRows.length > 0) {\n    for (const r of latRows) {\n      output += `• <b>[ID: ${r.id}]</b> <i>\"${escapeHtml(r.situation)}\"</i>\\n  ⏳ Vigencia: <code>${r.duration_text || 'Activa'}</code> | Vence: <code>${formatDate(r.expires_at)}</code>\\n`;\n    }\n  } else {\n    output += '• <i>Operación normal estándar (sin directivas especiales activas).</i>\\n';\n  }\n  output += '\\n';\n\n  output += '🌐 <b>Ambos Agentes (Global / ALL):</b>\\n';\n  if (allAgentsRows.length > 0) {\n    for (const r of allAgentsRows) {\n      output += `• <b>[ID: ${r.id}]</b> <i>\"${escapeHtml(r.situation)}\"</i>\\n  ⏳ Vigencia: <code>${r.duration_text || 'Activa'}</code> | Vence: <code>${formatDate(r.expires_at)}</code>\\n`;\n    }\n  } else {\n    output += '• <i>Ninguna directiva global activa.</i>\\n';\n  }\n  output += '\\n';\n\n  output += 'ℹ️ <i>Para agregar:</i> <code>/update &lt;usa|lat|all&gt; &lt;situación&gt;</code>\\n';\n  output += 'ℹ️ <i>Para desactivar una específica:</i> <code>/update clear &lt;ID&gt;</code> (ej: <code>/update clear 2</code>)\\n';\n  output += 'ℹ️ <i>Para desactivar todas de un agente:</i> <code>/update &lt;usa|lat|all&gt; clear</code>\\n';\n  output += 'ℹ️ <i>Para desactivar todas absolutamente:</i> <code>/update all clear</code>';\n\n  messageText = output;\n  return [{ json: { action: 'status', message_text: messageText, chatId, has_insert: false, has_delete: false, delete_ids: [] } }];\n\n} else if (action === 'clear_by_id') {\n  const matchRow = allRows.find(r => String(r.id) === String(targetId) || r.id === targetId);\n  if (!matchRow || matchRow.is_active === false || matchRow.is_active === 'false') {\n    messageText = `⚠️ No se encontró ninguna directiva activa con ID <b>${targetId}</b>.\\n\\nUsa <code>/update status</code> para consultar la lista de directivas e IDs vigentes.`;\n    return [{ json: { action: 'clear_by_id', message_text: messageText, chatId, has_insert: false, has_delete: false, delete_ids: [] } }];\n  }\n\n  const deleteIds = [String(matchRow.id)];\n  messageText = `✅ <b>Situación Temporal Desactivada:</b>\\n` +\n    `• <b>ID:</b> <code>${matchRow.id}</code>\\n` +\n    `• <b>Agente:</b> <code>${formatAgent(matchRow.agent)}</code>\\n` +\n    `• <b>Directiva removida:</b>\\n<i>\"${escapeHtml(matchRow.situation)}\"</i>\\n\\n` +\n    `• El agente ha vuelto a su comportamiento y documentación estándar para este tema.`;\n\n  return [{\n    json: {\n      action: 'clear_by_id',\n      target_id: matchRow.id,\n      delete_ids: deleteIds,\n      delete_id: deleteIds[0],\n      delete_count: 1,\n      message_text: messageText,\n      chatId,\n      has_insert: false,\n      has_delete: true\n    }\n  }];\n\n} else if (action === 'clear_agent' || action === 'clear_all') {\n  const rowsToDelete = activeRows.filter(r => (targetAgent === 'all' || r.agent === targetAgent || r.agent === 'all'));\n  const deleteIds = rowsToDelete.map(r => String(r.id));\n\n  if (deleteIds.length === 0) {\n    messageText = `ℹ️ No hay directivas temporales activas para <code>${formatAgent(targetAgent)}</code>.\\n\\nUsa <code>/update status</code> para ver el estado actual.`;\n    return [{ json: { action: 'clear', message_text: messageText, chatId, has_insert: false, has_delete: false, delete_ids: [] } }];\n  }\n\n  messageText = `✅ <b>Situaciones Temporales Desactivadas:</b>\\n` +\n    `• <b>Agente(s):</b> <code>${formatAgent(targetAgent)}</code>\\n` +\n    `• <b>Total removidas:</b> <code>${deleteIds.length} directivas</code> (IDs: ${deleteIds.map(id => `<code>${id}</code>`).join(', ')}).\\n` +\n    `• Los agentes han vuelto a su comportamiento y documentación estándar.`;\n\n  return [{\n    json: {\n      action: 'clear',\n      target_agent: targetAgent,\n      delete_ids: deleteIds,\n      delete_id: deleteIds[0],\n      delete_count: deleteIds.length,\n      message_text: messageText,\n      chatId,\n      has_insert: false,\n      has_delete: true\n    }\n  }];\n\n} else if (action === 'set') {\n  const newRowData = {\n    agent: targetAgent,\n    situation: targetSituation,\n    duration_text: durationText,\n    created_at: createdAt,\n    expires_at: expiresAt,\n    is_active: true\n  };\n\n  messageText = `✅ <b>Directiva / Situación Temporal Activada:</b>\\n` +\n    `• <b>Agente(s):</b> <code>${formatAgent(targetAgent)}</code>\\n` +\n    `• <b>Vigencia:</b> <code>${durationText}</code>\\n` +\n    `• <b>Vence:</b> <code>${formatDate(expiresAt)}</code>\\n` +\n    `• <b>Directiva configurada:</b>\\n` +\n    `<i>\"${escapeHtml(targetSituation)}\"</i>\\n\\n` +\n    `⚡ <i>Los agentes adoptarán esta instrucción de forma inmediata.</i>\\n` +\n    `ℹ️ <i>Para consultar directivas e IDs asignados:</i> <code>/update status</code>\\n` +\n    `ℹ️ <i>Para desactivar esta directiva más adelante:</i> <code>/update clear &lt;ID&gt;</code>`;\n\n  return [{\n    json: {\n      action: 'set',\n      target_agent: targetAgent,\n      new_row: newRowData,\n      ...newRowData,\n      message_text: messageText,\n      chatId,\n      has_insert: true,\n      has_delete: false,\n      delete_ids: []\n    }\n  }];\n}\n\nreturn [{ json: { action: 'unknown', message_text: '⚠️ Acción no reconocida.', chatId, has_insert: false, has_delete: false, delete_ids: [] } }];"
       }
     },
     {
@@ -1048,7 +1122,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        880,
+        1120,
         600
       ],
       "parameters": {
@@ -1066,6 +1140,82 @@
           "name": "Alvezn8nbot"
         }
       }
+    },
+    {
+      "id": "if-delete-situacion-tg",
+      "name": "¿Requiere Eliminar Situación?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        720
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-has-delete",
+              "leftValue": "={{ $json.has_delete }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "code-prep-delete-tg",
+      "name": "Preparar Filas a Borrar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        720
+      ],
+      "parameters": {
+        "jsCode": "// Prepare items for batch deletion in Data Table\nconst data = $('Procesar y Gestionar Situacion').first().json || {};\nconst deleteIds = data.delete_ids || [];\n\nif (deleteIds.length === 0) {\n  return [{ json: { delete_id: '', skip: true } }];\n}\n\nreturn deleteIds.map(id => ({\n  json: {\n    delete_id: String(id),\n    chatId: data.chatId,\n    message_text: data.message_text\n  }\n}));"
+      }
+    },
+    {
+      "id": "dt-delete-rows-situacion-tg",
+      "name": "Eliminar Filas Situación",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        720
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "nAczHKLZ5FAsGWWz",
+          "mode": "id"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.delete_id }}"
+            }
+          ]
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "nodeGroups": [],
