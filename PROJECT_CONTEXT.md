@@ -2725,3 +2725,46 @@
      - Exported and synchronized workflow JSON files via `workflows/export_workflows.py`.
      - Zero messages sent to live customers.
 
+---
+
+### 83. Dynamic Temporary Situations and Expiration Directives for AI Agents via Telegram (`/update`) and n8n Data Tables (2026-10-04)
+
+* **Context & Requirement**:
+  - Provide an instant, zero-downtime mechanism for the administrator to broadcast temporary operational directives, service incidents, or contingency instructions to the AI Agents (**TotalTv USA**, **TVTotal24 Latina**, or **Both**) directly from the `@AlvezN8Nbot` Telegram bot.
+  - Examples of use cases:
+    * *"El webplayer de totaltvusa está caído por 24 horas. Indicar a los clientes que usen la app en su lugar."*
+    * *"Intermitencia en servidores de TVTotal24 por 3 días."*
+    * *"Mantenimiento general en pasarela de pago hasta nuevo aviso."*
+  - Directives support explicit expiration durations (*"por 24 horas"*, *"por 3 días"*, *"por 30 minutos"*, *"hasta nuevo aviso"*, etc.), automatic expiration filtering, and immediate context injection into customer conversations before the LLM generates answers.
+
+* **Architecture & Implementation Details**:
+  1. **n8n Persistent Data Table `situaciones_agentes` (`nAczHKLZ5FAsGWWz`)**:
+     - Created in n8n project `m55JgyG7NxCoV85n` (`TotalTv`).
+     - Columns:
+       * `agent` (string): `usa` (TotalTv USA), `lat` (TVTotal24 Latina), or `all` (Both brands).
+       * `situation` (string): Full description of the contingency and instructions to follow.
+       * `duration_text` (string): Human-readable validity (e.g. `24 horas`, `3 días`, `hasta nuevo aviso`).
+       * `created_at` (string): ISO timestamp of creation.
+       * `expires_at` (string): ISO timestamp of expiration, or empty for indefinite.
+       * `is_active` (boolean): Active state flag.
+  2. **Telegram Bot Workflow (`telegram_to_n8n.json` / `TS2CADjNNn05jXBW`)**:
+     - **Command Parser (`Parsear y Calcular Comando`)**:
+       * Added command `/update` and aliases (`/situacion`, `/situaciones`).
+       * Parses target agent (`usa`, `lat`, `all`) and actions:
+         - `/update status` (or `/situaciones`): Displays a formatted status report of active situations per brand.
+         - `/update <usa|lat|all> clear` (or `off`, `borrar`, `eliminar`): Clears and deactivates active situations for the selected agent(s).
+         - `/update <usa|lat|all> <descripción>`: Extracts duration regex (`X horas`, `X días`, `X minutos`, `hasta nuevo aviso`) and computes exact `expires_at` timestamp.
+       * Integrated into `/help` command catalog.
+     - **Execution Flow**:
+       * `Switch Comando` (Rule 7: `Actualizar Situación`) -> `Obtener Situaciones (Update)` (Data Table get rows) -> `Procesar y Gestionar Situacion` (Code node formatting messages and computing operations) -> `¿Requiere Insertar Situación?` (IF node) -> `Insertar Fila Situación` (Data Table insert) -> `Enviar Confirmación Update` (Telegram node).
+     - Published active live version in n8n (`02351878-c1d7-4993-ae23-e925e7a145ca`).
+  3. **Router Workflow Context Injection (`router_chatwoot_ia.json` / `n0zgnS1vlOGNcGNY`)**:
+     - Inserted `Consultar Situaciones Activas` (DataTable node reading from `nAczHKLZ5FAsGWWz` with `onError: continueRegularOutput`) and `Inyectar Situaciones Temporales` (Code node) between `Procesar Soporte TotalTv` and `¿Qué Empresa?`.
+     - Filters active, non-expired situations for the current brand (`usa`/`all` or `lat`/`all`).
+     - Prepends a top-priority directive prompt block (`[🚨 SITUACIÓN TEMPORAL / DIRECTIVA ESPECIAL ACTIVA PARA ...]`) directly into the incoming customer message `content`.
+     - Automatically adapts language (English for TotalTv USA English chats, Spanish for TVTotal24 and Spanish chats).
+     - Published active live version in n8n (`bff5294f-63b8-40b4-afb9-760b8d867923`).
+  4. **Repository Synchronization & Zero Downtime**:
+     - Synchronized all 21 workflow JSON files locally using `workflows/export_workflows.py`.
+     - Zero messages sent to live customers during update.
+
