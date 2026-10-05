@@ -490,7 +490,7 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
     - Recommend installing **SmartOne IPTV** directly from their device's app store.
     - Explain that SmartOne gives a **15-day free trial period**, and then can be activated for **$4 USD/year** (or $20 lifetime).
     - 🎁 **TOTALTV USA 1-YEAR BONUS (SMARTONE ONLY)**: If (and only if) the customer uses SmartOne and purchases any 1-Year (12 Months) TotalTv USA subscription, the 1-Year activation of SmartOne for 1 device is gifted completely FREE!
-    - Login in SmartOne with their TotalTv USA credentials and DNS `http://hbptsjrw.sljur.com`.
+    - Login / Configuration in SmartOne: Credentials can be configured by visiting the SmartOne website (`https://smartone-iptv.com/`) entering Username, Password, and DNS `http://hbptsjrw.sljur.com`, or the customer can simply provide their TV/device MAC address (shown on the main screen of the SmartOne app) so support can load the credentials for them.
 - **Apple Devices (iPhone, iPad, Apple TV, Mac)**:
   * ⛔ **STRICT PROHIBITION ON SMARTONE FOR APPLE**: SmartOne IPTV DOES NOT EXIST in the Apple App Store (iOS / iPadOS / tvOS / macOS). NEVER recommend, offer, or mention SmartOne IPTV to Apple users under any circumstance!
   * Install **"Smarters Player Lite"** (or **"IPTV Smarters Pro"**) directly from the Apple App Store.
@@ -499,7 +499,7 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
   * ⛔ **REMINDER**: Never mention a "TotalTv app" on iPhone/iPad/Apple TV!
 - **Smart TVs non-Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) & App Activation**:
   * **APP RECOMMENDATION RULES (SMART ONE AS FIRST CHOICE)**:
-    - Whenever a customer mentions that their device is a **non-Android TV**, or directly names the brand **Samsung** or **LG**: **ALWAYS RECOMMEND SMART ONE (SmartOne IPTV) AS THE FIRST AND PRIMARY OPTION**. (Configure in SmartOne with DNS `http://hbptsjrw.sljur.com`).
+    - Whenever a customer mentions that their device is a **non-Android TV**, or directly names the brand **Samsung** or **LG**: **ALWAYS RECOMMEND SMART ONE (SmartOne IPTV) AS THE FIRST AND PRIMARY OPTION**. Explain that to load their credentials (Username, Password, and DNS `http://hbptsjrw.sljur.com`), they can visit the SmartOne website (`https://smartone-iptv.com/`) or share their TV/device MAC address (visible on the app's main screen on their TV) so support can load the credentials directly.
     - **FREE APP RESTRICTION**: Recommend **IPTV Smarters** (or IPTV Smarters Pro) **ONLY AND EXCLUSIVELY if this type of customer explicitly asks for a free application** (e.g. "una app gratis", "aplicación gratuita", "without cost", "a free app", "no quiero pagar activación"). (Configure in IPTV Smarters strictly with DNS Smarters `http://hbptsjrw.smrtchin.com`). NEVER offer IPTV Smarters upfront or by default for Samsung, LG, or non-Android TVs.
     - Other store apps available if requested: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recommend directly by name, never send external links).
   * **Activation Assistance**: We can help customers activate their third-party apps:

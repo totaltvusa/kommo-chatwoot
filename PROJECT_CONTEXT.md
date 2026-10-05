@@ -2696,5 +2696,32 @@
        * **29 accounts** tagged as  (e.g. Lorena Olivares, Marcos Rebruj, Frankie Alvarez, Marianny Diaz, Carlos Rodriguez, Benito Osorio, Andres Camous, Juan Fonseca, Clemente Marquez, Noel Izarra, Luis Villar, Juan Carlos Garcia, Humberto Hurtado, Julio Ricardo Villarroel, User250711, Angelina Montes, Wilfredo Cabas, Roberto Amaya, Luis Molina, Andres Tablante, Eddy Figueredo).
 
 * **Execution Details**:
-  - Executed atomically via Google Sheets API  in n8n ().
+  - Executed atomically via Google Sheets API `batchUpdate` in n8n (`setup_inspect_copia`).
   - Total updated cells: **3,050 cells** across Columns C and N in a single operation.
+
+---
+
+### 82. SmartOne IPTV Credential Loading Instructions (Web Portal & Device MAC Address Sharing) (2026-10-04)
+
+* **Requirement & Business Rule**:
+  - Whenever an AI Agent (TotalTv USA or TVTotal24 Latina) recommends or guides the installation of **SmartOne IPTV** (e.g. for non-Android Smart TVs like LG webOS, Samsung Tizen, Hisense VIDAA, WhaleOS, or as a fallback for Android devices when Downloader fails):
+  - In addition to providing username, password, and the appropriate server URL / DNS:
+    * TotalTv USA: `http://hbptsjrw.sljur.com`
+    * TVTotal24 Latina: `http://wk.mvpl.uk:2082`
+  - The instructions must explicitly explain how to enter/load the credentials into the SmartOne application:
+    1. **Self-Service via Web Portal**: The customer can visit the official SmartOne website at **`https://smartone-iptv.com/`** and load their credentials (Username, Password, Server URL) directly.
+    2. **Assisted Loading via Support**: Alternatively, the customer can simply provide us with their device's **MAC address** (displayed on the main screen of the SmartOne app on their TV/device), and our support team will configure and load their credentials for them.
+  - All existing SmartOne policies remain strictly enforced (15-day free trial, $4 USD/year or $20 USD lifetime activation, TotalTv USA 1-year annuality bonus, strict prohibition on Apple devices, zero mention during general plans/pricing).
+
+* **Changes Implemented**:
+  1. **System Prompts**:
+     - `prompts/agent_prompt.md`: Updated Section `INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)` under Android fallback and non-Android Smart TVs with web portal (`https://smartone-iptv.com/`) and MAC address sharing options.
+     - `prompts/tvtotal24_prompt.md`: Updated Section `INSTRUCCIONES DE INSTALACIÓN` under Downloader fallback and non-Android Smart TVs with web portal (`https://smartone-iptv.com/`) and MAC address sharing options.
+  2. **Knowledge Base Support Documents**:
+     - `knowledge/totaltv_usa_support.md`: Updated Sections 1.A.7, 1.C, 2.D, and Section 4.
+     - `knowledge/tvtotal24_latina_support.md`: Updated Sections 1.A.7, 1.C, 2.D, and Section 4.
+  3. **Live n8n Deployment & Repository Synchronization**:
+     - Updated live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) nodes `AI Agent` and `AI Agent - TVTotal24` via MCP and published active version (`1f12a08d-0c3e-487e-b2fa-5c33c5d82158`).
+     - Exported and synchronized workflow JSON files via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers.
+
