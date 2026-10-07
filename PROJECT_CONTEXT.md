@@ -2857,3 +2857,41 @@
      - Exported and synchronized all workflow definitions locally via `workflows/export_workflows.py`.
      - Maintained zero unauthorized messages sent to live customers.
 
+---
+
+### 87. Root Cause Resolution: AI Agent Silence (Model 404 & Regex Error) and /agent Instruction Hallucinations (2026-10-07)
+
+* **Incident Analysis & Identified Root Causes**:
+  - **Issue Reported**:
+    1. AI Agents were not responding to customer messages in Chatwoot.
+    2. When instructions were issued via the AlvezN8N Telegram bot (`/agent <id> <instrucción>`), the responses were completely hallucinated/invented.
+  - **Root Cause 1 (AI Silence - Model Not Found 404)**:
+    - In `router_chatwoot_ia.json` (`Chatwoot + IA Agent`), node `Anthropic Chat Model` was set with parameter `"value": "claude-3-5-sonnet-20241022"` instead of `"claude-3-5-haiku-20241022"`.
+    - Anthropic API rejected every invocation with `404 {"type":"error","error":{"type":"not_found_error","message":"model: claude-3-5-sonnet-20241022"}}`, crashing every AI agent turn.
+  - **Root Cause 2 (AI Silence - Fatal Regex SyntaxError in `Formatear Respuesta`)**:
+    - `Formatear Respuesta` contained a broken multiline regex literal `/[•\-\s]*1\s*Dispositivo:[^\n]*/gi`, throwing `SyntaxError: Invalid regular expression: missing /` in the node.js VM runtime and terminating execution before delivery.
+  - **Root Cause 3 (AlvezN8N /agent Hallucinations - DeepSeek & Empty System Prompt)**:
+    - In `telegram_to_n8n.json`, `/agent` was routing to `Generar Respuesta LLM DeepSeek` with an empty system prompt that lacked all brand knowledge, server URLs, applications, pricing tables, and closed-domain rules.
+    - DeepSeek had no truth source for TVTotal24 / TotalTv USA, resulting in fabricated apps, fake servers, and invalid pricing.
+  - **Root Cause 4 (Legacy Endpoint & Token References)**:
+    - Nodes `Preparar Mensaje`, `Formatear Respuesta`, `Responder en Chatwoot`, and `telegram_to_n8n` still referenced legacy domain `https://project1-chatwoot.efebpb.easypanel.host` and old token `nuwRKpG2bBAQBpRFznfvrMpT`.
+
+* **Remediations Implemented**:
+  1. **Fixed Anthropic Model Identifier (`router_chatwoot_ia.json`)**:
+     - Configured `Anthropic Chat Model` node to official `"claude-3-5-haiku-20241022"` (`@n8n/n8n-nodes-langchain.lmChatAnthropic`, `temperature: 0`).
+  2. **Repaired `Formatear Respuesta` Code Node & Syntax Validation**:
+     - Cleaned up regex sanitization to `/[•\-\s]*[123]\s*Dispositivos?:[^\r\n]*/gi`.
+     - Validated all 21 workflow JSON files with node VM syntax test (0 syntax errors).
+     - Updated Chatwoot API endpoints to `https://chatwoot.ac4.club` with active token `Dk8XKwvn4LgK38yJ4FzVqf8h`.
+  3. **Replaced /agent Engine with Anthropic Claude Haiku + Full Brand System Prompts**:
+     - In `telegram_to_n8n.json`:
+       * Replaced DeepSeek with `Generar Respuesta LLM Anthropic` (`https://api.anthropic.com/v1/messages`, `claude-3-5-haiku-20241022`, credential `ZbUWSAq6JlKInA64`).
+       * Updated `Preparar Instrucción Agente Directo` to load the full official system prompts (`tvtotal24_prompt.md` and `agent_prompt.md`), ensuring full ground truth for apps, servers, pricing, payment methods, and First Name greeting mandate.
+       * Updated `Responder en Chatwoot Directo` to use `https://chatwoot.ac4.club` and `Dk8XKwvn4LgK38yJ4FzVqf8h`.
+  4. **Production Deployment & Synchronization**:
+     - Live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) published active version `ef4f3a1c-e7d1-43ca-8be0-e8422f49777b`.
+     - Live workflow `TS2CADjNNn05jXBW` (`Telegram to N8N`) published active version `a6a7eaa6-2781-4522-ad5e-5199a732a49b`.
+     - Exported all workflows locally and verified test executions (`20658` status: `success`).
+     - Committed and pushed to `origin/main`.
+
+
