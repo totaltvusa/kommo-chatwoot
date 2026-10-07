@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "170a5c15-5dd3-4691-99f1-3f3ffef58680",
-  "activeVersionId": "170a5c15-5dd3-4691-99f1-3f3ffef58680",
+  "versionId": "7cd5896e-777c-47e9-9cb5-200becdb029c",
+  "activeVersionId": "7cd5896e-777c-47e9-9cb5-200becdb029c",
   "triggerCount": 1,
-  "nodeCount": 28,
+  "nodeCount": 31,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-10-05T01:18:50.731Z",
+  "updatedAt": "2026-10-07T01:09:17.599Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -159,17 +159,6 @@
         [
           {
             "node": "Enviar PdCash Link1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Ejecutar Agente Sub-Workflow": {
-      "main": [
-        [
-          {
-            "node": "Enviar Confirmación Agente",
             "type": "main",
             "index": 0
           }
@@ -1241,9 +1230,6 @@
       "onError": "continueRegularOutput"
     },
     {
-      "parameters": {
-        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\n\nconst cmdData = $input.first().json || {};\nconst conversationId = cmdData.conversation_id || cmdData.conversationId;\nconst instruction = cmdData.instruction || '';\nconst chatId = cmdData.chatId;\n\nif (!conversationId || !instruction) {\n  return [{\n    json: {\n      success: false,\n      error: 'ID de conversación o instrucción incompleta.',\n      conversation_id: conversationId || 0,\n      chatId\n    }\n  }];\n}\n\n// 1. Consultar conversación y mensajes en Chatwoot\nlet convData = {};\nlet contactData = {};\nlet contactId = null;\nlet inboxId = 0;\nlet channel = 'WhatsApp';\n\ntry {\n  convData = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversationId}`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  if (convData) {\n    inboxId = Number(convData.inbox_id || 0);\n    channel = convData.channel || convData.meta?.channel || 'WhatsApp';\n    contactId = convData.meta?.sender?.id || convData.contact_id;\n    contactData = convData.meta?.sender || {};\n  }\n} catch (e) {\n  return [{\n    json: {\n      success: false,\n      error: `No se pudo obtener la conversación #${conversationId} en Chatwoot.`,\n      conversation_id: conversationId,\n      chatId\n    }\n  }];\n}\n\nlet allMessages = [];\ntry {\n  const msgsRes = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversationId}/messages`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  if (msgsRes && Array.isArray(msgsRes.payload)) {\n    allMessages = msgsRes.payload;\n  }\n} catch (e) {}\n\n// 2. Extraer Primer Nombre (FIRST NAME ONLY MANDATE)\nconst rawContactName = String(contactData.name || 'Cliente').trim();\nconst isNumericName = /^\\+?\\d[\\d\\s-]{5,}$/.test(rawContactName);\nconst cleanName = (rawContactName && !isNumericName) ? rawContactName.replace(/^[^a-zA-ZáéíóúÁÉÍÓÚñÑ]+/, '').trim() : 'Cliente';\nconst firstName = cleanName.split(/\\s+/)[0] || 'Cliente';\n\n// 3. Identificar Marca\nconst isTVTotal24 = (inboxId === 10 || inboxId === 13 || inboxId === 15 || inboxId === 16 || inboxId === 19);\nconst brandName = isTVTotal24 ? 'TVTotal24 (Latina)' : 'TotalTv USA';\n\n// 4. Inferencia / Sobreescritura Estricta de Idioma\nconst enOverrideRegex = /(\\bin\\s+english\\b|\\blanguage\\s+is\\s+english\\b|\\binstruct(ions)?\\s+in\\s+english\\b|\\benglish\\s+language\\b|\\ben\\s+ingl[eé]s\\b|\\bidioma\\s+ingl[eé]s\\b|\\brespond\\s+in\\s+english\\b|\\bwrite\\s+in\\s+english\\b)/i;\nconst esOverrideRegex = /(\\bin\\s+spanish\\b|\\blanguage\\s+is\\s+spanish\\b|\\binstruct(ions)?\\s+in\\s+spanish\\b|\\bspanish\\s+language\\b|\\ben\\s+espa[nñ]ol\\b|\\bidioma\\s+espa[nñ]ol\\b|\\brespond\\s+in\\s+spanish\\b|\\bwrite\\s+in\\s+spanish\\b)/i;\n\nconst esWordRegex = /\\b(hola|buen|buenos|buenas|dias|días|tardes|noches|por favor|ayuda|gracias|precio|precios|plan|planes|cuenta|cuentas|pago|pagos|pagar|renovaci[oó]n|renovar|mes|meses|a[ñn]o|a[ñn]os|dispositivo|dispositivos|prueba|demo|servicio|activar|comprobante|listo|transferencia|aqui|ac[aá]|envi[eéo]|enviado|gustar[íi]a|quiero|interesad[oa]|qu[eé]|c[oó]mo|d[oó]nde|cu[aá]ndo|por qu[eé]|porque|saludos|el|la|los|las|un|una|mi|mis|tu|tus|su|sus|es|son|est[aá]|tengo|tiene|pantalla|clave|tarjeta|dinero|soporte|canal|canales)\\b/gi;\nconst enWordRegex = /\\b(hi|hello|hey|good|morning|afternoon|evening|please|help|thank|thanks|thank you|price|prices|plan|plans|account|accounts|payment|payments|pay|renewal|renew|month|months|year|years|device|devices|trial|demo|service|services|activate|receipt|done|transfer|here|sent|would|like|want|interested|subscrib|how|what|where|when|why|who|did|can|could|i|you|he|she|it|we|they|my|your|the|is|are|am|do|does|did|have|has|take|card|money|cash|free|need|support|app|firestick|tv|screen|channel|channels|test|buy)\\b/gi;\n\nlet isEnglish = false;\nif (enOverrideRegex.test(instruction)) {\n  isEnglish = true;\n} else if (esOverrideRegex.test(instruction)) {\n  isEnglish = false;\n} else {\n  const customerMsgs = allMessages.filter(m => m.message_type === 0 || (m.sender && (m.sender.type === 'contact' || m.sender.type === 'Contact')));\n  let enCount = 0, esCount = 0;\n  for (const m of customerMsgs) {\n    const text = String(m.content || '').trim();\n    if (!text || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]{2,}/.test(text)) continue;\n    enCount += (text.match(enWordRegex) || []).length;\n    esCount += (text.match(esWordRegex) || []).length;\n  }\n  if (enCount > esCount) isEnglish = true;\n  else if (esCount > enCount) isEnglish = false;\n  else isEnglish = (!isTVTotal24);\n}\n\nconst languageLabel = isEnglish ? 'English' : 'Español';\n\n// 5. Historial Reciente\nconst historyLines = [];\nconst visibleMessages = allMessages.filter(m => !m.private && (m.message_type === 0 || m.message_type === 1)).slice(-8);\nfor (const m of visibleMessages) {\n  let text = (m.content || '').replace(/\\n+/g, ' ').trim();\n  if (text.length > 160) text = text.slice(0, 157) + '...';\n  const sender = (m.message_type === 0) ? (isEnglish ? 'Customer' : 'Cliente') : (isEnglish ? 'Assistant' : 'Asistente');\n  if (text) historyLines.push(`• [${sender}]: ${text}`);\n}\n\nconst systemPrompt = `⛔ MANDATO SUPREMO — FORMATO DE SALUDO Y MANEJO DE INSTRUCCIONES DEL ADMINISTRADOR (/AGENT):\n- ÚNICA Y EXCLUSIVAMENTE debes usar el PRIMER NOMBRE del cliente: \"${firstName}\". NUNCA usar su nombre completo \"${rawContactName}\".\n- Tu mensaje debe iniciar directamente con \"${firstName},\" seguido inmediatamente de una coma \\`, \\` y a continuación la respuesta adaptada.\n- ${isEnglish ? 'DEBES FORMULAR TU MENSAJE 100% EN INGLÉS. Está TERMINANTEMENTE PROHIBIDO incluir palabras en español (como ¡Hola!, Con gusto, Paso 1, etc.).' : 'Formula tu mensaje 100% en ESPAÑOL.'}`;\n\nconst userPrompt = `[ADMINISTRATOR INSTRUCTION FOR CONVERSATION #${conversationId}: \"${instruction}\"]\n\n[CLIENT CONTEXT:\n Full Name: \"${rawContactName}\"\n First Name Only: \"${firstName}\"\n Brand: \"${brandName}\"\n Channel: \"${channel}\"\n Target Language: \"${languageLabel}\"]\n\n[MANDATORY GREETING MANDATE:\n - Initiate your response starting directly with \"${firstName},\" followed by a space and your adapted message (e.g. \"${firstName}, ...\").\n - You are STRICTLY FORBIDDEN from greeting using full name \"${rawContactName}\".]\n\n${isEnglish ? '[MANDATORY LANGUAGE DIRECTIVE: Formulate your entire message 100% in ENGLISH. Zero Spanish words allowed (no \"¡Hola!\", \"Con gusto\", \"Paso 1\", \"Configuración\", \"Instalar\", \"Descargar\", \"usuario\", \"contraseña\", etc.).]' : '[DIRECTIVA OBLIGATORIA DE IDIOMA: Formula tu respuesta 100% en ESPAÑOL.]'}\n\n[RECENT CONVERSATION HISTORY:\n${historyLines.join('\\n')}\n]`;\n\nreturn [{\n  json: {\n    conversation_id: conversationId,\n    contact_name: rawContactName,\n    firstName: firstName,\n    brand: brandName,\n    channel: channel,\n    language: languageLabel,\n    isEnglish: isEnglish,\n    instruction: instruction,\n    system_prompt: systemPrompt,\n    user_prompt: userPrompt,\n    chatId: chatId,\n    success: true\n  }\n}];"
-      },
       "id": "code-prep-agent-tg",
       "name": "Preparar Instrucción Agente Directo",
       "type": "n8n-nodes-base.code",
@@ -1251,15 +1237,22 @@
       "position": [
         32,
         440
-      ]
+      ],
+      "parameters": {
+        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\n\nconst cmdData = $input.first().json || {};\nconst conversationId = cmdData.conversation_id || cmdData.conversationId;\nconst instruction = cmdData.instruction || '';\nconst chatId = cmdData.chatId;\n\nif (!conversationId || !instruction) {\n  return [{\n    json: {\n      success: false,\n      error: 'ID de conversación o instrucción incompleta.',\n      conversation_id: conversationId || 0,\n      chatId\n    }\n  }];\n}\n\n// 1. Consultar conversación y mensajes en Chatwoot\nlet convData = {};\nlet contactData = {};\nlet contactId = null;\nlet inboxId = 0;\nlet channel = 'WhatsApp';\n\ntry {\n  convData = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversationId}`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  if (convData) {\n    inboxId = Number(convData.inbox_id || 0);\n    channel = convData.channel || convData.meta?.channel || 'WhatsApp';\n    contactId = convData.meta?.sender?.id || convData.contact_id;\n    contactData = convData.meta?.sender || {};\n  }\n} catch (e) {\n  return [{\n    json: {\n      success: false,\n      error: `No se pudo obtener la conversación #${conversationId} en Chatwoot.`,\n      conversation_id: conversationId,\n      chatId\n    }\n  }];\n}\n\nlet allMessages = [];\ntry {\n  const msgsRes = await this.helpers.httpRequest({\n    method: 'GET',\n    url: `${chatwootBase}/conversations/${conversationId}/messages`,\n    headers: { 'api_access_token': chatwootToken },\n    json: true\n  });\n  if (msgsRes && Array.isArray(msgsRes.payload)) {\n    allMessages = msgsRes.payload;\n  }\n} catch (e) {}\n\n// 2. Extraer Primer Nombre (FIRST NAME ONLY MANDATE)\nconst rawContactName = String(contactData.name || 'Cliente').trim();\nconst isNumericName = /^\\+?\\d[\\d\\s-]{5,}$/.test(rawContactName);\nconst cleanName = (rawContactName && !isNumericName) ? rawContactName.replace(/^[^a-zA-ZáéíóúÁÉÍÓÚñÑ]+/, '').trim() : 'Cliente';\nconst firstName = cleanName.split(/\\s+/)[0] || 'Cliente';\n\n// 3. Identificar Marca\nconst isTVTotal24 = (inboxId === 10 || inboxId === 13 || inboxId === 15 || inboxId === 16 || inboxId === 19);\nconst brandName = isTVTotal24 ? 'TVTotal24 (Latina)' : 'TotalTv USA';\n\n// 4. Inferencia / Sobreescritura Estricta de Idioma\nconst enOverrideRegex = /(\\bin\\s+english\\b|\\blanguage\\s+is\\s+english\\b|\\binstruct(ions)?\\s+in\\s+english\\b|\\benglish\\s+language\\b|\\ben\\s+ingl[eé]s\\b|\\bidioma\\s+ingl[eé]s\\b|\\brespond\\s+in\\s+english\\b|\\bwrite\\s+in\\s+english\\b)/i;\nconst esOverrideRegex = /(\\bin\\s+spanish\\b|\\blanguage\\s+is\\s+spanish\\b|\\binstruct(ions)?\\s+in\\s+spanish\\b|\\bspanish\\s+language\\b|\\ben\\s+espa[nñ]ol\\b|\\bidioma\\s+espa[nñ]ol\\b|\\brespond\\s+in\\s+spanish\\b|\\bwrite\\s+in\\s+spanish\\b)/i;\n\nconst esWordRegex = /\\b(hola|buen|buenos|buenas|dias|días|tardes|noches|por favor|ayuda|gracias|precio|precios|plan|planes|cuenta|cuentas|pago|pagos|pagar|renovaci[oó]n|renovar|mes|meses|a[ñn]o|a[ñn]os|dispositivo|dispositivos|prueba|demo|servicio|activar|comprobante|listo|transferencia|aqui|ac[aá]|envi[eéo]|enviado|gustar[íi]a|quiero|interesad[oa]|qu[eé]|c[oó]mo|d[oó]nde|cu[aá]ndo|por qu[eé]|porque|saludos|el|la|los|las|un|una|mi|mis|tu|tus|su|sus|es|son|est[aá]|tengo|tiene|pantalla|clave|tarjeta|dinero|soporte|canal|canales)\\b/gi;\nconst enWordRegex = /\\b(hi|hello|hey|good|morning|afternoon|evening|please|help|thank|thanks|thank you|price|prices|plan|plans|account|accounts|payment|payments|pay|renewal|renew|month|months|year|years|device|devices|trial|demo|service|services|activate|receipt|done|transfer|here|sent|would|like|want|interested|subscrib|how|what|where|when|why|who|did|can|could|i|you|he|she|it|we|they|my|your|the|is|are|am|do|does|did|have|has|take|card|money|cash|free|need|support|app|firestick|tv|screen|channel|channels|test|buy)\\b/gi;\n\nlet isEnglish = false;\nif (enOverrideRegex.test(instruction)) {\n  isEnglish = true;\n} else if (esOverrideRegex.test(instruction)) {\n  isEnglish = false;\n} else {\n  const customerMsgs = allMessages.filter(m => m.message_type === 0 || (m.sender && (m.sender.type === 'contact' || m.sender.type === 'Contact')));\n  let enCount = 0, esCount = 0;\n  for (const m of customerMsgs) {\n    const text = String(m.content || '').trim();\n    if (!text || !/[a-zA-ZáéíóúÁÉÍÓÚñÑ]{2,}/.test(text)) continue;\n    enCount += (text.match(enWordRegex) || []).length;\n    esCount += (text.match(esWordRegex) || []).length;\n  }\n  if (enCount > esCount) isEnglish = true;\n  else if (esCount > enCount) isEnglish = false;\n  else isEnglish = (!isTVTotal24);\n}\n\nconst languageLabel = isEnglish ? 'English' : 'Español';\n\n// 5. Historial Reciente\nconst historyLines = [];\nconst visibleMessages = allMessages.filter(m => !m.private && (m.message_type === 0 || m.message_type === 1)).slice(-8);\nfor (const m of visibleMessages) {\n  let text = (m.content || '').replace(/\\n+/g, ' ').trim();\n  if (text.length > 160) text = text.slice(0, 157) + '...';\n  const sender = (m.message_type === 0) ? (isEnglish ? 'Customer' : 'Cliente') : (isEnglish ? 'Assistant' : 'Asistente');\n  if (text) historyLines.push(`• [${sender}]: ${text}`);\n}\n\nconst systemPrompt = `⛔ MANDATO SUPREMO — FORMATO DE SALUDO Y MANEJO DE INSTRUCCIONES DEL ADMINISTRADOR (/AGENT):\n- ÚNICA Y EXCLUSIVAMENTE debes usar el PRIMER NOMBRE del cliente: \"${firstName}\". NUNCA usar su nombre completo \"${rawContactName}\".\n- Tu mensaje debe iniciar directamente con \"${firstName},\" seguido inmediatamente de una coma \\`, \\` y a continuación la respuesta adaptada.\n- ${isEnglish ? 'DEBES FORMULAR TU MENSAJE 100% EN INGLÉS. Está TERMINANTEMENTE PROHIBIDO incluir palabras en español (como ¡Hola!, Con gusto, Paso 1, etc.).' : 'Formula tu mensaje 100% en ESPAÑOL.'}`;\n\nconst userPrompt = `[ADMINISTRATOR INSTRUCTION FOR CONVERSATION #${conversationId}: \"${instruction}\"]\n\n[CLIENT CONTEXT:\n Full Name: \"${rawContactName}\"\n First Name Only: \"${firstName}\"\n Brand: \"${brandName}\"\n Channel: \"${channel}\"\n Target Language: \"${languageLabel}\"]\n\n[MANDATORY GREETING MANDATE:\n - Initiate your response starting directly with \"${firstName},\" followed by a space and your adapted message (e.g. \"${firstName}, ...\").\n - You are STRICTLY FORBIDDEN from greeting using full name \"${rawContactName}\".]\n\n${isEnglish ? '[MANDATORY LANGUAGE DIRECTIVE: Formulate your entire message 100% in ENGLISH. Zero Spanish words allowed (no \"¡Hola!\", \"Con gusto\", \"Paso 1\", \"Configuración\", \"Instalar\", \"Descargar\", \"usuario\", \"contraseña\", etc.).]' : '[DIRECTIVA OBLIGATORIA DE IDIOMA: Formula tu respuesta 100% en ESPAÑOL.]'}\n\n[RECENT CONVERSATION HISTORY:\n${historyLines.join('\\n')}\n]`;\n\nreturn [{\n  json: {\n    conversation_id: conversationId,\n    contact_name: rawContactName,\n    firstName: firstName,\n    brand: brandName,\n    channel: channel,\n    language: languageLabel,\n    isEnglish: isEnglish,\n    instruction: instruction,\n    system_prompt: systemPrompt,\n    user_prompt: userPrompt,\n    chatId: chatId,\n    success: true\n  }\n}];"
+      }
     },
     {
+      "id": "agent-llm-httprequest",
+      "name": "Generar Respuesta LLM DeepSeek",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        440
+      ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.deepseek.com/chat/completions",
         "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "deepSeekApi",
-        "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
@@ -1268,31 +1261,32 @@
             }
           ]
         },
-        "sendBody": true,
-        "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ model: 'deepseek-chat', messages: [ { role: 'system', content: $json.system_prompt }, { role: 'user', content: $json.user_prompt } ], temperature: 0 }) }}",
-        "options": {}
+        "method": "POST",
+        "nodeCredentialType": "deepSeekApi",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "https://api.deepseek.com/chat/completions"
       },
       "credentials": {
         "deepSeekApi": {
           "id": "22sfGWS6Ev7XMOfa",
           "name": "DeepSeek account"
         }
-      },
-      "id": "agent-llm-httprequest",
-      "name": "Generar Respuesta LLM DeepSeek",
+      }
+    },
+    {
+      "id": "agent-chatwoot-post",
+      "name": "Responder en Chatwoot Directo",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        240,
+        460,
         440
-      ]
-    },
-    {
+      ],
       "parameters": {
-        "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1/conversations/{{ $('Preparar Instrucción Agente Directo').item.json.conversation_id }}/messages",
-        "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
@@ -1305,24 +1299,16 @@
             }
           ]
         },
-        "sendBody": true,
-        "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ content: $json.choices[0].message.content, message_type: 'outgoing', private: false }) }}",
-        "options": {}
-      },
-      "id": "agent-chatwoot-post",
-      "name": "Responder en Chatwoot Directo",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        460,
-        440
-      ]
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1/conversations/{{ $('Preparar Instrucción Agente Directo').item.json.conversation_id }}/messages"
+      }
     },
     {
-      "parameters": {
-        "jsCode": "const prepData = $('Preparar Instrucción Agente Directo').item.json || {};\nconst llmData = $('Generar Respuesta LLM DeepSeek').item.json || {};\n\nlet generatedText = '';\ntry {\n  generatedText = llmData.choices[0].message.content || '';\n} catch (e) {\n  generatedText = '';\n}\n\nreturn [{\n  json: {\n    success: true,\n    conversation_id: prepData.conversation_id,\n    contact_name: prepData.contact_name,\n    brand: prepData.brand,\n    channel: prepData.channel,\n    language: prepData.language,\n    instruction: prepData.instruction,\n    message_sent: generatedText,\n    chatId: prepData.chatId\n  }\n}];"
-      },
       "id": "agent-prep-confirm-tg",
       "name": "Preparar Confirmación Agente",
       "type": "n8n-nodes-base.code",
@@ -1330,7 +1316,10 @@
       "position": [
         680,
         440
-      ]
+      ],
+      "parameters": {
+        "jsCode": "const prepData = $('Preparar Instrucción Agente Directo').item.json || {};\nconst llmData = $('Generar Respuesta LLM DeepSeek').item.json || {};\n\nlet generatedText = '';\ntry {\n  generatedText = llmData.choices[0].message.content || '';\n} catch (e) {\n  generatedText = '';\n}\n\nreturn [{\n  json: {\n    success: true,\n    conversation_id: prepData.conversation_id,\n    contact_name: prepData.contact_name,\n    brand: prepData.brand,\n    channel: prepData.channel,\n    language: prepData.language,\n    instruction: prepData.instruction,\n    message_sent: generatedText,\n    chatId: prepData.chatId\n  }\n}];"
+      }
     }
   ],
   "nodeGroups": [],

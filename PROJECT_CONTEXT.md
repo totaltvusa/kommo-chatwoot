@@ -2796,4 +2796,34 @@
      - Re-exported all 21 workflow JSON files to the local repository via `workflows/export_workflows.py`.
      - Zero messages sent to live customers.
 
+---
+
+### 85. Incident Resolution: AI Agent Silent Failure / Pipeline Halt (`Preparar Mensaje` Node Mode & `Responder en Chatwoot` Expression Fix) (2026-10-06)
+
+* **Incident Analysis & Symptoms**:
+  - **Issue Reported**: Customers were not receiving AI agent responses in Chatwoot (e.g., conversation `#1489` where customer sent *"Mañana lo pongo porque ya estoy en mi trabajo"* and received no response), despite the conversation NOT having the `human` label.
+  - **Diagnostic Findings**:
+    - Inspected conversation `#1489` in Chatwoot: status `open`, tags `['funnel-totaltv-latina', 'channel-whatsapp-lite', 'stage-contactado']`, no `human` tag.
+    - Queried n8n workflow executions: Execution `20265` failed with status `"error"` in 12.2s.
+    - Discovered two critical syntax / mode bugs halting the pipeline:
+      1. **`Preparar Mensaje` (`preparar-mensaje-ia`) Code Node Mode**:
+         - Node was missing `"mode": "runOnceForAllItems"`. In n8n v2, Code nodes default to `runOnceForEachItem`, where returning an array `[{ json: ... }]` throws a fatal `SyntaxError: Unexpected token '['`.
+      2. **`Responder en Chatwoot` (`c7641a56-50ae-429d-8ef3-42c2ee5b7a45`) Expression Syntax**:
+         - Parameter `jsonBody` was written with invalid template syntax:
+           `"jsonBody": "={\"content\": {{ JSON.stringify(...) }}, \"message_type\": \"outgoing\", \"private\": false}"`
+           Mixing leading `=` with nested `{{ ... }}` in n8n v2 HTTP Request nodes causes `SyntaxError: Invalid or unexpected token`.
+
+* **Remediations Implemented**:
+  1. **Fixed `Preparar Mensaje` Node Mode**:
+     - Explicitly set `"mode": "runOnceForAllItems"` in `parameters` of `preparar-mensaje-ia` in `router_chatwoot_ia.json` and live n8n workflow `n0zgnS1vlOGNcGNY`.
+  2. **Fixed `Responder en Chatwoot` `jsonBody` Expression**:
+     - Updated `jsonBody` to standard evaluated expression:
+       `"jsonBody": "={{ JSON.stringify({ content: $json.content || $('Formatear Respuesta').first().json.content, message_type: 'outgoing', private: false }) }}"`
+  3. **Verification & Deployment**:
+     - Verified individual node execution with test payloads (execution `20302` completed with status `"success"`).
+     - Published active live workflow version (`adb376d0-4356-48d9-bfd7-fd385ca0c65c`) in n8n.
+     - Exported updated workflows locally via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers during remediation.
+
+
 
