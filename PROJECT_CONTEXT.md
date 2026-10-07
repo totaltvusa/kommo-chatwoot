@@ -2767,3 +2767,33 @@
      - Synchronized all 21 workflow JSON files locally using `workflows/export_workflows.py`.
      - Zero messages sent to live customers during update.
 
+---
+
+### 84. TVTotal24 AI Agent Prompt Expression Syntax Fix & Guardrail Greeting Fallback Refinement (2026-10-06)
+
+* **Incident Analysis & Root Cause**:
+  - **Issue Reported**: AI Agent frequently transferred customers to human agents immediately, even upon receiving a simple greeting (*"hola"*), citing the internal reason `"Límite de Iteraciones del Agente IA (Auto-Guardarraíl)"`.
+  - **Root Cause 1 (`AI Agent - TVTotal24` in `router_chatwoot_ia.json`)**:
+    - An earlier prompt update contained an invalid expression syntax for the input text: `"text": "={{ .content }}"` instead of `"text": "={{ $json.content }}"`.
+    - Due to the missing `$json`, n8n passed an empty string (`""`) to DeepSeek as the prompt input. The LLM returned an empty response.
+  - **Root Cause 2 (`Formatear Respuesta` Guardrail False Alarm)**:
+    - The node had:
+      ```javascript
+      let isLimitError = !formattedText || agentLimitRegex.test(formattedText);
+      ```
+    - Because `formattedText` was empty, `!formattedText` evaluated to `true`, mistakenly categorizing every empty response or syntax failure as a LangChain iteration limit (`autoTransferReason = 'Límite de Iteraciones del Agente IA (Auto-Guardarraíl)'`).
+    - The auto-guardrail immediately added the `human` label in Chatwoot and transferred the customer to human support.
+
+* **Changes Implemented**:
+  1. **Fixed Prompt Input Expression (`AI Agent - TVTotal24`)**:
+     - Updated parameter `text` to `"={{ $json.content }}"` on node `AI Agent - TVTotal24` (`e377b8a2-8834-45a1-accb-7c5991b9aa1e`) in `router_chatwoot_ia.json`.
+  2. **Refined Auto-Guardrail Logic (`Formatear Respuesta`)**:
+     - Differentiated real LangChain ReAct iteration limit errors (`agentLimitRegex.test(formattedText)`) from empty/timeout responses (`!formattedText`).
+     - Added automatic fallback greeting: If `!formattedText` occurs and the customer sent a simple greeting (`hola`, `buenos días`, `buenas tardes`, `hi`, `hello`, `hey`), the system replies with a polite welcome message instead of immediately transferring to human support.
+     - Properly labeled non-greeting empty responses as `'Respuesta Vacía / Timeout de IA (Auto-Guardarraíl)'` instead of blaming iteration limits.
+  3. **Live Deployment & Verification**:
+     - Updated live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) via n8n MCP server and published active version (`a17ee290-27c7-46ed-8973-150503bf02f7`).
+     - Re-exported all 21 workflow JSON files to the local repository via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers.
+
+
