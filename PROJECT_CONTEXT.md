@@ -2824,6 +2824,36 @@
      - Published active live workflow version (`adb376d0-4356-48d9-bfd7-fd385ca0c65c`) in n8n.
      - Exported updated workflows locally via `workflows/export_workflows.py`.
      - Zero messages sent to live customers during remediation.
+---
 
+---
 
+### 86. Reversion to Anthropic Claude Haiku & TVTotal24 Pricing / Device Hallucination Fix (2026-10-07)
+
+* **Incident Analysis & Symptoms**:
+  - **Issue Reported**: DeepSeek model introduced recurring hallucinations and silence/unanswered customer conversations:
+    1. **Plan & Device Hallucination in TVTotal24**: Invented tiered plans by number of devices (e.g., claiming "1 Dispositivo: $8 USD, 2 Dispositivos: $11 USD, 3 Dispositivos: $14 USD; 3 Meses 1 Dispositivo: $21 USD" in conversation #1514), when in TVTotal24 all subscriptions are accounts with a single flat price per duration (1 Mes $8, 3 Meses $24) that include up to 3 simultaneous screens.
+    2. **Unanswered / Silent Customer Messages**: DeepSeek frequently yielded empty responses or timeouts on short answers/affirmations (e.g., "Ok" in #1552, "Mañana lo pongo porque ya estoy en mi trabajo" in #1489), triggering auto-guardrail transfers or silent skips.
+  - **Root Causes**:
+    - DeepSeek Chat struggled with complex negative constraints and hallucinated pricing tiers across multi-turn chats.
+    - `Formatear Respuesta` auto-guardrail only had fallback greeting detection for initial salutations (`hola`), treating short affirmations (`ok`, `entendido`, `perfecto`) with empty LLM outputs as errors to transfer.
+
+* **Remediations Implemented**:
+  1. **LLM Engine Reversion to Anthropic Claude Haiku**:
+     - In live workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`), replaced `DeepSeek Chat Model` with `Anthropic Chat Model` (`@n8n/n8n-nodes-langchain.lmChatAnthropic` v1.5, `temperature: 0`).
+     - Connected `Anthropic Chat Model` via `ai_languageModel` to both `AI Agent` (TotalTv USA) and `AI Agent - TVTotal24` (TVTotal24 Latina).
+     - Removed `DeepSeek Chat Model` node completely.
+  2. **TVTotal24 Prompt & Guardrails Reinforcement**:
+     - Updated `prompts/tvtotal24_prompt.md` and the system message in `AI Agent - TVTotal24` with absolute prohibition:
+       * Emphasized that TVTotal24 has ZERO device-tiered pricing.
+       * Re-affirmed that every subscription includes up to 3 simultaneous screens at the single flat price.
+       * Strictly prohibited quoting or inventing tiered pricing by device count.
+  3. **Auto-Sanitizer & Short Affirmation Fallback in `Formatear Respuesta`**:
+     - Added post-processing sanitizer for TVTotal24 that strips any accidental device-tier pricing leakage (`1 Dispositivo:`, `2 Dispositivos:`, etc.).
+     - Enhanced empty-response handler with `isAffirmationOnly` detection (`ok`, `vale`, `listo`, `perfecto`, `de acuerdo`, `entendido`, `gracias`) to reply politely instead of failing or transferring to human support.
+  4. **Production Deployment & Synchronization**:
+     - Applied updates to n8n live workflow `n0zgnS1vlOGNcGNY` via MCP `update_workflow` with 6 atomic operations.
+     - Published active live version `8278afbe-1584-41a7-be66-edd8f8ffb209`.
+     - Exported and synchronized all workflow definitions locally via `workflows/export_workflows.py`.
+     - Maintained zero unauthorized messages sent to live customers.
 
