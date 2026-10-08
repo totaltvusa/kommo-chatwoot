@@ -2972,4 +2972,36 @@
   3. **Local Synchronization & Git**:
      - Synchronized all workflow JSON files via `workflows/export_workflows.py`.
 
+---
+
+### 91. Resolution of /agent Command Failure in Telegram to N8N (Anthropic Temperature Deprecation & Data Mapping Fix) (2026-10-08)
+
+* **Incident Analysis & Reported Issues**:
+  - **Issue Reported**:
+    * When sending the Telegram bot command `/agent 1306 toma control de la conversación y dale respuesta al último mensaje del cliente` to bot `AlvezN8N`, nothing happened: no response in Chatwoot conversation #1306, and no confirmation message received in Telegram.
+  - **Diagnostic Findings & Root Causes**:
+    1. **Anthropic API HTTP 400 Error (`temperature` deprecation)**:
+       * When inspecting failed execution `20852` in n8n workflow `TS2CADjNNn05jXBW` (`Telegram to N8N`), the execution failed at node `Generar Respuesta LLM Anthropic`.
+       * Error log: `400 - "{"type":"error","error":{"type":"invalid_request_error","message":"`temperature` is deprecated for this model."}}"`.
+       * For `claude-haiku-5-5`, passing `"temperature": 0` in direct HTTP calls to Anthropic's Messages endpoint (`POST https://api.anthropic.com/v1/messages`) causes an immediate HTTP 400 error because the parameter is deprecated for this model family.
+    2. **Telegram Confirmation Node Mapping Mismatch**:
+       * In node `Preparar Confirmación Agente`, the generated output provided `message` (formatted HTML string) and `generated_text`, while node `Enviar Confirmación Agente` had an expression checking for `$json.message_sent`, `$json.contact_name`, `$json.brand`, etc., which were not individually passed, causing broken or missing Telegram delivery.
+       * In node `Preparar Confirmación Agente`, the reference to previous node input `$input.first().json` was reading the Chatwoot response rather than the Anthropic LLM response.
+    3. **Chatwoot URL Reference**:
+       * In node `Responder en Chatwoot Directo`, the conversation ID expression was updated to use `.first().json.conversation_id` for consistent item referencing.
+
+* **Fixes & Remediation Applied**:
+  1. **Generar Respuesta LLM Anthropic**:
+     - Removed `temperature: 0` from request body payload.
+     - Payload: `={{ JSON.stringify({ model: 'claude-haiku-5-5', max_tokens: 1024, system: $json.system_prompt, messages: [ { role: 'user', content: $json.user_prompt } ] }) }}`.
+     - Removed legacy `deepSeekApi` credential, preserving solely `anthropicApi` (`ZbUWSAq6JlKInA64`).
+  2. **Preparar Confirmación Agente**:
+     - Correctly referenced `.first().json` to reliably extract `llmRes.content[0].text`.
+     - Output full payload containing `success: true`, `chatId`, `conversation_id`, `contact_name`, `brand`, `channel`, `language`, `instruction`, `message_sent`, `generated_text`, and fully formatted HTML `message`.
+  3. **Enviar Confirmación Agente**:
+     - Standardized `text: "={{ $json.message }}"` and `chatId: "={{ $json.chatId || .first().json.chatId }}"` with `parse_mode: "HTML"`.
+  4. **Deployment & Verification**:
+     - Live workflow `TS2CADjNNn05jXBW` updated and published in n8n (active version `3a6a8a05-790c-4eb9-996b-553a8168a8fe`).
+     - Synchronized local workflows via `workflows/export_workflows.py`.
+     - Committed and pushed to GitHub repository (`main`).
 
