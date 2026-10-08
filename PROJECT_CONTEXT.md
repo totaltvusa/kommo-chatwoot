@@ -2924,3 +2924,27 @@
        * `TS2CADjNNn05jXBW` (`Telegram to N8N`).
      - Synchronized all 21 workflow JSON files locally via `workflows/export_workflows.py`.
      - Zero messages sent to live customers during remediation.
+---
+
+### 89. Reversion of DeepSeek Side Effects, Resolution of Unintended Human Transfers & Evolution API WhatsApp Admin Alerts (2026-10-08)
+
+* **Incident Analysis & Reported Issues**:
+  - **Issue Reported**:
+    1. Reverting from DeepSeek back to Anthropic still presented issues: agents were transferring immediately to human on standard customer questions like `"price 1 month"` or `"Para renovar por favor"`.
+    2. Admin alerts via WhatsApp failed (alerts reached Telegram inconsistently or not at all on WhatsApp).
+    3. User questioned whether `Claude 3.5 Haiku` is obsolete and requested checking the model state and ensuring total context remains safely under 100k tokens.
+  - **Diagnostic Findings & Root Causes**:
+    1. **Why "Price 1 month" triggered transfer**:
+       - In conversation `#1563` and `#1306`, incoming messages arrived precisely when the prior router run had failed (due to the earlier 404/401 bug), leaving empty AI responses and triggering `Formatear Respuesta`'s auto-guardrail (`Respuesta Vacía / Timeout de IA`).
+       - This applied the `human` label to Chatwoot conversations. On subsequent incoming messages, `isHuman = labels.includes('human')` set `skip_ai_response: true`, keeping the bot muted and preventing the AI Agent from processing new messages.
+       - Removed residual `human` labels from test conversations so the AI agent responds normally.
+    2. **WhatsApp Admin Notifications Failure in `Transfer to Human Tool` (`xam0WV65gvTbXcIx`)**:
+       - Workflow `xam0WV65gvTbXcIx` contained obsolete references to `https://project1-chatwoot.efebpb.easypanel.host` and outdated token `nuwRKpG2bBAQBpRFznfvrMpT` in nodes `Obtener datos conversacion`, `Marcar como humano`, and `Nota privada Chatwoot`.
+       - When these nodes threw errors or timed out, the downstream execution branch to `Notificar WhatsApp (Evolution API)` was impacted or disrupted.
+       - Updated all Chatwoot API nodes in `xam0WV65gvTbXcIx` to `https://chatwoot.ac4.club` with active token `Dk8XKwvnkGx79rjiL5cLdVZd`, verified Evolution API instance `TTvAlertsMovistar`, and deployed changes to live n8n.
+    3. **Model & Context Size Verification**:
+       - The Anthropic model identifier in n8n's `@n8n/n8n-nodes-langchain.lmChatAnthropic` is `claude-3-5-haiku-latest` (Claude 3.5 Haiku, official and current).
+       - System prompt length: TotalTv USA ~37.8k chars (~9.5k tokens); TVTotal24 ~70.5k chars (~17.6k tokens). Total turn context with conversation history is ~20k–25k tokens, well within the safe boundary (< 100k tokens).
+    4. **Workflow Consistency**:
+       - Cleaned legacy domain and token across all 21 workflow JSON files and deployed live changes to `xam0WV65gvTbXcIx` and `n0zgnS1vlOGNcGNY`.
+

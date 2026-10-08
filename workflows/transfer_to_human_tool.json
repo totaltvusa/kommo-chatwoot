@@ -3,12 +3,12 @@
   "name": "Transfer to Human Tool",
   "active": true,
   "isArchived": false,
-  "versionId": "bec45d34-f869-4174-8232-88767013947d",
-  "activeVersionId": "bec45d34-f869-4174-8232-88767013947d",
-  "triggerCount": 0,
-  "nodeCount": 9,
+  "versionId": "db3de8e5-bebd-453a-8695-3ef90b88e453",
+  "activeVersionId": "2090b7f0-0c55-4cb8-a249-1a1d0b5fdf9d",
+  "triggerCount": 1,
+  "nodeCount": 11,
   "createdAt": "2026-08-19T03:20:29.252Z",
-  "updatedAt": "2026-09-07T14:00:35.851Z",
+  "updatedAt": "2026-09-27T01:36:38.417Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -81,17 +81,6 @@
         ]
       ]
     },
-    "Marcar como humano": {
-      "main": [
-        [
-          {
-            "node": "Notificar Administrador",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Notificar Administrador": {
       "main": [
         [
@@ -129,6 +118,33 @@
           }
         ]
       ]
+    },
+    "Marcar como humano": {
+      "main": [
+        [
+          {
+            "node": "Notificar Administrador",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Registrar Consulta Pendiente Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Direct Trigger": {
+      "main": [
+        [
+          {
+            "node": "Preparar Datos Transferencia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "nodes": [
@@ -153,7 +169,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const trigger = $input.first().json || {};\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst query = (trigger.query || '').toString();\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'nuwRKpG2bBAQBpRFznfvrMpT',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 13,\n    query: query\n  }\n}];",
+        "jsCode": "const inp = $input.first().json || {};\nconst trigger = inp.body || inp;\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst reason = String(trigger.reason || trigger.motivo || '').trim();\nconst case_details = String(trigger.case_details || trigger.details || trigger.summary || trigger.informacion_caso || trigger.info || '').trim();\nconst query = (trigger.query || inp.query || '').toString();\n\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://chatwoot.ac4.club/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'Dk8XKwvnkGx79rjiL5cLdVZd',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 13,\n    reason: reason,\n    case_details: case_details,\n    query: query\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     },
@@ -167,13 +183,13 @@
         300
       ],
       "parameters": {
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}",
+        "url": "=https://chatwoot.ac4.club/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              "value": "Dk8XKwvnkGx79rjiL5cLdVZd"
             },
             {
               "name": "Content-Type",
@@ -194,7 +210,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Preparar Datos Transferencia').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id || 13;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst contact_name = convData.meta?.sender?.name || 'Cliente';\n\n// Safely preserve all current labels\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\n\nif (!currentLabels.includes('human')) {\n  currentLabels.push('human');\n}\n\nreturn [{\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    labels: currentLabels\n  }\n}];",
+        "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Preparar Datos Transferencia').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id || 13;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst sender = convData.meta?.sender || {};\nconst contact_name = sender.name || 'Cliente';\nconst contact_phone = sender.phone_number || (sender.identifier && /^\\+?\\d[\\d\\s-]{6,}$/.test(sender.identifier) ? sender.identifier : 'No registrado');\nconst contact_email = sender.email || 'No registrado';\nconst inbox_id = Number(convData.inbox_id || 0);\n\n// Identificar marca según inbox\nconst isTVTotal24 = (inbox_id === 10 || inbox_id === 13 || inbox_id === 15 || inbox_id === 16 || inbox_id === 19);\nconst brandName = isTVTotal24 ? 'TVTotal24 (Latina)' : 'TotalTv USA';\n\n// Motivo de la transferencia\nlet reason = String(triggerData.reason || '').trim();\nif (!reason) {\n  reason = 'Atención / Soporte requerido';\n}\n\n// Información recopilada del caso\nlet rawDetails = String(triggerData.case_details || '').trim();\n\n// Fallback: Si no se pasó case_details por el tool, consultar los últimos mensajes entrantes del cliente en Chatwoot\nif (!rawDetails) {\n  try {\n    const chatwootToken = 'Dk8XKwvnkGx79rjiL5cLdVZd';\n    const msgRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://chatwoot.ac4.club/api/v1/accounts/${account_id}/conversations/${conversation_id}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const msgs = (msgRes.payload || []).filter(m => m.message_type === 0 || m.message_type === 'incoming');\n    if (msgs.length > 0) {\n      const recentIncoming = msgs.slice(-4).map(m => `• \"${m.content}\"`).join('\\n');\n      rawDetails = `Mensajes recientes del cliente:\\n${recentIncoming}`;\n    }\n  } catch (e) {}\n}\n\nif (!rawDetails) {\n  rawDetails = 'No se registraron detalles adicionales previo a la transferencia.';\n}\n\n// 1. Formato para Nota Privada en Chatwoot (Markdown)\nconst privateNote = `⚠️ **TRANSFERENCIA A SOPORTE HUMANO**\n\n📌 **Motivo:** ${reason}\n👤 **Contacto:** ${contact_name}\n📱 **Teléfono:** ${contact_phone}\n📧 **Email:** ${contact_email}\n🏷️ **Canal / Inbox:** ${brandName} (Inbox #${inbox_id})\n💬 **Conversación:** #${conversation_id}\n\n📋 **INFORMACIÓN RECOPILADA DEL CASO:**\n${rawDetails}`;\n\n// Helper para escapar HTML en Telegram\nconst escapeHtml = (str) => String(str || '')\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;');\n\n// 2. Formato para Telegram (HTML)\nconst telegramText = `🔔 <b>Transferencia a Soporte Humano</b>\n\n👤 <b>Contacto:</b> ${escapeHtml(contact_name)}\n📱 <b>Teléfono:</b> ${escapeHtml(contact_phone)}\n📧 <b>Email:</b> ${escapeHtml(contact_email)}\n🏷️ <b>Canal:</b> ${escapeHtml(brandName)} (Inbox #${inbox_id})\n💬 <b>Conversación:</b> #${conversation_id}\n📌 <b>Motivo:</b> ${escapeHtml(reason)}\n\n📋 <b>Información Recopilada:</b>\n${escapeHtml(rawDetails)}`;\n\n// 3. Formato para WhatsApp Evolution API (WhatsApp Markdown)\nconst whatsappText = `🔔 *Transferencia a Soporte Humano*\n\n👤 *Contacto:* ${contact_name}\n📱 *Teléfono:* ${contact_phone}\n📧 *Email:* ${contact_email}\n🏷️ *Canal:* ${brandName} (Inbox #${inbox_id})\n💬 *Conversación:* #${conversation_id}\n📌 *Motivo:* ${reason}\n\n📋 *Información Recopilada:*\n${rawDetails}`;\n\n// Preservar etiquetas y agregar 'human'\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\nconst alreadyHadHuman = currentLabels.includes('human');\nif (!alreadyHadHuman) {\n  currentLabels.push('human');\n}\n\nreturn [{\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    contact_phone,\n    contact_email,\n    inbox_id,\n    brand_name: brandName,\n    reason,\n    case_details: rawDetails,\n    private_note_content: privateNote,\n    telegram_text: telegramText,\n    whatsapp_text: whatsappText,\n    labels: currentLabels,\n    already_had_human: alreadyHadHuman\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
     },
@@ -209,13 +225,13 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/labels",
+        "url": "=https://chatwoot.ac4.club/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/labels",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              "value": "Dk8XKwvnkGx79rjiL5cLdVZd"
             },
             {
               "name": "Content-Type",
@@ -240,13 +256,14 @@
       ],
       "parameters": {
         "chatId": "40371837",
-        "text": "=🔔 <b>Transferencia a Humano</b>\n👤 Contacto: <b>{{ $node[\"Agregar etiqueta human\"].json.contact_name }}</b>\n💬 Conversación: #{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}",
+        "text": "={{ $('Agregar etiqueta human').first().json.telegram_text }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
         }
       },
       "webhookId": "d299f8db-1ff1-48a4-8f37-623977c39001",
+      "onError": "continueRegularOutput",
       "credentials": {
         "telegramApi": {
           "id": "IWiCwNsfWPaJGIsw",
@@ -265,13 +282,13 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "=https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/{{ $node[\"Agregar etiqueta human\"].json.account_id }}/conversations/{{ $node[\"Agregar etiqueta human\"].json.conversation_id }}/messages",
+        "url": "=https://chatwoot.ac4.club/api/v1/accounts/{{ $('Agregar etiqueta human').first().json.account_id }}/conversations/{{ $('Agregar etiqueta human').first().json.conversation_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "api_access_token",
-              "value": "nuwRKpG2bBAQBpRFznfvrMpT"
+              "value": "Dk8XKwvnkGx79rjiL5cLdVZd"
             },
             {
               "name": "Content-Type",
@@ -281,9 +298,10 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\"content\": \"⚠️ Esta conversación ha sido transferida a soporte humano por el Agente de IA.\", \"private\": true}",
+        "jsonBody": "={\n  \"content\": {{ JSON.stringify($('Agregar etiqueta human').first().json.private_note_content) }},\n  \"private\": true\n}",
         "options": {}
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "id": "0efe5cd2-983d-4eaa-a73f-c3f406bf3e07",
@@ -298,9 +316,10 @@
         "resource": "messages-api",
         "instanceName": "TTvAlertsMovistar",
         "remoteJid": "584146130135",
-        "messageText": "={{ \"🔔 *Transferencia a Humano*\n👤 *Contacto:* \" + $(\"Agregar etiqueta human\").first().json.contact_name + \"\n💬 *Conversación:* #\" + $(\"Agregar etiqueta human\").first().json.conversation_id }}",
+        "messageText": "={{ $('Agregar etiqueta human').first().json.whatsapp_text }}",
         "options_message": {}
       },
+      "onError": "continueRegularOutput",
       "credentials": {
         "evolutionApi": {
           "id": "ecGN8GlLnzNz5Lq5",
@@ -318,14 +337,383 @@
         300
       ],
       "parameters": {
-        "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    message: \"La conversación ha sido transferida exitosamente a un asesor humano.\",\n    instructions_for_ai: \"Informa de inmediato al cliente que la transferencia a soporte humano ha sido realizada exitosamente y que pronto será atendido dentro del horario extendido de oficina de los agentes humanos.\"\n  }\n}];",
+        "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    reason: humanData.reason,\n    message: \"La conversación HA SIDO transferida exitosamente a un asesor humano en el sistema con la información recopilada.\",\n    instructions_for_ai: \"REGLA OBLIGATORIA E INELUDIBLE: La transferencia a soporte humano ya se realizó con éxito en el sistema. En este mismo mensaje final al cliente DEBES confirmar obligatoria y explícitamente que su caso/conversación ha sido transferido a nuestro equipo de soporte humano y que un asesor lo atenderá a la brevedad dentro del horario extendido de oficina. ESTÁ TOTALMENTE PROHIBIDO decir que hubo un error o terminar tu respuesta sin confirmar esta transferencia.\"\n  }\n}];",
         "mode": "runOnceForAllItems"
       }
+    },
+    {
+      "id": "e7b9f821-4a2c-4519-86b3-90d2e8f1c34a",
+      "name": "Registrar Consulta Pendiente Google Doc",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        400
+      ],
+      "parameters": {
+        "jsCode": "// Node: Registrar Consulta Pendiente Google Doc\nconst humanData = $('Agregar etiqueta human').first().json || {};\nconst brand = String(humanData.brand || humanData.brand_name || '').toLowerCase();\nconst isTVTotal24 = brand.includes('tvtotal24') || brand.includes('latina');\n\nlet googleDocId = '';\nif (isTVTotal24) {\n  googleDocId = $vars.TVTOTAL24_SUPPORT_DOC_ID || $vars.TOTALTV_SUPPORT_DOC_ID || '14VkDzxSnwQHZ6ezEZskeQ3lfLIXw5S0n2onK3I6yYdE';\n} else {\n  googleDocId = $vars.TOTALTV_USA_SUPPORT_DOC_ID || $vars.TOTALTV_SUPPORT_DOC_ID || '14VkDzxSnwQHZ6ezEZskeQ3lfLIXw5S0n2onK3I6yYdE';\n}\n\nif (googleDocId && googleDocId.length > 10 && !humanData.already_had_human) {\n  try {\n    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);\n    const brandName = humanData.brand_name || (isTVTotal24 ? 'TVTotal24 Latina' : 'TotalTv USA');\n    const convId = humanData.conversation_id || 'N/A';\n    const reason = humanData.reason || 'Soporte / Atención';\n    const details = String(humanData.case_details || '').replace(/\\n/g, ' ');\n\n    const appendText = `\\n- [${nowStr}] [${brandName}] [Conv #${convId}] Motivo: ${reason} | Detalles: ${details}`;\n\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `https://docs.googleapis.com/v1/documents/${googleDocId}:batchUpdate`,\n      headers: {\n        'Authorization': `Bearer ${$credentials.googleSheetsOAuth2Api?.oauthTokenData?.access_token || ''}`,\n        'Content-Type': 'application/json'\n      },\n      body: {\n        requests: [\n          {\n            insertText: {\n              endOfSegmentLocation: {},\n              text: appendText\n            }\n          }\n        ]\n      },\n      json: true\n    });\n  } catch (e) {}\n}\n\nreturn [{ json: humanData }];",
+        "mode": "runOnceForAllItems"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "731ab011-cbc9-49c5-b33d-85f6e1a3227b",
+      "name": "Webhook Direct Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        140
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transfer-to-human-direct",
+        "options": {}
+      },
+      "webhookId": "fc04db61-e511-411c-89c6-103b9e67522b"
     }
   ],
   "nodeGroups": [],
   "activeVersion": {
-    "sameAsDraft": true
+    "sameAsDraft": false,
+    "nodes": [
+      {
+        "id": "cd9d77d2-5ae4-410b-82e3-3241a3f3a06b",
+        "name": "Execute Workflow Trigger",
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1,
+        "position": [
+          100,
+          300
+        ],
+        "parameters": {}
+      },
+      {
+        "id": "58afcc7a-603a-4df3-b2ff-ba9e932f5dbf",
+        "name": "Preparar Datos Transferencia",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          280,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const inp = $input.first().json || {};\nconst trigger = inp.body || inp;\nlet account_id = trigger.account_id ? parseInt(trigger.account_id) : 1;\nlet conversation_id = trigger.conversation_id ? parseInt(trigger.conversation_id) : 0;\n\nconst reason = String(trigger.reason || trigger.motivo || '').trim();\nconst case_details = String(trigger.case_details || trigger.details || trigger.summary || trigger.informacion_caso || trigger.info || '').trim();\nconst query = (trigger.query || inp.query || '').toString();\n\nif (!conversation_id && query) {\n  const m = query.match(/(?:conversation_id|conversacion|conversation|id)\\s*[:=]?\\s*(\\d+)/i);\n  if (m) conversation_id = parseInt(m[1]);\n}\n\n// Fallback: If conversation_id is still missing or 0, query recent open conversations from Chatwoot\nif (!conversation_id) {\n  try {\n    const res = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://chatwoot.ac4.club/api/v1/accounts/${account_id}/conversations?status=all`,\n      headers: {\n        'api_access_token': 'Dk8XKwvnkGx79rjiL5cLdVZd',\n        'Content-Type': 'application/json'\n      },\n      json: true\n    });\n    const convs = res.data?.payload || [];\n    if (convs.length > 0) {\n      conversation_id = convs[0].id;\n    }\n  } catch (e) {}\n}\n\nreturn [{\n  json: {\n    account_id: account_id || 1,\n    conversation_id: conversation_id || 13,\n    reason: reason,\n    case_details: case_details,\n    query: query\n  }\n}];",
+          "mode": "runOnceForAllItems"
+        }
+      },
+      {
+        "id": "d1d4fb96-bd32-4fdd-aca8-d1e2ab21d6f4",
+        "name": "Obtener datos conversacion",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          460,
+          300
+        ],
+        "parameters": {
+          "url": "=https://chatwoot.ac4.club/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "Dk8XKwvnkGx79rjiL5cLdVZd"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "options": {}
+        }
+      },
+      {
+        "id": "d37b0ab8-9efd-4fdb-aaa5-27dd672801fb",
+        "name": "Agregar etiqueta human",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          640,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const convData = $('Obtener datos conversacion').first().json || {};\nconst triggerData = $('Preparar Datos Transferencia').first().json || {};\n\nconst conversation_id = triggerData.conversation_id || convData.id || 13;\nconst account_id = triggerData.account_id || convData.account_id || 1;\nconst sender = convData.meta?.sender || {};\nconst contact_name = sender.name || 'Cliente';\nconst contact_phone = sender.phone_number || (sender.identifier && /^\\+?\\d[\\d\\s-]{6,}$/.test(sender.identifier) ? sender.identifier : 'No registrado');\nconst contact_email = sender.email || 'No registrado';\nconst inbox_id = Number(convData.inbox_id || 0);\n\n// Identificar marca según inbox\nconst isTVTotal24 = (inbox_id === 10 || inbox_id === 13 || inbox_id === 15 || inbox_id === 16 || inbox_id === 19);\nconst brandName = isTVTotal24 ? 'TVTotal24 (Latina)' : 'TotalTv USA';\n\n// Motivo de la transferencia\nlet reason = String(triggerData.reason || '').trim();\nif (!reason) {\n  reason = 'Atención / Soporte requerido';\n}\n\n// Información recopilada del caso\nlet rawDetails = String(triggerData.case_details || '').trim();\n\n// Fallback: Si no se pasó case_details por el tool, consultar los últimos mensajes entrantes del cliente en Chatwoot\nif (!rawDetails) {\n  try {\n    const chatwootToken = 'Dk8XKwvnkGx79rjiL5cLdVZd';\n    const msgRes = await this.helpers.httpRequest({\n      method: 'GET',\n      url: `https://chatwoot.ac4.club/api/v1/accounts/${account_id}/conversations/${conversation_id}/messages`,\n      headers: { 'api_access_token': chatwootToken },\n      json: true\n    });\n    const msgs = (msgRes.payload || []).filter(m => m.message_type === 0 || m.message_type === 'incoming');\n    if (msgs.length > 0) {\n      const recentIncoming = msgs.slice(-4).map(m => `• \"${m.content}\"`).join('\\n');\n      rawDetails = `Mensajes recientes del cliente:\\n${recentIncoming}`;\n    }\n  } catch (e) {}\n}\n\nif (!rawDetails) {\n  rawDetails = 'No se registraron detalles adicionales previo a la transferencia.';\n}\n\n// 1. Formato para Nota Privada en Chatwoot (Markdown)\nconst privateNote = `⚠️ **TRANSFERENCIA A SOPORTE HUMANO**\n\n📌 **Motivo:** ${reason}\n👤 **Contacto:** ${contact_name}\n📱 **Teléfono:** ${contact_phone}\n📧 **Email:** ${contact_email}\n🏷️ **Canal / Inbox:** ${brandName} (Inbox #${inbox_id})\n💬 **Conversación:** #${conversation_id}\n\n📋 **INFORMACIÓN RECOPILADA DEL CASO:**\n${rawDetails}`;\n\n// Helper para escapar HTML en Telegram\nconst escapeHtml = (str) => String(str || '')\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;');\n\n// 2. Formato para Telegram (HTML)\nconst telegramText = `🔔 <b>Transferencia a Soporte Humano</b>\n\n👤 <b>Contacto:</b> ${escapeHtml(contact_name)}\n📱 <b>Teléfono:</b> ${escapeHtml(contact_phone)}\n📧 <b>Email:</b> ${escapeHtml(contact_email)}\n🏷️ <b>Canal:</b> ${escapeHtml(brandName)} (Inbox #${inbox_id})\n💬 <b>Conversación:</b> #${conversation_id}\n📌 <b>Motivo:</b> ${escapeHtml(reason)}\n\n📋 <b>Información Recopilada:</b>\n${escapeHtml(rawDetails)}`;\n\n// 3. Formato para WhatsApp Evolution API (WhatsApp Markdown)\nconst whatsappText = `🔔 *Transferencia a Soporte Humano*\n\n👤 *Contacto:* ${contact_name}\n📱 *Teléfono:* ${contact_phone}\n📧 *Email:* ${contact_email}\n🏷️ *Canal:* ${brandName} (Inbox #${inbox_id})\n💬 *Conversación:* #${conversation_id}\n📌 *Motivo:* ${reason}\n\n📋 *Información Recopilada:*\n${rawDetails}`;\n\n// Preservar etiquetas y agregar 'human'\nlet currentLabels = Array.isArray(convData.labels) ? [...convData.labels] : [];\nconst alreadyHadHuman = currentLabels.includes('human');\nif (!alreadyHadHuman) {\n  currentLabels.push('human');\n}\n\nreturn [{\n  json: {\n    conversation_id,\n    account_id,\n    contact_name,\n    contact_phone,\n    contact_email,\n    inbox_id,\n    brand_name: brandName,\n    reason,\n    case_details: rawDetails,\n    private_note_content: privateNote,\n    telegram_text: telegramText,\n    whatsapp_text: whatsappText,\n    labels: currentLabels,\n    already_had_human: alreadyHadHuman\n  }\n}];",
+          "mode": "runOnceForAllItems"
+        }
+      },
+      {
+        "id": "44827a92-b99f-4e82-83ab-ebd32b46bd35",
+        "name": "Marcar como humano",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          820,
+          300
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "=https://chatwoot.ac4.club/api/v1/accounts/{{ $json.account_id }}/conversations/{{ $json.conversation_id }}/labels",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "Dk8XKwvnkGx79rjiL5cLdVZd"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\"labels\": {{ JSON.stringify($json.labels) }}}",
+          "options": {}
+        }
+      },
+      {
+        "id": "56501115-1a9c-4d25-bc65-6bc19a08f20c",
+        "name": "Notificar Administrador",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          1000,
+          300
+        ],
+        "parameters": {
+          "chatId": "40371837",
+          "text": "={{ $('Agregar etiqueta human').first().json.telegram_text }}",
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "webhookId": "d299f8db-1ff1-48a4-8f37-623977c39001",
+        "onError": "continueRegularOutput",
+        "credentials": {
+          "telegramApi": {
+            "id": "IWiCwNsfWPaJGIsw",
+            "name": "Telegram Push"
+          }
+        }
+      },
+      {
+        "id": "594a2424-e991-48b9-b302-c130e0619d3e",
+        "name": "Nota privada Chatwoot",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1180,
+          200
+        ],
+        "parameters": {
+          "method": "POST",
+          "url": "=https://chatwoot.ac4.club/api/v1/accounts/{{ $('Agregar etiqueta human').first().json.account_id }}/conversations/{{ $('Agregar etiqueta human').first().json.conversation_id }}/messages",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "api_access_token",
+                "value": "Dk8XKwvnkGx79rjiL5cLdVZd"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"content\": {{ JSON.stringify($('Agregar etiqueta human').first().json.private_note_content) }},\n  \"private\": true\n}",
+          "options": {}
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "0efe5cd2-983d-4eaa-a73f-c3f406bf3e07",
+        "name": "Notificar WhatsApp (Evolution API)",
+        "type": "n8n-nodes-evolution-api.evolutionApi",
+        "typeVersion": 1,
+        "position": [
+          1180,
+          400
+        ],
+        "parameters": {
+          "resource": "messages-api",
+          "instanceName": "TTvAlertsMovistar",
+          "remoteJid": "584146130135",
+          "messageText": "={{ $('Agregar etiqueta human').first().json.whatsapp_text }}",
+          "options_message": {}
+        },
+        "onError": "continueRegularOutput",
+        "credentials": {
+          "evolutionApi": {
+            "id": "ecGN8GlLnzNz5Lq5",
+            "name": "Evolution account 2"
+          }
+        }
+      },
+      {
+        "id": "9d39bc3a-cbda-4641-85d1-0a4b8fe6b957",
+        "name": "Respuesta Tool Transferencia",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1380,
+          300
+        ],
+        "parameters": {
+          "jsCode": "const humanData = $('Agregar etiqueta human').first().json || {};\nreturn [{\n  json: {\n    status: \"success\",\n    human_transfer: \"completed\",\n    conversation_id: humanData.conversation_id,\n    contact_name: humanData.contact_name,\n    reason: humanData.reason,\n    message: \"La conversación HA SIDO transferida exitosamente a un asesor humano en el sistema con la información recopilada.\",\n    instructions_for_ai: \"REGLA OBLIGATORIA E INELUDIBLE: La transferencia a soporte humano ya se realizó con éxito en el sistema. En este mismo mensaje final al cliente DEBES confirmar obligatoria y explícitamente que su caso/conversación ha sido transferido a nuestro equipo de soporte humano y que un asesor lo atenderá a la brevedad dentro del horario extendido de oficina. ESTÁ TOTALMENTE PROHIBIDO decir que hubo un error o terminar tu respuesta sin confirmar esta transferencia.\"\n  }\n}];",
+          "mode": "runOnceForAllItems"
+        }
+      },
+      {
+        "id": "e7b9f821-4a2c-4519-86b3-90d2e8f1c34a",
+        "name": "Registrar Consulta Pendiente Google Doc",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1100,
+          400
+        ],
+        "parameters": {
+          "jsCode": "// Node: Registrar Consulta Pendiente Google Doc\nconst humanData = $('Agregar etiqueta human').first().json || {};\nconst googleDocId = $vars.TOTALTV_SUPPORT_DOC_ID || '14VkDzxSnwQHZ6ezEZskeQ3lfLIXw5S0n2onK3I6yYdE';\n\nif (googleDocId && googleDocId.length > 10 && !humanData.already_had_human) {\n  try {\n    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);\n    const brandName = humanData.brand_name || 'TotalTv USA';\n    const convId = humanData.conversation_id || 'N/A';\n    const reason = humanData.reason || 'Soporte / Atención';\n    const details = String(humanData.case_details || '').replace(/\\n/g, ' ');\n\n    const appendText = `\\n- [${nowStr}] [${brandName}] [Conv #${convId}] Motivo: ${reason} | Detalles: ${details}`;\n\n    await this.helpers.httpRequest({\n      method: 'POST',\n      url: `https://docs.googleapis.com/v1/documents/${googleDocId}:batchUpdate`,\n      headers: {\n        'Authorization': `Bearer ${$credentials.googleSheetsOAuth2Api?.oauthTokenData?.access_token || ''}`,\n        'Content-Type': 'application/json'\n      },\n      body: {\n        requests: [\n          {\n            insertText: {\n              endOfSegmentLocation: {},\n              text: appendText\n            }\n          }\n        ]\n      },\n      json: true\n    });\n  } catch (e) {}\n}\n\nreturn [{ json: humanData }];",
+          "mode": "runOnceForAllItems"
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "id": "731ab011-cbc9-49c5-b33d-85f6e1a3227b",
+        "name": "Webhook Direct Trigger",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          100,
+          140
+        ],
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "transfer-to-human-direct",
+          "options": {}
+        },
+        "webhookId": "fc04db61-e511-411c-89c6-103b9e67522b"
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Preparar Datos Transferencia",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Preparar Datos Transferencia": {
+        "main": [
+          [
+            {
+              "node": "Obtener datos conversacion",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Obtener datos conversacion": {
+        "main": [
+          [
+            {
+              "node": "Agregar etiqueta human",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Agregar etiqueta human": {
+        "main": [
+          [
+            {
+              "node": "Marcar como humano",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar Administrador": {
+        "main": [
+          [
+            {
+              "node": "Nota privada Chatwoot",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Notificar WhatsApp (Evolution API)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Nota privada Chatwoot": {
+        "main": [
+          [
+            {
+              "node": "Respuesta Tool Transferencia",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Notificar WhatsApp (Evolution API)": {
+        "main": [
+          [
+            {
+              "node": "Respuesta Tool Transferencia",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Marcar como humano": {
+        "main": [
+          [
+            {
+              "node": "Notificar Administrador",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Registrar Consulta Pendiente Google Doc",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook Direct Trigger": {
+        "main": [
+          [
+            {
+              "node": "Preparar Datos Transferencia",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": []
   },
   "meta": {
     "aiBuilderAssisted": true,
