@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "78764bfd-0a9d-48ab-bd05-9d8ac8166fae",
-  "activeVersionId": "78764bfd-0a9d-48ab-bd05-9d8ac8166fae",
+  "versionId": "3a6a8a05-790c-4eb9-996b-553a8168a8fe",
+  "activeVersionId": "3a6a8a05-790c-4eb9-996b-553a8168a8fe",
   "triggerCount": 1,
   "nodeCount": 31,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-10-08T15:27:14.438Z",
+  "updatedAt": "2026-10-08T15:54:37.041Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -835,8 +835,8 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $('Parsear y Calcular Comando').item.json.chatId }}",
-        "text": "={{ $json.success ? ('✅ <b>Instrucción Ejecutada por el Agente IA</b>\\n\\n' +\n   '💬 <b>Conversación:</b> #' + $json.conversation_id + '\\n' +\n   '👤 <b>Cliente:</b> ' + $json.contact_name + '\\n' +\n   '🏢 <b>Marca/Canal:</b> ' + $json.brand + ' (' + $json.channel + ')\\n' +\n   '🌐 <b>Idioma:</b> ' + $json.language + '\\n' +\n   '📋 <b>Instrucción:</b> <i>' + $json.instruction + '</i>\\n\\n' +\n   '📝 <b>Mensaje Enviado al Cliente en Chatwoot:</b>\\n' + $json.message_sent) : ('⚠️ <b>Error al Ejecutar Instrucción</b>\\n\\n' + ($json.error || 'Ocurrió un error al procesar la conversación en Chatwoot.')) }}",
+        "chatId": "={{ $json.chatId || $('Parsear y Calcular Comando').first().json.chatId }}",
+        "text": "={{ $json.message }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1265,14 +1265,15 @@
             }
           ]
         },
-        "jsonBody": "={{ JSON.stringify({ model: 'claude-haiku-5-5', max_tokens: 1024, temperature: 0, system: $json.system_prompt, messages: [ { role: 'user', content: $json.user_prompt } ] }) }}",
+        "jsonBody": "={{ JSON.stringify({ model: 'claude-haiku-5-5', max_tokens: 1024, system: $json.system_prompt, messages: [ { role: 'user', content: $json.user_prompt } ] }) }}",
         "method": "POST",
         "nodeCredentialType": "anthropicApi",
         "options": {},
         "sendBody": true,
         "sendHeaders": true,
         "specifyBody": "json",
-        "url": "https://api.anthropic.com/v1/messages"
+        "url": "https://api.anthropic.com/v1/messages",
+        "contentType": "json"
       },
       "credentials": {
         "deepSeekApi": {
@@ -1313,7 +1314,7 @@
         "sendBody": true,
         "sendHeaders": true,
         "specifyBody": "json",
-        "url": "=https://chatwoot.ac4.club/api/v1/accounts/1/conversations/{{ $('Preparar Instrucción Agente Directo').item.json.conversation_id }}/messages"
+        "url": "=https://chatwoot.ac4.club/api/v1/accounts/1/conversations/{{ $('Preparar Instrucción Agente Directo').first().json.conversation_id }}/messages"
       }
     },
     {
@@ -1326,7 +1327,7 @@
         440
       ],
       "parameters": {
-        "jsCode": "const prepData = $('Preparar Instrucción Agente Directo').first().json || {};\nconst llmRes = $input.first().json || {};\nconst chatwootRes = $('Responder en Chatwoot Directo').first().json || {};\n\nconst conversationId = prepData.conversation_id || 0;\nconst firstName = prepData.firstName || prepData.contact_name || 'Cliente';\nconst brand = prepData.brand || 'TotalTv';\nconst language = prepData.language || 'Español';\nconst instruction = prepData.instruction || '';\nconst chatId = prepData.chatId;\n\n// Extraer texto generado por Anthropic Claude\nlet generatedText = '';\nif (llmRes.content && Array.isArray(llmRes.content) && llmRes.content.length > 0) {\n  generatedText = llmRes.content[0].text || '';\n} else if (llmRes.choices && llmRes.choices.length > 0) {\n  generatedText = llmRes.choices[0].message?.content || '';\n} else if (chatwootRes.content) {\n  generatedText = chatwootRes.content;\n}\n\nconst telegramMessage = `✅ <b>Instrucción Ejecutada Exitosamente por IA (${brand})</b>\n\n💬 <b>Conversación:</b> #${conversationId}\n👤 <b>Contacto:</b> ${firstName}\n🌐 <b>Idioma Aplicado:</b> ${language}\n\n📝 <b>Instrucción del Administrador:</b>\n<i>\"${instruction}\"</i>\n\n🤖 <b>Mensaje Enviado al Cliente:</b>\n${generatedText}`;\n\nreturn [{\n  json: {\n    success: true,\n    chatId: chatId,\n    message: telegramMessage,\n    conversation_id: conversationId,\n    generated_text: generatedText\n  }\n}];"
+        "jsCode": "const prepData = $('Preparar Instrucción Agente Directo').first().json || {};\nconst llmRes = $('Generar Respuesta LLM Anthropic').first().json || {};\nconst chatwootRes = $input.first().json || {};\n\nconst conversationId = prepData.conversation_id || 0;\nconst contactName = prepData.firstName || prepData.contact_name || 'Cliente';\nconst brand = prepData.brand || 'TotalTv';\nconst channel = prepData.channel || 'WhatsApp';\nconst language = prepData.language || 'Español';\nconst instruction = prepData.instruction || '';\nconst chatId = prepData.chatId || $('Parsear y Calcular Comando').first().json.chatId;\n\n// Extraer texto generado por Anthropic Claude\nlet generatedText = '';\nif (llmRes.content && Array.isArray(llmRes.content) && llmRes.content.length > 0) {\n  generatedText = llmRes.content[0].text || '';\n} else if (chatwootRes.content) {\n  generatedText = chatwootRes.content;\n} else if (llmRes.choices && llmRes.choices.length > 0) {\n  generatedText = llmRes.choices[0].message?.content || '';\n}\n\nconst telegramMessage = `✅ <b>Instrucción Ejecutada por el Agente IA</b>\\n\\n` +\n  `💬 <b>Conversación:</b> #${conversationId}\\n` +\n  `👤 <b>Cliente:</b> ${contactName}\\n` +\n  `🏢 <b>Marca/Canal:</b> ${brand} (${channel})\\n` +\n  `🌐 <b>Idioma:</b> ${language}\\n` +\n  `📋 <b>Instrucción:</b> <i>\"${instruction}\"</i>\\n\\n` +\n  `🤖 <b>Mensaje Enviado al Cliente en Chatwoot:</b>\\n${generatedText}`;\n\nreturn [{\n  json: {\n    success: true,\n    chatId: chatId,\n    message: telegramMessage,\n    conversation_id: conversationId,\n    contact_name: contactName,\n    brand: brand,\n    channel: channel,\n    language: language,\n    instruction: instruction,\n    message_sent: generatedText,\n    generated_text: generatedText\n  }\n}];"
       }
     }
   ],
