@@ -3008,4 +3008,29 @@
      - Live workflow `TS2CADjNNn05jXBW` updated and published in n8n (active version `3a6a8a05-790c-4eb9-996b-553a8168a8fe`).
      - Synchronized local workflows via `workflows/export_workflows.py`.
      - Committed and pushed to GitHub repository (`main`).
+---
 
+### 92. Dynamic Live DNS Resolution from Mega OTT API (`tool_get_mega_credentials`) (2026-10-08)
+
+* **Incident Analysis & Reported Behavior**:
+  - **Issue Reported**:
+    - In conversation `#1360` (customer *Thomas Busby*), the customer asked *"Did the dns change?"*.
+    - The agent recovered the credentials (`ThomasBusby` / `EW94FSMV`) but returned DNS addresses `http://xtrzdnsz.sljur.com` and `http://xtrzdnsz.smrtchin.com` instead of the account's live dynamic DNS assigned in Mega OTT (`http://grygwesb.sljur.com`).
+  - **Diagnostic Findings & Root Causes**:
+    - In sub-workflow `Tool - Obtener Credenciales Mega (TotalTv USA)` (`Ub1ZMCeelck3kAiW`), node `Leer Sheet Mega` read the Google Sheet *Clientes TotalTV* (tab *Mega*).
+    - If the row lacked the numeric `id` column, the workflow fell back to static default variables (`http://xtrzdnsz.sljur.com` / `http://xtrzdnsz.smrtchin.com`).
+    - The workflow lacked direct search and pagination across the Mega OTT API (`GET /subscriptions?per_page=100`) when `bestMatch.id` was not pre-populated in the spreadsheet.
+
+* **Remediations & Architectural Hardening**:
+  1. **Direct Dynamic Mega OTT API Lookup**:
+     - Upgraded node `Code 1` in `tool_get_mega_credentials.json` (`Ub1ZMCeelck3kAiW`):
+       * If `bestMatch.id` is available, performs instant single subscription lookup via `GET /subscriptions/{id}`.
+       * If `bestMatch.id` is missing or does not return live DNS, queries the Mega OTT API with `per_page=100` across pages, matching by normalized `username`, `note` (client name), or customer phone number (with whitespace normalization and strict avoidance of empty-string matches or company support numbers).
+       * Extracts 100% exact live URLs: `dns_link` (General DNS) and `dns_link_for_samsung_lg` (Smarters DNS), along with live expiration dates.
+  2. **Chatwoot Endpoint Normalization**:
+     - Updated Chatwoot private audit note node in `Ub1ZMCeelck3kAiW` to use `https://chatwoot.ac4.club` with active token `Dk8XKwvnkGx79rjiL5cLdVZd`.
+  3. **Deployment & Verification**:
+     - Updated live workflow in n8n via MCP (`update_workflow`).
+     - Published active live version `b06d6992-6c80-4a1b-8756-f6c5ae7a5788`.
+     - Validated with automated tests: confirmed `Thomas Busby` / `ThomasBusby` resolves dynamically to `http://grygwesb.sljur.com` and `http://grygwesb.smrtchin.com`.
+     - Synchronized all 21 workflow JSON files locally via `workflows/export_workflows.py`.
