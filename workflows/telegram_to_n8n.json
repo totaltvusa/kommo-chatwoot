@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "a6a7eaa6-2781-4522-ad5e-5199a732a49b",
-  "activeVersionId": "a6a7eaa6-2781-4522-ad5e-5199a732a49b",
+  "versionId": "2f70a2c1-97ba-4046-9f6e-9d1795c22c6c",
+  "activeVersionId": "2f70a2c1-97ba-4046-9f6e-9d1795c22c6c",
   "triggerCount": 1,
   "nodeCount": 31,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-10-07T23:06:13.356Z",
+  "updatedAt": "2026-10-08T01:52:47.281Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -1265,7 +1265,7 @@
             }
           ]
         },
-        "jsonBody": "={{ JSON.stringify({ model: 'claude-3-5-haiku-20241022', max_tokens: 1024, temperature: 0, system: $json.system_prompt, messages: [ { role: 'user', content: $json.user_prompt } ] }) }}",
+        "jsonBody": "={{ JSON.stringify({ model: 'claude-3-5-haiku-latest', max_tokens: 1024, temperature: 0, system: $json.system_prompt, messages: [ { role: 'user', content: $json.user_prompt } ] }) }}",
         "method": "POST",
         "nodeCredentialType": "anthropicApi",
         "options": {},
@@ -1299,7 +1299,7 @@
           "parameters": [
             {
               "name": "api_access_token",
-              "value": "Dk8XKwvn4LgK38yJ4FzVqf8h"
+              "value": "Dk8XKwvnkGx79rjiL5cLdVZd"
             },
             {
               "name": "Content-Type",

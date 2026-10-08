@@ -2893,5 +2893,34 @@
      - Live workflow `TS2CADjNNn05jXBW` (`Telegram to N8N`) published active version `a6a7eaa6-2781-4522-ad5e-5199a732a49b`.
      - Exported all workflows locally and verified test executions (`20658` status: `success`).
      - Committed and pushed to `origin/main`.
+---
 
+### 88. Resolution of Silent Failures (Anthropic Model 404 & Chatwoot Token 401) in Router & Telegram Workflows (2026-10-07)
 
+* **Incident Analysis & Identified Root Causes**:
+  - **Issue Reported**:
+    - AI Agents were still not answering customer messages (e.g. Conversation `#1564` on Instagram Inbox 14 where customer Jamel Jackson sent *"Hello"* with no response).
+  - **Diagnostic Findings & Root Causes**:
+    1. **Anthropic Model String 404 Not Found**:
+       - The Anthropic Messages API returned `404 Not Found` when requesting model string `claude-3-5-haiku-20241022` via the official Anthropic credential `ZbUWSAq6JlKInA64`.
+       - Anthropic's active identifier for Claude 3.5 Haiku is `claude-3-5-haiku-latest`.
+    2. **Chatwoot API Token 401 Unauthorized**:
+       - The API token `Dk8XKwvn4LgK38yJ4FzVqf8h` returned `401 Invalid Access Token` on outbound message delivery attempts.
+       - The active valid system token is `Dk8XKwvnkGx79rjiL5cLdVZd`.
+
+* **Remediations Implemented**:
+  1. **Anthropic Model Parameter Update**:
+     - Configured `claude-3-5-haiku-latest` across all Anthropic LLM nodes:
+       * `router_chatwoot_ia.json` (`n0zgnS1vlOGNcGNY`): Node `Anthropic Chat Model` (`model: "claude-3-5-haiku-latest"`).
+       * `telegram_to_n8n.json` (`TS2CADjNNn05jXBW`): Node `Generar Respuesta LLM Anthropic` (`model: "claude-3-5-haiku-latest"`).
+  2. **Chatwoot Token Normalization**:
+     - Updated all outbound message dispatch nodes (`Responder en Chatwoot`, `Responder en Chatwoot Directo`, `Preparar Mensaje`) with the verified token `Dk8XKwvnkGx79rjiL5cLdVZd` at `https://chatwoot.ac4.club/api/v1/accounts/1`.
+  3. **Verification & Deployment**:
+     - Tested live workflows with test executions:
+       * Router execution completed end-to-end with status `success`.
+       * Telegram `/agent` command validated with zero hallucinations and accurate brand context.
+     - Live workflows published and synchronized:
+       * `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`).
+       * `TS2CADjNNn05jXBW` (`Telegram to N8N`).
+     - Synchronized all 21 workflow JSON files locally via `workflows/export_workflows.py`.
+     - Zero messages sent to live customers during remediation.
