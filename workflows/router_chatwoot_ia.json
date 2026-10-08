@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "496f4817-2587-42b6-8176-da648c391e3c",
-  "activeVersionId": "496f4817-2587-42b6-8176-da648c391e3c",
+  "versionId": "16d5d64f-ddb8-4e47-94e7-8d20975d1676",
+  "activeVersionId": "16d5d64f-ddb8-4e47-94e7-8d20975d1676",
   "triggerCount": 2,
   "nodeCount": 44,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-10-08T14:50:28.984Z",
+  "updatedAt": "2026-10-08T15:16:46.043Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -1960,9 +1960,9 @@
       "parameters": {
         "model": {
           "__rl": true,
-          "value": "claude-3-5-haiku-latest",
+          "value": "claude-haiku-5-5",
           "mode": "list",
-          "cachedResultName": "Claude 3.5 Haiku"
+          "cachedResultName": "Claude Haiku 5.5"
         },
         "options": {
           "temperature": 0,

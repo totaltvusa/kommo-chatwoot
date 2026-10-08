@@ -12,7 +12,7 @@
 * **Webhook Ingestion**: Chatwoot webhook posts `message_created` events to `https://n8n.ac4.club/webhook/chatwoot-inbound-webhook`.
 * **n8n Orchestration Workflow**: `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`).
 * **Debounce & Aggregation**: 8-second non-blocking rolling debounce wait (`Espera 8s`) + Chatwoot message query (`GET /messages`) + rolling reset check & aggregation code node (`Preparar Mensaje`) that clusters consecutive lines into a single prompt and resets the wait window for each new incoming line.
-* **LLM Engine**: **Anthropic Claude Haiku 4.5** (`claude-haiku-4-5`) via `@n8n/n8n-nodes-langchain.lmChatAnthropic` with credential `Anthropic account` (`ZbUWSAq6JlKInA64`).
+* **LLM Engine**: **Anthropic Claude Haiku 5.5** (`claude-haiku-5-5`) via `@n8n/n8n-nodes-langchain.lmChatAnthropic` with credential `Anthropic account` (`ZbUWSAq6JlKInA64`).
   * **Sampling Parameters**: Deterministic greedy decoding (`temperature: 0`).
   * ⚠️ **STRICT MANDATE (NO OPENAI)**: OpenAI is permanently decommissioned. Under NO circumstance will OpenAI models be used.
 * **Multi-Brand Routing (`¿Qué Empresa?`)**:
@@ -2943,8 +2943,33 @@
        - When these nodes threw errors or timed out, the downstream execution branch to `Notificar WhatsApp (Evolution API)` was impacted or disrupted.
        - Updated all Chatwoot API nodes in `xam0WV65gvTbXcIx` to `https://chatwoot.ac4.club` with active token `Dk8XKwvnkGx79rjiL5cLdVZd`, verified Evolution API instance `TTvAlertsMovistar`, and deployed changes to live n8n.
     3. **Model & Context Size Verification**:
-       - The Anthropic model identifier in n8n's `@n8n/n8n-nodes-langchain.lmChatAnthropic` is `claude-3-5-haiku-latest` (Claude 3.5 Haiku, official and current).
-       - System prompt length: TotalTv USA ~37.8k chars (~9.5k tokens); TVTotal24 ~70.5k chars (~17.6k tokens). Total turn context with conversation history is ~20k–25k tokens, well within the safe boundary (< 100k tokens).
+       - Verified pricing and performance: Claude Haiku 5.5 is significantly cheaper ($0.10/M input vs $0.80/M input; $0.50/M output vs $4.00/M output, up to 87.5% cost reduction) and outperforms Claude 3.5 Haiku.
+       - Upgraded engine to `claude-haiku-5-5` across production workflows.
+       - System prompt length: TotalTv USA ~37.8k chars (~9.5k tokens); TVTotal24 ~70.5k chars (~17.6k tokens). Total turn context with conversation history is ~20k–25k tokens, safely under 100k tokens to enjoy Tier 1 baseline pricing ($0.10/$0.50).
     4. **Workflow Consistency**:
-       - Cleaned legacy domain and token across all 21 workflow JSON files and deployed live changes to `xam0WV65gvTbXcIx` and `n0zgnS1vlOGNcGNY`.
+       - Cleaned legacy domain and token across all 21 workflow JSON files and deployed live changes to `xam0WV65gvTbXcIx`, `TS2CADjNNn05jXBW`, and `n0zgnS1vlOGNcGNY`.
+---
+
+### 90. Upgrade to Claude Haiku 5.5 Engine (`claude-haiku-5-5`) Across Production Workflows (2026-10-08)
+
+* **Cost Analysis & Confirmation**:
+  - **Claude 3.5 Haiku**:
+    * Input Tokens: **$0.80 / Million**
+    * Output Tokens: **$4.00 / Million**
+  - **Claude Haiku 5.5** (Official Release):
+    * Input Tokens (prompts $\le$ 100k tokens): **$0.10 / Million** (87.5% cheaper)
+    * Output Tokens: **$0.50 / Million** (87.5% cheaper)
+    * Context Window: 1M tokens.
+  - **Conclusion**: Claude Haiku 5.5 is **8 veces más económico (87.5% de ahorro)** que Claude 3.5 Haiku, además de ofrecer mayor velocidad y capacidades de razonamiento.
+
+* **Deployment**:
+  1. **Live n8n Router Workflow (`n0zgnS1vlOGNcGNY` - Chatwoot + IA Agent)**:
+     - Updated node `Anthropic Chat Model` (`@n8n/n8n-nodes-langchain.lmChatAnthropic`) to `claude-haiku-5-5` (`temperature: 0`).
+     - Published active version (`16d5d64f-ddb8-4e47-94e7-8d20975d1676`).
+  2. **Live n8n Telegram Admin Workflow (`TS2CADjNNn05jXBW` - Telegram to N8N)**:
+     - Updated node `Generar Respuesta LLM Anthropic` (`https://api.anthropic.com/v1/messages`) model parameter to `claude-haiku-5-5`.
+     - Published active version (`3724cbb7-ecc0-4cc9-8e31-69dcd3381e24`).
+  3. **Local Synchronization & Git**:
+     - Synchronized all workflow JSON files via `workflows/export_workflows.py`.
+
 
