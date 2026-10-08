@@ -2989,6 +2989,10 @@
        * In node `Preparar Confirmación Agente`, the reference to previous node input `$input.first().json` was reading the Chatwoot response rather than the Anthropic LLM response.
     3. **Chatwoot URL Reference**:
        * In node `Responder en Chatwoot Directo`, the conversation ID expression was updated to use `.first().json.conversation_id` for consistent item referencing.
+    4. **Claude Haiku 5.5 Extended Thinking Content Blocks Extraction**:
+       * Claude Haiku 5.5 Messages API returns structured content blocks where `content[0]` is a `{ type: "thinking", ... }` block, and the generated response is in `{ type: "text", text: "..." }` (`content[1]`).
+       * Hardcoded access to `content[0].text` evaluated to `undefined`, posting null to Chatwoot and leaving an empty message in the Telegram report.
+       * Updated `Responder en Chatwoot Directo` and `Preparar Confirmación Agente` to filter by `b.type === 'text'` and extract the actual generated text. Active version: `e4c5a966-443c-4f24-b09c-5a0e243c5daa`.
 
 * **Fixes & Remediation Applied**:
   1. **Generar Respuesta LLM Anthropic**:
