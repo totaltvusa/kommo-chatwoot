@@ -3069,3 +3069,32 @@
 * **DNS Fields Mapping Correction (dns_link & dns_link_for_samsung_lg)**:
   - Fixed field extraction in node `Procesar Mega y Cruzar con API Mega OTT`: Mega OTT API returns `dns_link` (General DNS) and `dns_link_for_samsung_lg` (Smarters DNS).
   - Re-executed workflow (`#21049`). Populated all 95 matched rows with their exact dynamic live DNS and DNS Smarters URLs in the `MegaID` sheet.
+---
+
+### 94. Weekly Cron Workflow: Sync New Mega Clients to Chatwoot MegaID (`cron_sync_mega_to_chatwoot_megaid`) (2026-10-08)
+
+* **Objective & Operational Context**:
+  - **Requirement**: Automated weekly synchronization executing every **Monday at 4:00 AM** (`0 4 * * 1`) to detect any new clients added to the `Mega` sheet in *Clientes TotalTV* (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`) that do not yet exist in the `MegaID` sheet in *Chatwoot* (`1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY`).
+  - **Treatment of New Clients**: For every newly detected client, dynamically query the **Mega OTT API** to retrieve their numeric `ID de mega`, `DNS` (`dns_link`), and `DNS Smarters` (`dns_link_for_samsung_lg`), and append their full row (`Nombre`, `Apellido`, `Usuario`, `Clave`, `DNS`, `DNS Smarters`, `ID de mega`) to `MegaID`.
+
+* **Architecture & Pipeline Implementation**:
+  - **Workflow Name**: `Cron - Sincronizar Nuevos Clientes Mega a MegaID` (`bLRjFiwHB0Rz1wYO`).
+  - **Exported File**: `workflows/cron_sync_mega_to_chatwoot_megaid.json`.
+  - **Triggers**:
+    1. `Lunes 4AM Schedule`: Schedule Trigger with cron expression `0 4 * * 1`.
+    2. `Manual Trigger`: Manual trigger for on-demand execution.
+  - **Pipeline Nodes**:
+    1. `Leer Mega en Clientes TotalTv`: HTTP GET reading `Mega!A1:Z` via Google Sheets API OAuth2 (`Pw5wN2L5UopOruaj`).
+    2. `Leer MegaID en Chatwoot`: HTTP GET reading `MegaID!A1:Z` via Google Sheets API OAuth2 (`Pw5wN2L5UopOruaj`).
+    3. `Identificar Nuevos Clientes y Cruzar con Mega OTT`:
+       - Builds lookup Sets for existing records in `MegaID` (`existingUsers`, `existingNames`, `existingIds`).
+       - Compares all rows in the `Mega` sheet. If a client is not found in `MegaID`, tags them as a new client.
+       - If new clients exist, paginates through the Mega OTT API (`https://megaott.net/api/v1/subscriptions?per_page=100`), matches each new client by username / note name / phone number, and extracts `ID de mega`, live `DNS`, and live `DNS Smarters`.
+       - Returns `hasNewClients: true/false` and formatted `rowsToAppend`.
+    4. `¿Hay Nuevos Clientes?`: Conditional router (`n8n-nodes-base.if`).
+    5. `Agregar Nuevos Clientes en MegaID`: HTTP POST to Google Sheets API `values/MegaID!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`.
+    6. `Reportar Resumen Semanal`: Code node returning execution summary.
+
+* **Live Verification & Repository Sync**:
+  - Validated with live test execution (`#21050`): successfully checked 97 records across both sheets, confirmed graceful zero-addition handling when up to date (`hasNewClients: false`), and verified active scheduled status.
+  - Registered in `workflows/export_workflows.py`, exported to local repository, and committed to git `main`.
