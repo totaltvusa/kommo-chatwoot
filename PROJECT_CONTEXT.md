@@ -3034,3 +3034,34 @@
      - Published active live version `b06d6992-6c80-4a1b-8756-f6c5ae7a5788`.
      - Validated with automated tests: confirmed `Thomas Busby` / `ThomasBusby` resolves dynamically to `http://grygwesb.sljur.com` and `http://grygwesb.smrtchin.com`.
      - Synchronized all 21 workflow JSON files locally via `workflows/export_workflows.py`.
+---
+
+### 93. Mega OTT Subscriptions Sync to Chatwoot Spreadsheet (`MegaID` Tab) (2026-10-08)
+
+* **Objective & Operational Context**:
+  - **User Request**: Extract all client records from the `Mega` sheet in Google Spreadsheet *Clientes TotalTV* (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`), query the **Mega OTT API** to retrieve each client's `ID de mega` (numeric subscription ID), `DNS` (General DNS), and `DNS Smarters`, and populate these columns (`Nombre`, `Apellido`, `Usuario`, `Clave`, `DNS`, `DNS Smarters`, `ID de mega`) into a new sheet named `MegaID` within the *Chatwoot* Google Spreadsheet (`1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY`).
+
+* **Architecture & Implementation Details**:
+  - **Workflow**: `Sync Mega to MegaData` (`Lcyro95g4yg39bdD`), active live in n8n (`https://n8n.ac4.club/workflow/Lcyro95g4yg39bdD`).
+  - **Pipeline Structure**:
+    1. **Webhook / Manual Trigger**: Exposed on `POST https://n8n.ac4.club/webhook/sync-mega-megadata` with `responseMode: "lastNode"`.
+    2. **Leer Mega en Clientes TotalTv**: Fetches all rows from `Mega!A1:Z` via Google Sheets REST API v4 using OAuth2 credentials (`Pw5wN2L5UopOruaj`).
+    3. **Obtener Metadatos Chatwoot**: Checks sheet properties on the target Chatwoot spreadsheet to verify whether the `MegaID` tab already exists.
+    4. **Procesar Mega y Cruzar con API Mega OTT**:
+       - Paginates through all subscriptions on `https://megaott.net/api/v1/subscriptions?per_page=100` with Bearer token authentication (163 active subscriptions indexed).
+       - Builds high-performance lookup maps: `subByUsername` (exact/case-insensitive), `subByNote` (full client name in note field), and `subByPhone` (digits-only, ignoring company support lines).
+       - Normalizes all input client rows and matches with Mega OTT data, obtaining the exact numeric `ID de mega`, live `DNS`, and live `DNS Smarters`.
+       - Formats output matrix with the exact requested headers: `["Nombre", "Apellido", "Usuario", "Clave", "DNS", "DNS Smarters", "ID de mega"]`.
+    5. **¿Requiere Crear Hoja MegaID?**: Conditional router (`n8n-nodes-base.if`) verifying `$json.sheetExists`.
+    6. **Crear Hoja MegaID**: Automatically creates the tab `MegaID` via `batchUpdate: addSheet` if not present.
+    7. **Escribir en Hoja MegaID**: Performs a `PUT` request with `valueInputOption=USER_ENTERED` to range `MegaID!A1:G` in the Chatwoot spreadsheet.
+    8. **Reportar Resumen**: Delivers a structured JSON report confirming update metrics.
+
+* **Live Execution & Verification**:
+  - **Execution Run (`#21043`)**:
+    * **Status**: `success`.
+    * **Total Source Rows Processed**: 97 client rows.
+    * **Matched with Mega OTT API**: 95 rows (97.9% automated match rate).
+    * **Target Spreadsheet**: *Chatwoot* (`1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY`), Sheet `MegaID`.
+    * **Updated Range**: `MegaID!A1:G98` (98 total rows, 7 columns, 686 cells updated).
+  - Synchronized repository workflows and updated project history.
