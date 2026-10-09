@@ -80,7 +80,8 @@ wfs = {
     'tool_card2crypto_tvtotal24': 'OCrN0N77qR9Gqppx',
     'campana_reactivacion_nova': 'uqCdr1F5uqNwgRTA',
     'card2crypto_to_me': 'OrUMncnYf5wezbpU',
-    'tool_renovar_mvplay_tvtotal24': '0Go7n1S2CQZr548G'
+    'tool_renovar_mvplay_tvtotal24': '0Go7n1S2CQZr548G',
+    'blink_to_me': 'ZtFZ5lSeAlYHf9bT'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))

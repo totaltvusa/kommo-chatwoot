@@ -1,0 +1,153 @@
+{
+  "id": "ZtFZ5lSeAlYHf9bT",
+  "name": "Blink to ME",
+  "active": true,
+  "isArchived": false,
+  "versionId": "04de9afe-ab17-4887-a99f-6a7e5fcb348a",
+  "activeVersionId": "04de9afe-ab17-4887-a99f-6a7e5fcb348a",
+  "triggerCount": 1,
+  "nodeCount": 4,
+  "createdAt": "2026-09-30T00:09:33.270Z",
+  "updatedAt": "2026-10-09T00:13:10.356Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Webhook Blink": {
+      "main": [
+        [
+          {
+            "node": "Procesar Evento Blink",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Evento Blink": {
+      "main": [
+        [
+          {
+            "node": "Notificar por Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "428c22a2-d751-40f1-bcc8-1006df0cc5cb",
+      "name": "Webhook Blink",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        96
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "blink-webhook",
+        "options": {}
+      },
+      "webhookId": "873a86d9-fe20-4204-a662-9e9e9c21153b"
+    },
+    {
+      "id": "3a5ebe05-6fa2-414f-82db-794ab5bc8d29",
+      "name": "Procesar Evento Blink",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        96
+      ],
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json.body || item.json;\n  const txn = data.transaction || data.tx || data.data || {};\n  \n  const rawEventType = String(data.eventType || data.event || data.event_type || data.type || data.action || '').toLowerCase();\n  const rawStatus = String(txn.status || data.status || data.state || data.payment_status || '').toLowerCase();\n  const memo = String(txn.memo || data.memo || data.description || data.notes || data.title || '').trim();\n\n  let orderId = String(data.order_id || data.orderId || txn.orderId || txn.order_id || '').trim();\n  if (!orderId && memo) {\n    orderId = memo;\n  }\n  if (!orderId) {\n    orderId = String(txn.id || data.id || txn.externalId || data.reference || '.').trim();\n  }\n\n  let amountStr = '.';\n  const currency = String(txn.settlementCurrency || data.currency || data.coin || 'USD').toUpperCase();\n\n  if (txn.settlementDisplayAmount !== undefined && txn.settlementDisplayAmount !== null && txn.settlementDisplayAmount !== '') {\n    amountStr = String(txn.settlementDisplayAmount).trim();\n  } else if (txn.settlementAmount !== undefined && txn.settlementAmount !== null) {\n    const rawAmt = Number(txn.settlementAmount);\n    if (!isNaN(rawAmt)) {\n      amountStr = currency === 'USD' ? (rawAmt / 100).toFixed(2) : String(rawAmt);\n    }\n  }\n\n  if (amountStr !== '.' && !isNaN(Number(amountStr))) {\n    amountStr = Number(amountStr).toFixed(2);\n  }\n\n  const customerName = String(data.customer_name || (data.customer && data.customer.name) || data.name || '.').trim();\n  const customerEmail = String(data.customer_email || (data.customer && data.customer.email) || data.email || '.').trim();\n  const description = memo || String(data.description || data.notes || data.title || '.').trim();\n\n  const isPaid = (\n    ['success', 'paid', 'completed', 'settled', 'confirmed'].includes(rawStatus) ||\n    (rawEventType.includes('receive') && !['pending', 'failed', 'cancelled', 'failure'].includes(rawStatus)) ||\n    ['paid', 'completed', 'settled', 'success', 'confirmed', 'payment.success', 'order.paid', 'invoice.paid'].includes(rawEventType)\n  );\n\n  const clientStr = customerName !== '.' ? customerName : (customerEmail !== '.' ? customerEmail : 'Cliente Blink');\n  const displayAmount = amountStr !== '.' ? `$${amountStr} ${currency}` : `Monto N/A (${currency})`;\n\n  let telegramText = '';\n  let whatsappText = '';\n\n  if (isPaid) {\n    telegramText = `🚀 *¡PAGO COMPLETADO EN BLINK!*\n\n💵 *Monto Recibido:* ${displayAmount}\n🆔 *Orden ID:* \\`${orderId}\\`\n👤 *Cliente:* ${clientStr}\n📋 *Descripción:* ${description}\n📊 *Estado:* ✅ Pago Confirmado`;\n\n    whatsappText = `🚀 ¡PAGO COMPLETADO EN BLINK!\n\n💵 Monto Recibido: ${displayAmount}\n🆔 Orden ID: ${orderId}\n👤 Cliente: ${clientStr}\n📋 Descripción: ${description}\n📊 Estado: ✅ Pago Confirmado`;\n  } else {\n    telegramText = `🛒 *¡NUEVA ORDEN CREADA EN BLINK!*\n\n💵 *Monto:* ${displayAmount}\n🆔 *Orden ID:* \\`${orderId}\\`\n👤 *Cliente:* ${clientStr}\n📋 *Descripción:* ${description}\n📊 *Estado:* 🟡 Orden Creada / Pendiente de Pago`;\n\n    whatsappText = `🛒 ¡NUEVA ORDEN CREADA EN BLINK!\n\n💵 Monto: ${displayAmount}\n🆔 Orden ID: ${orderId}\n👤 Cliente: ${clientStr}\n📋 Descripción: ${description}\n📊 Estado: 🟡 Orden Creada / Pendiente`;\n  }\n\n  results.push({\n    json: {\n      ...data,\n      isPaid,\n      order_id: orderId,\n      amount: amountStr,\n      currency,\n      displayAmount,\n      telegramText,\n      whatsappText,\n      clientStr,\n      description\n    }\n  });\n}\n\nreturn results;"
+      }
+    },
+    {
+      "id": "e3008069-3b80-4baf-a116-107de553b4ac",
+      "name": "Notificar por Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "webhookId": "5b543780-d77f-4c28-aec8-2e1126f6908d",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "id": "aa5d8352-d743-4a77-a6ae-ce3593f9aa1d",
+      "name": "Enviar texto",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        448,
+        192
+      ],
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ $json.whatsapp_text }}"
+      },
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}
