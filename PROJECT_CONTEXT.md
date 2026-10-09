@@ -3065,3 +3065,7 @@
     * **Target Spreadsheet**: *Chatwoot* (`1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY`), Sheet `MegaID`.
     * **Updated Range**: `MegaID!A1:G98` (98 total rows, 7 columns, 686 cells updated).
   - Synchronized repository workflows and updated project history.
+
+* **DNS Fields Mapping Correction (dns_link & dns_link_for_samsung_lg)**:
+  - Fixed field extraction in node `Procesar Mega y Cruzar con API Mega OTT`: Mega OTT API returns `dns_link` (General DNS) and `dns_link_for_samsung_lg` (Smarters DNS).
+  - Re-executed workflow (`#21049`). Populated all 95 matched rows with their exact dynamic live DNS and DNS Smarters URLs in the `MegaID` sheet.
