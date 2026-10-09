@@ -3098,3 +3098,26 @@
 * **Live Verification & Repository Sync**:
   - Validated with live test execution (`#21050`): successfully checked 97 records across both sheets, confirmed graceful zero-addition handling when up to date (`hasNewClients: false`), and verified active scheduled status.
   - Registered in `workflows/export_workflows.py`, exported to local repository, and committed to git `main`.
+---
+
+### 95. Fix AI Agent Silence on Incoming Messages: DataTable `alwaysOutputData` Property (`router_chatwoot_ia` & `telegram_to_n8n`) (2026-10-09)
+
+* **Incident Analysis & Reported Symptom**:
+  - **Issue Reported**: AI agents stopped responding to incoming messages from customers across conversations (e.g. #1306 and #1314).
+  - **Diagnostic Findings & Root Causes**:
+    - When inspecting failed executions `#21304` (conversation #1306) and `#21309` (conversation #1314), the execution halted at node `Consultar Situaciones Activas` (DataTable `nAczHKLZ5FAsGWWz`).
+    - Because there were currently 0 active rows in the DataTable `situaciones_agentes`, the DataTable node returned `[]` (0 items).
+    - In n8n, when a node outputs 0 items and does not have `alwaysOutputData: true`, downstream execution terminates immediately, preventing the message from reaching `Inyectar Situaciones Temporales`, `¿Qué Empresa?`, and `AI Agent`.
+    - Similarly, in `telegram_to_n8n` (`TS2CADjNNn05jXBW`), node `Obtener Situaciones (Update)` lacked `alwaysOutputData: true`, which would prevent situation management when the table had 0 rows.
+
+* **Fixes & Remediation Applied**:
+  1. **Router Workflow (`n0zgnS1vlOGNcGNY` - Chatwoot + IA Agent)**:
+     - Configured `alwaysOutputData: true` on node `Consultar Situaciones Activas`.
+     - Published active version `0b22a1e6-0148-4913-ac2a-9ebe26445ec9`.
+  2. **Telegram Admin Workflow (`TS2CADjNNn05jXBW` - Telegram to N8N)**:
+     - Configured `alwaysOutputData: true` on node `Obtener Situaciones (Update)`.
+     - Published active version `7cebed7d-c4ac-476d-8c3c-c23807278835`.
+  3. **Repository Sync & Git**:
+     - Exported all 23 workflow definitions via `workflows/export_workflows.py`.
+     - Committed and pushed to GitHub repository (`main`).
+

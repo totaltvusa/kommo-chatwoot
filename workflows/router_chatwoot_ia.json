@@ -3,12 +3,12 @@
   "name": "Chatwoot + IA Agent",
   "active": true,
   "isArchived": false,
-  "versionId": "16d5d64f-ddb8-4e47-94e7-8d20975d1676",
-  "activeVersionId": "16d5d64f-ddb8-4e47-94e7-8d20975d1676",
+  "versionId": "0b22a1e6-0148-4913-ac2a-9ebe26445ec9",
+  "activeVersionId": "0b22a1e6-0148-4913-ac2a-9ebe26445ec9",
   "triggerCount": 2,
   "nodeCount": 44,
   "createdAt": "2026-08-10T00:47:38.454Z",
-  "updatedAt": "2026-10-08T15:16:46.043Z",
+  "updatedAt": "2026-10-09T23:01:27.094Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -1933,7 +1933,8 @@
         },
         "returnAll": true
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
     },
     {
       "id": "code-inject-situaciones-router",

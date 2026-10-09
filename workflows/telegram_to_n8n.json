@@ -3,12 +3,12 @@
   "name": "Telegram to N8N",
   "active": true,
   "isArchived": false,
-  "versionId": "e4c5a966-443c-4f24-b09c-5a0e243c5daa",
-  "activeVersionId": "e4c5a966-443c-4f24-b09c-5a0e243c5daa",
+  "versionId": "7cebed7d-c4ac-476d-8c3c-c23807278835",
+  "activeVersionId": "7cebed7d-c4ac-476d-8c3c-c23807278835",
   "triggerCount": 1,
   "nodeCount": 31,
   "createdAt": "2026-08-11T00:27:51.670Z",
-  "updatedAt": "2026-10-08T16:03:59.069Z",
+  "updatedAt": "2026-10-09T23:01:40.952Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -1047,7 +1047,8 @@
           "mode": "id"
         },
         "returnAll": true
-      }
+      },
+      "alwaysOutputData": true
     },
     {
       "id": "code-manage-situaciones-tg",
