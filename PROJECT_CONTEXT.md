@@ -3145,5 +3145,22 @@
      - Router Workflow (`n0zgnS1vlOGNcGNY` - `Chatwoot + IA Agent`): updated and published.
      - Telegram Admin Workflow (`TS2CADjNNn05jXBW` - `Telegram to N8N`): updated and published.
      - Local repository JSON files and documentation synchronized and committed to `main`.
+---
+
+### 97. Customer Support Handling (Conversation #1467) & Autonomous "Always Proceed" Directives (2026-10-09)
+
+* **Conversation #1467 (Amilcar Perez - TVTotal24 WhatsApp Colombia / Inbox 16)**:
+  - **Context & Diagnostic**:
+    - Existing customer Amilcar Perez reported: *"No puedo conectarme con la app a traves de fire tv"*.
+    - Prior English response had occurred due to the loanword bug (*"Fire tv"*), which was resolved in Section 96.
+  - **Resolution Delivered**:
+    - Dispatched tailored technical support message in 100% Spanish adhering to all TVTotal24 system mandates (first-name greeting `Amilcar`, zero personal name disclosure).
+    - Provided structured troubleshooting for both the official **TotalTv Latina** app (Downloader code `5533902`, panel `TOTALTV LATINA`, user `AmilcarPerez`, pass `mTaFspXH4k`) and **Smarters Player Lite** (DNS `http://cdn01link.uk:2095` and fallback `http://node01hub.uk:2082`).
+    - Successfully posted to Chatwoot conversation `#1467` and delivered via WhatsApp.
+
+* **Autonomous Execution & Proactive Agency Directives (`GEMINI.md` & `AGENTS.md`)**:
+  - Established root project rules `GEMINI.md` and `AGENTS.md` enforcing mandatory autonomous execution across the assistant and all subagents.
+  - Mandated zero-interruption policy: investigate root causes, implement code/workflow fixes, deploy to n8n, verify live, commit, and push without requesting intermediate permissions or asking *"Should I proceed?"*.
+
 
 
