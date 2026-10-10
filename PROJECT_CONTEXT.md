@@ -3120,4 +3120,30 @@
   3. **Repository Sync & Git**:
      - Exported all 23 workflow definitions via `workflows/export_workflows.py`.
      - Committed and pushed to GitHub repository (`main`).
+---
+
+### 96. Fix TVTotal24 Erroneous English Responses to Spanish Customers (`router_chatwoot_ia` & `telegram_to_n8n`) (2026-10-09)
+
+* **Incident Analysis & Reported Symptom**:
+  - **Issue Reported**: The TVTotal24 AI Agent responded in English to a customer communicating in Spanish.
+  - **Diagnostic Findings & Root Causes**:
+    - In node `Preparar Mensaje` (`preparar-mensaje-ia`) in `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`), the English keyword regex (`enWordRegex`) included streaming/technical loanwords frequently used by Spanish-speaking Latin American customers: `app`, `tv`, `firestick`, `smart`, `demo`, `test`, `free`, `screen`, `card`, `plan`, `support`.
+    - `esWordRegex` lacked unaccented variants (`como`, `donde`, `cuando`, `que`, `ano`, `dia`, `esta`) and common action verbs (`descargar`, `instalar`, `bajar`, `funciona`, `probar`, `pague`, `senal`, `falla`).
+    - When a customer sent short messages containing technical words (e.g. *"Smart TV"*, *"Firestick"*, *"Como instalo la app en mi tv"*), `enCount >= esCount` caused `convLanguage = 'en'`.
+    - This injected a strict prompt directive `[MANDATORY LANGUAGE DIRECTIVE: The customer communicates in ENGLISH... You MUST formulate your entire response 100% in ENGLISH...]`, forcing Claude Haiku 5.5 to output its entire response in English.
+
+* **Fixes & Remediation Applied**:
+  1. **Cleaned Loanwords & Hardened `enWordRegex`**:
+     - Removed all generic technical loanwords (`app`, `tv`, `firestick`, `screen`, `test`, `demo`, `free`, `card`, `support`, `plan`) from standalone `enWordRegex`.
+     - Added English multi-word phrases and grammatical markers (`how to`, `how do`, `how can`, `how much`, `what is`, `where can`, `can i`, `could you`, `would like`, `i want`, `good morning`, `thank you`, `the`, `you`, `your`, `they`, `our`, `we`, `does`, `did`, `download`, `install`, `credentials`).
+  2. **Enriched `esWordRegex`**:
+     - Added unaccented variants and IPTV action verbs (`descargar`, `instalar`, `bajar`, `funciona`, `comprar`, `probar`, `pague`, `falla`, `senal`, `problema`, `conectar`, `smart`, `magis`, `roku`, `iptv`, `contrasena`, `telefono`).
+  3. **Strict Spanish Brand Default for TVTotal24**:
+     - TVTotal24 (Inboxes 10, 13, 15, 16, 19) now requires unambiguous English evidence (`enCount >= 2 && enCount > esCount * 2`) before switching away from Spanish.
+     - Single-word messages, device names (*"Firestick"*, *"Smart TV"*), and neutral words default 100% to Spanish for TVTotal24.
+  4. **Workflows Deployed & Published in n8n**:
+     - Router Workflow (`n0zgnS1vlOGNcGNY` - `Chatwoot + IA Agent`): updated and published.
+     - Telegram Admin Workflow (`TS2CADjNNn05jXBW` - `Telegram to N8N`): updated and published.
+     - Local repository JSON files and documentation synchronized and committed to `main`.
+
 
