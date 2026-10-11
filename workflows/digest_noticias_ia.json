@@ -1,0 +1,818 @@
+{
+  "id": "Q1mJOZaZwelJRIBq",
+  "name": "📰 Digest de Noticias IA - Curación Multicanal",
+  "active": true,
+  "isArchived": false,
+  "versionId": "e6ca3db4-e442-44ca-9d28-ce407b2ab464",
+  "activeVersionId": "e6ca3db4-e442-44ca-9d28-ce407b2ab464",
+  "triggerCount": 3,
+  "nodeCount": 21,
+  "createdAt": "2026-10-11T02:02:22.373Z",
+  "updatedAt": "2026-10-11T02:02:34.907Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Schedule Trigger (9am, 12:01pm, 7pm)": {
+      "main": [
+        [
+          {
+            "node": "RSS El Pais",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS El Nacional",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Tal Cual",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Telemundo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS NYTimes World",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NYTimes TopStories",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API GNews TopHeadlines",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NewsAPI Technology",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API WorldNews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS El Pais",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS El Nacional",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Tal Cual",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Telemundo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS NYTimes World",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NYTimes TopStories",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API GNews TopHeadlines",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NewsAPI Technology",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API WorldNews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS El Pais",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS El Nacional",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Tal Cual",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Telemundo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS NYTimes World",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NYTimes TopStories",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API GNews TopHeadlines",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NewsAPI Technology",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API WorldNews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Command Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Comando Telegram /resumen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Comando Telegram /resumen": {
+      "main": [
+        [
+          {
+            "node": "RSS El Pais",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS El Nacional",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Tal Cual",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Telemundo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS NYTimes World",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NYTimes TopStories",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API GNews TopHeadlines",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API NewsAPI Technology",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API WorldNews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS El Pais": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS El Nacional": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Tal Cual": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Telemundo": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS NYTimes World": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API NYTimes TopStories": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API GNews TopHeadlines": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API NewsAPI Technology": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API WorldNews": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Desduplicar Noticias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar y Desduplicar Noticias": {
+      "main": [
+        [
+          {
+            "node": "Curar y Redactar Noticias con IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Curar y Redactar Noticias con IA": {
+      "main": [
+        [
+          {
+            "node": "Formatear Mensajes Finales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Mensajes Finales": {
+      "main": [
+        [
+          {
+            "node": "Notificar Telegram Admin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar WhatsApp Admin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Es Solicitud Usuario Telegram?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es Solicitud Usuario Telegram?": {
+      "main": [
+        [
+          {
+            "node": "Responder Telegram Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "cd352cc8-0e0d-455c-88d3-7368c3240c27",
+      "name": "Schedule Trigger (9am, 12:01pm, 7pm)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "1 9,12,19 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4e7a08cf-41f2-4ea6-bc25-55c833c31047",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        160
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "6d462e3a-f548-4d4c-a3e6-039af9965b09",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        320
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "noticias-digest",
+        "options": {}
+      },
+      "webhookId": "noticias-digest-webhook"
+    },
+    {
+      "id": "4f8181b6-2dba-41d0-b977-8081ceffd590",
+      "name": "Telegram Command Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        480
+      ],
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "webhookId": "61b7ce12-5874-407e-9ead-6194402e55dc",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "id": "4342c0b9-e13c-419e-a49e-fae6ccc8af12",
+      "name": "Filtrar Comando Telegram /resumen",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        220,
+        480
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.message.text }}",
+              "operation": "startsWith",
+              "value2": "/resumen"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/resumen",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "b2a94004-4834-4586-87ab-82455fd12de5",
+      "name": "RSS El Pais",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"
+      }
+    },
+    {
+      "id": "3823ecf7-55b9-4896-93de-0cb71b836826",
+      "name": "RSS El Nacional",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        140
+      ],
+      "parameters": {
+        "url": "https://www.elnacional.com/feed/"
+      }
+    },
+    {
+      "id": "8766d68c-37b2-4a44-9bb3-b3cf4de97506",
+      "name": "RSS Tal Cual",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        280
+      ],
+      "parameters": {
+        "url": "https://talcualdigital.com/feed/"
+      }
+    },
+    {
+      "id": "423a7d64-d948-4ee8-aa85-a3efb7a6acd0",
+      "name": "RSS Telemundo",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        420
+      ],
+      "parameters": {
+        "url": "https://www.telemundo.com/rss/noticias"
+      }
+    },
+    {
+      "id": "eb0dc133-9595-4665-8aa5-ae74687ba822",
+      "name": "RSS NYTimes World",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        560
+      ],
+      "parameters": {
+        "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+      }
+    },
+    {
+      "id": "42b8f947-b13d-4447-9014-57439a9b2a4d",
+      "name": "API NYTimes TopStories",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        700
+      ],
+      "parameters": {
+        "url": "=https://api.nytimes.com/svc/topstories/v2/world.json?api-key={{ $env.NYTIMES_API_KEY || '' }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "36a0447b-afd9-490e-9da9-da83210bc16b",
+      "name": "API GNews TopHeadlines",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        840
+      ],
+      "parameters": {
+        "url": "=https://gnews.io/api/v4/top-headlines?lang=es&apikey={{ $env.GNEWS_API_KEY || '' }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "2f903d6d-53b9-4952-b75f-8540250414f5",
+      "name": "API NewsAPI Technology",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        980
+      ],
+      "parameters": {
+        "url": "=https://newsapi.org/v2/top-headlines?category=technology&apiKey={{ $env.NEWS_API_KEY || '' }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "2efeb844-4539-40e0-a663-41585d4c4ba3",
+      "name": "API WorldNews",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1120
+      ],
+      "parameters": {
+        "url": "=https://api.worldnewsapi.com/top-news?api-key={{ $env.WORLD_NEWS_API_KEY || '' }}&source-countries=ve,us,es",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "2730d79e-531c-4fb3-843e-5a64217c5d90",
+      "name": "Normalizar y Desduplicar Noticias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        500
+      ],
+      "parameters": {
+        "jsCode": "const rawItems = [];\n\nconst extractRss = (nodeName, defaultSource) => {\n  try {\n    const items = $(nodeName).all();\n    for (const item of items) {\n      const j = item.json || {};\n      const title = String(j.title || j['rss:title'] || '').trim();\n      const link = String(j.link || j.guid || j['rss:link'] || '').trim();\n      const desc = String(j.contentSnippet || j.content || j.description || '').replace(/<[^>]*>?/gm, '').trim();\n      const pubDate = String(j.pubDate || j.isoDate || new Date().toISOString());\n      \n      if (title && link) {\n        rawItems.push({\n          title,\n          description: desc.slice(0, 300),\n          url: link,\n          source: defaultSource,\n          pubDate\n        });\n      }\n    }\n  } catch (e) {}\n};\n\nextractRss('RSS El Pais', 'El País');\nextractRss('RSS El Nacional', 'El Nacional (Venezuela)');\nextractRss('RSS Tal Cual', 'Tal Cual Digital');\nextractRss('RSS Telemundo', 'Telemundo');\nextractRss('RSS NYTimes World', 'NYTimes RSS');\n\ntry {\n  const nyRes = $('API NYTimes TopStories').first()?.json || {};\n  if (Array.isArray(nyRes.results)) {\n    for (const article of nyRes.results) {\n      if (article.title && article.url) {\n        rawItems.push({\n          title: article.title,\n          description: (article.abstract || '').slice(0, 300),\n          url: article.url,\n          source: 'NYTimes API',\n          pubDate: article.published_date || new Date().toISOString()\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const gnewsRes = $('API GNews TopHeadlines').first()?.json || {};\n  if (Array.isArray(gnewsRes.articles)) {\n    for (const article of gnewsRes.articles) {\n      if (article.title && article.url) {\n        rawItems.push({\n          title: article.title,\n          description: (article.description || '').slice(0, 300),\n          url: article.url,\n          source: article.source?.name || 'GNews API',\n          pubDate: article.publishedAt || new Date().toISOString()\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const newsApiRes = $('API NewsAPI Technology').first()?.json || {};\n  if (Array.isArray(newsApiRes.articles)) {\n    for (const article of newsApiRes.articles) {\n      if (article.title && article.url) {\n        rawItems.push({\n          title: article.title,\n          description: (article.description || '').slice(0, 300),\n          url: article.url,\n          source: article.source?.name || 'NewsAPI Tech',\n          pubDate: article.publishedAt || new Date().toISOString()\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const worldNewsRes = $('API WorldNews').first()?.json || {};\n  if (Array.isArray(worldNewsRes.top_news)) {\n    for (const group of worldNewsRes.top_news) {\n      if (Array.isArray(group.news)) {\n        for (const article of group.news) {\n          if (article.title && article.url) {\n            rawItems.push({\n              title: article.title,\n              description: (article.text || article.summary || '').slice(0, 300),\n              url: article.url,\n              source: 'WorldNews API',\n              pubDate: article.publish_date || new Date().toISOString()\n            });\n          }\n        }\n      }\n    }\n  }\n} catch (e) {}\n\nconst seenUrls = new Set();\nconst seenTitles = new Set();\nconst uniqueArticles = [];\n\nconst normalizeTitle = (t) => t.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '');\n\nfor (const art of rawItems) {\n  const normUrl = art.url.split('?')[0].toLowerCase();\n  const normT = normalizeTitle(art.title);\n  \n  if (seenUrls.has(normUrl) || seenTitles.has(normT)) {\n    continue;\n  }\n  \n  seenUrls.add(normUrl);\n  seenTitles.add(normT);\n  uniqueArticles.push(art);\n}\n\nlet originChatId = null;\ntry {\n  const tgData = $('Telegram Command Trigger').first()?.json || {};\n  if (tgData.message && tgData.message.chat) {\n    originChatId = String(tgData.message.chat.id);\n  }\n} catch (e) {}\n\nreturn [{\n  json: {\n    total_raw: rawItems.length,\n    total_unique: uniqueArticles.length,\n    origin_chat_id: originChatId,\n    articles: uniqueArticles.slice(0, 60)\n  }\n}];"
+      }
+    },
+    {
+      "id": "fed19ace-9b5b-4588-8b14-064ee4cc4fe7",
+      "name": "Curar y Redactar Noticias con IA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1060,
+        500
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "deepSeekApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"deepseek-chat\",\n  \"temperature\": 0.3,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Eres un editor en jefe senior y periodista de inteligencia artificial especializado en curación de noticias para el público hispanohablante.\\n\\nTu misión es seleccionar EXACTAMENTE 3 noticias más importantes, relevantes o leídas para CADA UNA de las siguientes 5 categorías:\\n1. 🇻🇪 VENEZUELA\\n2. 🌎 USA Y AMÉRICA LATINA\\n3. 🌐 MUNDO\\n4. 💻 TECNOLOGÍA\\n5. 🎭 ESPECTÁCULO & ENTRETENIMIENTO\\n\\nREGLAS ESTRICTAS DE FORMATO Y ESTILO:\\n- Debes seleccionar exactamente 3 noticias por categoría.\\n- Para cada noticia incluye:\\n  * Título / Titular claro en negrita.\\n  * Breve resumen de EXACTAMENTE 2 LÍNEAS (sin excepciones) que aporte contexto real y hechos clave.\\n  * Enlace directo a la fuente original.\\n\\nFORMATO DE SALIDA (Aplica este formato exacto en Markdown):\\n\\n🇻🇪 *VENEZUELA*\\n1. *[Título Noticia 1]*\\n[Resumen línea 1]\\n[Resumen línea 2]\\n🔗 [Leer noticia en la fuente](URL)\\n\\n2. *[Título Noticia 2]*\\n[Resumen línea 1]\\n[Resumen línea 2]\\n🔗 [Leer noticia en la fuente](URL)\\n\\n3. *[Título Noticia 3]*\\n[Resumen línea 1]\\n[Resumen línea 2]\\n🔗 [Leer noticia en la fuente](URL)\\n\\n🌎 *USA Y AMÉRICA LATINA*\\n... (3 noticias con el mismo formato)\\n\\n🌐 *MUNDO*\\n... (3 noticias con el mismo formato)\\n\\n💻 *TECNOLOGÍA*\\n... (3 noticias con el mismo formato)\\n\\n🎭 *ESPECTÁCULO & ENTRETENIMIENTO*\\n... (3 noticias con el mismo formato)\\n\\nNo incluyas saludos, introducciones ni explicaciones adicionales. Genera únicamente el resumen curado.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Analiza y cura el siguiente listado de noticias recolectadas hoy:\\n\\n\" + JSON.stringify($json.articles)\n    }\n  ]\n}",
+        "options": {}
+      },
+      "credentials": {
+        "deepSeekApi": {
+          "id": "22sfGWS6Ev7XMOfa",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "id": "1a7c8e12-e3ce-405c-894f-43e863376ddb",
+      "name": "Formatear Mensajes Finales",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        500
+      ],
+      "parameters": {
+        "jsCode": "const rawText = $json.choices[0].message.content.trim();\nconst normData = $('Normalizar y Desduplicar Noticias').first()?.json || {};\n\nconst dateStr = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });\n\nconst header = `📰 *RESUMEN DE NOTICIAS DESTACADAS* 🗞️\\n📅 *${dateStr.toUpperCase()}*\\n----------------------------------------\\n\\n`;\n\nconst fullText = header + rawText;\n\nconst telegramText = fullText;\nconst whatsappText = fullText.replace(/\\*\\*/g, '*');\n\nreturn [{\n  json: {\n    telegram_text: telegramText,\n    whatsapp_text: whatsappText,\n    origin_chat_id: normData.origin_chat_id || null,\n    raw_response: rawText\n  }\n}];"
+      }
+    },
+    {
+      "id": "20a9b6a0-2af0-458a-a972-2f47f248ae1b",
+      "name": "Notificar Telegram Admin",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        360
+      ],
+      "parameters": {
+        "chatId": "40371837",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        },
+        "resource": "message",
+        "operation": "sendMessage"
+      },
+      "webhookId": "11f6e626-050e-4911-8721-0644b8d68e68",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    },
+    {
+      "id": "a9c902c7-b43d-4ae9-b321-995bbf1c87cf",
+      "name": "Enviar WhatsApp Admin",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        560
+      ],
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ $json.whatsapp_text }}"
+      },
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "id": "e6945d07-fbb9-4251-b14a-6ea3017ebacf",
+      "name": "Es Solicitud Usuario Telegram?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        760
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ String($json.origin_chat_id || '') }}",
+              "operation": "isNotEmpty"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c2",
+              "leftValue": "={{ String($json.origin_chat_id || '') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "e7f893b8-37c5-4986-9365-defe69334e89",
+      "name": "Responder Telegram Usuario",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        760
+      ],
+      "parameters": {
+        "chatId": "={{ $json.origin_chat_id }}",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        },
+        "resource": "message",
+        "operation": "sendMessage"
+      },
+      "webhookId": "f5a1a7f7-7977-4eb0-9397-9c439c2efa5e",
+      "credentials": {
+        "telegramApi": {
+          "id": "IWiCwNsfWPaJGIsw",
+          "name": "Telegram Push"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}
