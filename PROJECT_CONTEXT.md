@@ -3164,3 +3164,38 @@
 
 
 
+---
+
+### 98. Automatic Payment Verification & Instant MVPlay Renewal for Zelle, Binance & Pago Móvil (2026-10-10)
+
+* **Incident Analysis & Investigation (Conversation #1348 - Andres Tablante)**:
+  - **Issue Reported**: In conversation `#1348`, the customer sent a payment screenshot for a 1-month Zelle renewal ($8.00 USD, ref: `xk6lhzghj`). Instead of automatically renewing the customer's account in MVPlay and returning confirmation credentials, the bot triggered an automatic human transfer (`Auto-Guardarraíl: Comprobante de Pago Recibido`), asking generic questions and forcing manual human intervention.
+  - **Diagnostic Findings & Root Causes**:
+    1. **Context Block Erasure in `Procesar Soporte TotalTv` (`router_chatwoot_ia.json`)**:
+       - When a customer sent an image receipt, `Analizar Imagen (Visión Anthropic)` and `Procesar Resultado Visión` correctly verified the receipt ($8 Zelle to `pagos@totaltvlatina.com`) and generated the priority mandate context block `[PAYMENT RECEIPT DETECTED IN ATTACHMENT: ... YOU MUST IMMEDIATELY EXECUTE the tool renovar_cuenta_mvplay_tvtotal24]`.
+       - However, the subsequent node `Procesar Soporte TotalTv` rebuilt `finalContent` using only `langDirective + supportBlockWithSep + historyBlock + clientContextPrefix + rawContent`, dropping `prepData.receipt_context_block` entirely.
+       - Consequently, `AI Agent - TVTotal24` received an empty prompt string without the payment receipt context or renewal instructions, producing a generic greeting (`"Andres, ¿en qué puedo ayudarte hoy?"`). Downstream node `Formatear Respuesta` detected `is_payment_receipt: true` with `!renewalSucceeded`, triggering the Auto-Guardarraíl transfer.
+    2. **Outdated Chatwoot Host & Token in `Tool - Renovacion Automatica MVPlay TVTotal24` (`0Go7n1S2CQZr548G`)**:
+       - In `tool_renovar_mvplay_tvtotal24.json`, `Nota Privada Chatwoot` and `Validar y Procesar Renovacion` were hardcoded to the old host (`https://project1-chatwoot.efebpb.easypanel.host`) and legacy token (`nuwRKpG2bBAQBpRFznfvrMpT`), failing contact attribute updates and private note audit logs.
+    3. **Pago Móvil Prompt Disallowance & Strict Rate Tolerances**:
+       - The system prompt in `AI Agent - TVTotal24` previously explicitly stated that Pago Móvil was not eligible for auto-renewal and instructed immediate transfer to human.
+       - In `tool_renovar_mvplay_tvtotal24.json`, Pago Móvil validation used a narrow 2% tolerance that rejected valid payments subject to daily rounding or direct USD expressions ($8 / $24).
+
+* **Remediations & Architectural Hardening**:
+  1. **Preserve Payment Receipt Context in `Procesar Soporte TotalTv` (`router_chatwoot_ia.json`)**:
+     - Updated `Procesar Resultado Visión` to explicitly export `receipt_context_block`.
+     - Updated `Procesar Soporte TotalTv` to prepend `receiptBlock` to `finalContent`:
+       `finalContent = langDirective + (receiptBlock ? (receiptBlock + 
+
+) : ) + supportBlockWithSep + historyBlock + clientContextPrefix + rawContent;`
+  2. **Comprehensive System Message Protocol in `AI Agent - TVTotal24`**:
+     - Updated the payment and renewal protocol to mandate automatic execution of `renovar_cuenta_mvplay_tvtotal24` for **Zelle** ($8 / $24), **Binance Pay** (5 / 14 USDT), and **Pago Móvil** (1m / 3m in Bolívares or $8 / $24 USD equivalent).
+     - Applied to both **Image Attachments (Receipts)** and **Text Payment Notifications** (e.g. *"ya transferí 8$ por zelle ref: xk6lhzghj"*, *"pagué 1 mes por pago móvil"*).
+     - Strict rule: reply solely with the confirmation and active credentials upon successful renewal without mentioning or triggering human transfer.
+  3. **Chatwoot Endpoint & Pago Móvil Hardening in `tool_renovar_mvplay_tvtotal24` (`0Go7n1S2CQZr548G`)**:
+     - Standardized all endpoints to `https://chatwoot.ac4.club/api/v1/accounts/1` with active token `Dk8XKwvnkGx79rjiL5cLdVZd`.
+     - Enhanced Pago Móvil validation: supports direct USD amounts ($8 for 1m, $24 for 3m) and widened Bolívares rate tolerance to 6% against live BCV / Paralelo / Binance P2P rates.
+  4. **Deployment & Verification**:
+     - Deployed and published active versions for both `0Go7n1S2CQZr548G` (version `349e1849-067a-46eb-8f5b-de3beddf4df1`) and `n0zgnS1vlOGNcGNY` (version `3a9b8600-d1b5-44f5-ba35-42e537df00a8`).
+     - Validated pipeline execution via automated simulation without sending outbound messages to real customers.
+     - Synchronized repository workflows and committed to git `main`.
