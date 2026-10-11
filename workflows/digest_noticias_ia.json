@@ -1,14 +1,14 @@
 {
-  "id": "Hq5yWjepotMfEHJK",
+  "id": "tDpdINyOd2NmS7LT",
   "name": "📰 Digest de Noticias IA - Curación Multicanal",
   "active": false,
   "isArchived": false,
-  "versionId": "b94a28fb-8e2f-45af-a828-a07873bdee98",
+  "versionId": "51c1ba01-c674-46ff-9ffc-cd8a2bc925c5",
   "activeVersionId": null,
   "triggerCount": 0,
   "nodeCount": 21,
-  "createdAt": "2026-10-11T02:28:03.578Z",
-  "updatedAt": "2026-10-11T02:28:03.578Z",
+  "createdAt": "2026-10-11T02:28:50.917Z",
+  "updatedAt": "2026-10-11T02:28:50.917Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -124,6 +124,17 @@
         ]
       ]
     },
+    "RSS BBC Mundo": {
+      "main": [
+        [
+          {
+            "node": "RSS NYTimes World",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "RSS NYTimes World": {
       "main": [
         [
@@ -232,22 +243,11 @@
           }
         ]
       ]
-    },
-    "RSS BBC Mundo": {
-      "main": [
-        [
-          {
-            "node": "RSS NYTimes World",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "nodes": [
     {
-      "id": "ce929f2e-0e44-4a72-a8a9-4c9cfe2852ad",
+      "id": "a687c853-b302-446f-9e22-63b4c74f2165",
       "name": "Schedule Trigger (9am, 12:01pm, 7pm)",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -267,7 +267,7 @@
       }
     },
     {
-      "id": "aac5938c-2121-431f-9abb-25b797105658",
+      "id": "0984ac60-39b8-4a4d-a22e-9868f0d6af94",
       "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
@@ -278,7 +278,7 @@
       "parameters": {}
     },
     {
-      "id": "8e14235c-fa1f-4513-9e13-d31d5a592801",
+      "id": "8c188e2a-0418-4c5c-9a4f-a9d5695a197c",
       "name": "Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -294,7 +294,7 @@
       "webhookId": "noticias-digest-webhook"
     },
     {
-      "id": "d9ff5e57-87e2-43ca-a9b2-0ff6352d6c3e",
+      "id": "8b581432-e788-4289-ac73-7386b6b04279",
       "name": "Telegram Command Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.1,
@@ -308,7 +308,7 @@
         ],
         "additionalFields": {}
       },
-      "webhookId": "5c099c8e-5a51-4097-993c-a37dc4e4552d",
+      "webhookId": "7335316e-ac04-421b-a38a-7c1b1a9c7237",
       "credentials": {
         "telegramApi": {
           "id": "IWiCwNsfWPaJGIsw",
@@ -317,7 +317,7 @@
       }
     },
     {
-      "id": "939b2ba2-4251-4d29-9b7d-90cbbae60a5f",
+      "id": "37f85738-ac4b-4359-8714-030176802d6e",
       "name": "Filtrar Comando Telegram /resumen",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -356,7 +356,7 @@
       }
     },
     {
-      "id": "f18825f9-fe04-4a31-b86d-d5690965f94f",
+      "id": "58bc8a9b-1a9b-4735-a67b-d8b2e3f1d8dc",
       "name": "RSS El Pais",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
@@ -370,7 +370,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "ca460124-1468-4d1e-a532-4fb4e5a4f91c",
+      "id": "570584aa-6184-438b-83bc-9c89aef651e8",
       "name": "RSS El Nacional",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
@@ -384,7 +384,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "7d9ca827-154a-429c-9b36-3bba360d5fce",
+      "id": "ea98f66d-3f10-4446-abb1-ab54bd139b03",
       "name": "RSS Tal Cual",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
@@ -398,7 +398,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "28023499-ee5f-48f4-857c-bed34b87a45d",
+      "id": "81d981a8-c309-4be1-9376-735dafa2fa17",
       "name": "RSS BBC Mundo",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
@@ -412,7 +412,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "c3437d48-4358-4f14-a453-1a443807a012",
+      "id": "6b6d2af6-f183-435f-9208-ee2a369cc8bf",
       "name": "RSS NYTimes World",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
@@ -426,7 +426,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "e87a4713-31c2-4f1e-8335-452020f345ed",
+      "id": "f6cb7be4-001a-4c27-a59b-34b33c4440c4",
       "name": "API NYTimes TopStories",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -441,7 +441,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "c1c08f96-f063-40bc-81c9-d14cedc35d11",
+      "id": "e6736cac-45e2-4ab8-ae6a-57088eb11146",
       "name": "API GNews TopHeadlines",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -456,7 +456,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "dc2b1671-5dc8-416a-b082-c57dcd5effca",
+      "id": "0fa75afa-b112-4128-9cad-46946d4da6b1",
       "name": "API NewsAPI Technology",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -471,7 +471,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "b6b5c6fc-4f8e-47a7-9706-9daa3d073757",
+      "id": "b9f730f6-e5d7-4917-b721-d75690538468",
       "name": "API WorldNews",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -486,7 +486,7 @@
       "onError": "continueRegularOutput"
     },
     {
-      "id": "b5dd5174-0f3f-4f1c-80ec-369b84d6e0a5",
+      "id": "3ec6ba14-2da0-49fe-aa51-467e5b8ab4e5",
       "name": "Normalizar y Desduplicar Noticias",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -499,7 +499,7 @@
       }
     },
     {
-      "id": "842275d3-6671-4a02-bb3d-2d0b1ff81442",
+      "id": "0fa76ec6-bb7e-4ee9-a73f-68273fffb72f",
       "name": "Curar y Redactar Noticias con IA",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -525,7 +525,7 @@
       }
     },
     {
-      "id": "3e6b01ae-54bf-4259-8f38-a89d61674228",
+      "id": "010ec5d5-5627-42ec-b86c-cdd35faa5124",
       "name": "Formatear Mensajes Finales",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -538,7 +538,7 @@
       }
     },
     {
-      "id": "1235d563-5333-4a22-a9ea-2a16c933d437",
+      "id": "18bad423-e01a-42c6-81e6-26cc15d43083",
       "name": "Notificar Telegram Admin",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
@@ -556,7 +556,7 @@
         "resource": "message",
         "operation": "sendMessage"
       },
-      "webhookId": "a2709a4c-9e36-463c-886f-a05b3cf5d13e",
+      "webhookId": "f78828e3-2e2a-42a0-98b3-6ec5b77eee4b",
       "credentials": {
         "telegramApi": {
           "id": "IWiCwNsfWPaJGIsw",
@@ -565,7 +565,7 @@
       }
     },
     {
-      "id": "f43a1095-fc73-48e1-b07a-f14ccd1eb8c3",
+      "id": "b9d8b513-0350-4afb-9766-fd750465b1ef",
       "name": "Enviar WhatsApp Admin",
       "type": "n8n-nodes-evolution-api.evolutionApi",
       "typeVersion": 1,
@@ -587,7 +587,7 @@
       }
     },
     {
-      "id": "5dca0c23-32db-4c86-9402-f12c0ebccfb3",
+      "id": "6fd44b9c-3699-44f1-853a-f60dfc949cd7",
       "name": "Es Solicitud Usuario Telegram?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -625,7 +625,7 @@
       }
     },
     {
-      "id": "c9924998-8585-407c-9014-cd530f50c298",
+      "id": "1b4cf6d1-ffd9-4da3-9b31-0e07687634ec",
       "name": "Responder Telegram Usuario",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
@@ -643,7 +643,7 @@
         "resource": "message",
         "operation": "sendMessage"
       },
-      "webhookId": "5eea39d8-b387-4ec7-8ee7-e5ada6d5b88d",
+      "webhookId": "51c01af6-2873-4b8c-a985-7560b678bfb1",
       "credentials": {
         "telegramApi": {
           "id": "IWiCwNsfWPaJGIsw",
