@@ -3226,21 +3226,35 @@
     * **3 Meses**: Plan de 3 meses con 3 conexiones (consume 2 créditos, ID de Paquete `130`).
   - **Diagnostic Findings & Root Causes**:
     * In Xtream-Masters / MVPlay reseller API, packages `129` (`⚡ 1 Mes`) and `130` (`⚡ 3 Meses`) have `multiconx_pricing` configured where connections 1, 2, and 3 cost 1 crédito (para 1 mes) y 2 créditos (para 3 meses).
-    * When `action=extend_line` is called, the panel applies the package's default `max_connections` (1 conexión).
+    * When `action=extend_line` was called, the panel applied the package's default `max_connections` (1 conexión).
     * The subsequent `action=edit_line` call in `tool_renovar_mvplay_tvtotal24.json` attempted to set `&max_connections=3` without passing `&package=${packageId}`. The panel silently ignored `max_connections` when `package` was omitted in `edit_line`, leaving the line at 1 conexión.
     * Live testing against the panel proved that sending `action=edit_line&id=${lineId}&package=${packageId}&max_connections=3` immediately sets `max_connections: 3` without consuming additional credits.
 
+---
+
+### 101. Elimination of Double Renewals in MVPlay Auto-Renewals (2026-10-13)
+
+* **Incident Analysis & Operational Context**:
+  - **Issue Reported**: Following the previous change, automatic renewals in MVPlay were executing twice:
+    * `AlejandroBenitez` and `AlejandroZarate` were renewed 2 times, pushing their expiration to December (instead of November).
+    * `LuzdelaCruz` ended up with expiration in April 2027 due to repeated calls during diagnostic tests.
+  - **Diagnostic Findings & Root Cause**:
+    * In Xtream-Masters / MVPlay reseller API, calling `action=edit_line&id=<id>&package=<packageId>&max_connections=3` on an active line already performs the package renewal/extension and simultaneously assigns `max_connections: 3` in a single atomic operation.
+    * In the previous fix, the workflow was executing:
+      1. `action=extend_line&id=${lineId}&package=${packageId}&max_connections=3` (which added 1 duration).
+      2. `action=edit_line&id=${lineId}&package=${packageId}&max_connections=3` (which added a SECOND duration).
+    * Consequently, each renewal cycle added the package duration twice (e.g., 1 month + 1 month = 2 months).
+    * LuzdelaCruz had been updated multiple times during API exploration in the previous session (initial expiry was November 2, then +1m +3m +1m = April 2, 2027).
+
 * **Fixes & Remediation Applied**:
-  1. **Sub-workflow `Tool - Renovacion Automatica MVPlay TVTotal24` (`0Go7n1S2CQZr548G`)**:
-     - Updated node `Validar y Procesar Renovacion`:
-       * `action=extend_line` now explicitly passes `&package=' + packageId + '&max_connections=3'`.
-       * `action=edit_line` now passes both `&package=' + packageId + '&max_connections=3'` ensuring the line is unconditionally updated to 3 connections.
-       * Updated admin notification templates (Telegram HTML, WhatsApp Evolution API, Chatwoot private note) and customer message to explicitly state `3 conexiones`.
-       * Standardized `pagoRow` plan column to `duration + ' (3 conx)'`.
-  2. **Active Lines Rectification**:
-     - Audited all 50 active lines in MVPlay panel via `get_lines`. Found 2 lines (`JoseNieto` #48388 y `LuzdelaCruz` #48739) that were set at 1 connection from recent renewals.
-     - Executed targeted `edit_line` updates on both lines, rectifying 100% of the active fleet to `max_connections: 3`.
-  3. **Deployment & Verification**:
-     - Live workflow `0Go7n1S2CQZr548G` updated and published in n8n (active version `32fe6043-4755-4ddf-a3b5-9133d1eb6d15`).
-     - Synchronized local file `workflows/tool_renovar_mvplay_tvtotal24.json`.
-     - Committed and pushed to GitHub repository (`main`).
+  1. **Consolidated Atomic Renewal Call**:
+     - Removed the redundant `action=extend_line` call entirely in node `Validar y Procesar Renovacion` of workflow `0Go7n1S2CQZr548G` (`Tool - Renovacion Automatica MVPlay TVTotal24`).
+     - Standardized the renewal to a single atomic API call: `action=edit_line&id=${lineId}&package=${packageId}&max_connections=3`.
+     - Tested on isolated diagnostic test lines: verifies exact duration extension (e.g., exactly 1 month for package 129, 3 months for package 130), exact credit deduction (1 credit for 129, 2 credits for 130), and immediate enforcement of `max_connections: 3`.
+  2. **Zero-Touch on Customer Example Lines**:
+     - Strict observance of user mandate: none of the reported accounts (`AlejandroBenitez`, `AlejandroZarate`, `LuzdelaCruz`) were renewed again during the diagnostic, fix, and deployment process.
+  3. **Live Deployment & Version Synchronization**:
+     - Live workflow `0Go7n1S2CQZr548G` updated and published in n8n (active version `5441e5e7-2ba6-4d5c-90dc-1809411a8eee`).
+     - Workflow exports synchronized with repository.
+     - Documented in `PROJECT_CONTEXT.md` and committed to Git `main`.
+
