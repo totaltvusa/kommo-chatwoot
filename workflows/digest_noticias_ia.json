@@ -1,496 +1,40 @@
 {
-  "updatedAt": "2026-10-12T14:56:04.739Z",
-  "createdAt": "2026-10-11T02:42:50.333Z",
   "id": "7iY79q4NlKs8kFV4",
   "name": "📰 Digest de Noticias IA - Curación Multicanal",
-  "description": null,
   "active": true,
   "isArchived": false,
-  "nodes": [
-    {
-      "id": "cd352cc8-0e0d-455c-88d3-7368c3240c27",
-      "name": "Schedule Trigger (9am, 12:01pm, 7pm)",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        0,
-        0
-      ],
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "cronExpression",
-              "expression": "1 9,12,19 * * *"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "4e7a08cf-41f2-4ea6-bc25-55c833c31047",
-      "name": "Manual Trigger",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        0,
-        160
-      ],
-      "parameters": {}
-    },
-    {
-      "id": "6d462e3a-f548-4d4c-a3e6-039af9965b09",
-      "name": "Webhook Trigger",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        0,
-        320
-      ],
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "noticias-digest",
-        "options": {},
-        "responseMode": "onReceived"
-      },
-      "webhookId": "noticias-digest-webhook"
-    },
-    {
-      "id": "4f8181b6-2dba-41d0-b977-8081ceffd590",
-      "name": "Telegram Command Trigger",
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        0,
-        480
-      ],
-      "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
-      },
-      "credentials": {
-        "telegramApi": {
-          "id": "SA3yCHTkCTq8xDb8",
-          "name": "Telegram account"
-        }
-      },
-      "webhookId": "64d086c6-24d3-4650-80b2-c8680564555c"
-    },
-    {
-      "id": "4342c0b9-e13c-419e-a49e-fae6ccc8af12",
-      "name": "Filtrar Comando Telegram /resumen",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        220,
-        480
-      ],
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "c1",
-              "leftValue": "={{ $json.message.text }}",
-              "rightValue": "/resumen",
-              "operator": {
-                "type": "string",
-                "operation": "startsWith"
-              }
-            }
-          ],
-          "combinator": "and"
-        }
-      }
-    },
-    {
-      "id": "3823ecf7-55b9-4896-93de-0cb71b836826",
-      "name": "RSS El Nacional",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1,
-      "position": [
-        480,
-        0
-      ],
-      "parameters": {
-        "url": "https://www.elnacional.com/feed/"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "8766d68c-37b2-4a44-9bb3-b3cf4de97506",
-      "name": "RSS Tal Cual",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1,
-      "position": [
-        480,
-        140
-      ],
-      "parameters": {
-        "url": "https://talcualdigital.com/feed/"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "f7c4c09b-8c97-4ea4-a104-3f06e9d52bf9",
-      "name": "RSS La Verdad",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1,
-      "position": [
-        480,
-        280
-      ],
-      "parameters": {
-        "url": "https://laverdad.com/feed/"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "c67baab1-70a6-4e8f-a2f7-3cda9f7baaa7",
-      "name": "HTTP El Universal",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        480,
-        420
-      ],
-      "parameters": {
-        "url": "https://www.eluniversal.com/",
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "text"
-            }
-          }
-        }
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "b2a94004-4834-4586-87ab-82455fd12de5",
-      "name": "RSS El Pais",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1,
-      "position": [
-        480,
-        560
-      ],
-      "parameters": {
-        "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "6ceae732-bd42-4e4f-abe4-be22e74b6eb6",
-      "name": "RSS BBC Mundo",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1,
-      "position": [
-        480,
-        700
-      ],
-      "parameters": {
-        "url": "https://feeds.bbci.co.uk/mundo/rss.xml"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "eb0dc133-9595-4665-8aa5-ae74687ba822",
-      "name": "RSS NYTimes World",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1,
-      "position": [
-        480,
-        840
-      ],
-      "parameters": {
-        "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "42b8f947-b13d-4447-9014-57439a9b2a4d",
-      "name": "API NYTimes TopStories",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        480,
-        980
-      ],
-      "parameters": {
-        "url": "=https://api.nytimes.com/svc/topstories/v2/world.json?api-key={{ $env.NYTIMES_API_KEY || '' }}",
-        "options": {}
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "36a0447b-afd9-490e-9da9-da83210bc16b",
-      "name": "API GNews TopHeadlines",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        480,
-        1120
-      ],
-      "parameters": {
-        "url": "=https://gnews.io/api/v4/top-headlines?lang=es&apikey={{ $env.GNEWS_API_KEY || '' }}",
-        "options": {}
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "2f903d6d-53b9-4952-b75f-8540250414f5",
-      "name": "API NewsAPI Technology",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        480,
-        1260
-      ],
-      "parameters": {
-        "url": "=https://newsapi.org/v2/top-headlines?category=technology&apiKey={{ $env.NEWS_API_KEY || '' }}",
-        "options": {}
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "2efeb844-4539-40e0-a663-41585d4c4ba3",
-      "name": "API WorldNews",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        480,
-        1400
-      ],
-      "parameters": {
-        "url": "=https://api.worldnewsapi.com/top-news?api-key={{ $env.WORLD_NEWS_API_KEY || '' }}&source-countries=ve,us,es",
-        "options": {}
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "2730d79e-531c-4fb3-843e-5a64217c5d90",
-      "name": "Normalizar y Desduplicar Noticias",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        820,
-        600
-      ],
-      "parameters": {
-        "jsCode": "const rawItems = [];\n\nconst extractRss = (nodeName, defaultSource) => {\n  try {\n    const items = $(nodeName).all();\n    for (const item of items) {\n      const j = item.json || {};\n      const title = String(j.title || j['rss:title'] || '').trim();\n      const link = String(j.link || j.guid || j['rss:link'] || '').trim();\n      const desc = String(j.contentSnippet || j.content || j.description || '').replace(/<[^>]*>?/gm, '').trim();\n      const pubDate = String(j.pubDate || j.isoDate || new Date().toISOString());\n      \n      if (title && link) {\n        rawItems.push({\n          title,\n          url: link,\n          snippet: desc.slice(0, 300),\n          source: defaultSource,\n          pubDate\n        });\n      }\n    }\n  } catch (e) {}\n};\n\n// 1. Feeds de Venezuela\nextractRss('RSS El Nacional', 'El Nacional (Venezuela)');\nextractRss('RSS Tal Cual', 'Tal Cual Digital (Venezuela)');\nextractRss('RSS La Verdad', 'La Verdad (Venezuela)');\nextractRss('RSS Alertas 24', 'Alertas 24 (Venezuela)');\nextractRss('RSS Twitter Venezuela', 'X / Twitter (Venezuela)');\n\n// Scraper HTML El Universal\ntry {\n  const elUniItems = $('HTTP El Universal').all();\n  for (const item of elUniItems) {\n    const html = String(item.json?.data || '');\n    const regex = /<a[^>]+href=\"([^\"]+)\"[^>]*>([\\s\\S]*?)<\\/a>/gi;\n    let match;\n    let count = 0;\n    while ((match = regex.exec(html)) !== null && count < 25) {\n      const rawHref = match[1];\n      const linkText = match[2].replace(/<[^>]*>?/gm, '').trim();\n      if (linkText.length > 25 && !linkText.includes('Publicidad') && !linkText.includes('Términos')) {\n        let fullUrl = rawHref;\n        if (fullUrl.startsWith('/')) {\n          fullUrl = 'https://www.eluniversal.com' + fullUrl;\n        }\n        if (fullUrl.startsWith('http')) {\n          rawItems.push({\n            title: linkText,\n            url: fullUrl,\n            snippet: linkText,\n            source: 'El Universal (Venezuela)',\n            pubDate: new Date().toISOString()\n          });\n          count++;\n        }\n      }\n    }\n  }\n} catch (e) {}\n\n// 2. Feeds Internacionales, Deportes y X/Twitter Global\nextractRss('RSS El Pais', 'El País Internacional');\nextractRss('RSS BBC Mundo', 'BBC Mundo');\nextractRss('RSS NYTimes World', 'NYTimes RSS');\nextractRss('RSS Twitter Global', 'X / Twitter (Internacional / USA)');\n\n// 3. APIs Externas (si están configuradas)\ntry {\n  const nytItems = $('API NYTimes TopStories').all();\n  for (const item of nytItems) {\n    const results = item.json?.results || [];\n    for (const r of results) {\n      if (r.title && r.url) {\n        rawItems.push({\n          title: String(r.title).trim(),\n          url: String(r.url).trim(),\n          snippet: String(r.abstract || '').slice(0, 300),\n          source: 'NYTimes API',\n          pubDate: String(r.published_date || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const gnewsItems = $('API GNews TopHeadlines').all();\n  for (const item of gnewsItems) {\n    const articles = item.json?.articles || [];\n    for (const a of articles) {\n      if (a.title && a.url) {\n        rawItems.push({\n          title: String(a.title).trim(),\n          url: String(a.url).trim(),\n          snippet: String(a.description || '').slice(0, 300),\n          source: 'GNews API',\n          pubDate: String(a.publishedAt || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const newsApiItems = $('API NewsAPI Technology').all();\n  for (const item of newsApiItems) {\n    const articles = item.json?.articles || [];\n    for (const a of articles) {\n      if (a.title && a.url) {\n        rawItems.push({\n          title: String(a.title).trim(),\n          url: String(a.url).trim(),\n          snippet: String(a.description || '').slice(0, 300),\n          source: 'NewsAPI Tech',\n          pubDate: String(a.publishedAt || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const wnItems = $('API WorldNews').all();\n  for (const item of wnItems) {\n    const news = item.json?.news || [];\n    for (const n of news) {\n      if (n.title && n.url) {\n        rawItems.push({\n          title: String(n.title).trim(),\n          url: String(n.url).trim(),\n          snippet: String(n.text || '').slice(0, 300),\n          source: 'WorldNews API',\n          pubDate: String(n.publish_date || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\n// Desduplicación por URL y Similitud de Título\nconst seenUrls = new Set();\nconst seenTitles = new Set();\nconst uniqueArticles = [];\n\nconst normalizeTitle = (t) => t.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '');\n\nfor (const art of rawItems) {\n  const normUrl = art.url.split('?')[0].toLowerCase();\n  const normT = normalizeTitle(art.title);\n  \n  if (seenUrls.has(normUrl) || seenTitles.has(normT)) {\n    continue;\n  }\n  \n  seenUrls.add(normUrl);\n  seenTitles.add(normT);\n  uniqueArticles.push(art);\n}\n\n// Balanceo Garantizado: Extraer artículos de Venezuela, USA y resto\nconst veSources = [\n  'El Nacional (Venezuela)',\n  'Tal Cual Digital (Venezuela)',\n  'La Verdad (Venezuela)',\n  'El Universal (Venezuela)',\n  'Alertas 24 (Venezuela)',\n  'X / Twitter (Venezuela)'\n];\n\nconst usSources = [\n  'NYTimes RSS',\n  'NYTimes API',\n  'GNews API',\n  'NewsAPI Tech',\n  'X / Twitter (Internacional / USA)'\n];\n\nconst veList = [];\nconst usList = [];\nconst otherList = [];\n\nfor (const art of uniqueArticles) {\n  if (veSources.includes(art.source)) {\n    veList.push(art);\n  } else if (usSources.includes(art.source)) {\n    usList.push(art);\n  } else {\n    otherList.push(art);\n  }\n}\n\n// Combinar garantizando presencia completa de cada bloque\nconst balancedArticles = [\n  ...veList.slice(0, 35),\n  ...usList.slice(0, 25),\n  ...otherList.slice(0, 35)\n];\n\nlet originChatId = null;\ntry {\n  const tgData = $('Telegram Command Trigger').first()?.json || {};\n  if (tgData.message && tgData.message.chat) {\n    originChatId = String(tgData.message.chat.id);\n  }\n} catch (e) {}\n\nreturn [{\n  json: {\n    total_raw: rawItems.length,\n    total_unique: uniqueArticles.length,\n    total_ve: veList.length,\n    total_us: usList.length,\n    origin_chat_id: originChatId,\n    articles: balancedArticles\n  }\n}];"
-      }
-    },
-    {
-      "id": "fed19ace-9b5b-4588-8b14-064ee4cc4fe7",
-      "name": "Curar y Redactar Noticias con IA",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1060,
-        600
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.deepseek.com/chat/completions",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "deepSeekApi",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  model: 'deepseek-chat',\n  temperature: 0.3,\n  max_tokens: 3500,\n  messages: [\n    {\n      role: 'system',\n      content: \"Eres un Editor Jefe y Curador Senior de Noticias con criterio period\\u00edstico riguroso y redacci\\u00f3n \\u00e1gil.\\nTu misi\\u00f3n es seleccionar las noticias m\\u00e1s relevantes a partir de la lista JSON proporcionada y redactar un bolet\\u00edn informativo de alto impacto.\\n\\nREGLAS DE SELECCI\\u00d3N Y CATEGORIZACI\\u00d3N:\\nDebes estructurar el bolet\\u00edn en exactamente 6 secciones con la cantidad exacta de noticias requerida:\\n\\n1. \\ud83c\\uddfb\\ud83c\\uddea VENEZUELA (Exactamente 3 noticias destacadas)\\n   - REGLA ESTRICTA: Utiliza \\u00daNICAMENTE noticias provenientes de medios y periodistas venezolanos (El Nacional, Tal Cual Digital, La Verdad, El Universal, Alertas 24, o publicaciones en X/Twitter de periodistas y medios venezolanos como Sergio Novelli, Carla Angola, Apolitiko, Efecto Cocuyo, El Nacional, Tal Cual, La Verdad).\\n   - Prohibido usar fuentes extranjeras para esta secci\\u00f3n.\\n\\n2. \\ud83c\\udf0e USA Y AM\\u00c9RICA LATINA (Exactamente 3 noticias)\\n   - REGLA ESTRICTA PARA ESTADOS UNIDOS: Para noticias referentes a Estados Unidos, utiliza \\u00daNICAMENTE las fuentes estadounidenses (New York Times, GNews, NewsAPI, o cuentas de X/Twitter de medios como Wall Street Journal, NYTimes, CNN). Para Am\\u00e9rica Latina puedes usar medios regionales.\\n\\n3. \\ud83c\\udf10 MUNDO (Exactamente 3 noticias)\\n   - Geopol\\u00edtica global, conflictos internacionales, econom\\u00eda mundial o eventos de m\\u00e1xima trascendencia.\\n\\n4. \\ud83d\\udcbb TECNOLOG\\u00cdA (Exactamente 3 noticias)\\n   - Avances en Inteligencia Artificial, ciberseguridad, lanzamientos o impacto digital relevante.\\n\\n5. \\u26bd DEPORTES (Exactamente 4 noticias)\\n   - Exactamente 2 noticias sobre deportes en Venezuela o venezolanos destacados en el deporte en el exterior (f\\u00fatbol Vinotinto, MLB/b\\u00e9isbol, atletas ol\\u00edmpicos, baloncesto, etc.).\\n   - Exactamente 2 noticias sobre el deporte a nivel mundial (f\\u00fatbol internacional, Champions League, ligas europeas, F\\u00f3rmula 1, tenis, etc.).\\n\\n6. \\ud83c\\udfad ESPECT\\u00c1CULO & ENTRETENIMIENTO (Exactamente 3 noticias)\\n   - Cultura, cine, m\\u00fasica, arte o entretenimiento de impacto internacional o hispanohablante.\\n\\nFORMATO OBLIGATORIO PARA CADA NOTICIA:\\n1. **[Titular informativo y atractivo en negrita]**\\n[L\\u00ednea 1 de contexto y desarrollo breve]\\n[L\\u00ednea 2 de impacto o desenlace relevante]\\n\\ud83d\\udd17 [Leer noticia en la fuente](URL_EXACTA_DEL_ARTICULO)\\n\\nLINEAMIENTOS EST\\u00c9TICOS Y DE ESTILO:\\n- Utiliza los emojis indicados para los t\\u00edtulos de cada secci\\u00f3n.\\n- El enlace debe ser exactamente la URL del art\\u00edculo original sin inventar links.\\n- No incluyas saludos ni despedidas, inicia directamente con la primera secci\\u00f3n.\"\n    },\n    {\n      role: 'user',\n      content: 'A continuación tienes la lista de artículos disponibles:\\n\\n' + JSON.stringify($json.articles, null, 2) + '\\n\\nGenera el boletín de noticias siguiendo estrictamente la estructura y reglas indicadas.'\n    }\n  ]\n}) }}",
-        "options": {}
-      },
-      "credentials": {
-        "deepSeekApi": {
-          "id": "22sfGWS6Ev7XMOfa",
-          "name": "DeepSeek account"
-        }
-      }
-    },
-    {
-      "id": "1a7c8e12-e3ce-405c-894f-43e863376ddb",
-      "name": "Formatear Mensajes Finales",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1300,
-        600
-      ],
-      "parameters": {
-        "jsCode": "const rawText = $json.choices[0].message.content.trim();\nconst normData = $('Normalizar y Desduplicar Noticias').first()?.json || {};\n\nconst dateStr = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });\nconst header = `📰 *RESUMEN DE NOTICIAS DESTACADAS* 🗞️\\n📅 *${dateStr.toUpperCase()}*\\n----------------------------------------\\n\\n`;\n\nconst fullText = header + rawText;\n\nfunction chunkMessage(text, maxLen = 3500) {\n  if (text.length <= maxLen) return [text];\n  const result = [];\n  let rem = text;\n  while (rem.length > maxLen) {\n    let idx = rem.lastIndexOf('\\n\\n', maxLen);\n    if (idx === -1 || idx < maxLen / 2) {\n      idx = rem.lastIndexOf('\\n', maxLen);\n    }\n    if (idx === -1 || idx < maxLen / 2) {\n      idx = maxLen;\n    }\n    result.push(rem.slice(0, idx).trim());\n    rem = rem.slice(idx).trim();\n  }\n  if (rem) result.push(rem);\n  return result;\n}\n\nconst chunks = chunkMessage(fullText, 3500);\n\nreturn chunks.map((c, i) => ({\n  json: {\n    part: i + 1,\n    total_parts: chunks.length,\n    telegram_text: chunks.length > 1 ? `*(Parte ${i + 1}/${chunks.length})*\\n\\n${c}` : c,\n    origin_chat_id: normData.origin_chat_id || null\n  }\n}));"
-      }
-    },
-    {
-      "id": "20a9b6a0-2af0-458a-a972-2f47f248ae1b",
-      "name": "Notificar Telegram Admin",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1,
-      "position": [
-        1540,
-        460
-      ],
-      "parameters": {
-        "resource": "message",
-        "operation": "sendMessage",
-        "chatId": "40371837",
-        "text": "={{ $json.telegram_text }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "Markdown"
-        }
-      },
-      "credentials": {
-        "telegramApi": {
-          "id": "SA3yCHTkCTq8xDb8",
-          "name": "Telegram account"
-        }
-      },
-      "webhookId": "0877b946-f650-43cd-b6f2-baa2f85b8d25"
-    },
-    {
-      "id": "a9c902c7-b43d-4ae9-b321-995bbf1c87cf",
-      "name": "Enviar WhatsApp Admin",
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
-      "position": [
-        1780,
-        660
-      ],
-      "parameters": {
-        "resource": "messages-api",
-        "instanceName": "TTvAlertsMovistar",
-        "remoteJid": "584146130135",
-        "messageText": "={{ $json.whatsapp_text }}"
-      },
-      "credentials": {
-        "evolutionApi": {
-          "id": "ecGN8GlLnzNz5Lq5",
-          "name": "Evolution account 2"
-        }
-      }
-    },
-    {
-      "id": "e6945d07-fbb9-4251-b14a-6ea3017ebacf",
-      "name": "Es Solicitud Usuario Telegram?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        1540,
-        860
-      ],
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "c2",
-              "leftValue": "={{ String($json.origin_chat_id || '') }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty"
-              }
-            }
-          ],
-          "combinator": "and"
-        }
-      }
-    },
-    {
-      "id": "e7f893b8-37c5-4986-9365-defe69334e89",
-      "name": "Responder Telegram Usuario",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1,
-      "position": [
-        1780,
-        860
-      ],
-      "parameters": {
-        "resource": "message",
-        "operation": "sendMessage",
-        "chatId": "={{ $json.origin_chat_id }}",
-        "text": "={{ $json.telegram_text }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "Markdown"
-        }
-      },
-      "credentials": {
-        "telegramApi": {
-          "id": "SA3yCHTkCTq8xDb8",
-          "name": "Telegram account"
-        }
-      },
-      "webhookId": "b24d96c4-6f69-407e-8fff-cdfb452c461f"
-    },
-    {
-      "id": "rss-alertas-24",
-      "name": "RSS Alertas 24",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1.1,
-      "position": [
-        -240,
-        240
-      ],
-      "parameters": {
-        "url": "https://alertas24.com/feed/"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "rss-twitter-ve",
-      "name": "RSS Twitter Venezuela",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1.1,
-      "position": [
-        -40,
-        240
-      ],
-      "parameters": {
-        "url": "https://news.google.com/rss/search?q=site%3Ax.com+%28ElNacionalWeb+OR+SergioNovelli+OR+CarlaAngola+OR+apolitiko+OR+EfectoCocuyo+OR+TalCualDigital+OR+laverdadweb%29+when%3A3d&hl=es&gl=VE&ceid=VE:es"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "id": "rss-twitter-global",
-      "name": "RSS Twitter Global",
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1.1,
-      "position": [
-        1200,
-        240
-      ],
-      "parameters": {
-        "url": "https://news.google.com/rss/search?q=site%3Ax.com+%28CNNEE+OR+elpais_america+OR+nytimes+OR+WSJ+OR+BBCMundo+OR+ReutersLatam%29+when%3A3d&hl=es&gl=VE&ceid=VE:es"
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Determinar la hora de envío programada (9am, 12pm, 7pm) o la hora actual\nconst now = new Date();\nconst hour = parseInt(new Intl.DateTimeFormat('en-US', {\n  hour: 'numeric',\n  hour12: false,\n  timeZone: 'America/Caracas'\n}).format(now), 10);\n\nlet horaEnvio = '9am';\nif (hour >= 8 && hour <= 10) {\n  horaEnvio = '9am';\n} else if (hour >= 11 && hour <= 14) {\n  horaEnvio = '12pm';\n} else if (hour >= 18 && hour <= 21) {\n  horaEnvio = '7pm';\n} else {\n  const hour12 = hour % 12 || 12;\n  const ampm = hour < 12 ? 'am' : 'pm';\n  horaEnvio = `${hour12}${ampm}`;\n}\n\nreturn [{\n  json: {\n    whatsapp_text: `Noticias ${horaEnvio} enviadas`\n  }\n}];"
-      },
-      "id": "e93a7482-5c91-4e78-98e3-0d5b78f991bb",
-      "name": "Preparar Aviso WhatsApp",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1540,
-        660
-      ]
-    }
+  "versionId": "54458b5f-5fbc-41a1-965e-b007bbb5238d",
+  "activeVersionId": "54458b5f-5fbc-41a1-965e-b007bbb5238d",
+  "triggerCount": 3,
+  "nodeCount": 27,
+  "createdAt": "2026-10-11T02:42:50.333Z",
+  "updatedAt": "2026-10-12T14:56:04.739Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
   ],
+  "canExecute": true,
   "connections": {
     "Schedule Trigger (9am, 12:01pm, 7pm)": {
       "main": [
@@ -767,812 +311,497 @@
       ]
     }
   },
-  "settings": {
-    "executionOrder": "v1",
-    "availableInMCP": true
-  },
-  "staticData": {
-    "node:Schedule Trigger (9am, 12:01pm, 7pm)": {
-      "recurrenceRules": [
-        null
+  "nodes": [
+    {
+      "id": "cd352cc8-0e0d-455c-88d3-7368c3240c27",
+      "name": "Schedule Trigger (9am, 12:01pm, 7pm)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
       ],
-      "recurrenceRuleSignatures": [
-        null
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "1 9,12,19 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4e7a08cf-41f2-4ea6-bc25-55c833c31047",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        160
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "6d462e3a-f548-4d4c-a3e6-039af9965b09",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        320
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "noticias-digest",
+        "options": {},
+        "responseMode": "onReceived"
+      },
+      "webhookId": "noticias-digest-webhook"
+    },
+    {
+      "id": "4f8181b6-2dba-41d0-b977-8081ceffd590",
+      "name": "Telegram Command Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        480
+      ],
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "webhookId": "64d086c6-24d3-4650-80b2-c8680564555c",
+      "credentials": {
+        "telegramApi": {
+          "id": "SA3yCHTkCTq8xDb8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "id": "4342c0b9-e13c-419e-a49e-fae6ccc8af12",
+      "name": "Filtrar Comando Telegram /resumen",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        220,
+        480
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/resumen",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "3823ecf7-55b9-4896-93de-0cb71b836826",
+      "name": "RSS El Nacional",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "url": "https://www.elnacional.com/feed/"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "8766d68c-37b2-4a44-9bb3-b3cf4de97506",
+      "name": "RSS Tal Cual",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        140
+      ],
+      "parameters": {
+        "url": "https://talcualdigital.com/feed/"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "f7c4c09b-8c97-4ea4-a104-3f06e9d52bf9",
+      "name": "RSS La Verdad",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        280
+      ],
+      "parameters": {
+        "url": "https://laverdad.com/feed/"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "c67baab1-70a6-4e8f-a2f7-3cda9f7baaa7",
+      "name": "HTTP El Universal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        420
+      ],
+      "parameters": {
+        "url": "https://www.eluniversal.com/",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "b2a94004-4834-4586-87ab-82455fd12de5",
+      "name": "RSS El Pais",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        560
+      ],
+      "parameters": {
+        "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "6ceae732-bd42-4e4f-abe4-be22e74b6eb6",
+      "name": "RSS BBC Mundo",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        700
+      ],
+      "parameters": {
+        "url": "https://feeds.bbci.co.uk/mundo/rss.xml"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "eb0dc133-9595-4665-8aa5-ae74687ba822",
+      "name": "RSS NYTimes World",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        480,
+        840
+      ],
+      "parameters": {
+        "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "42b8f947-b13d-4447-9014-57439a9b2a4d",
+      "name": "API NYTimes TopStories",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        980
+      ],
+      "parameters": {
+        "url": "=https://api.nytimes.com/svc/topstories/v2/world.json?api-key={{ $env.NYTIMES_API_KEY || '' }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "36a0447b-afd9-490e-9da9-da83210bc16b",
+      "name": "API GNews TopHeadlines",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1120
+      ],
+      "parameters": {
+        "url": "=https://gnews.io/api/v4/top-headlines?lang=es&apikey={{ $env.GNEWS_API_KEY || '' }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "2f903d6d-53b9-4952-b75f-8540250414f5",
+      "name": "API NewsAPI Technology",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1260
+      ],
+      "parameters": {
+        "url": "=https://newsapi.org/v2/top-headlines?category=technology&apiKey={{ $env.NEWS_API_KEY || '' }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "2efeb844-4539-40e0-a663-41585d4c4ba3",
+      "name": "API WorldNews",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        1400
+      ],
+      "parameters": {
+        "url": "=https://api.worldnewsapi.com/top-news?api-key={{ $env.WORLD_NEWS_API_KEY || '' }}&source-countries=ve,us,es",
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "2730d79e-531c-4fb3-843e-5a64217c5d90",
+      "name": "Normalizar y Desduplicar Noticias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        600
+      ],
+      "parameters": {
+        "jsCode": "const rawItems = [];\n\nconst extractRss = (nodeName, defaultSource) => {\n  try {\n    const items = $(nodeName).all();\n    for (const item of items) {\n      const j = item.json || {};\n      const title = String(j.title || j['rss:title'] || '').trim();\n      const link = String(j.link || j.guid || j['rss:link'] || '').trim();\n      const desc = String(j.contentSnippet || j.content || j.description || '').replace(/<[^>]*>?/gm, '').trim();\n      const pubDate = String(j.pubDate || j.isoDate || new Date().toISOString());\n      \n      if (title && link) {\n        rawItems.push({\n          title,\n          url: link,\n          snippet: desc.slice(0, 300),\n          source: defaultSource,\n          pubDate\n        });\n      }\n    }\n  } catch (e) {}\n};\n\n// 1. Feeds de Venezuela\nextractRss('RSS El Nacional', 'El Nacional (Venezuela)');\nextractRss('RSS Tal Cual', 'Tal Cual Digital (Venezuela)');\nextractRss('RSS La Verdad', 'La Verdad (Venezuela)');\nextractRss('RSS Alertas 24', 'Alertas 24 (Venezuela)');\nextractRss('RSS Twitter Venezuela', 'X / Twitter (Venezuela)');\n\n// Scraper HTML El Universal\ntry {\n  const elUniItems = $('HTTP El Universal').all();\n  for (const item of elUniItems) {\n    const html = String(item.json?.data || '');\n    const regex = /<a[^>]+href=\"([^\"]+)\"[^>]*>([\\s\\S]*?)<\\/a>/gi;\n    let match;\n    let count = 0;\n    while ((match = regex.exec(html)) !== null && count < 25) {\n      const rawHref = match[1];\n      const linkText = match[2].replace(/<[^>]*>?/gm, '').trim();\n      if (linkText.length > 25 && !linkText.includes('Publicidad') && !linkText.includes('Términos')) {\n        let fullUrl = rawHref;\n        if (fullUrl.startsWith('/')) {\n          fullUrl = 'https://www.eluniversal.com' + fullUrl;\n        }\n        if (fullUrl.startsWith('http')) {\n          rawItems.push({\n            title: linkText,\n            url: fullUrl,\n            snippet: linkText,\n            source: 'El Universal (Venezuela)',\n            pubDate: new Date().toISOString()\n          });\n          count++;\n        }\n      }\n    }\n  }\n} catch (e) {}\n\n// 2. Feeds Internacionales, Deportes y X/Twitter Global\nextractRss('RSS El Pais', 'El País Internacional');\nextractRss('RSS BBC Mundo', 'BBC Mundo');\nextractRss('RSS NYTimes World', 'NYTimes RSS');\nextractRss('RSS Twitter Global', 'X / Twitter (Internacional / USA)');\n\n// 3. APIs Externas (si están configuradas)\ntry {\n  const nytItems = $('API NYTimes TopStories').all();\n  for (const item of nytItems) {\n    const results = item.json?.results || [];\n    for (const r of results) {\n      if (r.title && r.url) {\n        rawItems.push({\n          title: String(r.title).trim(),\n          url: String(r.url).trim(),\n          snippet: String(r.abstract || '').slice(0, 300),\n          source: 'NYTimes API',\n          pubDate: String(r.published_date || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const gnewsItems = $('API GNews TopHeadlines').all();\n  for (const item of gnewsItems) {\n    const articles = item.json?.articles || [];\n    for (const a of articles) {\n      if (a.title && a.url) {\n        rawItems.push({\n          title: String(a.title).trim(),\n          url: String(a.url).trim(),\n          snippet: String(a.description || '').slice(0, 300),\n          source: 'GNews API',\n          pubDate: String(a.publishedAt || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const newsApiItems = $('API NewsAPI Technology').all();\n  for (const item of newsApiItems) {\n    const articles = item.json?.articles || [];\n    for (const a of articles) {\n      if (a.title && a.url) {\n        rawItems.push({\n          title: String(a.title).trim(),\n          url: String(a.url).trim(),\n          snippet: String(a.description || '').slice(0, 300),\n          source: 'NewsAPI Tech',\n          pubDate: String(a.publishedAt || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const wnItems = $('API WorldNews').all();\n  for (const item of wnItems) {\n    const news = item.json?.news || [];\n    for (const n of news) {\n      if (n.title && n.url) {\n        rawItems.push({\n          title: String(n.title).trim(),\n          url: String(n.url).trim(),\n          snippet: String(n.text || '').slice(0, 300),\n          source: 'WorldNews API',\n          pubDate: String(n.publish_date || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\n// Desduplicación por URL y Similitud de Título\nconst seenUrls = new Set();\nconst seenTitles = new Set();\nconst uniqueArticles = [];\n\nconst normalizeTitle = (t) => t.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '');\n\nfor (const art of rawItems) {\n  const normUrl = art.url.split('?')[0].toLowerCase();\n  const normT = normalizeTitle(art.title);\n  \n  if (seenUrls.has(normUrl) || seenTitles.has(normT)) {\n    continue;\n  }\n  \n  seenUrls.add(normUrl);\n  seenTitles.add(normT);\n  uniqueArticles.push(art);\n}\n\n// Balanceo Garantizado: Extraer artículos de Venezuela, USA y resto\nconst veSources = [\n  'El Nacional (Venezuela)',\n  'Tal Cual Digital (Venezuela)',\n  'La Verdad (Venezuela)',\n  'El Universal (Venezuela)',\n  'Alertas 24 (Venezuela)',\n  'X / Twitter (Venezuela)'\n];\n\nconst usSources = [\n  'NYTimes RSS',\n  'NYTimes API',\n  'GNews API',\n  'NewsAPI Tech',\n  'X / Twitter (Internacional / USA)'\n];\n\nconst veList = [];\nconst usList = [];\nconst otherList = [];\n\nfor (const art of uniqueArticles) {\n  if (veSources.includes(art.source)) {\n    veList.push(art);\n  } else if (usSources.includes(art.source)) {\n    usList.push(art);\n  } else {\n    otherList.push(art);\n  }\n}\n\n// Combinar garantizando presencia completa de cada bloque\nconst balancedArticles = [\n  ...veList.slice(0, 35),\n  ...usList.slice(0, 25),\n  ...otherList.slice(0, 35)\n];\n\nlet originChatId = null;\ntry {\n  const tgData = $('Telegram Command Trigger').first()?.json || {};\n  if (tgData.message && tgData.message.chat) {\n    originChatId = String(tgData.message.chat.id);\n  }\n} catch (e) {}\n\nreturn [{\n  json: {\n    total_raw: rawItems.length,\n    total_unique: uniqueArticles.length,\n    total_ve: veList.length,\n    total_us: usList.length,\n    origin_chat_id: originChatId,\n    articles: balancedArticles\n  }\n}];"
+      }
+    },
+    {
+      "id": "fed19ace-9b5b-4588-8b14-064ee4cc4fe7",
+      "name": "Curar y Redactar Noticias con IA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1060,
+        600
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "deepSeekApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'deepseek-chat',\n  temperature: 0.3,\n  max_tokens: 3500,\n  messages: [\n    {\n      role: 'system',\n      content: \"Eres un Editor Jefe y Curador Senior de Noticias con criterio period\\u00edstico riguroso y redacci\\u00f3n \\u00e1gil.\\nTu misi\\u00f3n es seleccionar las noticias m\\u00e1s relevantes a partir de la lista JSON proporcionada y redactar un bolet\\u00edn informativo de alto impacto.\\n\\nREGLAS DE SELECCI\\u00d3N Y CATEGORIZACI\\u00d3N:\\nDebes estructurar el bolet\\u00edn en exactamente 6 secciones con la cantidad exacta de noticias requerida:\\n\\n1. \\ud83c\\uddfb\\ud83c\\uddea VENEZUELA (Exactamente 3 noticias destacadas)\\n   - REGLA ESTRICTA: Utiliza \\u00daNICAMENTE noticias provenientes de medios y periodistas venezolanos (El Nacional, Tal Cual Digital, La Verdad, El Universal, Alertas 24, o publicaciones en X/Twitter de periodistas y medios venezolanos como Sergio Novelli, Carla Angola, Apolitiko, Efecto Cocuyo, El Nacional, Tal Cual, La Verdad).\\n   - Prohibido usar fuentes extranjeras para esta secci\\u00f3n.\\n\\n2. \\ud83c\\udf0e USA Y AM\\u00c9RICA LATINA (Exactamente 3 noticias)\\n   - REGLA ESTRICTA PARA ESTADOS UNIDOS: Para noticias referentes a Estados Unidos, utiliza \\u00daNICAMENTE las fuentes estadounidenses (New York Times, GNews, NewsAPI, o cuentas de X/Twitter de medios como Wall Street Journal, NYTimes, CNN). Para Am\\u00e9rica Latina puedes usar medios regionales.\\n\\n3. \\ud83c\\udf10 MUNDO (Exactamente 3 noticias)\\n   - Geopol\\u00edtica global, conflictos internacionales, econom\\u00eda mundial o eventos de m\\u00e1xima trascendencia.\\n\\n4. \\ud83d\\udcbb TECNOLOG\\u00cdA (Exactamente 3 noticias)\\n   - Avances en Inteligencia Artificial, ciberseguridad, lanzamientos o impacto digital relevante.\\n\\n5. \\u26bd DEPORTES (Exactamente 4 noticias)\\n   - Exactamente 2 noticias sobre deportes en Venezuela o venezolanos destacados en el deporte en el exterior (f\\u00fatbol Vinotinto, MLB/b\\u00e9isbol, atletas ol\\u00edmpicos, baloncesto, etc.).\\n   - Exactamente 2 noticias sobre el deporte a nivel mundial (f\\u00fatbol internacional, Champions League, ligas europeas, F\\u00f3rmula 1, tenis, etc.).\\n\\n6. \\ud83c\\udfad ESPECT\\u00c1CULO & ENTRETENIMIENTO (Exactamente 3 noticias)\\n   - Cultura, cine, m\\u00fasica, arte o entretenimiento de impacto internacional o hispanohablante.\\n\\nFORMATO OBLIGATORIO PARA CADA NOTICIA:\\n1. **[Titular informativo y atractivo en negrita]**\\n[L\\u00ednea 1 de contexto y desarrollo breve]\\n[L\\u00ednea 2 de impacto o desenlace relevante]\\n\\ud83d\\udd17 [Leer noticia en la fuente](URL_EXACTA_DEL_ARTICULO)\\n\\nLINEAMIENTOS EST\\u00c9TICOS Y DE ESTILO:\\n- Utiliza los emojis indicados para los t\\u00edtulos de cada secci\\u00f3n.\\n- El enlace debe ser exactamente la URL del art\\u00edculo original sin inventar links.\\n- No incluyas saludos ni despedidas, inicia directamente con la primera secci\\u00f3n.\"\n    },\n    {\n      role: 'user',\n      content: 'A continuación tienes la lista de artículos disponibles:\\n\\n' + JSON.stringify($json.articles, null, 2) + '\\n\\nGenera el boletín de noticias siguiendo estrictamente la estructura y reglas indicadas.'\n    }\n  ]\n}) }}",
+        "options": {}
+      },
+      "credentials": {
+        "deepSeekApi": {
+          "id": "22sfGWS6Ev7XMOfa",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "id": "1a7c8e12-e3ce-405c-894f-43e863376ddb",
+      "name": "Formatear Mensajes Finales",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        600
+      ],
+      "parameters": {
+        "jsCode": "const rawText = $json.choices[0].message.content.trim();\nconst normData = $('Normalizar y Desduplicar Noticias').first()?.json || {};\n\nconst dateStr = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });\nconst header = `📰 *RESUMEN DE NOTICIAS DESTACADAS* 🗞️\\n📅 *${dateStr.toUpperCase()}*\\n----------------------------------------\\n\\n`;\n\nconst fullText = header + rawText;\n\nfunction chunkMessage(text, maxLen = 3500) {\n  if (text.length <= maxLen) return [text];\n  const result = [];\n  let rem = text;\n  while (rem.length > maxLen) {\n    let idx = rem.lastIndexOf('\\n\\n', maxLen);\n    if (idx === -1 || idx < maxLen / 2) {\n      idx = rem.lastIndexOf('\\n', maxLen);\n    }\n    if (idx === -1 || idx < maxLen / 2) {\n      idx = maxLen;\n    }\n    result.push(rem.slice(0, idx).trim());\n    rem = rem.slice(idx).trim();\n  }\n  if (rem) result.push(rem);\n  return result;\n}\n\nconst chunks = chunkMessage(fullText, 3500);\n\nreturn chunks.map((c, i) => ({\n  json: {\n    part: i + 1,\n    total_parts: chunks.length,\n    telegram_text: chunks.length > 1 ? `*(Parte ${i + 1}/${chunks.length})*\\n\\n${c}` : c,\n    origin_chat_id: normData.origin_chat_id || null\n  }\n}));"
+      }
+    },
+    {
+      "id": "20a9b6a0-2af0-458a-a972-2f47f248ae1b",
+      "name": "Notificar Telegram Admin",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        460
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "40371837",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "webhookId": "0877b946-f650-43cd-b6f2-baa2f85b8d25",
+      "credentials": {
+        "telegramApi": {
+          "id": "SA3yCHTkCTq8xDb8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "id": "a9c902c7-b43d-4ae9-b321-995bbf1c87cf",
+      "name": "Enviar WhatsApp Admin",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        660
+      ],
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "TTvAlertsMovistar",
+        "remoteJid": "584146130135",
+        "messageText": "={{ $json.whatsapp_text }}"
+      },
+      "credentials": {
+        "evolutionApi": {
+          "id": "ecGN8GlLnzNz5Lq5",
+          "name": "Evolution account 2"
+        }
+      }
+    },
+    {
+      "id": "e6945d07-fbb9-4251-b14a-6ea3017ebacf",
+      "name": "Es Solicitud Usuario Telegram?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        860
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c2",
+              "leftValue": "={{ String($json.origin_chat_id || '') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "e7f893b8-37c5-4986-9365-defe69334e89",
+      "name": "Responder Telegram Usuario",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        860
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{ $json.origin_chat_id }}",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "webhookId": "b24d96c4-6f69-407e-8fff-cdfb452c461f",
+      "credentials": {
+        "telegramApi": {
+          "id": "SA3yCHTkCTq8xDb8",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "id": "rss-alertas-24",
+      "name": "RSS Alertas 24",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -240,
+        240
+      ],
+      "parameters": {
+        "url": "https://alertas24.com/feed/"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "rss-twitter-ve",
+      "name": "RSS Twitter Venezuela",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -40,
+        240
+      ],
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=site%3Ax.com+%28ElNacionalWeb+OR+SergioNovelli+OR+CarlaAngola+OR+apolitiko+OR+EfectoCocuyo+OR+TalCualDigital+OR+laverdadweb%29+when%3A3d&hl=es&gl=VE&ceid=VE:es"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "rss-twitter-global",
+      "name": "RSS Twitter Global",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        240
+      ],
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=site%3Ax.com+%28CNNEE+OR+elpais_america+OR+nytimes+OR+WSJ+OR+BBCMundo+OR+ReutersLatam%29+when%3A3d&hl=es&gl=VE&ceid=VE:es"
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Determinar la hora de envío programada (9am, 12pm, 7pm) o la hora actual\nconst now = new Date();\nconst hour = parseInt(new Intl.DateTimeFormat('en-US', {\n  hour: 'numeric',\n  hour12: false,\n  timeZone: 'America/Caracas'\n}).format(now), 10);\n\nlet horaEnvio = '9am';\nif (hour >= 8 && hour <= 10) {\n  horaEnvio = '9am';\n} else if (hour >= 11 && hour <= 14) {\n  horaEnvio = '12pm';\n} else if (hour >= 18 && hour <= 21) {\n  horaEnvio = '7pm';\n} else {\n  const hour12 = hour % 12 || 12;\n  const ampm = hour < 12 ? 'am' : 'pm';\n  horaEnvio = `${hour12}${ampm}`;\n}\n\nreturn [{\n  json: {\n    whatsapp_text: `Noticias ${horaEnvio} enviadas`\n  }\n}];"
+      },
+      "id": "e93a7482-5c91-4e78-98e3-0d5b78f991bb",
+      "name": "Preparar Aviso WhatsApp",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        660
       ]
     }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
   },
   "meta": {
     "aiBuilderAssisted": true,
     "builderVariant": "mcp"
-  },
-  "nodeGroups": [],
-  "pinData": null,
-  "versionId": "54458b5f-5fbc-41a1-965e-b007bbb5238d",
-  "activeVersionId": "54458b5f-5fbc-41a1-965e-b007bbb5238d",
-  "versionCounter": 9,
-  "triggerCount": 3,
-  "sourceWorkflowId": null,
-  "tags": [],
-  "activeVersion": {
-    "updatedAt": "2026-10-12T14:56:04.743Z",
-    "createdAt": "2026-10-12T14:56:04.743Z",
-    "versionId": "54458b5f-5fbc-41a1-965e-b007bbb5238d",
-    "workflowId": "7iY79q4NlKs8kFV4",
-    "nodes": [
-      {
-        "id": "cd352cc8-0e0d-455c-88d3-7368c3240c27",
-        "name": "Schedule Trigger (9am, 12:01pm, 7pm)",
-        "type": "n8n-nodes-base.scheduleTrigger",
-        "typeVersion": 1.2,
-        "position": [
-          0,
-          0
-        ],
-        "parameters": {
-          "rule": {
-            "interval": [
-              {
-                "field": "cronExpression",
-                "expression": "1 9,12,19 * * *"
-              }
-            ]
-          }
-        }
-      },
-      {
-        "id": "4e7a08cf-41f2-4ea6-bc25-55c833c31047",
-        "name": "Manual Trigger",
-        "type": "n8n-nodes-base.manualTrigger",
-        "typeVersion": 1,
-        "position": [
-          0,
-          160
-        ],
-        "parameters": {}
-      },
-      {
-        "id": "6d462e3a-f548-4d4c-a3e6-039af9965b09",
-        "name": "Webhook Trigger",
-        "type": "n8n-nodes-base.webhook",
-        "typeVersion": 2,
-        "position": [
-          0,
-          320
-        ],
-        "parameters": {
-          "httpMethod": "POST",
-          "path": "noticias-digest",
-          "options": {},
-          "responseMode": "onReceived"
-        },
-        "webhookId": "noticias-digest-webhook"
-      },
-      {
-        "id": "4f8181b6-2dba-41d0-b977-8081ceffd590",
-        "name": "Telegram Command Trigger",
-        "type": "n8n-nodes-base.telegramTrigger",
-        "typeVersion": 1.1,
-        "position": [
-          0,
-          480
-        ],
-        "parameters": {
-          "updates": [
-            "message"
-          ],
-          "additionalFields": {}
-        },
-        "credentials": {
-          "telegramApi": {
-            "id": "SA3yCHTkCTq8xDb8",
-            "name": "Telegram account"
-          }
-        },
-        "webhookId": "64d086c6-24d3-4650-80b2-c8680564555c"
-      },
-      {
-        "id": "4342c0b9-e13c-419e-a49e-fae6ccc8af12",
-        "name": "Filtrar Comando Telegram /resumen",
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 2,
-        "position": [
-          220,
-          480
-        ],
-        "parameters": {
-          "conditions": {
-            "options": {
-              "caseSensitive": true,
-              "leftValue": "",
-              "typeValidation": "strict",
-              "version": 2
-            },
-            "conditions": [
-              {
-                "id": "c1",
-                "leftValue": "={{ $json.message.text }}",
-                "rightValue": "/resumen",
-                "operator": {
-                  "type": "string",
-                  "operation": "startsWith"
-                }
-              }
-            ],
-            "combinator": "and"
-          }
-        }
-      },
-      {
-        "id": "3823ecf7-55b9-4896-93de-0cb71b836826",
-        "name": "RSS El Nacional",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1,
-        "position": [
-          480,
-          0
-        ],
-        "parameters": {
-          "url": "https://www.elnacional.com/feed/"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "8766d68c-37b2-4a44-9bb3-b3cf4de97506",
-        "name": "RSS Tal Cual",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1,
-        "position": [
-          480,
-          140
-        ],
-        "parameters": {
-          "url": "https://talcualdigital.com/feed/"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "f7c4c09b-8c97-4ea4-a104-3f06e9d52bf9",
-        "name": "RSS La Verdad",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1,
-        "position": [
-          480,
-          280
-        ],
-        "parameters": {
-          "url": "https://laverdad.com/feed/"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "c67baab1-70a6-4e8f-a2f7-3cda9f7baaa7",
-        "name": "HTTP El Universal",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          480,
-          420
-        ],
-        "parameters": {
-          "url": "https://www.eluniversal.com/",
-          "options": {
-            "response": {
-              "response": {
-                "responseFormat": "text"
-              }
-            }
-          }
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "b2a94004-4834-4586-87ab-82455fd12de5",
-        "name": "RSS El Pais",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1,
-        "position": [
-          480,
-          560
-        ],
-        "parameters": {
-          "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "6ceae732-bd42-4e4f-abe4-be22e74b6eb6",
-        "name": "RSS BBC Mundo",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1,
-        "position": [
-          480,
-          700
-        ],
-        "parameters": {
-          "url": "https://feeds.bbci.co.uk/mundo/rss.xml"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "eb0dc133-9595-4665-8aa5-ae74687ba822",
-        "name": "RSS NYTimes World",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1,
-        "position": [
-          480,
-          840
-        ],
-        "parameters": {
-          "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "42b8f947-b13d-4447-9014-57439a9b2a4d",
-        "name": "API NYTimes TopStories",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          480,
-          980
-        ],
-        "parameters": {
-          "url": "=https://api.nytimes.com/svc/topstories/v2/world.json?api-key={{ $env.NYTIMES_API_KEY || '' }}",
-          "options": {}
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "36a0447b-afd9-490e-9da9-da83210bc16b",
-        "name": "API GNews TopHeadlines",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          480,
-          1120
-        ],
-        "parameters": {
-          "url": "=https://gnews.io/api/v4/top-headlines?lang=es&apikey={{ $env.GNEWS_API_KEY || '' }}",
-          "options": {}
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "2f903d6d-53b9-4952-b75f-8540250414f5",
-        "name": "API NewsAPI Technology",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          480,
-          1260
-        ],
-        "parameters": {
-          "url": "=https://newsapi.org/v2/top-headlines?category=technology&apiKey={{ $env.NEWS_API_KEY || '' }}",
-          "options": {}
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "2efeb844-4539-40e0-a663-41585d4c4ba3",
-        "name": "API WorldNews",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          480,
-          1400
-        ],
-        "parameters": {
-          "url": "=https://api.worldnewsapi.com/top-news?api-key={{ $env.WORLD_NEWS_API_KEY || '' }}&source-countries=ve,us,es",
-          "options": {}
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "2730d79e-531c-4fb3-843e-5a64217c5d90",
-        "name": "Normalizar y Desduplicar Noticias",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          820,
-          600
-        ],
-        "parameters": {
-          "jsCode": "const rawItems = [];\n\nconst extractRss = (nodeName, defaultSource) => {\n  try {\n    const items = $(nodeName).all();\n    for (const item of items) {\n      const j = item.json || {};\n      const title = String(j.title || j['rss:title'] || '').trim();\n      const link = String(j.link || j.guid || j['rss:link'] || '').trim();\n      const desc = String(j.contentSnippet || j.content || j.description || '').replace(/<[^>]*>?/gm, '').trim();\n      const pubDate = String(j.pubDate || j.isoDate || new Date().toISOString());\n      \n      if (title && link) {\n        rawItems.push({\n          title,\n          url: link,\n          snippet: desc.slice(0, 300),\n          source: defaultSource,\n          pubDate\n        });\n      }\n    }\n  } catch (e) {}\n};\n\n// 1. Feeds de Venezuela\nextractRss('RSS El Nacional', 'El Nacional (Venezuela)');\nextractRss('RSS Tal Cual', 'Tal Cual Digital (Venezuela)');\nextractRss('RSS La Verdad', 'La Verdad (Venezuela)');\nextractRss('RSS Alertas 24', 'Alertas 24 (Venezuela)');\nextractRss('RSS Twitter Venezuela', 'X / Twitter (Venezuela)');\n\n// Scraper HTML El Universal\ntry {\n  const elUniItems = $('HTTP El Universal').all();\n  for (const item of elUniItems) {\n    const html = String(item.json?.data || '');\n    const regex = /<a[^>]+href=\"([^\"]+)\"[^>]*>([\\s\\S]*?)<\\/a>/gi;\n    let match;\n    let count = 0;\n    while ((match = regex.exec(html)) !== null && count < 25) {\n      const rawHref = match[1];\n      const linkText = match[2].replace(/<[^>]*>?/gm, '').trim();\n      if (linkText.length > 25 && !linkText.includes('Publicidad') && !linkText.includes('Términos')) {\n        let fullUrl = rawHref;\n        if (fullUrl.startsWith('/')) {\n          fullUrl = 'https://www.eluniversal.com' + fullUrl;\n        }\n        if (fullUrl.startsWith('http')) {\n          rawItems.push({\n            title: linkText,\n            url: fullUrl,\n            snippet: linkText,\n            source: 'El Universal (Venezuela)',\n            pubDate: new Date().toISOString()\n          });\n          count++;\n        }\n      }\n    }\n  }\n} catch (e) {}\n\n// 2. Feeds Internacionales, Deportes y X/Twitter Global\nextractRss('RSS El Pais', 'El País Internacional');\nextractRss('RSS BBC Mundo', 'BBC Mundo');\nextractRss('RSS NYTimes World', 'NYTimes RSS');\nextractRss('RSS Twitter Global', 'X / Twitter (Internacional / USA)');\n\n// 3. APIs Externas (si están configuradas)\ntry {\n  const nytItems = $('API NYTimes TopStories').all();\n  for (const item of nytItems) {\n    const results = item.json?.results || [];\n    for (const r of results) {\n      if (r.title && r.url) {\n        rawItems.push({\n          title: String(r.title).trim(),\n          url: String(r.url).trim(),\n          snippet: String(r.abstract || '').slice(0, 300),\n          source: 'NYTimes API',\n          pubDate: String(r.published_date || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const gnewsItems = $('API GNews TopHeadlines').all();\n  for (const item of gnewsItems) {\n    const articles = item.json?.articles || [];\n    for (const a of articles) {\n      if (a.title && a.url) {\n        rawItems.push({\n          title: String(a.title).trim(),\n          url: String(a.url).trim(),\n          snippet: String(a.description || '').slice(0, 300),\n          source: 'GNews API',\n          pubDate: String(a.publishedAt || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const newsApiItems = $('API NewsAPI Technology').all();\n  for (const item of newsApiItems) {\n    const articles = item.json?.articles || [];\n    for (const a of articles) {\n      if (a.title && a.url) {\n        rawItems.push({\n          title: String(a.title).trim(),\n          url: String(a.url).trim(),\n          snippet: String(a.description || '').slice(0, 300),\n          source: 'NewsAPI Tech',\n          pubDate: String(a.publishedAt || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\ntry {\n  const wnItems = $('API WorldNews').all();\n  for (const item of wnItems) {\n    const news = item.json?.news || [];\n    for (const n of news) {\n      if (n.title && n.url) {\n        rawItems.push({\n          title: String(n.title).trim(),\n          url: String(n.url).trim(),\n          snippet: String(n.text || '').slice(0, 300),\n          source: 'WorldNews API',\n          pubDate: String(n.publish_date || new Date().toISOString())\n        });\n      }\n    }\n  }\n} catch (e) {}\n\n// Desduplicación por URL y Similitud de Título\nconst seenUrls = new Set();\nconst seenTitles = new Set();\nconst uniqueArticles = [];\n\nconst normalizeTitle = (t) => t.toLowerCase().replace(/[^a-z0-9áéíóúñ]/g, '');\n\nfor (const art of rawItems) {\n  const normUrl = art.url.split('?')[0].toLowerCase();\n  const normT = normalizeTitle(art.title);\n  \n  if (seenUrls.has(normUrl) || seenTitles.has(normT)) {\n    continue;\n  }\n  \n  seenUrls.add(normUrl);\n  seenTitles.add(normT);\n  uniqueArticles.push(art);\n}\n\n// Balanceo Garantizado: Extraer artículos de Venezuela, USA y resto\nconst veSources = [\n  'El Nacional (Venezuela)',\n  'Tal Cual Digital (Venezuela)',\n  'La Verdad (Venezuela)',\n  'El Universal (Venezuela)',\n  'Alertas 24 (Venezuela)',\n  'X / Twitter (Venezuela)'\n];\n\nconst usSources = [\n  'NYTimes RSS',\n  'NYTimes API',\n  'GNews API',\n  'NewsAPI Tech',\n  'X / Twitter (Internacional / USA)'\n];\n\nconst veList = [];\nconst usList = [];\nconst otherList = [];\n\nfor (const art of uniqueArticles) {\n  if (veSources.includes(art.source)) {\n    veList.push(art);\n  } else if (usSources.includes(art.source)) {\n    usList.push(art);\n  } else {\n    otherList.push(art);\n  }\n}\n\n// Combinar garantizando presencia completa de cada bloque\nconst balancedArticles = [\n  ...veList.slice(0, 35),\n  ...usList.slice(0, 25),\n  ...otherList.slice(0, 35)\n];\n\nlet originChatId = null;\ntry {\n  const tgData = $('Telegram Command Trigger').first()?.json || {};\n  if (tgData.message && tgData.message.chat) {\n    originChatId = String(tgData.message.chat.id);\n  }\n} catch (e) {}\n\nreturn [{\n  json: {\n    total_raw: rawItems.length,\n    total_unique: uniqueArticles.length,\n    total_ve: veList.length,\n    total_us: usList.length,\n    origin_chat_id: originChatId,\n    articles: balancedArticles\n  }\n}];"
-        }
-      },
-      {
-        "id": "fed19ace-9b5b-4588-8b14-064ee4cc4fe7",
-        "name": "Curar y Redactar Noticias con IA",
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.2,
-        "position": [
-          1060,
-          600
-        ],
-        "parameters": {
-          "method": "POST",
-          "url": "https://api.deepseek.com/chat/completions",
-          "authentication": "predefinedCredentialType",
-          "nodeCredentialType": "deepSeekApi",
-          "sendBody": true,
-          "specifyBody": "json",
-          "jsonBody": "={{ JSON.stringify({\n  model: 'deepseek-chat',\n  temperature: 0.3,\n  max_tokens: 3500,\n  messages: [\n    {\n      role: 'system',\n      content: \"Eres un Editor Jefe y Curador Senior de Noticias con criterio period\\u00edstico riguroso y redacci\\u00f3n \\u00e1gil.\\nTu misi\\u00f3n es seleccionar las noticias m\\u00e1s relevantes a partir de la lista JSON proporcionada y redactar un bolet\\u00edn informativo de alto impacto.\\n\\nREGLAS DE SELECCI\\u00d3N Y CATEGORIZACI\\u00d3N:\\nDebes estructurar el bolet\\u00edn en exactamente 6 secciones con la cantidad exacta de noticias requerida:\\n\\n1. \\ud83c\\uddfb\\ud83c\\uddea VENEZUELA (Exactamente 3 noticias destacadas)\\n   - REGLA ESTRICTA: Utiliza \\u00daNICAMENTE noticias provenientes de medios y periodistas venezolanos (El Nacional, Tal Cual Digital, La Verdad, El Universal, Alertas 24, o publicaciones en X/Twitter de periodistas y medios venezolanos como Sergio Novelli, Carla Angola, Apolitiko, Efecto Cocuyo, El Nacional, Tal Cual, La Verdad).\\n   - Prohibido usar fuentes extranjeras para esta secci\\u00f3n.\\n\\n2. \\ud83c\\udf0e USA Y AM\\u00c9RICA LATINA (Exactamente 3 noticias)\\n   - REGLA ESTRICTA PARA ESTADOS UNIDOS: Para noticias referentes a Estados Unidos, utiliza \\u00daNICAMENTE las fuentes estadounidenses (New York Times, GNews, NewsAPI, o cuentas de X/Twitter de medios como Wall Street Journal, NYTimes, CNN). Para Am\\u00e9rica Latina puedes usar medios regionales.\\n\\n3. \\ud83c\\udf10 MUNDO (Exactamente 3 noticias)\\n   - Geopol\\u00edtica global, conflictos internacionales, econom\\u00eda mundial o eventos de m\\u00e1xima trascendencia.\\n\\n4. \\ud83d\\udcbb TECNOLOG\\u00cdA (Exactamente 3 noticias)\\n   - Avances en Inteligencia Artificial, ciberseguridad, lanzamientos o impacto digital relevante.\\n\\n5. \\u26bd DEPORTES (Exactamente 4 noticias)\\n   - Exactamente 2 noticias sobre deportes en Venezuela o venezolanos destacados en el deporte en el exterior (f\\u00fatbol Vinotinto, MLB/b\\u00e9isbol, atletas ol\\u00edmpicos, baloncesto, etc.).\\n   - Exactamente 2 noticias sobre el deporte a nivel mundial (f\\u00fatbol internacional, Champions League, ligas europeas, F\\u00f3rmula 1, tenis, etc.).\\n\\n6. \\ud83c\\udfad ESPECT\\u00c1CULO & ENTRETENIMIENTO (Exactamente 3 noticias)\\n   - Cultura, cine, m\\u00fasica, arte o entretenimiento de impacto internacional o hispanohablante.\\n\\nFORMATO OBLIGATORIO PARA CADA NOTICIA:\\n1. **[Titular informativo y atractivo en negrita]**\\n[L\\u00ednea 1 de contexto y desarrollo breve]\\n[L\\u00ednea 2 de impacto o desenlace relevante]\\n\\ud83d\\udd17 [Leer noticia en la fuente](URL_EXACTA_DEL_ARTICULO)\\n\\nLINEAMIENTOS EST\\u00c9TICOS Y DE ESTILO:\\n- Utiliza los emojis indicados para los t\\u00edtulos de cada secci\\u00f3n.\\n- El enlace debe ser exactamente la URL del art\\u00edculo original sin inventar links.\\n- No incluyas saludos ni despedidas, inicia directamente con la primera secci\\u00f3n.\"\n    },\n    {\n      role: 'user',\n      content: 'A continuación tienes la lista de artículos disponibles:\\n\\n' + JSON.stringify($json.articles, null, 2) + '\\n\\nGenera el boletín de noticias siguiendo estrictamente la estructura y reglas indicadas.'\n    }\n  ]\n}) }}",
-          "options": {}
-        },
-        "credentials": {
-          "deepSeekApi": {
-            "id": "22sfGWS6Ev7XMOfa",
-            "name": "DeepSeek account"
-          }
-        }
-      },
-      {
-        "id": "1a7c8e12-e3ce-405c-894f-43e863376ddb",
-        "name": "Formatear Mensajes Finales",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          1300,
-          600
-        ],
-        "parameters": {
-          "jsCode": "const rawText = $json.choices[0].message.content.trim();\nconst normData = $('Normalizar y Desduplicar Noticias').first()?.json || {};\n\nconst dateStr = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });\nconst header = `📰 *RESUMEN DE NOTICIAS DESTACADAS* 🗞️\\n📅 *${dateStr.toUpperCase()}*\\n----------------------------------------\\n\\n`;\n\nconst fullText = header + rawText;\n\nfunction chunkMessage(text, maxLen = 3500) {\n  if (text.length <= maxLen) return [text];\n  const result = [];\n  let rem = text;\n  while (rem.length > maxLen) {\n    let idx = rem.lastIndexOf('\\n\\n', maxLen);\n    if (idx === -1 || idx < maxLen / 2) {\n      idx = rem.lastIndexOf('\\n', maxLen);\n    }\n    if (idx === -1 || idx < maxLen / 2) {\n      idx = maxLen;\n    }\n    result.push(rem.slice(0, idx).trim());\n    rem = rem.slice(idx).trim();\n  }\n  if (rem) result.push(rem);\n  return result;\n}\n\nconst chunks = chunkMessage(fullText, 3500);\n\nreturn chunks.map((c, i) => ({\n  json: {\n    part: i + 1,\n    total_parts: chunks.length,\n    telegram_text: chunks.length > 1 ? `*(Parte ${i + 1}/${chunks.length})*\\n\\n${c}` : c,\n    origin_chat_id: normData.origin_chat_id || null\n  }\n}));"
-        }
-      },
-      {
-        "id": "20a9b6a0-2af0-458a-a972-2f47f248ae1b",
-        "name": "Notificar Telegram Admin",
-        "type": "n8n-nodes-base.telegram",
-        "typeVersion": 1,
-        "position": [
-          1540,
-          460
-        ],
-        "parameters": {
-          "resource": "message",
-          "operation": "sendMessage",
-          "chatId": "40371837",
-          "text": "={{ $json.telegram_text }}",
-          "additionalFields": {
-            "appendAttribution": false,
-            "parse_mode": "Markdown"
-          }
-        },
-        "credentials": {
-          "telegramApi": {
-            "id": "SA3yCHTkCTq8xDb8",
-            "name": "Telegram account"
-          }
-        },
-        "webhookId": "0877b946-f650-43cd-b6f2-baa2f85b8d25"
-      },
-      {
-        "id": "a9c902c7-b43d-4ae9-b321-995bbf1c87cf",
-        "name": "Enviar WhatsApp Admin",
-        "type": "n8n-nodes-evolution-api.evolutionApi",
-        "typeVersion": 1,
-        "position": [
-          1780,
-          660
-        ],
-        "parameters": {
-          "resource": "messages-api",
-          "instanceName": "TTvAlertsMovistar",
-          "remoteJid": "584146130135",
-          "messageText": "={{ $json.whatsapp_text }}"
-        },
-        "credentials": {
-          "evolutionApi": {
-            "id": "ecGN8GlLnzNz5Lq5",
-            "name": "Evolution account 2"
-          }
-        }
-      },
-      {
-        "id": "e6945d07-fbb9-4251-b14a-6ea3017ebacf",
-        "name": "Es Solicitud Usuario Telegram?",
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 2,
-        "position": [
-          1540,
-          860
-        ],
-        "parameters": {
-          "conditions": {
-            "options": {
-              "caseSensitive": true,
-              "leftValue": "",
-              "typeValidation": "strict",
-              "version": 2
-            },
-            "conditions": [
-              {
-                "id": "c2",
-                "leftValue": "={{ String($json.origin_chat_id || '') }}",
-                "rightValue": "",
-                "operator": {
-                  "type": "string",
-                  "operation": "notEmpty"
-                }
-              }
-            ],
-            "combinator": "and"
-          }
-        }
-      },
-      {
-        "id": "e7f893b8-37c5-4986-9365-defe69334e89",
-        "name": "Responder Telegram Usuario",
-        "type": "n8n-nodes-base.telegram",
-        "typeVersion": 1,
-        "position": [
-          1780,
-          860
-        ],
-        "parameters": {
-          "resource": "message",
-          "operation": "sendMessage",
-          "chatId": "={{ $json.origin_chat_id }}",
-          "text": "={{ $json.telegram_text }}",
-          "additionalFields": {
-            "appendAttribution": false,
-            "parse_mode": "Markdown"
-          }
-        },
-        "credentials": {
-          "telegramApi": {
-            "id": "SA3yCHTkCTq8xDb8",
-            "name": "Telegram account"
-          }
-        },
-        "webhookId": "b24d96c4-6f69-407e-8fff-cdfb452c461f"
-      },
-      {
-        "id": "rss-alertas-24",
-        "name": "RSS Alertas 24",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1.1,
-        "position": [
-          -240,
-          240
-        ],
-        "parameters": {
-          "url": "https://alertas24.com/feed/"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "rss-twitter-ve",
-        "name": "RSS Twitter Venezuela",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1.1,
-        "position": [
-          -40,
-          240
-        ],
-        "parameters": {
-          "url": "https://news.google.com/rss/search?q=site%3Ax.com+%28ElNacionalWeb+OR+SergioNovelli+OR+CarlaAngola+OR+apolitiko+OR+EfectoCocuyo+OR+TalCualDigital+OR+laverdadweb%29+when%3A3d&hl=es&gl=VE&ceid=VE:es"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "id": "rss-twitter-global",
-        "name": "RSS Twitter Global",
-        "type": "n8n-nodes-base.rssFeedRead",
-        "typeVersion": 1.1,
-        "position": [
-          1200,
-          240
-        ],
-        "parameters": {
-          "url": "https://news.google.com/rss/search?q=site%3Ax.com+%28CNNEE+OR+elpais_america+OR+nytimes+OR+WSJ+OR+BBCMundo+OR+ReutersLatam%29+when%3A3d&hl=es&gl=VE&ceid=VE:es"
-        },
-        "onError": "continueRegularOutput"
-      },
-      {
-        "parameters": {
-          "jsCode": "// Determinar la hora de envío programada (9am, 12pm, 7pm) o la hora actual\nconst now = new Date();\nconst hour = parseInt(new Intl.DateTimeFormat('en-US', {\n  hour: 'numeric',\n  hour12: false,\n  timeZone: 'America/Caracas'\n}).format(now), 10);\n\nlet horaEnvio = '9am';\nif (hour >= 8 && hour <= 10) {\n  horaEnvio = '9am';\n} else if (hour >= 11 && hour <= 14) {\n  horaEnvio = '12pm';\n} else if (hour >= 18 && hour <= 21) {\n  horaEnvio = '7pm';\n} else {\n  const hour12 = hour % 12 || 12;\n  const ampm = hour < 12 ? 'am' : 'pm';\n  horaEnvio = `${hour12}${ampm}`;\n}\n\nreturn [{\n  json: {\n    whatsapp_text: `Noticias ${horaEnvio} enviadas`\n  }\n}];"
-        },
-        "id": "e93a7482-5c91-4e78-98e3-0d5b78f991bb",
-        "name": "Preparar Aviso WhatsApp",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          1540,
-          660
-        ]
-      }
-    ],
-    "connections": {
-      "Schedule Trigger (9am, 12:01pm, 7pm)": {
-        "main": [
-          [
-            {
-              "node": "RSS El Nacional",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Manual Trigger": {
-        "main": [
-          [
-            {
-              "node": "RSS El Nacional",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Webhook Trigger": {
-        "main": [
-          [
-            {
-              "node": "RSS El Nacional",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Telegram Command Trigger": {
-        "main": [
-          [
-            {
-              "node": "Filtrar Comando Telegram /resumen",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Filtrar Comando Telegram /resumen": {
-        "main": [
-          [
-            {
-              "node": "RSS El Nacional",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS El Nacional": {
-        "main": [
-          [
-            {
-              "node": "RSS Tal Cual",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS Tal Cual": {
-        "main": [
-          [
-            {
-              "node": "RSS La Verdad",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS La Verdad": {
-        "main": [
-          [
-            {
-              "node": "HTTP El Universal",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS El Pais": {
-        "main": [
-          [
-            {
-              "node": "RSS BBC Mundo",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS BBC Mundo": {
-        "main": [
-          [
-            {
-              "node": "RSS NYTimes World",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS NYTimes World": {
-        "main": [
-          [
-            {
-              "node": "API NYTimes TopStories",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "API NYTimes TopStories": {
-        "main": [
-          [
-            {
-              "node": "API GNews TopHeadlines",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "API GNews TopHeadlines": {
-        "main": [
-          [
-            {
-              "node": "API NewsAPI Technology",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "API NewsAPI Technology": {
-        "main": [
-          [
-            {
-              "node": "API WorldNews",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Normalizar y Desduplicar Noticias": {
-        "main": [
-          [
-            {
-              "node": "Curar y Redactar Noticias con IA",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Curar y Redactar Noticias con IA": {
-        "main": [
-          [
-            {
-              "node": "Formatear Mensajes Finales",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Formatear Mensajes Finales": {
-        "main": [
-          [
-            {
-              "node": "Notificar Telegram Admin",
-              "type": "main",
-              "index": 0
-            },
-            {
-              "node": "Preparar Aviso WhatsApp",
-              "type": "main",
-              "index": 0
-            },
-            {
-              "node": "Es Solicitud Usuario Telegram?",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Es Solicitud Usuario Telegram?": {
-        "main": [
-          [
-            {
-              "node": "Responder Telegram Usuario",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "HTTP El Universal": {
-        "main": [
-          [
-            {
-              "node": "RSS Alertas 24",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS Alertas 24": {
-        "main": [
-          [
-            {
-              "node": "RSS Twitter Venezuela",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS Twitter Venezuela": {
-        "main": [
-          [
-            {
-              "node": "RSS El Pais",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "API WorldNews": {
-        "main": [
-          [
-            {
-              "node": "RSS Twitter Global",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "RSS Twitter Global": {
-        "main": [
-          [
-            {
-              "node": "Normalizar y Desduplicar Noticias",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Preparar Aviso WhatsApp": {
-        "main": [
-          [
-            {
-              "node": "Enviar WhatsApp Admin",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      }
-    },
-    "nodeGroups": [],
-    "authors": "Alvez Caliman",
-    "name": null,
-    "description": null,
-    "autosaved": false,
-    "workflowPublishHistory": [
-      {
-        "createdAt": "2026-10-12T14:56:06.468Z",
-        "id": 1626,
-        "workflowId": "7iY79q4NlKs8kFV4",
-        "versionId": "54458b5f-5fbc-41a1-965e-b007bbb5238d",
-        "event": "activated",
-        "userId": "2ca8eef2-a9ec-4ba9-9ef3-600592ec65ef"
-      }
-    ]
   }
 }
