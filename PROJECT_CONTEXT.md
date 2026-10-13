@@ -3199,3 +3199,19 @@
      - Deployed and published active versions for both `0Go7n1S2CQZr548G` (version `349e1849-067a-46eb-8f5b-de3beddf4df1`) and `n0zgnS1vlOGNcGNY` (version `3a9b8600-d1b5-44f5-ba35-42e537df00a8`).
      - Validated pipeline execution via automated simulation without sending outbound messages to real customers.
      - Synchronized repository workflows and committed to git `main`.
+---
+
+### 99. AI News Digest Multichannel Curation (`digest_noticias_ia`) (2026-10-10 - 2026-10-12)
+
+* **Objective & Operational Context**:
+  - Implementation of an automated AI-powered news curation pipeline (`digest_noticias_ia.json` - Workflow ID `7iY79q4NlKs8kFV4`) to curate, synthesize, and distribute news digests across multiple channels.
+  - **Sources & Feeds**:
+    * RSS / Media feeds covering international news, Venezuela sources (*La Verdad*, *El Universal*, *Alertas24*), and sports sections.
+    * X/Twitter feeds for real-time trending updates.
+  - **Distribution Channels**:
+    * **Telegram**: Direct broadcast using `AlvezNewsBot` with chunked, formatted HTML/Markdown delivery.
+    * **WhatsApp**: Automated concise notification of news digest sent.
+
+* **Architecture & Sync**:
+  - Registered in `workflows/export_workflows.py` (`'digest_noticias_ia': '7iY79q4NlKs8kFV4'`).
+  - Active and enabled in n8n live environment.
