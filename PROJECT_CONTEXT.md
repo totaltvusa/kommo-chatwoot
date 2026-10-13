@@ -3215,3 +3215,32 @@
 * **Architecture & Sync**:
   - Registered in `workflows/export_workflows.py` (`'digest_noticias_ia': '7iY79q4NlKs8kFV4'`).
   - Active and enabled in n8n live environment.
+---
+
+### 100. Enforcement of 3 Simultaneous Connections on MVPlay Renewals (1 & 3 Months) (2026-10-13)
+
+* **Incident Analysis & Operational Context**:
+  - **Issue Reported**: During automatic MVPlay renewals for both 1-month and 3-month plans, accounts were ending up with only 1 connection (`max_connections: 1`).
+  - **Business Policy**: In TVTotal24, all plans must provide 3 simultaneous connections:
+    * **1 Mes**: Plan de 1 mes con 3 conexiones (consume 1 crédito, ID de Paquete `129`).
+    * **3 Meses**: Plan de 3 meses con 3 conexiones (consume 2 créditos, ID de Paquete `130`).
+  - **Diagnostic Findings & Root Causes**:
+    * In Xtream-Masters / MVPlay reseller API, packages `129` (`⚡ 1 Mes`) and `130` (`⚡ 3 Meses`) have `multiconx_pricing` configured where connections 1, 2, and 3 cost 1 crédito (para 1 mes) y 2 créditos (para 3 meses).
+    * When `action=extend_line` is called, the panel applies the package's default `max_connections` (1 conexión).
+    * The subsequent `action=edit_line` call in `tool_renovar_mvplay_tvtotal24.json` attempted to set `&max_connections=3` without passing `&package=${packageId}`. The panel silently ignored `max_connections` when `package` was omitted in `edit_line`, leaving the line at 1 conexión.
+    * Live testing against the panel proved that sending `action=edit_line&id=${lineId}&package=${packageId}&max_connections=3` immediately sets `max_connections: 3` without consuming additional credits.
+
+* **Fixes & Remediation Applied**:
+  1. **Sub-workflow `Tool - Renovacion Automatica MVPlay TVTotal24` (`0Go7n1S2CQZr548G`)**:
+     - Updated node `Validar y Procesar Renovacion`:
+       * `action=extend_line` now explicitly passes `&package=' + packageId + '&max_connections=3'`.
+       * `action=edit_line` now passes both `&package=' + packageId + '&max_connections=3'` ensuring the line is unconditionally updated to 3 connections.
+       * Updated admin notification templates (Telegram HTML, WhatsApp Evolution API, Chatwoot private note) and customer message to explicitly state `3 conexiones`.
+       * Standardized `pagoRow` plan column to `duration + ' (3 conx)'`.
+  2. **Active Lines Rectification**:
+     - Audited all 50 active lines in MVPlay panel via `get_lines`. Found 2 lines (`JoseNieto` #48388 y `LuzdelaCruz` #48739) that were set at 1 connection from recent renewals.
+     - Executed targeted `edit_line` updates on both lines, rectifying 100% of the active fleet to `max_connections: 3`.
+  3. **Deployment & Verification**:
+     - Live workflow `0Go7n1S2CQZr548G` updated and published in n8n (active version `32fe6043-4755-4ddf-a3b5-9133d1eb6d15`).
+     - Synchronized local file `workflows/tool_renovar_mvplay_tvtotal24.json`.
+     - Committed and pushed to GitHub repository (`main`).
