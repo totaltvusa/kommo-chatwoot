@@ -3,12 +3,12 @@
   "name": "Ecwid to Client & me 2.0",
   "active": true,
   "isArchived": false,
-  "versionId": "1a70991e-ea39-4062-b8a6-72b0ee83b577",
-  "activeVersionId": "1a70991e-ea39-4062-b8a6-72b0ee83b577",
+  "versionId": "e6d93a6e-db2d-41cd-9609-c153ac160fdd",
+  "activeVersionId": "e6d93a6e-db2d-41cd-9609-c153ac160fdd",
   "triggerCount": 1,
-  "nodeCount": 33,
+  "nodeCount": 34,
   "createdAt": "2026-07-27T01:52:27.063Z",
-  "updatedAt": "2026-09-29T01:40:42.865Z",
+  "updatedAt": "2026-10-15T01:41:29.129Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -246,32 +246,6 @@
         []
       ]
     },
-    "pdCashlink": {
-      "main": [
-        [
-          {
-            "node": "Whatsme Link PdCash",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Email Link a Cliente1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Notificarme Link Cashapp",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "If Celular Cashapp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "NowPaymentsLink": {
       "main": [
         [
@@ -348,6 +322,43 @@
           }
         ],
         []
+      ]
+    },
+    "pdCashlink": {
+      "main": [
+        [
+          {
+            "node": "BlinkLink",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BlinkLink": {
+      "main": [
+        [
+          {
+            "node": "Whatsme Link PdCash",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Link a Cliente1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificarme Link Cashapp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If Celular Cashapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -887,7 +898,7 @@
       "parameters": {
         "sendTo": "={{ $('TomaDatosDelEmail').item.json.Email }}",
         "subject": "={{ ($('TomaDatosDelEmail').first().json.CustomerName || 'Customer').split(' ')[0] }}, Your TotalTv Payment Link - Order #{{ $('TomaDatosDelEmail').item.json.OrderID }}",
-        "message": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},<br>\n<br>\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}<br>\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}<br>\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}<br>\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}<br>\n<br>\n<strong>Payment Summary:</strong><br>\n&nbsp;&nbsp;Order Amount: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}<br>\n&nbsp;&nbsp;Payment Processing Fee (10%): &nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.10).toFixed(2) : '.'}<br>\n&nbsp;&nbsp;<strong>Total to Pay: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 1.10).toFixed(2) : '.'}</strong><br>\n<br>\nPlease complete payment using the following link:<br>\n<a href=\"${$('pdCashlink').item.json.data.urls.payment_page}\">Click here to pay your order</a><br>\n<br>\nThank you for choosing us!<br>\n<img src=\"https://raw.githubusercontent.com/totaltvusa/images/main/TotalTvLogo.png\" alt=\"TotalTv USA\" width=\"220\" height=\"48\" style=\"display: block; width: 220px; max-width: 220px; height: 48px; border: 0; outline: none; text-decoration: none; margin-top: 15px;\" border=\"0\" />` }}",
+        "message": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},<br><br>Thank you for your TotalTv Order # <strong>${$(\"TomaDatosDelEmail\").first().json.OrderID}</strong><br>Months: ${$(\"TomaDatosDelEmail\").first().json.Months}<br>Conns: ${$(\"TomaDatosDelEmail\").first().json.Conns}<br>Adult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}<br><br><div style=\"background-color: #f8f9fa; border-left: 4px solid #00D632; padding: 12px 16px; margin: 15px 0; font-family: sans-serif;\">  <strong style=\"font-size: 15px; color: #333;\">Payment Summary:</strong><br>  &nbsp;&nbsp;Order Amount: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}<br>  &nbsp;&nbsp;Payment Processing Fee (10%): &nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.10).toFixed(2) : '.'}<br>  &nbsp;&nbsp;<strong style=\"color: #000; font-size: 16px;\">Total to Pay: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 1.10).toFixed(2) : '.'} USD</strong></div><h3 style=\"color: #00D632; margin-bottom: 5px;\">🟢 Option 1: Pay via CashApp Web Link</h3>Click the link below to pay directly with CashApp or Card:<br><a href=\"${$('pdCashlink').item.json.data?.urls?.payment_page}\" style=\"display: inline-block; background-color: #00D632; color: #ffffff; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 8px;\">👉 Click here to pay your order</a><br><br>${$('BlinkLink').item.json?.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest ? `<hr style=\"border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;\"><h3 style=\"color: #0070ba; margin-bottom: 5px;\">⚡ Option 2: Pay from CashApp using Bitcoin Lightning (Blink QR)</h3>You can also pay instantly from CashApp using the Bitcoin Lightning feature:<br><br><img src=\"https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent($('BlinkLink').item.json.data.lnUsdInvoiceCreate.invoice.paymentRequest)}\" alt=\"Blink QR Code\" width=\"260\" height=\"260\" style=\"display: block; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0;\" /><br><a href=\"lightning:${$('BlinkLink').item.json.data.lnUsdInvoiceCreate.invoice.paymentRequest}\" style=\"font-weight: bold; color: #0070ba;\">👉 Open directly in CashApp / Lightning App</a><br><br><strong>Invoice Code (Copy & Paste):</strong><br><code style=\"display: block; background: #f1f3f5; padding: 8px; border-radius: 4px; word-break: break-all; font-size: 12px; margin-top: 5px;\">${$('BlinkLink').item.json.data.lnUsdInvoiceCreate.invoice.paymentRequest}</code><br><small style=\"color: #666;\">📱 <em>In CashApp: Tap the Money/Bitcoin tab ➔ Tap the QR scanner icon ➔ Scan the QR code above or paste the Invoice Code.</em></small><br>` : ''}<br>Thank you for choosing us!<br><img src=\"https://raw.githubusercontent.com/totaltvusa/images/main/TotalTvLogo.png\" alt=\"TotalTv USA\" width=\"220\" height=\"48\" style=\"display: block; width: 220px; max-width: 220px; height: 48px; border: 0; outline: none; text-decoration: none; margin-top: 15px;\" border=\"0\" />` }}",
         "options": {
           "appendAttribution": false,
           "bccList": "totaltvusa@gmail.com"
@@ -978,7 +989,7 @@
             },
             {
               "name": "text",
-              "value": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName},\n\nPayment link for TotalTv Order #${$(\"TomaDatosDelEmail\").first().json.OrderID} was sent to ${$(\"TomaDatosDelEmail\").first().json.Email}\n\nPlease check spam/junk folders too.` }}"
+              "value": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nPayment options for TotalTv Order #${$(\"TomaDatosDelEmail\").first().json.OrderID} ($${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? (parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()) * 1.10).toFixed(2) : \".\"}):\n\n1. CashApp Link:\n${$('pdCashlink').first().json.data?.urls?.payment_page}\n${$('BlinkLink').item.json?.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest ? `\n2. Blink Lightning QR:\nhttps://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent($('BlinkLink').item.json.data.lnUsdInvoiceCreate.invoice.paymentRequest)}\n` : ''}\nFull instructions and QR were also sent to ${$(\"TomaDatosDelEmail\").first().json.Email}.` }}"
             }
           ]
         },
@@ -1027,7 +1038,7 @@
     {
       "parameters": {
         "chatId": "40371837",
-        "text": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n<b>Payment Summary:</b>\n• Order Amount: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}\n• Payment Processing Fee (10%): ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.10).toFixed(2) : '.'}\n<b>• Total to Pay: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 1.10).toFixed(2) : '.'}</b>\n\nPlease complete payment using the following link:\n${$('pdCashlink').first().json.data.urls.payment_page}\n\nThank you for choosing us!` }}",
+        "text": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n<b>Payment Summary:</b>\n• Order Amount: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount).toFixed(2) : '.'}\n• Payment Processing Fee (10%): ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 0.10).toFixed(2) : '.'}\n<b>• Total to Pay: ${!isNaN(parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount)) ? '$' + (parseFloat($(\"TomaDatosDelEmail\").first().json.TotalAmount) * 1.10).toFixed(2) : '.'}</b>\n\n<b>1. pd.cash Link:</b>\n${$('pdCashlink').first().json.data.urls.payment_page}\n\n${$('BlinkLink').item.json?.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest ? `<b>2. Blink Lightning Invoice:</b>\n<code>${$('BlinkLink').item.json.data.lnUsdInvoiceCreate.invoice.paymentRequest}</code>\n\n<b>QR Link:</b>\nhttps://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent($('BlinkLink').item.json.data.lnUsdInvoiceCreate.invoice.paymentRequest)}\n\n` : ''}Thank you for choosing us!` }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -1241,7 +1252,7 @@
         "resource": "messages-api",
         "instanceName": "TTvAlertsMovistar",
         "remoteJid": "584146130135",
-        "messageText": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n*Payment Summary:*\n• Order Amount: ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()).toFixed(2) : '.'}\n• Payment Processing Fee (10%): ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + (parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()) * 0.10).toFixed(2) : '.'}\n*• Total to Pay: ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + (parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()) * 1.10).toFixed(2) : '.'}*\n\nPlease complete payment using the following link:\n${$('pdCashlink').first().json.data.urls.payment_page}\n\nThank you for choosing us!` }}",
+        "messageText": "={{ `Dear ${$(\"TomaDatosDelEmail\").first().json.CustomerName || \"Customer\"},\n\nThank you for your TotalTv Order # ${$(\"TomaDatosDelEmail\").first().json.OrderID}\nMonths: ${$(\"TomaDatosDelEmail\").first().json.Months}\nConns: ${$(\"TomaDatosDelEmail\").first().json.Conns}\nAdult: ${$(\"TomaDatosDelEmail\").first().json.Adult === \"Yes\" ? \"Yes\" : ($(\"TomaDatosDelEmail\").first().json.Adult === \"No\" ? \"No\" : \".\")}\n\n*Payment Summary:*\n• Order Amount: ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()).toFixed(2) : '.'}\n• Payment Processing Fee (10%): ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + (parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()) * 0.10).toFixed(2) : '.'}\n*• Total to Pay: ${!isNaN(parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim())) ? '$' + (parseFloat(String($(\"TomaDatosDelEmail\").first().json.TotalAmount).trim()) * 1.10).toFixed(2) : '.'}*\n\n*1. pd.cash Link:*\n${$('pdCashlink').first().json.data.urls.payment_page}\n\n${$('BlinkLink').item.json?.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest ? `*2. Blink Lightning QR Link:*\nhttps://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent($('BlinkLink').item.json.data.lnUsdInvoiceCreate.invoice.paymentRequest)}\n\n` : ''}Thank you for choosing us!` }}",
         "options_message": {
           "delay": 5000
         }
@@ -1363,6 +1374,42 @@
       ],
       "id": "50baa76b-4c7f-43b6-b177-ae7c53ca6f1e",
       "name": "If Celular NowPay"
+    },
+    {
+      "id": "blink-link-cashapp",
+      "name": "BlinkLink",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        2496
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.blink.sv/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "blink_UUV73Rc9ihd3eNaoQ84nrHe108CiP8LKnTSC2q4r9yJOniXGpLPsBjNyGNNMFJp0"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: `mutation { lnUsdInvoiceCreate(input: { walletId: \"ea0a30f1-0325-4e72-9453-eb07a1351b52\", amount: ${Math.round(parseFloat($(\"pdCashLink\").first().json.amount) * 100)}, memo: \"Order \" + \"${String($(\"TomaDatosDelEmail\").first().json.OrderID)}\" }) { errors { message } invoice { paymentRequest paymentHash satoshis } } }` }) }}",
+        "options": {
+          "response": {
+            "neverError": true
+          }
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "nodeGroups": [],
