@@ -1,0 +1,241 @@
+{
+  "id": "X4yimojEiqWudtao",
+  "name": "📦 Sincronización WooCommerce Orders (Gmail a Google Sheets)",
+  "active": true,
+  "isArchived": false,
+  "versionId": "d7c146c2-3276-44aa-b69e-a861b0bd38ee",
+  "activeVersionId": "d7c146c2-3276-44aa-b69e-a861b0bd38ee",
+  "triggerCount": 1,
+  "nodeCount": 6,
+  "createdAt": "2026-10-15T15:53:17.102Z",
+  "updatedAt": "2026-10-16T00:23:49.679Z",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "description": "Sincroniza pedidos de WooCommerce desde Gmail zelletotaltv@gmail.com hacia Google Sheets (Chatwoot -> Orders)",
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "canExecute": true,
+  "connections": {
+    "Buscar Correos WooCommerce (Gmail)": {
+      "main": [
+        [
+          {
+            "node": "Leer Órdenes Existentes (Sheets)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear y Desduplicar Órdenes": {
+      "main": [
+        [
+          {
+            "node": "Insertar en Google Sheets (Batch Append)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Buscar Correos WooCommerce (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger (Cada 1h)": {
+      "main": [
+        [
+          {
+            "node": "Buscar Correos WooCommerce (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Órdenes Existentes (Sheets)": {
+      "main": [
+        [
+          {
+            "node": "Parsear y Desduplicar Órdenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "options": {}
+      },
+      "id": "64df2da9-3f66-4c4d-bb84-d82cb99feda2",
+      "name": "Leer Órdenes Existentes (Sheets)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        96
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 100,
+        "filters": {
+          "q": "subject:\"Nuevo pedido\" OR subject:\"[Total TV Latina] Nuevo pedido\""
+        },
+        "simple": false
+      },
+      "id": "87ef7ef5-313c-44aa-81d1-008336e6e67e",
+      "name": "Buscar Correos WooCommerce (Gmail)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        448,
+        96
+      ],
+      "webhookId": "44d819c7-caa1-4972-a9eb-c72d71d369d4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CXK8oN7vdrIzstyd",
+          "name": "Gmail account zelletotaltv"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraer y Normalizar Órdenes de WooCommerce con Desduplicación\nlet existingSheetsData = [];\ntry {\n  existingSheetsData = $('Leer Órdenes Existentes (Sheets)').all();\n} catch (e) {\n  existingSheetsData = [];\n}\n\nconst existingKeys = new Set();\nfor (const row of existingSheetsData) {\n  const r = row.json || {};\n  const orderId = (r['Order ID'] || r.order_id || '').toString().trim();\n  const email = (r['Email'] || r.email || '').toString().trim().toLowerCase();\n  const fecha = (r['Fecha'] || r.fecha || '').toString().trim();\n  const msgId = (r['Message ID'] || r.message_id || '').toString().trim();\n\n  if (orderId) existingKeys.add('ORDER:' + orderId);\n  if (email && fecha) existingKeys.add('EMAIL_FECHA:' + email + '|' + fecha);\n  if (msgId) existingKeys.add('MSG:' + msgId);\n}\n\nconst outputItems = [];\n// CRUCIAL: Leer del nodo de Gmail explícitamente, evitando leer la entrada previa de Sheets\nconst gmailMessages = $('Buscar Correos WooCommerce (Gmail)').all();\n\nfor (const item of gmailMessages) {\n  const data = item.json || {};\n  const msgId = data.id || '';\n  const subject = data.subject || '';\n  const snippet = data.snippet || '';\n  const internalDate = data.internalDate ? new Date(parseInt(data.internalDate)) : (data.date ? new Date(data.date) : new Date());\n  const textBody = data.text || snippet || '';\n  const htmlBody = data.html || data.textAsHtml || '';\n  \n  // Limpieza y normalización de contenido para Regex\n  const rawContent = (htmlBody.replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, '')\n                              .replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, '')\n                              .replace(/<[^>]+>/g, ' ')\n                              .replace(/&nbsp;/g, ' ')\n                              + '\\n' + textBody).replace(/\\s+/g, ' ');\n\n  // 1. Order ID (soporta #(3996), #3996, Pedido #3996)\n  let orderId = '';\n  const subMatch = subject.match(/#\\(?(\\d+)\\)?/);\n  if (subMatch) {\n    orderId = subMatch[1];\n  } else {\n    const bodyMatch = textBody.match(/(?:Pedido|Order)\\s*#?\\(?(\\d+)\\)?/i);\n    if (bodyMatch) orderId = bodyMatch[1];\n  }\n\n  // 2. Fecha (YYYY-MM-DD HH:MM)\n  const yyyy = internalDate.getFullYear();\n  const mm = String(internalDate.getMonth() + 1).padStart(2, '0');\n  const dd = String(internalDate.getDate()).padStart(2, '0');\n  const hh = String(internalDate.getHours()).padStart(2, '0');\n  const min = String(internalDate.getMinutes()).padStart(2, '0');\n  const fechaFormatted = `${yyyy}-${mm}-${dd} ${hh}:${min}`;\n\n  // 3. Nombre del cliente\n  let nombre = '';\n  const nameMatch = textBody.match(/(?:pedido de|order from)\\s+([^:,\n\r]+?)(?:\\s*[:.(]|$)/i);\n  if (nameMatch) {\n    nombre = nameMatch[1].trim();\n  }\n\n  // 4. Email\n  let email = '';\n  if (data.headers && data.headers['reply-to']) {\n    const rt = data.headers['reply-to'].match(/<([^>]+)>/);\n    if (rt) email = rt[1].trim();\n  }\n  if (!email) {\n    const allEmails = textBody.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g) || [];\n    const filtered = allEmails.filter(e => !e.toLowerCase().includes('totaltv') && !e.toLowerCase().includes('woocommerce'));\n    if (filtered.length > 0) email = filtered[0];\n  }\n\n  // 5. Teléfono\n  let telefono = '';\n  const telMatch = textBody.match(/(\\d{7,15})\\s*(?:\\[tel:|$)/);\n  if (telMatch) {\n    telefono = telMatch[1].trim();\n  } else {\n    const pMatch = textBody.match(/(?:Tel[ée]fono|Phone|Tel):\\s*([+\\d\\s().-]{7,})/i);\n    if (pMatch) telefono = pMatch[1].trim();\n  }\n\n  // 6. Dirección\n  let direccion = '';\n  const addrBlock = textBody.match(/DIRECCI[ÓO]N DE FACTURACI[ÓO]N\\s*([\\s\\S]*?)(?:Enhorabuena|Total TV Latina|Recibe pagos|$)/i);\n  if (addrBlock) {\n    const lines = addrBlock[1].split('\\n').map(l => l.trim()).filter(l => l.length > 0 && !l.includes('@') && !l.includes('[tel:'));\n    if (lines.length > 1 && lines[0].toLowerCase() === nombre.toLowerCase()) {\n      lines.shift();\n    }\n    direccion = lines.join(', ');\n  }\n\n  // 7. Total\n  let total = '';\n  const totMatch = textBody.match(/Total:\\s*(\\$[\\d.,]+)/i);\n  if (totMatch) {\n    total = totMatch[1].trim();\n  }\n\n  // 8. Resumen de productos\n  let productos = '';\n  const prodMatch = textBody.match(/Producto\\s+Cantidad\\s+Precio\\s+([\\s\\S]*?)\\s+Subtotal/i);\n  if (prodMatch) {\n    productos = prodMatch[1].replace(/\\s+/g, ' ').trim();\n  }\n\n  // Ignorar correos que no contengan datos mínimos de pedido WooCommerce\n  if (!orderId && !email && !nombre) {\n    continue;\n  }\n\n  // Desduplicación estricta\n  const orderKey = orderId ? ('ORDER:' + orderId) : null;\n  const emailDateKey = (email && fechaFormatted) ? ('EMAIL_FECHA:' + email.toLowerCase() + '|' + fechaFormatted) : null;\n  const msgKey = 'MSG:' + msgId;\n\n  if (orderKey && existingKeys.has(orderKey)) continue;\n  if (emailDateKey && existingKeys.has(emailDateKey)) continue;\n  if (existingKeys.has(msgKey)) continue;\n\n  if (orderKey) existingKeys.add(orderKey);\n  if (emailDateKey) existingKeys.add(emailDateKey);\n  existingKeys.add(msgKey);\n\n  outputItems.push({\n    json: {\n      'Order ID': orderId,\n      'Fecha': fechaFormatted,\n      'Nombre': nombre,\n      'Email': email,\n      'Teléfono': telefono,\n      'Dirección': direccion,\n      'Total': total,\n      'Productos': productos,\n      'Message ID': msgId\n    }\n  });\n}\n\nreturn outputItems;"
+      },
+      "id": "0c44d100-27f6-4285-84fb-7c58acd6b1ce",
+      "name": "Parsear y Desduplicar Órdenes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Orders"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "5e106da6-0025-43fe-9e62-9c57fc48e3b7",
+      "name": "Insertar en Google Sheets (Batch Append)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        896,
+        96
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "4effc866-b1a2-4afc-985e-08c03d9a2dc3",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        192
+      ]
+    },
+    {
+      "id": "fca372b3-0143-47e4-a58f-bde292774ea8",
+      "name": "Schedule Trigger (Cada 1h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": true
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  }
+}

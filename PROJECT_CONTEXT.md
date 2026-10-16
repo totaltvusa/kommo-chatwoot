@@ -3258,3 +3258,21 @@
      - Workflow exports synchronized with repository.
      - Documented in `PROJECT_CONTEXT.md` and committed to Git `main`.
 
+---
+
+### 100. WooCommerce Orders Synchronization (`sync_woocommerce_orders`) (2026-10-15)
+
+* **Objective & Operational Context**:
+  - Implementation of an automated pipeline to continuously ingest WooCommerce purchase orders received via Gmail (`zelletotaltv@gmail.com`) and sync them into the *Chatwoot* Google Spreadsheet (`1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY`) in the `Orders` sheet.
+  - **Triggers**: Runs every hour (`Schedule Trigger (Cada 1h)`) and supports on-demand execution (`Manual Trigger`).
+  - **Pipeline Steps**:
+    1. `Leer Órdenes Existentes (Sheets)`: Reads existing order IDs from the `Orders` tab in the *Chatwoot* spreadsheet to prevent duplicates.
+    2. `Buscar Correos WooCommerce (Gmail)`: Queries Gmail for new WooCommerce order confirmation notifications.
+    3. `Parsear y Desduplicar Órdenes`: Extracts order ID, date, customer name, email, phone, product details, payment method, and amount, filtering out any orders already logged in Sheets.
+    4. `Insertar en Google Sheets (Batch Append)`: Appends newly parsed orders to the `Orders` sheet in batch mode.
+
+* **Architecture & Sync**:
+  - **Workflow Name**: `📦 Sincronización WooCommerce Orders (Gmail a Google Sheets)` (ID `X4yimojEiqWudtao`).
+  - **Exported File**: `workflows/sync_woocommerce_orders.json`.
+  - Registered in `workflows/export_workflows.py`.
+  - Active and operational in n8n live environment.

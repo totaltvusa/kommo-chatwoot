@@ -83,7 +83,8 @@ wfs = {
     'tool_renovar_mvplay_tvtotal24': '0Go7n1S2CQZr548G',
     'blink_to_me': 'ZtFZ5lSeAlYHf9bT',
     'cron_sync_mega_to_chatwoot_megaid': 'bLRjFiwHB0Rz1wYO',
-    'digest_noticias_ia': '7iY79q4NlKs8kFV4'
+    'digest_noticias_ia': '7iY79q4NlKs8kFV4',
+    'sync_woocommerce_orders': 'X4yimojEiqWudtao'
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
