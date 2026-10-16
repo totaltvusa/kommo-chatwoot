@@ -3260,7 +3260,7 @@
 
 ---
 
-### 100. WooCommerce Orders Synchronization (`sync_woocommerce_orders`) (2026-10-15)
+### 102. WooCommerce Orders Synchronization (`sync_woocommerce_orders`) (2026-10-15)
 
 * **Objective & Operational Context**:
   - Implementation of an automated pipeline to continuously ingest WooCommerce purchase orders received via Gmail (`zelletotaltv@gmail.com`) and sync them into the *Chatwoot* Google Spreadsheet (`1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY`) in the `Orders` sheet.
@@ -3276,3 +3276,63 @@
   - **Exported File**: `workflows/sync_woocommerce_orders.json`.
   - Registered in `workflows/export_workflows.py`.
   - Active and operational in n8n live environment.
+
+
+---
+
+### 103. Corrección de Zona Horaria en Fecha de Vencimiento de Renovaciones Automáticas ( & ) (2026-10-15)
+
+* **Diagnóstico y Análisis de Causa Raíz**:
+  - **Problema Reportado**: Al realizarse una renovación automática en el workflow `Tool - Renovacion Automatica MVPlay TVTotal24` (`0Go7n1S2CQZr548G`), la nueva fecha de vencimiento que se asentaba en la hoja `DnSpace` del archivo *Clientes TotalTv* (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`) y en la hoja `PAGOS` de *Chatwoot* quedaba desfasada en **+1 día respecto al vencimiento real del cliente** (por ejemplo, clientes con vencimiento día 15 quedaban con día 16, y clientes con vencimiento día 22 quedaban con día 23).
+  - **Evidencia Operativa en Ejecución 24159 (Caso Omer Sánchez)**:
+    * En conversación 1357, el cliente Omer Sánchez (`OmerSanchez`) vencía originalmente el 15 de Octubre de 2026.
+    * Realizó su pago móvil a las 8:25 PM hora local de Venezuela (20:25:10 Caracas / 00:25:10 UTC del 16 de Octubre).
+    * La API de MVPlay renovó exitosamente por 1 mes (Paquete 129, 3 pantallas) y retornó el timestamp Unix `1794788713`.
+    * En hora oficial de Venezuela (`America/Caracas`, UTC-4), dicho timestamp corresponde exactamente al **15 de Noviembre de 2026 a las 20:25:13**.
+    * Sin embargo, el contenedor Docker de n8n ejecuta bajo zona horaria `UTC` (`+00:00`).
+    * El código previo en el nodo `Validar y Procesar Renovacion` utilizaba:
+      ```javascript
+      const d = new Date(expDateAfter * 1000);
+      newExpDateStr = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+      ```
+      Al evaluar `d.getDate()` en la hora del sistema (UTC), evaluó al **16 de Noviembre de 2026**, escribiendo `2026-11-16` en la hoja `DnSpace`, en la nota privada y en la auditoría de `PAGOS`.
+  - **Comprobación en Datos a partir de la Línea 98 (`DnSpace`)**:
+    * Se inspeccionaron las filas de `DnSpace` a partir de la fila 98 (`Staff` en fila 98, `miuser` en 99, etc.).
+    * La línea de `Staff` (`id=49861`) en MVPlay tiene `exp_date = 1867463700`:
+      - En UTC: `2029-03-06 03:55:00` (día 06).
+      - En Caracas: `2029-03-05 23:55:00` (día 05).
+      - En la hoja `DnSpace` (Fila 98), el registro oficial es **`2029-03-05`**, confirmando inequívocamente que la base de datos de Total TV se rige por la fecha civil de Venezuela (`America/Caracas`).
+    * Se corroboró que de las 50 líneas activas en MVPlay, 18 líneas (36%) tienen hora de expiración nocturna (entre 20:00 y 23:59 Caracas, equivalente a 00:00 - 03:59 UTC del día siguiente), las cuales sufrían el mismo desfase de +1 día al renovar.
+
+* **Solución Implementada**:
+  1. **Formateo con Zona Horaria Oficial `America/Caracas`**:
+     - Se actualizó el nodo `Validar y Procesar Renovacion` en `workflows/tool_renovar_mvplay_tvtotal24.json` y en n8n (`0Go7n1S2CQZr548G`) para formatear la fecha `newExpDateStr` utilizando `Intl.DateTimeFormat` bajo la zona horaria `America/Caracas` (con fallback matemático seguro `UTC - 4h`):
+       ```javascript
+       let newExpDateStr = '';
+       if (expDateAfter > 0) {
+         try {
+           const formatter = new Intl.DateTimeFormat('en-CA', {
+             timeZone: 'America/Caracas',
+             year: 'numeric',
+             month: '2-digit',
+             day: '2-digit'
+           });
+           newExpDateStr = formatter.format(new Date(expDateAfter * 1000));
+         } catch (e) {
+           const dCaracas = new Date((expDateAfter - 4 * 3600) * 1000);
+           const pad = (n) => String(n).padStart(2, '0');
+           newExpDateStr = dCaracas.getUTCFullYear() + '-' + pad(dCaracas.getUTCMonth() + 1) + '-' + pad(dCaracas.getUTCDate());
+         }
+       }
+       ```
+  2. **Validación Exhaustiva sin Modificar Archivos ni Contactar Clientes**:
+     - Estricto cumplimiento de las directivas del usuario: **Cero modificaciones en las celdas del archivo Google Sheets** y **Cero mensajes enviados a clientes** durante la investigación y validación.
+     - Pruebas unitarias ejecutadas contra 8 casos de prueba reales:
+       * Caso Omer Sánchez: Retorna exactamente `2026-11-15` (eliminando el erróneo 16).
+       * Caso Staff (Fila 98): Retorna exactamente `2029-03-05` (coincidiendo con la hoja `DnSpace`).
+       * Casos Federico Querio y Reinaldo Sosa (Vence el 22): Retornan exactamente `2026-10-22` (eliminando el erróneo 23).
+       * Casos Kerlly Jácome, Juan García, Noel Izarra, Julio Conde: 100% PASS.
+  3. **Despliegue y Publicación en n8n**:
+     - Actualizado workflow `0Go7n1S2CQZr548G` vía MCP `update_workflow`.
+     - Publicado y activado en n8n (`activeVersionId: d9805c77-f860-4cc8-80d6-870fc808851e`).
+     - Sincronizados y exportados todos los flujos mediante `python3 workflows/export_workflows.py`.
