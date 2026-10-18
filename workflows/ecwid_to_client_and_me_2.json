@@ -3,12 +3,12 @@
   "name": "Ecwid to Client & me 2.0",
   "active": true,
   "isArchived": false,
-  "versionId": "84d4ac72-e8e1-4692-a362-ee75a81a58ce",
-  "activeVersionId": "84d4ac72-e8e1-4692-a362-ee75a81a58ce",
+  "versionId": "c0a178c2-2761-4027-b016-da7fa28f5711",
+  "activeVersionId": "c0a178c2-2761-4027-b016-da7fa28f5711",
   "triggerCount": 1,
   "nodeCount": 35,
   "createdAt": "2026-07-27T01:52:27.063Z",
-  "updatedAt": "2026-10-15T02:07:38.231Z",
+  "updatedAt": "2026-10-18T16:28:26.993Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -403,8 +403,8 @@
       "name": "Gmail Trigger",
       "credentials": {
         "gmailOAuth2": {
-          "id": "CXK8oN7vdrIzstyd",
-          "name": "Gmail account"
+          "id": "Fpqe0kd3dfzKqhCR",
+          "name": "Gmail Totaltvusa@gmail.com"
         }
       }
     },
@@ -506,8 +506,8 @@
       "onError": "continueRegularOutput",
       "credentials": {
         "gmailOAuth2": {
-          "id": "CXK8oN7vdrIzstyd",
-          "name": "Gmail account"
+          "id": "Fpqe0kd3dfzKqhCR",
+          "name": "Gmail Totaltvusa@gmail.com"
         }
       }
     },
@@ -527,8 +527,8 @@
       "webhookId": "181754d3-f693-43e7-96d1-fb1ec60adf1f",
       "credentials": {
         "gmailOAuth2": {
-          "id": "CXK8oN7vdrIzstyd",
-          "name": "Gmail account"
+          "id": "Fpqe0kd3dfzKqhCR",
+          "name": "Gmail Totaltvusa@gmail.com"
         }
       }
     },
@@ -553,8 +553,8 @@
       "webhookId": "61cdbcfe-41f9-468d-ac0e-147e1e0c647d",
       "credentials": {
         "gmailOAuth2": {
-          "id": "CXK8oN7vdrIzstyd",
-          "name": "Gmail account"
+          "id": "Fpqe0kd3dfzKqhCR",
+          "name": "Gmail Totaltvusa@gmail.com"
         }
       }
     },
@@ -603,8 +603,8 @@
       "webhookId": "ae2d7ec0-2335-4c0b-944e-34f1375f0897",
       "credentials": {
         "gmailOAuth2": {
-          "id": "CXK8oN7vdrIzstyd",
-          "name": "Gmail account"
+          "id": "Fpqe0kd3dfzKqhCR",
+          "name": "Gmail Totaltvusa@gmail.com"
         }
       }
     },
@@ -926,8 +926,8 @@
       "webhookId": "ae2d7ec0-2335-4c0b-944e-34f1375f0897",
       "credentials": {
         "gmailOAuth2": {
-          "id": "CXK8oN7vdrIzstyd",
-          "name": "Gmail account"
+          "id": "Fpqe0kd3dfzKqhCR",
+          "name": "Gmail Totaltvusa@gmail.com"
         }
       }
     },
@@ -1198,8 +1198,8 @@
       "webhookId": "ae2d7ec0-2335-4c0b-944e-34f1375f0897",
       "credentials": {
         "gmailOAuth2": {
-          "id": "CXK8oN7vdrIzstyd",
-          "name": "Gmail account"
+          "id": "Fpqe0kd3dfzKqhCR",
+          "name": "Gmail Totaltvusa@gmail.com"
         }
       }
     },
