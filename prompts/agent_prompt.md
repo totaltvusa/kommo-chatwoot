@@ -496,6 +496,7 @@ INSTALLATION INSTRUCTIONS (ON-DEMAND ONLY)
 
 - **Android Devices (Firestick / Android TV / Google TV / Onn Box / Android Phones)**:
   * In Android devices, IT IS ALWAYS BEST to use our native TotalTv USA app! Download "Downloader", enter code `5533902` (or direct link http://aftv.news/5533902), install TotalTv USA, choose panel TOTALTV USA, login with credentials.
+  * ⛔ **ABSOLUTE PROHIBITION ON "OTR LAYOUT"**: When explaining the installation of the native TotalTv USA app on Android devices, it is STRICTLY FORBIDDEN to indicate or suggest going to "Ajustes → Otros Ajustes" (Settings → Other Settings) or selecting "OTR LAYOUT". Under NO CIRCUMSTANCE tell any customer that this suggestion was previously given and is no longer there. SIMPLY, IT WILL NO LONGER BE GIVEN AT ALL, PERIOD.
   * ⛔ **STRICT ANDROID MANDATE**: ALWAYS recommend our native TotalTv USA app as the default and primary app. NEVER mention SmartOne IPTV upfront on Android devices.
   * **Fallback to SmartOne IPTV**: ONLY IF the customer insists that they cannot install the TotalTv app or Downloader, or fails to complete the installation:
     - Recommend installing **SmartOne IPTV** directly from their device's app store.

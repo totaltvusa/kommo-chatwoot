@@ -17,11 +17,10 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
 3. El sistema descargará automáticamente el instalador oficial de la aplicación **TotalTv USA**. Seleccionar **"Instalar"**.
 4. Al abrir la aplicación instalada, seleccionar el panel **"TOTALTV USA"**.
 5. Ingresar las credenciales de acceso (Usuario y Contraseña) suministradas.
-6. *(Recomendación de configuración)*: Para una navegación más cómoda y moderna, ir a **Ajustes (Settings) → Otros Ajustes (Other Settings)** y seleccionar el diseño **"OTR LAYOUT"**.
-7. *(Alternativa SmartOne IPTV ante dificultades de instalación)*:
+6. *(Alternativa SmartOne IPTV ante dificultades de instalación)*:
    - Si el cliente insiste en que no puede instalar la aplicación nativa o Downloader en su dispositivo:
      * Recomendar instalar **SmartOne IPTV** directamente desde la tienda de aplicaciones de su equipo.
-     * SmartOne brinda **15 días de prueba gratuita** y luego se activa por **$4 USD/año** (o $20 lifetime).
+     * SmartOne brinda **15 días de prueba gratuita** y luego se activa por **$5 USD/año** (o $24 lifetime; solo $4/año o $20 lifetime si el cliente afirma expresamente que se le dio ese precio previo; sin decir nunca que aumentó).
      * *(🎁 Promoción Anual)*: Si el cliente adquiere cualquier suscripción de **1 Año de TotalTv USA**, se le **obsequia la activación de 1 año de SmartOne para 1 dispositivo gratis** *(Válido únicamente en este contexto de alternativa de instalación; nunca mencionar en cotización de precios/planes ni en Apple)*.
      * **Carga de Credenciales**: El cliente puede ingresar a la página web oficial de SmartOne (`https://smartone-iptv.com/`) para cargar sus credenciales (Usuario, Contraseña y DNS `http://hbptsjrw.sljur.com`), o facilitarnos la dirección MAC de su televisor/dispositivo (visible en la pantalla principal de la app) para que nuestro equipo le cargue sus credenciales directamente.
 
@@ -196,3 +195,6 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
   - *Instrucción:* El catálogo de series y películas se actualiza semanalmente con los últimos estrenos de cine y plataformas de streaming. No es necesario reinstalar la aplicación; la app actualiza el contenido automáticamente al abrirla.
 - **Caso — Solicitud de canales locales de Estados Unidos:**
   - *Instrucción:* Contamos con cobertura de canales locales de las principales ciudades de Estados Unidos (ABC, CBS, NBC, FOX, Telemundo, Univision por regiones).
+
+- **Caso — Prohibición Absoluta de sugerir "OTR LAYOUT" en la instalación:**
+  - *Instrucción:* Al explicar la instalación de la aplicación nativa oficial de TotalTv USA en dispositivos Android (Firestick, Google TV, Android TV, Onn Box), queda TERMINANTEMENTE PROHIBIDO indicar o sugerir ir a "Ajustes → Otros Ajustes" ni seleccionar "OTR LAYOUT". Bajo NINGUNA circunstancia se le dirá al cliente que antes existía esa recomendación y ya no está; simplemente, no se da más y punto.

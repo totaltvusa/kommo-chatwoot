@@ -17,8 +17,7 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
 3. El sistema descargará e instalará la aplicación oficial **TotalTv Latina**.
 4. Al abrir la app, seleccionar en la pantalla principal el panel **"TOTALTV LATINA"**.
 5. Ingresar las credenciales (Usuario y Contraseña) suministradas.
-6. *(Recomendación de visualización)*: En **Ajustes → Otros Ajustes**, activar la opción **"OTR LAYOUT"** para la interfaz moderna.
-7. *(Soporte ante fallos de Downloader / Alternativa SmartOne IPTV)*:
+6. *(Soporte ante fallos de Downloader / Alternativa SmartOne IPTV)*:
    - Si el cliente **no logra hacer que Downloader instale la aplicación** (permisos de fuentes desconocidas, opciones de desarrollador):
      * Sugerirle ver el video oficial de YouTube: 👉 `https://www.youtube.com/watch?v=ffiUu9wsac8` (explica cómo habilitar los permisos de instalación con Downloader).
    - Si el cliente **insiste en que no puede instalar la app o Downloader, o sigue sin lograrlo tras el video**:
@@ -167,3 +166,6 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
     * **Si el cliente NO pregunta la tasa**: Se calcula el monto en Bolívares con las reglas estándar y se entrega únicamente el monto total en Bs y los datos bancarios. No se menciona la tasa proactivamente.
     * **Si y ÚNICAMENTE SI el cliente pregunta directamente qué tasa se usa** (ej. "¿A qué tasa reciben?", "¿Cuál es la tasa de cambio?", "¿Usan BCV?"): Se le informa con total claridad que se usa la **tasa oficial del Banco Central de Venezuela (BCV)**.
     * **Cálculo con tasa BCV**: Si el cliente preguntó la tasa o ya se le indicó que es BCV, al calcular el monto en Bolívares para el Pago Móvil se debe usar obligatoriamente la tasa oficial del BCV del dólar (`usar_bcv: true` en la herramienta `calcular_pago_movil`).
+
+- **Caso — Prohibición Absoluta de sugerir "OTR LAYOUT" en la instalación:**
+  - *Instrucción:* Al explicar la instalación de la aplicación nativa oficial de TotalTv Latina en dispositivos Android (Firestick, Google TV, Android TV, Onn Box), queda TERMINANTEMENTE PROHIBIDO indicar o sugerir ir a "Ajustes → Otros Ajustes" ni seleccionar "OTR LAYOUT". Bajo NINGUNA circunstancia se le dirá al cliente que antes existía esa recomendación y ya no está; simplemente, no se da más y punto.

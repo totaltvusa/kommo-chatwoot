@@ -3387,3 +3387,33 @@
   5. **Sincronización Total del Repositorio**:
      - Ejecutado `python3 workflows/export_workflows.py`, asegurando que todos los 25 flujos de n8n queden sincronizados con el repositorio.
 
+---
+
+### 106. Eliminación Total de la Sugerencia "OTR LAYOUT" en la Instalación de TotalTv y Mandato de Cero Mención Histórica (2026-10-21)
+
+* **Directiva y Mandato Operativo**:
+  1. **Eliminación Definitiva de "OTR LAYOUT"**:
+     - Se elimina por completo la recomendación: *"Para una mejor experiencia, ve a Ajustes → Otros Ajustes y selecciona “OTR LAYOUT”.*" al explicar la instalación de la aplicación nativa oficial de TotalTv (tanto en **TVTotal24 Latina** como en **TotalTv USA**).
+  2. **Mandato Estricto de Comunicación (Cero Mención Histórica)**:
+     - Bajo **NINGÚN CONCEPTO ni circunstancia** se dirá a ningún cliente que antes existía esa sugerencia o recomendación y que ya no está.
+     - **SIMPLEMENTE, NO SE DARÁ MÁS Y PUNTO**.
+  3. **Regla de Prohibición Negativa Activa en Agentes IA**:
+     - Dado que los modelos de lenguaje pueden retener o recuperar sugerencias previas del historial o contexto, se incorporó una directiva explícita de prohibición negativa en los prompts y bases de conocimiento:
+       > ⛔ **PROHIBICIÓN ABSOLUTA DE SUGERIR "OTR LAYOUT"**: Al explicar la instalación de la aplicación nativa TotalTv en dispositivos Android (Firestick, Google TV, Android TV, Onn Box), queda TERMINANTEMENTE PROHIBIDO indicar o sugerir ir a "Ajustes → Otros Ajustes" ni seleccionar "OTR LAYOUT". Bajo NINGUNA circunstancia se le dirá al cliente que antes existía esa recomendación y ya no está; simplemente, no se da más y punto.
+
+* **Componentes y Archivos Actualizados**:
+  1. **Bases de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/totaltv_usa_support.md`: Eliminado el paso 6 de la guía de instalación para Android, renumerado el paso de fallback de SmartOne a paso 6, e incorporado el nuevo caso aprendido de prohibición en la Sección 4.
+     - `knowledge/tvtotal24_latina_support.md`: Eliminado el paso 6 de la guía de instalación para Android, renumerado el paso de soporte a paso 6, e incorporado el nuevo caso aprendido de prohibición en la Sección 4.
+  2. **Prompts Principales de los Agentes IA**:
+     - `prompts/agent_prompt.md`: Añadida la regla de prohibición absoluta de sugerir "OTR LAYOUT" u "Otros Ajustes" en la sección de dispositivos Android.
+     - `prompts/tvtotal24_prompt.md`: Eliminada la recomendación previa de OTR LAYOUT e inyectada la regla de prohibición absoluta en la sección de instalación para Android.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados los `systemMessage` de los nodos `AI Agent` (TotalTv USA) y `AI Agent - TVTotal24` (TVTotal24 Latina).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado el prompt en el nodo `AI Agent`.
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado el nodo de código `Preparar Instrucción Agente Directo`.
+     - `workflows/export_workflows.py`: Incorporado `agent_tvtotal24_latina` al mapa de flujos rastreados (`wfs`).
+  4. **Despliegue, Publicación y Sincronización**:
+     - Desplegados y publicados en vivo los workflows `n0zgnS1vlOGNcGNY`, `Vfweu0rjoTT3FUl1` y `TS2CADjNNn05jXBW` en el servidor n8n.
+     - Re-exportados todos los workflows locales mediante `export_workflows.py` garantizando consistencia absoluta entre n8n y Git.
+

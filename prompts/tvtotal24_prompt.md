@@ -423,7 +423,7 @@ Provide these exact steps based on the customer's device:
 - **Regla de Oro**: En dispositivos Android SIEMPRE es mejor y más recomendado usar nuestra aplicación nativa TotalTv Latina.
 - Instalar la app "Downloader", abrir e ingresar código: `5533902` (o enlace http://aftv.news/5533902) para descargar la app oficial.
 - Abrir la app, elegir panel TOTALTV LATINA e ingresar credenciales (usuario y contraseña).
-- Para mejor experiencia: ir a Ajustes → Otros Ajustes y seleccionar "OTR LAYOUT".
+- ⛔ **PROHIBICIÓN ABSOLUTA DE SUGERIR "OTR LAYOUT"**: Queda TERMINANTEMENTE PROHIBIDO indicar o sugerir ir a "Ajustes → Otros Ajustes" o seleccionar "OTR LAYOUT". Bajo NINGUNA circunstancia se le dirá a nadie que antes existía esa sugerencia y ya no está. SIMPLEMENTE, NO SE DARÁ MÁS Y PUNTO.
 - **Soporte para Downloader y Alternativa SmartOne IPTV**:
   * **Si el cliente no logra hacer que Downloader instale la app** (problemas de permisos, orígenes desconocidos, opciones de desarrollador):
     - Sugiérele ver este video de YouTube que explica paso a paso cómo activar las instalaciones con Downloader:
