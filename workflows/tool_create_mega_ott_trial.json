@@ -16,6 +16,9 @@
   "tags": [],
   "parentFolderId": null,
   "scopes": [
+    "execution:delete",
+    "execution:list",
+    "execution:read",
     "execution:reveal",
     "workflow:create",
     "workflow:delete",

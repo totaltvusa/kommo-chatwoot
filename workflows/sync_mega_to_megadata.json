@@ -17,6 +17,9 @@
   "parentFolderId": null,
   "description": "Workflow to sync all Mega subscriptions and write to MegaData sheet in Clientes TotalTV.",
   "scopes": [
+    "execution:delete",
+    "execution:list",
+    "execution:read",
     "execution:reveal",
     "workflow:create",
     "workflow:delete",

@@ -17,6 +17,9 @@
   "parentFolderId": null,
   "description": "Se ejecuta los lunes a las 4am y detecta si hay nuevos clientes en la hoja Mega de Clientes TotalTv que no esten en MegaID de Chatwoot para cruzarlos con la API de Mega OTT y agregarlos.",
   "scopes": [
+    "execution:delete",
+    "execution:list",
+    "execution:read",
     "execution:reveal",
     "workflow:create",
     "workflow:delete",

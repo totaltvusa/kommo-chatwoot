@@ -3336,3 +3336,19 @@
      - Actualizado workflow `0Go7n1S2CQZr548G` vía MCP `update_workflow`.
      - Publicado y activado en n8n (`activeVersionId: d9805c77-f860-4cc8-80d6-870fc808851e`).
      - Sincronizados y exportados todos los flujos mediante `python3 workflows/export_workflows.py`.
+
+
+---
+
+### 104. Sincronización de Órdenes WooCommerce con Verificación DnSpace y Credencial Dedicada en Ecwid (2026-10-21)
+
+* **Novedades y Actualizaciones del Repositorio**:
+  1. **Credencial Dedicada en Flujo Ecwid**:
+     - Se actualizó el workflow `Ecwid to Client & me 2.0` (`ecwid_to_client_and_me_2.json`) para utilizar la credencial OAuth2 dedicada `Fpqe0kd3dfzKqhCR` (*"Gmail Totaltvusa@gmail.com"*), desacoplándola de la credencial general anterior.
+  2. **Verificación Automática de Clientes en `DnSpace` para Órdenes de WooCommerce**:
+     - En el workflow `📦 Sincronización WooCommerce Orders (Gmail a Google Sheets)` (`sync_woocommerce_orders.json`, ID `X4yimojEiqWudtao`):
+       * Se incorporó el nodo `Leer Sheet DnSpace` (`57417c13-2aaf-41c7-89c8-1a110406bf8d`) que lee la hoja `DnSpace` (`1823373862`) de *Clientes TotalTV* (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`).
+       * El nodo de código `Parsear y Desduplicar Órdenes` (`0c44d100-27f6-4285-84fb-7c58acd6b1ce`) ahora cruza automáticamente cada orden entrante con la base de datos de `DnSpace` por coincidencia de teléfono (limpieza de dígitos y prefijos internacionales), email y nombre/apellido.
+       * Si el comprador ya existe como suscriptor en `DnSpace`, se asienta la columna `DnSpace: "ACTIVO"` y la columna normalizada `Name: nombre`.
+  3. **Sincronización Total de Flujos con n8n**:
+     - Todos los workflows de n8n fueron re-exportados e integrados con sus esquemas y scopes actualizados.

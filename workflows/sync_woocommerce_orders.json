@@ -3,12 +3,12 @@
   "name": "📦 Sincronización WooCommerce Orders (Gmail a Google Sheets)",
   "active": true,
   "isArchived": false,
-  "versionId": "a9164b56-5e32-4a42-b9ea-a1418a0d1ec8",
-  "activeVersionId": "a9164b56-5e32-4a42-b9ea-a1418a0d1ec8",
-  "triggerCount": 1,
+  "versionId": "2b957004-e2ff-4587-abc2-0ac35c1d7674",
+  "activeVersionId": "b95e37e4-d671-4ec1-b728-71529ced6247",
+  "triggerCount": 0,
   "nodeCount": 6,
   "createdAt": "2026-10-15T15:53:17.102Z",
-  "updatedAt": "2026-10-16T00:55:43.260Z",
+  "updatedAt": "2026-10-18T16:21:27.788Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -18,6 +18,9 @@
   "parentFolderId": null,
   "description": "Sincroniza pedidos de WooCommerce desde Gmail zelletotaltv@gmail.com hacia Google Sheets (Chatwoot -> Orders)",
   "scopes": [
+    "execution:delete",
+    "execution:list",
+    "execution:read",
     "execution:reveal",
     "workflow:create",
     "workflow:delete",
@@ -38,22 +41,22 @@
   ],
   "canExecute": true,
   "connections": {
-    "Buscar Correos WooCommerce (Gmail)": {
+    "Parsear y Desduplicar Órdenes": {
       "main": [
         [
           {
-            "node": "Leer Órdenes Existentes (Sheets)",
+            "node": "Insertar en Google Sheets (Batch Append)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Parsear y Desduplicar Órdenes": {
+    "Leer Sheet DnSpace": {
       "main": [
         [
           {
-            "node": "Insertar en Google Sheets (Batch Append)",
+            "node": "Leer Órdenes Existentes (Sheets)",
             "type": "main",
             "index": 0
           }
@@ -71,11 +74,11 @@
         ]
       ]
     },
-    "Schedule Trigger (Cada 1h)": {
+    "Buscar Correos WooCommerce (Gmail)": {
       "main": [
         [
           {
-            "node": "Buscar Correos WooCommerce (Gmail)",
+            "node": "Leer Sheet DnSpace",
             "type": "main",
             "index": 0
           }
@@ -105,7 +108,7 @@
         "sheetName": {
           "__rl": true,
           "mode": "name",
-          "value": "Orders"
+          "value": "Ordenes"
         },
         "options": {}
       },
@@ -114,8 +117,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        224,
-        96
+        784,
+        128
       ],
       "alwaysOutputData": true,
       "executeOnce": true,
@@ -129,19 +132,23 @@
     {
       "parameters": {
         "operation": "getAll",
-        "limit": 100,
+        "limit": 5,
+        "simple": false,
         "filters": {
-          "q": "from:info@totaltvlatina.com \"Nuevo pedido\" before:2024/02/22"
+          "q": "from:notifications@ecwid.com OR ecwid",
+          "labelIds": [
+            "Label_3684611167352542731"
+          ]
         },
-        "simple": false
+        "options": {}
       },
       "id": "87ef7ef5-313c-44aa-81d1-008336e6e67e",
       "name": "Buscar Correos WooCommerce (Gmail)",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        448,
-        96
+        272,
+        128
       ],
       "webhookId": "44d819c7-caa1-4972-a9eb-c72d71d369d4",
       "credentials": {
@@ -153,15 +160,15 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extraer y Normalizar Órdenes de WooCommerce con Desduplicación\nlet existingSheetsData = [];\ntry {\n  existingSheetsData = $('Leer Órdenes Existentes (Sheets)').all();\n} catch (e) {\n  existingSheetsData = [];\n}\n\nconst existingKeys = new Set();\nfor (const row of existingSheetsData) {\n  const r = row.json || {};\n  const orderId = (r['Order ID'] || r.order_id || '').toString().trim();\n  const email = (r['Email'] || r.email || '').toString().trim().toLowerCase();\n  const fecha = (r['Fecha'] || r.fecha || '').toString().trim();\n  const msgId = (r['Message ID'] || r.message_id || '').toString().trim();\n\n  if (orderId) existingKeys.add('ORDER:' + orderId);\n  if (email && fecha) existingKeys.add('EMAIL_FECHA:' + email + '|' + fecha);\n  if (msgId) existingKeys.add('MSG:' + msgId);\n}\n\nconst outputItems = [];\nconst gmailMessages = $('Buscar Correos WooCommerce (Gmail)').all();\n\nfor (const item of gmailMessages) {\n  const data = item.json || {};\n  const msgId = data.id || '';\n  const subject = data.subject || '';\n  const snippet = data.snippet || '';\n  const internalDate = data.internalDate ? new Date(parseInt(data.internalDate)) : (data.date ? new Date(data.date) : new Date());\n  const textBody = data.text || snippet || '';\n  const htmlBody = data.html || data.textAsHtml || '';\n\n  // 1. Order ID (soporta #(3996), #3996, Pedido #3996)\n  let orderId = '';\n  const subMatch = subject.match(/#\\(?(\\d+)\\)?/);\n  if (subMatch) {\n    orderId = subMatch[1];\n  } else {\n    const bodyMatch = textBody.match(/(?:Pedido|Order)\\s*#?\\(?(\\d+)\\)?/i);\n    if (bodyMatch) orderId = bodyMatch[1];\n  }\n\n  // 2. Fecha (YYYY-MM-DD HH:MM)\n  const yyyy = internalDate.getFullYear();\n  const mm = String(internalDate.getMonth() + 1).padStart(2, '0');\n  const dd = String(internalDate.getDate()).padStart(2, '0');\n  const hh = String(internalDate.getHours()).padStart(2, '0');\n  const min = String(internalDate.getMinutes()).padStart(2, '0');\n  const fechaFormatted = `${yyyy}-${mm}-${dd} ${hh}:${min}`;\n\n  // 3. Nombre del cliente\n  let nombre = '';\n  const nameMatch = textBody.match(/(?:pedido de|order from)\\s+([^:\\r\\n]+?)(?:\\s*[:.(]|$)/i);\n  if (nameMatch) {\n    nombre = nameMatch[1].trim();\n  }\n\n  // 4. Email\n  let email = '';\n  if (data.headers && data.headers['reply-to']) {\n    const rt = data.headers['reply-to'].match(/<([^>]+)>/);\n    if (rt) email = rt[1].trim();\n    else if (data.headers['reply-to'].includes('@')) email = data.headers['reply-to'].trim();\n  }\n  if (!email) {\n    const allEmails = textBody.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g) || [];\n    const filtered = allEmails.filter(e => !e.toLowerCase().includes('totaltv') && !e.toLowerCase().includes('woocommerce'));\n    if (filtered.length > 0) email = filtered[0];\n  }\n\n  // 5. Teléfono\n  let telefono = '';\n  const telMatch = textBody.match(/(\\d{7,15})\\s*(?:\\[tel:|$)/);\n  if (telMatch) {\n    telefono = telMatch[1].trim();\n  } else {\n    const pMatch = textBody.match(/(?:Tel[ée]fono|Phone|Tel):\\s*([+\\d\\s().-]{7,})/i);\n    if (pMatch) telefono = pMatch[1].trim();\n  }\n\n  // 6. Dirección\n  let direccion = '';\n  const addrBlock = textBody.match(/DIRECCI[ÓO]N DE FACTURACI[ÓO]N\\s*([\\s\\S]*?)(?:Enhorabuena|Total TV Latina|Recibe pagos|$)/i);\n  if (addrBlock) {\n    const lines = addrBlock[1].split('\\n').map(l => l.trim()).filter(l => l.length > 0 && !l.includes('@') && !l.includes('[tel:'));\n    if (lines.length > 1 && lines[0].toLowerCase() === nombre.toLowerCase()) {\n      lines.shift();\n    }\n    direccion = lines.join(', ');\n  }\n\n  // 7. Total\n  let total = '';\n  const totMatch = textBody.match(/Total:\\s*(\\$[\\d.,]+)/i);\n  if (totMatch) {\n    total = totMatch[1].trim();\n  }\n\n  // 8. Resumen de productos\n  let productos = '';\n  const prodMatch = textBody.match(/Producto\\s+Cantidad\\s+Precio\\s+([\\s\\S]*?)\\s+Subtotal/i);\n  if (prodMatch) {\n    productos = prodMatch[1].replace(/\\s+/g, ' ').trim();\n  }\n\n  // Ignorar correos que no contengan datos mínimos\n  if (!orderId && !email && !nombre) {\n    continue;\n  }\n\n  // Desduplicación\n  const orderKey = orderId ? ('ORDER:' + orderId) : null;\n  const emailDateKey = (email && fechaFormatted) ? ('EMAIL_FECHA:' + email.toLowerCase() + '|' + fechaFormatted) : null;\n  const msgKey = 'MSG:' + msgId;\n\n  if (orderKey && existingKeys.has(orderKey)) continue;\n  if (emailDateKey && existingKeys.has(emailDateKey)) continue;\n  if (existingKeys.has(msgKey)) continue;\n\n  if (orderKey) existingKeys.add(orderKey);\n  if (emailDateKey) existingKeys.add(emailDateKey);\n  existingKeys.add(msgKey);\n\n  outputItems.push({\n    json: {\n      'Order ID': orderId,\n      'Fecha': fechaFormatted,\n      'Nombre': nombre,\n      'Email': email,\n      'Teléfono': telefono,\n      'Dirección': direccion,\n      'Total': total,\n      'Productos': productos,\n      'Message ID': msgId\n    }\n  });\n}\n\nreturn outputItems;\n"
+        "jsCode": "// Extraer y Normalizar Órdenes de WooCommerce con Desduplicación y Verificación DnSpace\nlet existingSheetsData = [];\ntry {\n  existingSheetsData = $('Leer Órdenes Existentes (Sheets)').all();\n} catch (e) {\n  existingSheetsData = [];\n}\n\nlet dnspaceData = [];\ntry {\n  dnspaceData = $('Leer Sheet DnSpace').all();\n} catch (e) {\n  dnspaceData = [];\n}\n\n// Helpers de normalización y matching con DnSpace\nfunction normStr(s) {\n  if (!s) return '';\n  return String(s).trim().toLowerCase()\n    .normalize('NFD').replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/\\s+/g, ' ');\n}\n\nfunction cleanPhone(p) {\n  if (!p) return '';\n  let digits = String(p).replace(/\\D/g, '');\n  if (digits.startsWith('00')) digits = digits.slice(2);\n  return digits;\n}\n\nfunction phonesMatch(p1, p2) {\n  const d1 = cleanPhone(p1);\n  const d2 = cleanPhone(p2);\n  if (!d1 || !d2 || d1.length < 7 || d2.length < 7) return false;\n  if (d1 === d2) return true;\n  if (d1.endsWith(d2) || d2.endsWith(d1)) return true;\n  if (d1.length >= 10 && d2.length >= 10 && d1.slice(-10) === d2.slice(-10)) return true;\n  if (d1.length >= 9 && d2.length >= 9 && d1.slice(-9) === d2.slice(-9)) return true;\n  const m1 = (d1.startsWith('521') && d1.length === 13) ? ('52' + d1.slice(3)) : d1;\n  const m2 = (d2.startsWith('521') && d2.length === 13) ? ('52' + d2.slice(3)) : d2;\n  if (m1 === m2 || m1.endsWith(m2) || m2.endsWith(m1)) return true;\n  if (m1.length >= 10 && m2.length >= 10 && m1.slice(-10) === m2.slice(-10)) return true;\n  return false;\n}\n\nfunction emailsMatch(e1, e2) {\n  if (!e1 || !e2) return false;\n  const s1 = String(e1).trim().toLowerCase();\n  const s2 = String(e2).trim().toLowerCase();\n  if (!s1.includes('@') || !s2.includes('@')) return false;\n  const adminEmails = ['totaltv', 'woocommerce', 'acalimanr@gmail.com', 'acalimanr@hotmail.com'];\n  if (adminEmails.some(a => s1.includes(a) || s2.includes(a))) return false;\n  return s1 === s2;\n}\n\nfunction namesMatch(n1, n2) {\n  const s1 = normStr(n1);\n  const s2 = normStr(n2);\n  if (!s1 || !s2 || s1.length < 4 || s2.length < 4) return false;\n  const generic = ['staff', 'admin', 'customer', 'desconocido'];\n  if (generic.includes(s1) || generic.includes(s2)) return false;\n  if (s1 === s2) return true;\n  const w1 = s1.split(' ');\n  const w2 = s2.split(' ');\n  if (w1.length >= 2 && w2.length >= 2) {\n    if (w1[0] === w2[0] && w1[w1.length - 1] === w2[w2.length - 1]) return true;\n    if (w1.every(w => w2.includes(w)) && w2.every(w => w1.includes(w))) return true;\n  }\n  return false;\n}\n\nfunction isCustomerInDnSpace(clientName, clientEmail, clientPhone) {\n  for (const dItem of dnspaceData) {\n    const dn = dItem.json || {};\n    const dnFn = [dn.Nombre || '', dn.Apellido || ''].filter(Boolean).join(' ').trim();\n    const dnObs = dn['Observación'] || '';\n    const dnEmail = dn.Email || '';\n    const dnPhone = dn['Teléfono'] || '';\n\n    if (emailsMatch(clientEmail, dnEmail)) return true;\n    if (phonesMatch(clientPhone, dnPhone)) return true;\n    if (namesMatch(clientName, dnFn) || (dnObs && namesMatch(clientName, dnObs))) return true;\n  }\n  return false;\n}\n\nconst existingKeys = new Set();\nfor (const row of existingSheetsData) {\n  const r = row.json || {};\n  const orderId = (r['Order ID'] || r.order_id || '').toString().trim();\n  const email = (r['Email'] || r.email || '').toString().trim().toLowerCase();\n  const fecha = (r['Fecha'] || r.fecha || '').toString().trim();\n  const msgId = (r['Message ID'] || r.message_id || '').toString().trim();\n\n  if (orderId) existingKeys.add('ORDER:' + orderId);\n  if (email && fecha) existingKeys.add('EMAIL_FECHA:' + email + '|' + fecha);\n  if (msgId) existingKeys.add('MSG:' + msgId);\n}\n\nconst outputItems = [];\nconst gmailMessages = $('Buscar Correos WooCommerce (Gmail)').all();\n\nfor (const item of gmailMessages) {\n  const data = item.json || {};\n  const msgId = data.id || '';\n  const subject = data.subject || '';\n  const snippet = data.snippet || '';\n  const internalDate = data.internalDate ? new Date(parseInt(data.internalDate)) : (data.date ? new Date(data.date) : new Date());\n  const textBody = data.text || snippet || '';\n  const htmlBody = data.html || data.textAsHtml || '';\n\n  // 1. Order ID (soporta #(3996), #3996, Pedido #3996)\n  let orderId = '';\n  const subMatch = subject.match(/#\\(?(\\d+)\\)?/);\n  if (subMatch) {\n    orderId = subMatch[1];\n  } else {\n    const bodyMatch = textBody.match(/(?:Pedido|Order)\\s*#?\\(?(\\d+)\\)?/i);\n    if (bodyMatch) orderId = bodyMatch[1];\n  }\n\n  // 2. Fecha (YYYY-MM-DD HH:MM)\n  const yyyy = internalDate.getFullYear();\n  const mm = String(internalDate.getMonth() + 1).padStart(2, '0');\n  const dd = String(internalDate.getDate()).padStart(2, '0');\n  const hh = String(internalDate.getHours()).padStart(2, '0');\n  const min = String(internalDate.getMinutes()).padStart(2, '0');\n  const fechaFormatted = `${yyyy}-${mm}-${dd} ${hh}:${min}`;\n\n  // 3. Nombre del cliente\n  let nombre = '';\n  const nameMatch = textBody.match(/(?:pedido de|order from)\\s+([^:\\r\\n]+?)(?:\\s*[:.(]|$)/i);\n  if (nameMatch) {\n    nombre = nameMatch[1].trim();\n  }\n\n  // 4. Email\n  let email = '';\n  if (data.headers && data.headers['reply-to']) {\n    const rt = data.headers['reply-to'].match(/<([^>]+)>/);\n    if (rt) email = rt[1].trim();\n    else if (data.headers['reply-to'].includes('@')) email = data.headers['reply-to'].trim();\n  }\n  if (!email) {\n    const allEmails = textBody.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g) || [];\n    const filtered = allEmails.filter(e => !e.toLowerCase().includes('totaltv') && !e.toLowerCase().includes('woocommerce'));\n    if (filtered.length > 0) email = filtered[0];\n  }\n\n  // 5. Teléfono\n  let telefono = '';\n  const telMatch = textBody.match(/(\\d{7,15})\\s*(?:\\[tel:|$)/);\n  if (telMatch) {\n    telefono = telMatch[1].trim();\n  } else {\n    const pMatch = textBody.match(/(?:Tel[ée]fono|Phone|Tel):\\s*([+\\d\\s().-]{7,})/i);\n    if (pMatch) telefono = pMatch[1].trim();\n  }\n\n  // 6. Dirección\n  let direccion = '';\n  const addrBlock = textBody.match(/DIRECCI[ÓO]N DE FACTURACI[ÓO]N\\s*([\\s\\S]*?)(?:Enhorabuena|Total TV Latina|Recibe pagos|$)/i);\n  if (addrBlock) {\n    const lines = addrBlock[1].split('\\n').map(l => l.trim()).filter(l => l.length > 0 && !l.includes('@') && !l.includes('[tel:'));\n    if (lines.length > 1 && lines[0].toLowerCase() === nombre.toLowerCase()) {\n      lines.shift();\n    }\n    direccion = lines.join(', ');\n  }\n\n  // 7. Total\n  let total = '';\n  const totMatch = textBody.match(/Total:\\s*(\\$[\\d.,]+)/i);\n  if (totMatch) {\n    total = totMatch[1].trim();\n  }\n\n  // 8. Resumen de productos\n  let productos = '';\n  const prodMatch = textBody.match(/Producto\\s+Cantidad\\s+Precio\\s+([\\s\\S]*?)\\s+Subtotal/i);\n  if (prodMatch) {\n    productos = prodMatch[1].replace(/\\s+/g, ' ').trim();\n  }\n\n  // Ignorar correos que no contengan datos mínimos\n  if (!orderId && !email && !nombre) {\n    continue;\n  }\n\n  // Desduplicación\n  const orderKey = orderId ? ('ORDER:' + orderId) : null;\n  const emailDateKey = (email && fechaFormatted) ? ('EMAIL_FECHA:' + email.toLowerCase() + '|' + fechaFormatted) : null;\n  const msgKey = 'MSG:' + msgId;\n\n  if (orderKey && existingKeys.has(orderKey)) continue;\n  if (emailDateKey && existingKeys.has(emailDateKey)) continue;\n  if (existingKeys.has(msgKey)) continue;\n\n  if (orderKey) existingKeys.add(orderKey);\n  if (emailDateKey) existingKeys.add(emailDateKey);\n  existingKeys.add(msgKey);\n\n  // 9. Verificar si el cliente está en DnSpace\n  const isDnSpace = isCustomerInDnSpace(nombre, email, telefono);\n\n  outputItems.push({\n    json: {\n      'Order ID': orderId,\n      'Fecha': fechaFormatted,\n      'Nombre': nombre,\n      'Email': email,\n      'Teléfono': telefono,\n      'Dirección': direccion,\n      'Total': total,\n      'Productos': productos,\n      'Message ID': msgId,\n      'Name': nombre,\n      'DnSpace': isDnSpace ? 'ACTIVO' : ''\n    }\n  });\n}\n\nreturn outputItems;\n"
       },
       "id": "0c44d100-27f6-4285-84fb-7c58acd6b1ce",
       "name": "Parsear y Desduplicar Órdenes",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        672,
-        96
+        1040,
+        128
       ]
     },
     {
@@ -175,7 +182,7 @@
         "sheetName": {
           "__rl": true,
           "mode": "name",
-          "value": "Orders"
+          "value": "Ordenes"
         },
         "columns": {
           "mappingMode": "autoMapInputData",
@@ -188,8 +195,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        896,
-        96
+        1312,
+        128
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -206,33 +213,254 @@
       "typeVersion": 1,
       "position": [
         0,
-        192
+        208
       ]
     },
     {
-      "id": "fca372b3-0143-47e4-a58f-bde292774ea8",
-      "name": "Schedule Trigger (Cada 1h)",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        0,
-        0
-      ],
       "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "hours",
-              "hoursInterval": 1
-            }
-          ]
+        "documentId": {
+          "__rl": true,
+          "value": "1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0",
+          "mode": "list",
+          "cachedResultName": "Clientes TotalTV"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1823373862,
+          "mode": "list",
+          "cachedResultName": "DnSpace"
+        },
+        "options": {}
+      },
+      "id": "57417c13-2aaf-41c7-89c8-1a110406bf8d",
+      "name": "Leer Sheet DnSpace",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        528,
+        128
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
         }
       }
     }
   ],
   "nodeGroups": [],
   "activeVersion": {
-    "sameAsDraft": true
+    "sameAsDraft": false,
+    "nodes": [
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY"
+          },
+          "sheetName": {
+            "__rl": true,
+            "mode": "name",
+            "value": "Ordenes"
+          },
+          "options": {}
+        },
+        "id": "64df2da9-3f66-4c4d-bb84-d82cb99feda2",
+        "name": "Leer Órdenes Existentes (Sheets)",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          784,
+          128
+        ],
+        "alwaysOutputData": true,
+        "executeOnce": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Pw5wN2L5UopOruaj",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "limit": 100,
+          "simple": false,
+          "filters": {
+            "q": "from:info@totaltvlatina.com \"Nuevo pedido\""
+          },
+          "options": {}
+        },
+        "id": "87ef7ef5-313c-44aa-81d1-008336e6e67e",
+        "name": "Buscar Correos WooCommerce (Gmail)",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.1,
+        "position": [
+          272,
+          128
+        ],
+        "webhookId": "44d819c7-caa1-4972-a9eb-c72d71d369d4",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "CXK8oN7vdrIzstyd",
+            "name": "Gmail account zelletotaltv"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Extraer y Normalizar Órdenes de WooCommerce con Desduplicación y Verificación DnSpace\nlet existingSheetsData = [];\ntry {\n  existingSheetsData = $('Leer Órdenes Existentes (Sheets)').all();\n} catch (e) {\n  existingSheetsData = [];\n}\n\nlet dnspaceData = [];\ntry {\n  dnspaceData = $('Leer Sheet DnSpace').all();\n} catch (e) {\n  dnspaceData = [];\n}\n\n// Helpers de normalización y matching con DnSpace\nfunction normStr(s) {\n  if (!s) return '';\n  return String(s).trim().toLowerCase()\n    .normalize('NFD').replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/\\s+/g, ' ');\n}\n\nfunction cleanPhone(p) {\n  if (!p) return '';\n  let digits = String(p).replace(/\\D/g, '');\n  if (digits.startsWith('00')) digits = digits.slice(2);\n  return digits;\n}\n\nfunction phonesMatch(p1, p2) {\n  const d1 = cleanPhone(p1);\n  const d2 = cleanPhone(p2);\n  if (!d1 || !d2 || d1.length < 7 || d2.length < 7) return false;\n  if (d1 === d2) return true;\n  if (d1.endsWith(d2) || d2.endsWith(d1)) return true;\n  if (d1.length >= 10 && d2.length >= 10 && d1.slice(-10) === d2.slice(-10)) return true;\n  if (d1.length >= 9 && d2.length >= 9 && d1.slice(-9) === d2.slice(-9)) return true;\n  const m1 = (d1.startsWith('521') && d1.length === 13) ? ('52' + d1.slice(3)) : d1;\n  const m2 = (d2.startsWith('521') && d2.length === 13) ? ('52' + d2.slice(3)) : d2;\n  if (m1 === m2 || m1.endsWith(m2) || m2.endsWith(m1)) return true;\n  if (m1.length >= 10 && m2.length >= 10 && m1.slice(-10) === m2.slice(-10)) return true;\n  return false;\n}\n\nfunction emailsMatch(e1, e2) {\n  if (!e1 || !e2) return false;\n  const s1 = String(e1).trim().toLowerCase();\n  const s2 = String(e2).trim().toLowerCase();\n  if (!s1.includes('@') || !s2.includes('@')) return false;\n  const adminEmails = ['totaltv', 'woocommerce', 'acalimanr@gmail.com', 'acalimanr@hotmail.com'];\n  if (adminEmails.some(a => s1.includes(a) || s2.includes(a))) return false;\n  return s1 === s2;\n}\n\nfunction namesMatch(n1, n2) {\n  const s1 = normStr(n1);\n  const s2 = normStr(n2);\n  if (!s1 || !s2 || s1.length < 4 || s2.length < 4) return false;\n  const generic = ['staff', 'admin', 'customer', 'desconocido'];\n  if (generic.includes(s1) || generic.includes(s2)) return false;\n  if (s1 === s2) return true;\n  const w1 = s1.split(' ');\n  const w2 = s2.split(' ');\n  if (w1.length >= 2 && w2.length >= 2) {\n    if (w1[0] === w2[0] && w1[w1.length - 1] === w2[w2.length - 1]) return true;\n    if (w1.every(w => w2.includes(w)) && w2.every(w => w1.includes(w))) return true;\n  }\n  return false;\n}\n\nfunction isCustomerInDnSpace(clientName, clientEmail, clientPhone) {\n  for (const dItem of dnspaceData) {\n    const dn = dItem.json || {};\n    const dnFn = [dn.Nombre || '', dn.Apellido || ''].filter(Boolean).join(' ').trim();\n    const dnObs = dn['Observación'] || '';\n    const dnEmail = dn.Email || '';\n    const dnPhone = dn['Teléfono'] || '';\n\n    if (emailsMatch(clientEmail, dnEmail)) return true;\n    if (phonesMatch(clientPhone, dnPhone)) return true;\n    if (namesMatch(clientName, dnFn) || (dnObs && namesMatch(clientName, dnObs))) return true;\n  }\n  return false;\n}\n\nconst existingKeys = new Set();\nfor (const row of existingSheetsData) {\n  const r = row.json || {};\n  const orderId = (r['Order ID'] || r.order_id || '').toString().trim();\n  const email = (r['Email'] || r.email || '').toString().trim().toLowerCase();\n  const fecha = (r['Fecha'] || r.fecha || '').toString().trim();\n  const msgId = (r['Message ID'] || r.message_id || '').toString().trim();\n\n  if (orderId) existingKeys.add('ORDER:' + orderId);\n  if (email && fecha) existingKeys.add('EMAIL_FECHA:' + email + '|' + fecha);\n  if (msgId) existingKeys.add('MSG:' + msgId);\n}\n\nconst outputItems = [];\nconst gmailMessages = $('Buscar Correos WooCommerce (Gmail)').all();\n\nfor (const item of gmailMessages) {\n  const data = item.json || {};\n  const msgId = data.id || '';\n  const subject = data.subject || '';\n  const snippet = data.snippet || '';\n  const internalDate = data.internalDate ? new Date(parseInt(data.internalDate)) : (data.date ? new Date(data.date) : new Date());\n  const textBody = data.text || snippet || '';\n  const htmlBody = data.html || data.textAsHtml || '';\n\n  // 1. Order ID (soporta #(3996), #3996, Pedido #3996)\n  let orderId = '';\n  const subMatch = subject.match(/#\\(?(\\d+)\\)?/);\n  if (subMatch) {\n    orderId = subMatch[1];\n  } else {\n    const bodyMatch = textBody.match(/(?:Pedido|Order)\\s*#?\\(?(\\d+)\\)?/i);\n    if (bodyMatch) orderId = bodyMatch[1];\n  }\n\n  // 2. Fecha (YYYY-MM-DD HH:MM)\n  const yyyy = internalDate.getFullYear();\n  const mm = String(internalDate.getMonth() + 1).padStart(2, '0');\n  const dd = String(internalDate.getDate()).padStart(2, '0');\n  const hh = String(internalDate.getHours()).padStart(2, '0');\n  const min = String(internalDate.getMinutes()).padStart(2, '0');\n  const fechaFormatted = `${yyyy}-${mm}-${dd} ${hh}:${min}`;\n\n  // 3. Nombre del cliente\n  let nombre = '';\n  const nameMatch = textBody.match(/(?:pedido de|order from)\\s+([^:\\r\\n]+?)(?:\\s*[:.(]|$)/i);\n  if (nameMatch) {\n    nombre = nameMatch[1].trim();\n  }\n\n  // 4. Email\n  let email = '';\n  if (data.headers && data.headers['reply-to']) {\n    const rt = data.headers['reply-to'].match(/<([^>]+)>/);\n    if (rt) email = rt[1].trim();\n    else if (data.headers['reply-to'].includes('@')) email = data.headers['reply-to'].trim();\n  }\n  if (!email) {\n    const allEmails = textBody.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g) || [];\n    const filtered = allEmails.filter(e => !e.toLowerCase().includes('totaltv') && !e.toLowerCase().includes('woocommerce'));\n    if (filtered.length > 0) email = filtered[0];\n  }\n\n  // 5. Teléfono\n  let telefono = '';\n  const telMatch = textBody.match(/(\\d{7,15})\\s*(?:\\[tel:|$)/);\n  if (telMatch) {\n    telefono = telMatch[1].trim();\n  } else {\n    const pMatch = textBody.match(/(?:Tel[ée]fono|Phone|Tel):\\s*([+\\d\\s().-]{7,})/i);\n    if (pMatch) telefono = pMatch[1].trim();\n  }\n\n  // 6. Dirección\n  let direccion = '';\n  const addrBlock = textBody.match(/DIRECCI[ÓO]N DE FACTURACI[ÓO]N\\s*([\\s\\S]*?)(?:Enhorabuena|Total TV Latina|Recibe pagos|$)/i);\n  if (addrBlock) {\n    const lines = addrBlock[1].split('\\n').map(l => l.trim()).filter(l => l.length > 0 && !l.includes('@') && !l.includes('[tel:'));\n    if (lines.length > 1 && lines[0].toLowerCase() === nombre.toLowerCase()) {\n      lines.shift();\n    }\n    direccion = lines.join(', ');\n  }\n\n  // 7. Total\n  let total = '';\n  const totMatch = textBody.match(/Total:\\s*(\\$[\\d.,]+)/i);\n  if (totMatch) {\n    total = totMatch[1].trim();\n  }\n\n  // 8. Resumen de productos\n  let productos = '';\n  const prodMatch = textBody.match(/Producto\\s+Cantidad\\s+Precio\\s+([\\s\\S]*?)\\s+Subtotal/i);\n  if (prodMatch) {\n    productos = prodMatch[1].replace(/\\s+/g, ' ').trim();\n  }\n\n  // Ignorar correos que no contengan datos mínimos\n  if (!orderId && !email && !nombre) {\n    continue;\n  }\n\n  // Desduplicación\n  const orderKey = orderId ? ('ORDER:' + orderId) : null;\n  const emailDateKey = (email && fechaFormatted) ? ('EMAIL_FECHA:' + email.toLowerCase() + '|' + fechaFormatted) : null;\n  const msgKey = 'MSG:' + msgId;\n\n  if (orderKey && existingKeys.has(orderKey)) continue;\n  if (emailDateKey && existingKeys.has(emailDateKey)) continue;\n  if (existingKeys.has(msgKey)) continue;\n\n  if (orderKey) existingKeys.add(orderKey);\n  if (emailDateKey) existingKeys.add(emailDateKey);\n  existingKeys.add(msgKey);\n\n  // 9. Verificar si el cliente está en DnSpace\n  const isDnSpace = isCustomerInDnSpace(nombre, email, telefono);\n\n  outputItems.push({\n    json: {\n      'Order ID': orderId,\n      'Fecha': fechaFormatted,\n      'Nombre': nombre,\n      'Email': email,\n      'Teléfono': telefono,\n      'Dirección': direccion,\n      'Total': total,\n      'Productos': productos,\n      'Message ID': msgId,\n      'Name': nombre,\n      'DnSpace': isDnSpace ? 'ACTIVO' : ''\n    }\n  });\n}\n\nreturn outputItems;\n"
+        },
+        "id": "0c44d100-27f6-4285-84fb-7c58acd6b1ce",
+        "name": "Parsear y Desduplicar Órdenes",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1040,
+          128
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "1-SuFz9JlHcDY95ymAP1f1JvIIaLdZxUN_g_8z72BglY"
+          },
+          "sheetName": {
+            "__rl": true,
+            "mode": "name",
+            "value": "Ordenes"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {}
+          },
+          "options": {}
+        },
+        "id": "5e106da6-0025-43fe-9e62-9c57fc48e3b7",
+        "name": "Insertar en Google Sheets (Batch Append)",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          1312,
+          128
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Pw5wN2L5UopOruaj",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "id": "4effc866-b1a2-4afc-985e-08c03d9a2dc3",
+        "name": "Manual Trigger",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          208
+        ]
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0",
+            "mode": "list",
+            "cachedResultName": "Clientes TotalTV"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1823373862,
+            "mode": "list",
+            "cachedResultName": "DnSpace"
+          },
+          "options": {}
+        },
+        "id": "57417c13-2aaf-41c7-89c8-1a110406bf8d",
+        "name": "Leer Sheet DnSpace",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          528,
+          128
+        ],
+        "alwaysOutputData": true,
+        "executeOnce": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Pw5wN2L5UopOruaj",
+            "name": "Google Sheets account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Parsear y Desduplicar Órdenes": {
+        "main": [
+          [
+            {
+              "node": "Insertar en Google Sheets (Batch Append)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Leer Sheet DnSpace": {
+        "main": [
+          [
+            {
+              "node": "Leer Órdenes Existentes (Sheets)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Manual Trigger": {
+        "main": [
+          [
+            {
+              "node": "Buscar Correos WooCommerce (Gmail)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Buscar Correos WooCommerce (Gmail)": {
+        "main": [
+          [
+            {
+              "node": "Leer Sheet DnSpace",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Leer Órdenes Existentes (Sheets)": {
+        "main": [
+          [
+            {
+              "node": "Parsear y Desduplicar Órdenes",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": []
   },
   "meta": {
     "aiBuilderAssisted": true,

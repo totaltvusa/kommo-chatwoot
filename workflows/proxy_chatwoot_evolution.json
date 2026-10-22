@@ -17,6 +17,9 @@
   "parentFolderId": null,
   "description": "Intercepts outgoing Chatwoot messages to Evolution API, sanitizing ProseMirror backslashes before delivery to WhatsApp",
   "scopes": [
+    "execution:delete",
+    "execution:list",
+    "execution:read",
     "execution:reveal",
     "workflow:create",
     "workflow:delete",
