@@ -23,7 +23,7 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
      * Sugerirle ver el video oficial de YouTube: 👉 `https://www.youtube.com/watch?v=ffiUu9wsac8` (explica cómo habilitar los permisos de instalación con Downloader).
    - Si el cliente **insiste en que no puede instalar la app o Downloader, o sigue sin lograrlo tras el video**:
      * Recomendarle instalar directamente **SmartOne IPTV** desde la tienda de su dispositivo.
-     * SmartOne ofrece **15 días de prueba gratuita** y luego se puede activar por **$4 USD al año** (o $20 de por vida).
+     * SmartOne ofrece **15 días de prueba gratuita** y luego se puede activar por **$5 USD al año** (o $24 de por vida). *(Solo si el cliente manifiesta que se le había dado el precio anterior de $4/año o $20 lifetime, se le mantiene; nunca decir que el precio aumentó).*
      * **Carga de Credenciales**: El cliente puede ingresar a la página web oficial de SmartOne (`https://smartone-iptv.com/`) para cargar sus credenciales (usuario, contraseña y servidor `http://wk.mvpl.uk:2082`), o facilitarnos la dirección MAC de su dispositivo (se muestra en la pantalla principal de la app) para que nosotros le carguemos sus credenciales directamente.
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac)
@@ -52,13 +52,15 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
    - Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., cuentan con un período de prueba gratuito por parte de sus desarrolladores.
    - **Asistencia de Activación por nuestro equipo**: Podemos ayudar al cliente a tramitar y activar su aplicación:
      * **SmartOne IPTV**:
-       - Opción 1 Año: **$4 USD**.
-       - Opción De por Vida (Lifetime): **$20 USD**.
+       - Opción 1 Año: **$5 USD**.
+       - Opción De por Vida (Lifetime): **$24 USD**.
+       - *Excepción Precio Anterior (Legacy)*: SOLO si el cliente manifiesta expresamente que se le había dado el precio anterior ($4/año o $20 lifetime), se le respetará y ofrecerá ese precio. De lo contrario, SIEMPRE se maneja el precio nuevo.
+       - *Regla Estricta de Comunicación*: PROHIBIDO TERMINANTEMENTE decir que el precio subió o aumentó. Simplemente se indica el precio que hay ($5/año o $24 lifetime), y punto.
      * **IBO Player**: **$20 USD** (pago único de por vida).
      * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: **$25 USD** (pago único de por vida).
    - **Condiciones Clave y Reglas de Pago**:
-     * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Binance Pay USDT (que tiene descuento en suscripciones), **la activación NO lleva descuento** ($4, $20 o $25 USD netos).
-     * **RECARGOS POR PASARELA**: Si el cliente solicita pagar con Card2Crypto (PayPal/Tarjetas), aplica el 10% de recargo sobre el valor base de la activación (ej. $4 -> $4.80, $20 -> $22.00, $25 -> $27.50 USD). En Zelle o Pago Móvil (a la tasa oficial) se abona el monto base.
+     * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Binance Pay USDT (que tiene descuento en suscripciones), **la activación NO lleva descuento** ($5, $24, $20 o $25 USD netos).
+     * **RECARGOS POR PASARELA**: Si el cliente solicita pagar con Card2Crypto (PayPal/Tarjetas), aplica el 10% de recargo sobre el valor base de la activación (ej. $5 -> $5.50, $24 -> $26.40, $20 -> $22.00, $25 -> $27.50 USD; o si aplica precio anterior: $4 -> $4.40, $20 -> $22 USD). En Zelle o Pago Móvil (a la tasa oficial) se abona el monto base ($5, $24, $20, $25 USD).
      * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (ligada a su MAC y Device ID).
      * **No transferible**: La activación no se puede transferir a otro dispositivo.
  4. Abrir la app instalada:
@@ -105,7 +107,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
    - Compartir el video de YouTube con los pasos para habilitar instalaciones: 👉 `https://www.youtube.com/watch?v=ffiUu9wsac8`
 2. Si el cliente **sigue sin poder instalar o insiste en la dificultad**:
    - Recomendar la instalación directa de **SmartOne IPTV** desde la tienda de su dispositivo.
-   - SmartOne cuenta con **15 días de prueba gratuita** y activación posterior por **$4 USD/año** (o $20 lifetime).
+    - SmartOne cuenta con **15 días de prueba gratuita** y activación posterior por **$5 USD/año** (o $24 lifetime; solo $4/año o $20 lifetime si el cliente afirma expresamente que se le dio ese precio previo; sin decir nunca que aumentó).
    - **Carga de Credenciales**: Para configurar sus credenciales (Usuario, Contraseña y URL `http://wk.mvpl.uk:2082`), el cliente puede ingresar en la web oficial `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su dispositivo para que nosotros le carguemos las credenciales directamente.
 
 ---
@@ -142,10 +144,10 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
   - *(Excepción app gratuita)*: Si el cliente solicita explícitamente una opción gratuita, se le recomienda **IPTV Smarters** (o IPTV Smarters Pro).
   - Otras opciones compatibles de la tienda: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
   - **Activación**: Estas aplicaciones cuentan con prueba gratuita inicial. Si el cliente lo desea, **nosotros podemos ayudarle con la activación**:
-    * **SmartOne IPTV:** **$4 USD** (por 1 año) o **$20 USD** (de por vida).
+    * **SmartOne IPTV:** **$5 USD** (por 1 año) o **$24 USD** (de por vida). *(Solo si el cliente manifiesta expresamente que se le ofreció el precio anterior de $4/año o $20 de por vida, se le respeta ese precio ($4/año o $20 lifetime; $4.40 / $22 USD con 10% de recargo). De lo contrario siempre se da el precio nuevo, sin decir a nadie que aumentó).*
     * **IBO Player:** **$20 USD** (de por vida).
     * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** **$25 USD** (de por vida).
-    *(Precios netos: A las activaciones NO aplica ningún descuento, incluso si paga con Binance. En Card2Crypto/PayPal aplica el 10% de recargo. Pago exclusivo para ese dispositivo específico, no transferible)*.
+    *(Precios netos: A las activaciones NO aplica ningún descuento, incluso si paga con Binance. En Card2Crypto/PayPal aplica el 10% de recargo ($5 -> $5.50, $24 -> $26.40, $20 -> $22.00, $25 -> $27.50 USD; o precio anterior $4 -> $4.40, $20 -> $22 USD). Pago exclusivo para ese dispositivo específico, no transferible)*.
   - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor y más recomendado usar nuestra app oficial TotalTv Latina descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
@@ -159,7 +161,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
     1. **DNS para Smarters (`http://cdn01link.uk:2095`)**: OBLIGATORIO Y EXCLUSIVO para cualquier aplicación de la familia Smarters (**Smarters Player Lite**, **IPTV Smarters Pro**, **IPTV Smarters**). Si el cliente indica que usa o va a usar Smarters, se le entrega únicamente este DNS para Smarters.
     2. **Servidor / DNS General (`http://wk.mvpl.uk:2082`)**: Para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
 - **Caso — Dificultad para instalar aplicación con Downloader:**
-  - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $4/año), explicándole que para cargar sus credenciales puede visitar `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su equipo para que nosotros se las carguemos directamente.
+  - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $5/año o $24 de por vida; solo $4/año o $20 lifetime si indica expresamente que se le dio ese precio previo; sin mencionar jamás que subió el precio), explicándole que para cargar sus credenciales puede visitar `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su equipo para que nosotros se las carguemos directamente.
 - **Caso — Consulta de Tasa de Cambio para Pago Móvil (Tasa Oficial BCV):**
   - *Instrucción:*
     * **Si el cliente NO pregunta la tasa**: Se calcula el monto en Bolívares con las reglas estándar y se entrega únicamente el monto total en Bs y los datos bancarios. No se menciona la tasa proactivamente.

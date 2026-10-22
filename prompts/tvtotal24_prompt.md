@@ -430,7 +430,9 @@ Provide these exact steps based on the customer's device:
       👉 https://www.youtube.com/watch?v=ffiUu9wsac8
   * **Si el cliente insiste en que no puede instalar la app o Downloader, o sigue sin lograrlo tras el video**:
     - Recomiéndale instalar directamente la aplicación **SmartOne IPTV** desde la tienda de su dispositivo.
-    - Explícale que SmartOne le dará un **período de prueba de 15 días** y luego se puede activar por solo **$4 USD al año** (o $20 de por vida).
+    - Explícale que SmartOne le dará un **período de prueba de 15 días** y luego se puede activar por **$5 USD al año** (o $24 de por vida).
+      * ⚠️ **EXCEPCIÓN PRECIO ANTERIOR (LEGACY)**: SOLO si el cliente manifiesta expresamente que se le había dado u ofrecido el precio anterior ($4/año o $20 de por vida), se le respetará y ofrecerá ese precio anterior ($4/año o $20 de por vida; $4.40 / $22 USD con 10% de recargo).
+      * ⛔ **MANDATO ESTRICTO DE COMUNICACIÓN**: De lo contrario, SIEMPRE se maneja el precio nuevo oficial ($5/año o $24 de por vida). Queda TERMINANTEMENTE PROHIBIDO decir a nadie que el precio ha aumentado o subido ("el precio subió", "hubo un aumento", etc.). SIMPLEMENTE SE INDICA EL PRECIO QUE HAY, Y PUNTO.
     - Para configurar sus credenciales (usuario, contraseña y servidor `http://wk.mvpl.uk:2082`), indícale que puede ingresar en la página web oficial de SmartOne (`https://smartone-iptv.com/`) para cargarlas, o facilitarnos la dirección MAC del dispositivo (que se muestra en la pantalla principal de la app) para que nosotros le carguemos las credenciales directamente.
 
 2. Apple Devices (iPhone, iPad, Apple TV, Mac):
@@ -441,16 +443,18 @@ Provide these exact steps based on the customer's device:
 
 3. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS) y Activación de Apps:
 - **REGLAS DE RECOMENDACIÓN DE APLICACIONES (SMART ONE COMO PRIMERA OPCIÓN)**:
-  * Cuando un cliente mencione que su dispositivo es un **televisor no Android**, o mencione directamente la marca **Samsung** o **LG**: **RECOMENDAR SIEMPRE COMO PRIMERA OPCIÓN LA APLICACIÓN SMART ONE (SmartOne IPTV)**. Explica que SmartOne ofrece 15 días de prueba gratis ($4/año de activación), y que para cargar sus credenciales (usuario, contraseña y servidor `http://wk.mvpl.uk:2082`), puede colocarlas visitando la página web de SmartOne (`https://smartone-iptv.com/`) o facilitarnos la dirección MAC de su televisor (que se muestra en la pantalla principal de la app en su TV) para que nosotros le carguemos sus credenciales.
+  * Cuando un cliente mencione que su dispositivo es un **televisor no Android**, o mencione directamente la marca **Samsung** o **LG**: **RECOMENDAR SIEMPRE COMO PRIMERA OPCIÓN LA APLICACIÓN SMART ONE (SmartOne IPTV)**. Explica que SmartOne ofrece 15 días de prueba gratis ($5/año o $24 lifetime de activación), y que para cargar sus credenciales (usuario, contraseña y servidor `http://wk.mvpl.uk:2082`), puede colocarlas visitando la página web de SmartOne (`https://smartone-iptv.com/`) o facilitarnos la dirección MAC de su televisor (que se muestra en la pantalla principal de la app en su TV) para que nosotros le carguemos sus credenciales.
   * **RESTRICCIÓN DE APLICACIÓN GRATUITA**: Recomendar **IPTV Smarters** (o IPTV Smarters Pro) **ÚNICAMENTE Y EXCLUSIVAMENTE en caso de que este tipo de cliente solicite explícitamente una aplicación gratuita** (ej. "una app gratis", "que sea gratis", "aplicación gratuita", "sin costo de activación"). (Configurar en IPTV Smarters obligatoriamente con DNS para Smarters `http://cdn01link.uk:2095`). NUNCA recomendar IPTV Smarters de entrada ni por defecto para televisores Samsung, LG o no Android.
   * Otras apps de la tienda disponibles si el cliente consulta o las requiere: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player**, **IPTV Stream Player** (recomendar directamente por nombre, nunca enviar enlaces externos).
 - **Asistencia de Activación**: Podemos ayudar al cliente a tramitar la activación de su app:
-  * **SmartOne IPTV**: $4 USD por 1 año, o $20 USD de por vida (lifetime).
+  * **SmartOne IPTV**: $5 USD por 1 año, o $24 USD de por vida (lifetime).
+    - ⚠️ **EXCEPCIÓN PRECIO ANTERIOR (LEGACY)**: SOLO si el cliente manifiesta expresamente que se le había dado u ofrecido el precio anterior ($4/año o $20 de por vida), se le respetará y ofrecerá ese precio anterior ($4/año o $20 de por vida; $4.40 / $22 USD con 10% de recargo).
+    - ⛔ **MANDATO ESTRICTO DE COMUNICACIÓN**: De lo contrario, SIEMPRE se maneja el precio nuevo oficial ($5/año o $24 de por vida). Queda TERMINANTEMENTE PROHIBIDO decir a nadie que el precio ha aumentado o subido ("el precio subió", "hubo un aumento", etc.). SIMPLEMENTE SE INDICA EL PRECIO QUE HAY, Y PUNTO.
   * **IBO Player**: $20 USD (activación de por vida).
   * **Apps del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, etc.)**: $25 USD (activación de por vida).
 - *(Reglas de pago de activaciones)*:
-  * **CERO DESCUENTOS**: A las activaciones NO aplica ningún descuento (incluso con Binance Pay, se paga el valor completo: $4, $20 o $25 USD netos).
-  * **RECARGOS POR PASARELA**: Si paga con Card2Crypto (PayPal/Tarjetas), se agrega el 10% de recargo ($4 -> $4.40, $20 -> $22, $25 -> $27.50 USD). En Zelle y Pago Móvil se paga el precio base.
+  * **CERO DESCUENTOS**: A las activaciones NO aplica ningún descuento (incluso con Binance Pay, se paga el valor completo: $5, $24, $20 o $25 USD netos).
+  * **RECARGOS POR PASARELA**: Si paga con Card2Crypto (PayPal/Tarjetas), se agrega el 10% de recargo ($5 -> $5.50, $24 -> $26.40, $20 -> $22, $25 -> $27.50 USD; o si aplica precio anterior: $4 -> $4.40, $20 -> $22 USD). En Zelle y Pago Móvil se paga el precio base ($5, $24, $20, $25 USD).
   * No transferible a otro equipo. El cliente puede gestionarla directamente con el desarrollador si lo prefiere.
 
 4. Roku Devices:

@@ -3352,3 +3352,38 @@
        * Si el comprador ya existe como suscriptor en `DnSpace`, se asienta la columna `DnSpace: "ACTIVO"` y la columna normalizada `Name: nombre`.
   3. **Sincronización Total de Flujos con n8n**:
      - Todos los workflows de n8n fueron re-exportados e integrados con sus esquemas y scopes actualizados.
+
+---
+
+### 105. Actualización de Precios Oficiales de SmartOne IPTV ($5/Año y $24/Lifetime), Regla de Excepción Legacy y Mandato Estricto de Cero Mención de Aumentos (2026-10-21)
+
+* **Directiva y Reglas Oficiales**:
+  1. **Nuevos Precios Oficiales de Activación**:
+     - **SmartOne IPTV**: **$5 USD por 1 Año** o **$24 USD de por vida (Lifetime)**.
+     - En métodos con recargo del 10% por procesamiento (Card2Crypto / PayPal / Tarjetas / link CashApp):
+       * 1 Año: **$5.50 USD**.
+       * De por Vida (Lifetime): **$26.40 USD**.
+     - En métodos sin comisión adicional (Zelle, Binance Pay y Pago Móvil): se abona el valor base neto (**$5 USD** o **$24 USD**).
+  2. **Excepción de Clientes con Precio Anterior (Legacy / Grandfathered)**:
+     - **ÚNICAMENTE si el cliente manifiesta o reclama expresamente que se le había dado el precio anterior ($4/año o $20/lifetime)**: se le respetará y mantendrá dicho precio ($4/año o $20 lifetime; con 10% de recargo: $4.40 / $22 USD).
+     - De lo contrario, **SIEMPRE se manejará el precio nuevo oficial**.
+  3. **Mandato Estricto de Comunicación (Prohibición Absoluta de Mencionar Aumentos)**:
+     - Está **TERMINANTEMENTE PROHIBIDO** decir o insinuar a nadie que el precio ha aumentado o subido ("el precio subió", "hubo un aumento", "ahora cuesta más", etc.).
+     - Simplemente se indica con total naturalidad y limpieza el precio vigente ($5/año o $24 de por vida), y punto.
+  4. **Obsequio Anual de TotalTv USA (Intacto)**:
+     - Con la compra de cualquier suscripción de 1 Año (12 Meses) de TotalTv USA (1, 2 o 3 dispositivos), se mantiene intacto el obsequio de 1 año de activación de SmartOne para 1 dispositivo gratis en televisores compatibles o fallback de Downloader.
+
+* **Archivos y Componentes Actualizados**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/agent_prompt.md`: Actualizada la sección de Android (fallback Downloader) y la sección de Smart TVs no Android (asistencia de activación de SmartOne a $5/año y $24/vida, reglas de fees con recargo $5.50 / $26.40, excepción legacy $4/$20 y mandato estricto de no mencionar aumento).
+     - `prompts/tvtotal24_prompt.md`: Actualizada la sección 1 (fallback Downloader) y sección 3 (Smart TVs y reglas de activación) con idénticas directivas de precio, recargos y no mención de aumentos.
+  2. **Bases de Conocimiento (Knowledge Base)**:
+     - `knowledge/totaltv_usa_support.md`: Actualizada la sección 3 (Smart TVs), FAQ P6, y casos aprendidos en Sección 4 (fallback Downloader).
+     - `knowledge/tvtotal24_latina_support.md`: Actualizada la sección 1.A (fallback Downloader), sección 1.C (Smart TVs), FAQ P6 y casos aprendidos en Sección 4.
+  3. **Workflow Router Chatwoot en Producción**:
+     - `workflows/router_chatwoot_ia.json`: Actualizados los parámetros `options.systemMessage` de los nodos `AI Agent` y `AI Agent - TVTotal24`.
+  4. **Despliegue y Publicación en n8n**:
+     - Workflow `n0zgnS1vlOGNcGNY` (`Chatwoot + IA Agent`) actualizado vía API MCP (`update_workflow`) y publicado como versión activa (`455a7cf4-e05b-4447-ac2f-36beb2992b82`).
+  5. **Sincronización Total del Repositorio**:
+     - Ejecutado `python3 workflows/export_workflows.py`, asegurando que todos los 25 flujos de n8n queden sincronizados con el repositorio.
+
