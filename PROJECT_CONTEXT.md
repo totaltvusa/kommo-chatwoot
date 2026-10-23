@@ -3442,4 +3442,22 @@
   4. **Despliegue, Publicación y Sincronización Total**:
      - Ejecutado `python3 workflows/export_workflows.py`, asegurando sincronización completa y sanitizada de todos los workflows de n8n con el repositorio Git.
 
+---
+
+### 108. Corrección de Error de Sintaxis en Comando `/agent` y Actualización de Endpoint Chatwoot en Telegram to N8N (2026-10-23)
+
+* **Diagnóstico y Causa Raíz**:
+  - Al ejecutar el comando de administración `/agent <id_conversacion> <instruccion>` desde el bot de Telegram `@AlvezN8N` (por ejemplo `/agent 1691 ofrecer al cliente una prueba gratuita...`), el workflow `Telegram to N8N` (`TS2CADjNNn05jXBW`) fallaba de inmediato arrojando error en ejecuciones `#29119` y `#29122` sin enviar mensaje ni responder en Telegram.
+  - **Causa Raíz 1 (SyntaxError en JavaScript)**: Durante la edición previa para deprecación de OTR Layout, se había insertado accidentalmente texto Markdown plano sin comentar (`- ⛔ **PROHIBICIÓN ABSOLUTA...`) en el bloque de código del nodo `Preparar Instrucción Agente Directo`, eliminando a su vez la variable `baseBrandPrompt` (~150 KB de directivas de marca). El intérprete Node.js/V8 abortaba inmediatamente con `SyntaxError: Invalid or unexpected token`.
+  - **Causa Raíz 2 (403 Forbidden en API Chatwoot)**: Los nodos `Preparar Instrucción Agente Directo` y `Responder en Chatwoot Directo` apuntaban a `https://chatwoot.ac4.club/api/v1/accounts/1`, dominio que retorna `403 Forbidden` en peticiones directas de API externa.
+
+* **Remediaciones Implementadas**:
+  1. **Restauración de `baseBrandPrompt` y Validación de Sintaxis**:
+     - Se reconstruyó completamente la variable `baseBrandPrompt` unificando las directivas oficiales de `tvtotal24_prompt.md` y `agent_prompt.md` (incluyendo la prohibición de OTR Layout debidamente escapada dentro del string).
+     - Se validó la sintaxis completa del nodo con `node -c` (0 errores de compilación).
+  2. **Actualización de Endpoints de Chatwoot**:
+     - Se actualizaron los nodos `Preparar Instrucción Agente Directo` y `Responder en Chatwoot Directo` para consultar el endpoint operativo `https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1` con token activo `Dk8XKwvnkGx79rjiL5cLdVZd`.
+  3. **Despliegue y Sincronización**:
+     - Workflow `TS2CADjNNn05jXBW` publicado y activo en n8n (`activeVersionId: a1b78075-f5f6-46e3-88b5-d1c8e2dbee99`).
+     - Respaldo exportado en `workflows/telegram_to_n8n.json`.
 
