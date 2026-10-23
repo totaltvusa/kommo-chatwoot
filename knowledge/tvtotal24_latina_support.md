@@ -116,6 +116,9 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 ### P1: ¿Qué contenido incluye TVTotal24 Latina?
 - **R:** Más de 5,000 canales de televisión en vivo internacionales y de toda América Latina (deportes premium, fútbol sudamericano y europeo, canales de Venezuela, Colombia, México, Argentina, Chile, Perú, etc., PPV, infantiles y contenido para adultos opcional) y más de 20,000 películas y series actualizadas de las plataformas más populares.
 
+### P1.1: ¿Tienen algún canal, película, serie o evento deportivo en específico? (Consultas de disponibilidad de contenido)
+- **R:** En un universo tan sumamente amplio con más de 5,000 canales en vivo y más de 20,000 películas y series que se actualizan constantemente todos los días, **es lo más posible y sumamente probable que sí contemos con ese contenido**. La mejor y más rápida manera de confirmarlo es que el cliente lo compruebe por sí mismo buscando dicho contenido dentro del servicio. Para ello, **nada mejor que tomar la prueba gratuita de 4 horas continuas** sin ningún compromiso para que lo verifique directamente en su pantalla.
+
 ### P2: ¿Cómo son los planes y precios de TVTotal24 Latina?
 - **R:** En TVTotal24 las suscripciones tienen precio único por duración (cada suscripción es una cuenta completa para disfrutar el servicio):
   - **1 Mes:** $8 USD *(Súper Descuento con Binance USDT: $5 USD)*
@@ -169,3 +172,10 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 
 - **Caso — Prohibición Absoluta de sugerir "OTR LAYOUT" en la instalación:**
   - *Instrucción:* Al explicar la instalación de la aplicación nativa oficial de TotalTv Latina en dispositivos Android (Firestick, Google TV, Android TV, Onn Box), queda TERMINANTEMENTE PROHIBIDO indicar o sugerir ir a "Ajustes → Otros Ajustes" ni seleccionar "OTR LAYOUT". Bajo NINGUNA circunstancia se le dirá al cliente que antes existía esa recomendación y ya no está; simplemente, no se da más y punto.
+
+- **Caso — Consultas sobre canales, películas, series, deportes o señales en particular:**
+  - *Instrucción:* Cuando un cliente pregunte si disponemos de un canal, película o serie específica, transmisiones deportivas/ligas, o una señal en particular:
+    1. Responder que **es lo más posible / muy probable** que sí contemos con dicho contenido.
+    2. Explicar con claridad y amabilidad que en un universo tan amplio de más de 5,000 canales y más de 20,000 películas y series actualizadas constantemente todos los días, la mejor y más rápida manera de confirmarlo es buscar dicho contenido directamente en el servicio.
+    3. Resaltar que para ello **nada mejor que tomar la prueba gratuita de 4 horas continuas** para comprobarlo por sí mismo directamente en su pantalla sin compromiso.
+

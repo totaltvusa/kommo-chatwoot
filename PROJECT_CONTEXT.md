@@ -3417,3 +3417,29 @@
      - Desplegados y publicados en vivo los workflows `n0zgnS1vlOGNcGNY`, `Vfweu0rjoTT3FUl1` y `TS2CADjNNn05jXBW` en el servidor n8n.
      - Re-exportados todos los workflows locales mediante `export_workflows.py` garantizando consistencia absoluta entre n8n y Git.
 
+---
+
+### 107. Política de Respuesta a Consultas sobre Disponibilidad de Canales, Películas, Series, Deportes o Señales Específicas (2026-10-23)
+
+* **Directiva y Mandato de Atención al Cliente**:
+  - Cuando un cliente pregunte si disponemos de algún canal, película, serie, evento deportivo, liga o señal en particular en nuestro catálogo:
+    1. **Respuesta Positiva y Segura**: Responder con seguridad que **es lo más posible / sumamente probable** que sí contemos con dicho contenido.
+    2. **Fundamento del Universo de Contenido**: Explicar amablemente que en un universo tan sumamente amplio con miles y miles de canales en vivo, películas y series que además se actualizan de manera constante todos los días, buscar dicho contenido directamente dentro del servicio es la mejor forma de confirmar si contamos con él.
+    3. **Invitación Directa a la Prueba Gratuita**: Indicar que para ello **nada mejor que tomar la prueba gratuita** (24 horas en TotalTv USA / 4 horas continuas en TVTotal24 Latina) para que el propio cliente lo compruebe por sí mismo directamente en su pantalla sin compromiso.
+    4. **Cero Mención de Imposibilidad**: Jamás responder con dudas o negativas directas sin antes invitar a comprobarlo en la prueba.
+
+* **Componentes y Archivos Actualizados**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/agent_prompt.md` (TotalTv USA): Añadido el mandato crítico `SERVICE OVERVIEW & CONTENT AVAILABILITY INQUIRIES` con ejemplos bilingües (español e inglés) orientados a la prueba de 24 horas.
+     - `prompts/tvtotal24_prompt.md` (TVTotal24 Latina): Añadido el mandato crítico `ABOUT TOTALTV / TVTOTAL24 & CONSULTAS DE CONTENIDO ESPECÍFICO` con ejemplo en español orientado a la prueba de 4 horas continuas.
+  2. **Bases de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/totaltv_usa_support.md`: Añadida la FAQ `P1.1` y nuevo caso aprendido en la Sección 4.
+     - `knowledge/tvtotal24_latina_support.md`: Añadida la FAQ `P1.1` y nuevo caso aprendido en la Sección 4.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados los parámetros `options.systemMessage` en los nodos `AI Agent` (TotalTv USA) y `AI Agent - TVTotal24` (TVTotal24 Latina). Publicada versión activa en producción.
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado el nodo `AI Agent`. Publicada versión activa en producción.
+     - `workflows/agent_totaltv_usa.json`: Sincronizado localmente.
+  4. **Despliegue, Publicación y Sincronización Total**:
+     - Ejecutado `python3 workflows/export_workflows.py`, asegurando sincronización completa y sanitizada de todos los workflows de n8n con el repositorio Git.
+
+
