@@ -3,12 +3,12 @@
   "name": "Ecwid to Client & me 2.0",
   "active": true,
   "isArchived": false,
-  "versionId": "c0a178c2-2761-4027-b016-da7fa28f5711",
-  "activeVersionId": "c0a178c2-2761-4027-b016-da7fa28f5711",
+  "versionId": "7a399615-b03f-44d5-8b50-78ab63eb0640",
+  "activeVersionId": "7a399615-b03f-44d5-8b50-78ab63eb0640",
   "triggerCount": 1,
   "nodeCount": 35,
   "createdAt": "2026-07-27T01:52:27.063Z",
-  "updatedAt": "2026-10-18T16:28:26.993Z",
+  "updatedAt": "2026-10-26T01:30:09.263Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -413,7 +413,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const telnyxApiKey = 'KEY_TELNYX_REDACTED';\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const html = item.json.html || \"\";\n  const subject = item.json.headers?.subject || \"\";\n\n  const cleanText = html\n    .replace(/<style([\\s\\S]*?)<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&nbsp;/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n  const extract = (regex, text, index = 1, fallback = \".\") => {\n    const match = text.match(regex);\n    return (match && match[index] && match[index].trim()) ? match[index].trim() : fallback;\n  };\n\n  const orderID = extract(/#([A-Z0-9]+)/, subject, 1, \".\");\n  const rawCustomerName = extract(/from\\s+([^!$]+)/i, subject, 1, \"Customer\");\n  const customerName = (rawCustomerName && rawCustomerName !== \"No encontrado\" && rawCustomerName !== \".\") ? rawCustomerName : \"Customer\";\n\n  const email = extract(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/, cleanText, 1, \".\");\n  const phone = extract(/Phone\\s+([\\+\\d\\s-]{7,20})/, cleanText, 1, \".\");\n\n  const rawAmount = extract(/Total\\s+\\$([\\d.]+)/, cleanText, 1, \".\");\n  const totalAmount = (rawAmount !== \".\" && rawAmount !== \"No encontrado\" && !isNaN(parseFloat(rawAmount))) \n    ? Math.round(parseFloat(rawAmount)).toString() \n    : \".\";\n  \n  const months = extract(/(\\d+)\\s*Months?/i, cleanText, 1, \".\");\n  const conns = extract(/Conns:\\s*(\\d+)/i, cleanText, 1, \".\");\n  const adult = extract(/Adult:\\s*(Yes|No)/i, cleanText, 1, \".\");\n  const paymentPart = extract(/Payment method\\s+(.+?)(?:View order details|$)/i, cleanText, 1, \".\");\n\n  let canSendSms = false;\n  let phoneLineType = \"unknown\";\n\n  if (phone && phone !== \".\") {\n    try {\n      const digits = phone.replace(/\\D/g, \"\");\n      let cleanLookupPhone = digits;\n      if (digits.length === 10) {\n        cleanLookupPhone = `+1${digits}`;\n      } else if (digits.length === 11 && digits.startsWith(\"1\")) {\n        cleanLookupPhone = `+${digits}`;\n      } else if (digits.length > 0) {\n        cleanLookupPhone = phone.trim().startsWith(\"+\") ? phone.trim() : `+${digits}`;\n      }\n\n      const lookupRes = await this.helpers.httpRequest({\n        method: \"GET\",\n        url: `https://api.telnyx.com/v2/number_lookup/${encodeURIComponent(cleanLookupPhone)}?type=carrier`,\n        headers: {\n          \"Authorization\": `Bearer ${telnyxApiKey}`,\n          \"Accept\": \"application/json\"\n        },\n        json: true\n      });\n\n      const carrierType = (lookupRes?.data?.carrier?.type || \"\").toLowerCase();\n      const lineType = (lookupRes?.data?.portability?.line_type || \"\").toLowerCase();\n      phoneLineType = lineType || carrierType || \"unknown\";\n\n      const isNonMobile = /wireline|landline|fixed/i.test(carrierType) || /wireline|landline|fixed/i.test(lineType);\n      const isMobile = /mobile|wireless|cellular/i.test(carrierType) || /mobile|wireless|cellular/i.test(lineType);\n\n      if (isNonMobile || (!isMobile && (carrierType || lineType))) {\n        canSendSms = false;\n      } else {\n        canSendSms = true;\n      }\n    } catch (e) {\n      canSendSms = false;\n    }\n  }\n\n  results.push({\n    json: {\n      OrderID: orderID,\n      TotalAmount: totalAmount,\n      CustomerName: customerName,\n      Email: email,\n      Phone: phone,\n      can_send_sms: canSendSms,\n      phone_line_type: phoneLineType,\n      PaymentMethod: paymentPart,\n      Months: months,\n      Conns: conns,\n      Adult: adult\n    }\n  });\n}\n\nreturn results;"
+        "jsCode": "const telnyxApiKey = 'KEY_TELNYX_REDACTED';\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const html = item.json.html || \"\";\n  const subject = item.json.headers?.subject || \"\";\n\n  const cleanText = html\n    .replace(/<style([\\s\\S]*?)<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&nbsp;/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n  const extract = (regex, text, index = 1, fallback = \".\") => {\n    const match = text.match(regex);\n    return (match && match[index] && match[index].trim()) ? match[index].trim() : fallback;\n  };\n\n  const orderID = extract(/#([A-Z0-9]+)/, subject, 1, \".\");\n  const rawCustomerName = extract(/from\\s+([^!$]+)/i, subject, 1, \"Customer\");\n  const customerName = (rawCustomerName && rawCustomerName !== \"No encontrado\" && rawCustomerName !== \".\") ? rawCustomerName : \"Customer\";\n\n  const email = extract(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})/, cleanText, 1, \".\");\n  const phone = extract(/Phone\\s+([\\+\\d\\s-]{7,20})/, cleanText, 1, \".\");\n\n  const rawAmount = extract(/Total\\s+\\$([\\d.]+)/, cleanText, 1, \".\");\n  const totalAmount = (rawAmount !== \".\" && rawAmount !== \"No encontrado\" && !isNaN(parseFloat(rawAmount))) \n    ? Math.round(parseFloat(rawAmount)).toString() \n    : \".\";\n  \n  const months = extract(/(\\d+)\\s*Months?/i, cleanText, 1, \".\");\n  const conns = extract(/Conns:\\s*(\\d+)/i, cleanText, 1, \".\");\n  const adult = extract(/Adult:\\s*(Yes|No)/i, cleanText, 1, \".\");\n  const paymentPart = extract(/Payment method\\s+(.+?)(?:View order details|$)/i, cleanText, 1, \".\");\n\n  let canSendSms = false;\n  let phoneLineType = \"unknown\";\n  let normalizedPhone = phone;\n\n  if (phone && phone !== \".\") {\n    try {\n      const digits = phone.replace(/\\D/g, \"\");\n      let cleanLookupPhone = digits;\n      if (digits.length === 10) {\n        cleanLookupPhone = `+1${digits}`;\n        normalizedPhone = `1${digits}`;\n      } else if (digits.length === 11 && digits.startsWith(\"1\")) {\n        cleanLookupPhone = `+${digits}`;\n        normalizedPhone = digits;\n      } else if (digits.length > 0) {\n        cleanLookupPhone = phone.trim().startsWith(\"+\") ? phone.trim() : `+${digits}`;\n        normalizedPhone = digits;\n      }\n\n      const lookupRes = await this.helpers.httpRequest({\n        method: \"GET\",\n        url: `https://api.telnyx.com/v2/number_lookup/${encodeURIComponent(cleanLookupPhone)}?type=carrier`,\n        headers: {\n          \"Authorization\": `Bearer ${telnyxApiKey}`,\n          \"Accept\": \"application/json\"\n        },\n        json: true\n      });\n\n      const carrierType = (lookupRes?.data?.carrier?.type || \"\").toLowerCase();\n      const lineType = (lookupRes?.data?.portability?.line_type || \"\").toLowerCase();\n      phoneLineType = lineType || carrierType || \"unknown\";\n\n      const isNonMobile = /wireline|landline|fixed/i.test(carrierType) || /wireline|landline|fixed/i.test(lineType);\n      const isMobile = /mobile|wireless|cellular|voip/i.test(carrierType) || /mobile|wireless|cellular|voip/i.test(lineType);\n\n      if (isNonMobile || (!isMobile && (carrierType || lineType))) {\n        canSendSms = false;\n      } else {\n        canSendSms = true;\n      }\n    } catch (e) {\n      canSendSms = false;\n    }\n  }\n\n  results.push({\n    json: {\n      OrderID: orderID,\n      TotalAmount: totalAmount,\n      CustomerName: customerName,\n      Email: email,\n      Phone: normalizedPhone,\n      can_send_sms: canSendSms,\n      phone_line_type: phoneLineType,\n      PaymentMethod: paymentPart,\n      Months: months,\n      Conns: conns,\n      Adult: adult\n    }\n  });\n}\n\nreturn results;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -680,13 +680,13 @@
                 },
                 "conditions": [
                   {
+                    "id": "55af80b9-6227-487c-a432-b1db11716bc0",
                     "leftValue": "={{ $json.PaymentMethod }}",
-                    "rightValue": "Zelle",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
                     },
-                    "id": "55af80b9-6227-487c-a432-b1db11716bc0"
+                    "rightValue": "Zelle"
                   }
                 ],
                 "combinator": "and"
@@ -704,11 +704,11 @@
                   {
                     "id": "34f821ed-5b72-4269-8e61-41d91e0d946e",
                     "leftValue": "={{ $json.PaymentMethod }}",
-                    "rightValue": "Credit/Debit Cards (Pay by link)",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
-                    }
+                    },
+                    "rightValue": "Credit/Debit Cards (Pay by link)"
                   }
                 ],
                 "combinator": "and"
@@ -726,12 +726,12 @@
                   {
                     "id": "e4df88d5-5fa2-4a20-b04a-a316262d08ce",
                     "leftValue": "={{ $json.PaymentMethod }}",
-                    "rightValue": "Crypto 20% OFF",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
                       "name": "filter.operator.equals"
-                    }
+                    },
+                    "rightValue": "Crypto 20% OFF"
                   }
                 ],
                 "combinator": "and"
@@ -740,7 +740,7 @@
             {
               "conditions": {
                 "options": {
-                  "caseSensitive": true,
+                  "caseSensitive": false,
                   "leftValue": "",
                   "typeValidation": "strict",
                   "version": 3
@@ -749,15 +749,25 @@
                   {
                     "id": "0f164e0f-b14e-421c-ada6-116e72da2dec",
                     "leftValue": "={{ $json.PaymentMethod }}",
-                    "rightValue": "CashApp (Pay by link)",
                     "operator": {
                       "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
+                      "operation": "contains",
+                      "name": "filter.operator.contains"
+                    },
+                    "rightValue": "CashApp"
+                  },
+                  {
+                    "id": "pdcash-filter-cond",
+                    "leftValue": "={{ $json.PaymentMethod }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains",
+                      "name": "filter.operator.contains"
+                    },
+                    "rightValue": "pdCash"
                   }
                 ],
-                "combinator": "and"
+                "combinator": "or"
               }
             }
           ]
@@ -1406,7 +1416,7 @@
           "parameters": [
             {
               "name": "X-API-KEY",
-              "value": "blink_UUV73Rc9ihd3eNaoQ84nrHe108CiP8LKnTSC2q4r9yJOniXGpLPsBjNyGNNMFJp0"
+              "value": "BLINK_REDACTED"
             },
             {
               "name": "Content-Type",
@@ -1435,7 +1445,7 @@
         2496
       ],
       "parameters": {
-        "jsCode": "const orderData = $('TomaDatosDelEmail').first()?.json || {};\nconst pdLink = $('pdCashlink').first()?.json?.data?.urls?.payment_page || '';\nconst blinkInvoice = $('BlinkLink').first()?.json?.data?.lnUsdInvoiceCreate?.invoice?.paymentRequest || '';\n\nconst baseAmount = parseFloat(orderData.TotalAmount) || 0;\nconst fee = baseAmount * 0.10;\nconst totalWithFee = baseAmount * 1.10;\nconst totalBlink = baseAmount; // No 10% fee for Blink!\nconst firstName = (orderData.CustomerName || 'Customer').split(' ')[0];\n\nlet emailHtml = `Dear ${orderData.CustomerName || 'Customer'},<br>\n<br>\nThank you for your TotalTv Order # <strong>${orderData.OrderID}</strong><br>\nMonths: ${orderData.Months || '.'}<br>\nConns: ${orderData.Conns || '.'}<br>\nAdult: ${orderData.Adult === 'Yes' ? 'Yes' : (orderData.Adult === 'No' ? 'No' : '.')}<br>\n<br>\n<div style=\"background-color: #f8f9fa; border-left: 4px solid #0070ba; padding: 12px 16px; margin: 15px 0; font-family: sans-serif;\">\n  <strong style=\"font-size: 15px; color: #333;\">Order Amount: &nbsp;&nbsp;$${baseAmount.toFixed(2)} USD</strong>\n</div>\n\n<div style=\"background: #eef7ff; border: 1px solid #bde0fe; border-radius: 8px; padding: 14px 18px; margin: 18px 0; font-family: sans-serif;\">\n  <h3 style=\"color: #0070ba; margin: 0 0 8px 0; font-size: 17px;\">⚡ Option 1 (Recommended): Pay from CashApp with Bitcoin Lightning</h3>\n  <ul style=\"margin: 6px 0 12px 18px; padding: 0; color: #0b3d91; font-size: 14px;\">\n    <li><strong>🎉 NO PROCESSING FEE (0% Fee):</strong> Pay only <strong>$${totalBlink.toFixed(2)} USD</strong> (Save $${fee.toFixed(2)} in fees!)</li>\n    <li><strong>🚀 Faster Method:</strong> Lightning payments confirm immediately, speeding up your account activation / renewal!</li>\n  </ul>\n`;\n\nif (blinkInvoice) {\n  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(blinkInvoice)}`;\n  emailHtml += `\n  <img src=\"${qrUrl}\" alt=\"Blink Lightning QR Code\" width=\"260\" height=\"260\" style=\"display: block; border: 1px solid #cce5ff; border-radius: 8px; margin: 12px 0;\" /><br>\n  <a href=\"lightning:${blinkInvoice}\" style=\"display: inline-block; background-color: #0070ba; color: #ffffff; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-bottom: 10px;\">⚡ Open directly in CashApp / Lightning App ($${totalBlink.toFixed(2)})</a><br>\n  <br>\n  <strong>Invoice Code (Copy & Paste):</strong><br>\n  <code style=\"display: block; background: #f1f3f5; padding: 8px; border-radius: 4px; word-break: break-all; font-size: 12px; margin-top: 5px;\">${blinkInvoice}</code><br>\n  <small style=\"color: #555;\">📱 <em>In CashApp: Open CashApp ➔ Tap the Money/Bitcoin tab ➔ Tap the QR scanner icon in the top-left corner ➔ Scan the QR code above or paste the Invoice Code.</em></small>\n</div>`;\n}\n\nemailHtml += `\n<div style=\"background: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; margin: 20px 0; font-family: sans-serif;\">\n  <h3 style=\"color: #00D632; margin: 0 0 8px 0; font-size: 17px;\">🟢 Option 2: Pay via CashApp Web Link</h3>\n  <div style=\"font-size: 14px; color: #555; margin-bottom: 10px;\">\n    • Order: $${baseAmount.toFixed(2)}<br>\n    • Payment Processing Fee (10%): $${fee.toFixed(2)}<br>\n    <strong>• Total to Pay: $${totalWithFee.toFixed(2)} USD</strong>\n  </div>\n  <a href=\"${pdLink}\" style=\"display: inline-block; background-color: #00D632; color: #ffffff; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold;\">👉 Click here to pay via CashApp Web ($${totalWithFee.toFixed(2)})</a>\n</div>\n\nThank you for choosing us!<br>\n<img src=\"https://raw.githubusercontent.com/totaltvusa/images/main/TotalTvLogo.png\" alt=\"TotalTv USA\" width=\"220\" height=\"48\" style=\"display: block; width: 220px; max-width: 220px; height: 48px; border: 0; outline: none; text-decoration: none; margin-top: 15px;\" border=\"0\" />`;\n\n// Single message SMS: strictly informs that payment instructions were sent to email\nconst smsText = `Dear ${orderData.CustomerName || 'Customer'},\n\nPayment instructions for TotalTv Order #${orderData.OrderID} were sent to ${orderData.Email}.\n\nPlease check spam/junk folders too.`;\n\nlet tgText = `Dear ${orderData.CustomerName || 'Customer'},\n\nThank you for your TotalTv Order # ${orderData.OrderID}\nMonths: ${orderData.Months || '.'}\nConns: ${orderData.Conns || '.'}\nAdult: ${orderData.Adult === 'Yes' ? 'Yes' : (orderData.Adult === 'No' ? 'No' : '.')}\n\n<b>Order Amount:</b> $${baseAmount.toFixed(2)} USD\n\n<b>⚡ Option 1 (Blink Lightning - 0% Fee):</b> $${totalBlink.toFixed(2)} USD (Instant Activation)\n${blinkInvoice ? `Invoice: <code>${blinkInvoice}</code>\nQR: https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(blinkInvoice)}\n` : ''}\n<b>🟢 Option 2 (CashApp Web - 10% Fee):</b> $${totalWithFee.toFixed(2)} USD\nLink: ${pdLink}\n\nThank you for choosing us!`;\n\nlet waText = `Dear ${orderData.CustomerName || 'Customer'},\n\nThank you for your TotalTv Order # ${orderData.OrderID}\nMonths: ${orderData.Months || '.'}\nConns: ${orderData.Conns || '.'}\nAdult: ${orderData.Adult === 'Yes' ? 'Yes' : (orderData.Adult === 'No' ? 'No' : '.')}\n\n*Order Amount:* $${baseAmount.toFixed(2)} USD\n\n*⚡ Option 1 (Blink Lightning - 0% Fee):* $${totalBlink.toFixed(2)} USD (Instant Activation)\n${blinkInvoice ? `QR: https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(blinkInvoice)}\n` : ''}\n*🟢 Option 2 (CashApp Web - 10% Fee):* $${totalWithFee.toFixed(2)} USD\nLink: ${pdLink}\n\nThank you for choosing us!`;\n\nreturn [{\n  json: {\n    customer_name: orderData.CustomerName || 'Customer',\n    first_name: firstName,\n    order_id: orderData.OrderID,\n    email: orderData.Email,\n    phone: orderData.Phone,\n    can_send_sms: orderData.can_send_sms,\n    email_subject: `${firstName}, Your TotalTv Payment Link - Order #${orderData.OrderID}`,\n    email_html: emailHtml,\n    sms_text: smsText,\n    tg_text: tgText,\n    wa_text: waText\n  }\n}];"
+        "jsCode": "const orderData = $('TomaDatosDelEmail').first()?.json || {};\nconst baseAmount = parseFloat(orderData.TotalAmount) || 0;\nconst firstName = (orderData.CustomerName || 'Customer').split(' ')[0];\nconst apiKey = 'BLINK_REDACTED';\nconst walletId = 'f7cc1aa9-749c-4eb3-969d-fe9d1deac883'; // BTC Wallet for 24h validity\n\n// 1. Fetch realtime price to convert USD to satoshis\nlet sats = 0;\ntry {\n  const priceRes = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.blink.sv/graphql',\n    headers: {\n      'X-API-KEY': apiKey,\n      'Content-Type': 'application/json'\n    },\n    body: {\n      query: 'query { realtimePrice(currency: \"USD\") { btcSatPrice { base offset } } }'\n    },\n    json: true\n  });\n  const btcSat = priceRes?.data?.realtimePrice?.btcSatPrice;\n  if (btcSat && btcSat.base) {\n    const satPriceCents = btcSat.base / Math.pow(10, btcSat.offset);\n    sats = Math.round((baseAmount * 100) / satPriceCents);\n  }\n} catch (e) {\n  sats = Math.round((baseAmount * 100) / 0.08);\n}\n\n// 2. Create 24h Lightning invoice (expiresIn: 1440 mins = 24h)\nlet blinkInvoice = '';\ntry {\n  const invRes = await this.helpers.httpRequest({\n    method: 'POST',\n    url: 'https://api.blink.sv/graphql',\n    headers: {\n      'X-API-KEY': apiKey,\n      'Content-Type': 'application/json'\n    },\n    body: {\n      query: `mutation {\n        lnInvoiceCreate(input: {\n          walletId: \"${walletId}\",\n          amount: ${sats},\n          expiresIn: 1440,\n          memo: \"TotalTv Order #${String(orderData.OrderID)}\"\n        }) {\n          errors { message }\n          invoice { paymentRequest }\n        }\n      }`\n    },\n    json: true\n  });\n  blinkInvoice = invRes?.data?.lnInvoiceCreate?.invoice?.paymentRequest || '';\n} catch (e) {\n  blinkInvoice = '';\n}\n\n// 3. Format expiration in EST (+24 hours)\nconst expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);\nconst expFormattedEST = expiresAt.toLocaleString('en-US', {\n  timeZone: 'America/New_York',\n  month: 'long',\n  day: 'numeric',\n  hour: 'numeric',\n  minute: '2-digit',\n  hour12: true\n}) + ' EST';\n\nconst qrUrl = blinkInvoice ? `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(blinkInvoice)}` : '';\n\nlet emailHtml = `Dear ${orderData.CustomerName || 'Customer'},<br>\n<br>\nThank you for your TotalTv Order # <strong>${orderData.OrderID}</strong><br>\nMonths: ${orderData.Months || '.'}<br>\nConns: ${orderData.Conns || '.'}<br>\nAdult: ${orderData.Adult === 'Yes' ? 'Yes' : (orderData.Adult === 'No' ? 'No' : '.')}<br>\nTotal Amount: $${baseAmount.toFixed(2)}<br>\n<br>\nIf you want to complete payment for your order using <strong>CashApp</strong>, you can pay directly via the <strong>Lightning Network</strong> by scanning the QR code below for <strong>$${baseAmount.toFixed(2)}</strong>:<br>\n<br>`;\n\nif (blinkInvoice) {\n  emailHtml += `<img src=\"${qrUrl}\" alt=\"Lightning QR\" width=\"260\" height=\"260\" style=\"display: block; border: 1px solid #cce5ff; border-radius: 8px; margin: 12px 0;\" /><br>\n<br>\n👉 <a href=\"lightning:${blinkInvoice}\" style=\"display: inline-block; background-color: #0070ba; color: #ffffff; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px;\">⚡ Open directly in Cash App / Lightning App ($${baseAmount.toFixed(2)})</a><br>\n<br>\n<strong>Lightning Invoice Code (Copy & Paste):</strong><br>\n<code style=\"display: block; background: #f1f3f4; padding: 8px; border-radius: 4px; word-break: break-all; font-size: 12px; margin-top: 5px;\">${blinkInvoice}</code><br>\n<br>\n⏳ <strong>Important:</strong> This payment code is valid for 24 hours (until <strong>${expFormattedEST}</strong>).<br>\n<br>\n<em>📱 In Cash App: Tap the Money/Bitcoin tab ➔ Tap the QR scanner icon in the top-left corner ➔ Scan the QR code above or paste the Invoice Code.</em><br>\n<br>`;\n} else {\n  emailHtml += `Please contact support to complete your payment.<br><br>`;\n}\n\nemailHtml += `Thank you for choosing us!<br>\n<br>\n-----------<br>\nQuestions? <a href=\"https://wa.me/13059861096?text=Hello!,%20%20I%20have%20a%20question:%20\">Chat with us!</a><br>\n<br>\n<img src=\"https://raw.githubusercontent.com/totaltvusa/images/main/TotalTvLogo.png\" alt=\"TotalTv USA\" width=\"220\" height=\"48\" style=\"display: block; width: 220px; max-width: 220px; height: 48px; border: 0; outline: none; text-decoration: none; margin-top: 15px;\" border=\"0\" />`;\n\nconst smsText = `Dear ${orderData.CustomerName || 'Customer'},\nPayment instructions for TotalTv Order #${orderData.OrderID} were sent to ${orderData.Email}\n(check spam/junk too)`;\n\nlet tgText = `🚀 <b>NUEVO PEDIDO RECIBIDO (pdCash)</b> (#${orderData.OrderID})\n----------------------------------\n👤 <b>Cliente:</b> ${orderData.CustomerName || \"Customer\"}\n📧 <b>Email:</b> ${orderData.Email}\n📱 <b>Tel:</b> ${orderData.Phone}\n📦 <b>Plan:</b> ${orderData.Months} Mes(es)\n🖥️ <b>Conexiones:</b> ${orderData.Conns}\n🔞 <b>Adulto:</b> ${orderData.Adult === \"Yes\" ? \"Sí\" : \"No\"}\n💰 <b>Total:</b> $${baseAmount.toFixed(2)} (${sats} sats)\n💳 <b>Método:</b> pdCash (Lightning Network 24h)\n⏳ <b>Vence:</b> ${expFormattedEST}\n${blinkInvoice ? `⚡ <b>Invoice:</b> <code>${blinkInvoice}</code>\nQR: https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(blinkInvoice)}\n` : ''}\nThank you!`;\n\nlet waText = `🚀 *NUEVO PEDIDO RECIBIDO (pdCash)* (#${orderData.OrderID})\n----------------------------------\n👤 *Cliente:* ${orderData.CustomerName || \"Customer\"}\n📧 *Email:* ${orderData.Email}\n📱 *Tel:* ${orderData.Phone}\n📦 *Plan:* ${orderData.Months} Mes(es)\n🖥️ *Conexiones:* ${orderData.Conns}\n🔞 *Adulto:* ${orderData.Adult === \"Yes\" ? \"Sí\" : \"No\"}\n💰 *Total:* $${baseAmount.toFixed(2)} (${sats} sats)\n💳 *Método:* pdCash (Lightning Network 24h)\n⏳ *Vence:* ${expFormattedEST}\n${blinkInvoice ? `⚡ *QR:* https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(blinkInvoice)}\n` : ''}\nThank you!`;\n\nreturn [{\n  json: {\n    customer_name: orderData.CustomerName || 'Customer',\n    first_name: firstName,\n    order_id: orderData.OrderID,\n    email: orderData.Email,\n    phone: orderData.Phone,\n    can_send_sms: orderData.can_send_sms,\n    email_subject: `${firstName}, your TotalTv Order #${orderData.OrderID} - CashApp Payment Instructions`,\n    email_html: emailHtml,\n    sms_text: smsText,\n    tg_text: tgText,\n    wa_text: waText\n  }\n}];"
       }
     }
   ],

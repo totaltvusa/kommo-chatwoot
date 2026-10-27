@@ -122,7 +122,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 - **R:** Sí. Puedes instalar la aplicación en todos los dispositivos que desees (Firestick, celulares, Smart TVs, computadoras). La cantidad de pantallas que pueden reproducir **al mismo tiempo (en simultáneo)** depende del plan contratado (1, 2 o 3 dispositivos simultáneos). Las pantallas pueden estar conectadas en la misma casa o en ubicaciones/ciudades distintas.
 
 ### P3: ¿Cómo funciona la prueba gratuita (Free Trial) de TotalTv USA?
-- **R:** Ofrecemos una prueba gratuita de 24 horas para 1 dispositivo. El tiempo de 24 horas comienza a correr a partir de tu **primer inicio de sesión** (primer login) en la aplicación, por lo que no pierdes tiempo si la creas y la pruebas más tarde. Para generarla, el asistente de IA solicita Nombre y Apellido, Correo Electrónico y Teléfono con código de país.
+- **R:** Ofrecemos una prueba gratuita de 24 horas para 1 dispositivo. El tiempo de 24 horas comienza a correr a partir de tu **primer inicio de sesión** (primer login) en la aplicación, por lo que no pierdes tiempo si la creas y la pruebas más tarde. Para generarla, se validan los datos de contacto requeridos (Nombre y Apellido, Correo Electrónico y Teléfono con código de país). Si ya se tienen los datos, no se pregunta nada y se entrega de inmediato; si falta algún dato, solo se solicita el dato faltante (sin preguntar si es para sí mismo o para otra persona).
 
 ### P4: ¿Cuáles son las formas de pago aceptadas para TotalTv USA?
 - **R:** Aceptamos las siguientes opciones seguras:
@@ -207,4 +207,12 @@ Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una 
     1. Responder que **es lo más posible / muy probable** que sí contemos con dicho contenido.
     2. Explicar amablemente que en un universo tan amplio de más de 15,000 canales y más de 50,000 películas y series actualizadas a diario, la mejor y más rápida manera de confirmarlo es buscar dicho contenido directamente en el servicio.
     3. Resaltar que para ello **nada mejor que tomar la prueba gratuita de 24 horas** para comprobarlo por sí mismo directamente en su pantalla sin compromiso.
+
+- **Caso — Proceso Expedito de Pruebas Gratuitas y Prohibición de Preguntar Destinatario:**
+  - *Instrucción:* Cuando un cliente solicita una prueba gratuita (sea nuevo o existente):
+    1. **Prohibido preguntar destinatario**: No se debe preguntar si la prueba es para el cliente o para otra persona, ni explicar que si es para otra persona dé sus datos (queda totalmente prohibido preguntar "¿Deseas la prueba a tu nombre o es para algún familiar o amigo?").
+    2. **Validación expedita**: Se valida si ya se cuenta con los 3 datos requeridos (nombre completo con nombre y apellido mínimo 2 palabras, correo electrónico válido y teléfono con código de país).
+    3. **Si ya se tienen los datos**: No se pregunta nada; se procede de inmediato a crear y entregar la prueba para hacer el proceso más expedito con menos pasos para el cliente.
+    4. **Si falta algún dato**: Solo se solicita el dato específico que esté faltando, sin volver a pedir lo que ya se conoce.
+
 

@@ -97,7 +97,9 @@ def sanitize_secrets(data_str):
     data_str = re.sub(r'apik_[A-Za-z0-9_]+', 'APIK_WHOP_REDACTED', data_str)
     data_str = re.sub(r'sk_[A-Za-z0-9_]{20,}', 'SK_REDACTED', data_str)
     data_str = re.sub(r'pk_[A-Za-z0-9_]{20,}', 'PK_REDACTED', data_str)
+    data_str = re.sub(r'blink_[A-Za-z0-9_]{20,}', 'BLINK_REDACTED', data_str)
     return data_str
+
 
 def main():
     for name, wid in wfs.items():

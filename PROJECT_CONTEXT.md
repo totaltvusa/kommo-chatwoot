@@ -3461,3 +3461,37 @@
      - Workflow `TS2CADjNNn05jXBW` publicado y activo en n8n (`activeVersionId: a1b78075-f5f6-46e3-88b5-d1c8e2dbee99`).
      - Respaldo exportado en `workflows/telegram_to_n8n.json`.
 
+---
+
+### 109. Proceso Expedito de Pruebas Gratuitas y Prohibición de Preguntar por Destinatario (2026-10-27)
+
+* **Directiva y Mandato de Atención**:
+  - Al procesar una solicitud de prueba gratuita de un cliente (aplica tanto para **TotalTv USA** como para **TVTotal24 Latina**, sea cliente nuevo o cliente existente):
+    1. **Prohibición Estricta de Preguntar por Destinatario**:
+       - Está terminantemente prohibido preguntar si la prueba es para el cliente o para otra persona, familiar o amigo (queda erradicada la pregunta: *"¿Deseas la prueba a tu nombre con los datos que ya tenemos o es para algún familiar o amigo y prefieres darnos los datos...?"*).
+       - No se debe explicar al cliente que si es para otra persona debe aportar sus datos.
+    2. **Validación Directa de Datos**:
+       - El asistente valida inmediatamente si ya se cuenta con los 3 datos indispensables: Nombre y Apellido (mínimo 2 palabras), Correo electrónico válido y Teléfono con código de país (desde `[CLIENT CONTEXT: ...]`, perfil o historial de conversación).
+    3. **Si ya se tienen los datos**:
+       - **NO SE PREGUNTA NADA**. Se procede de inmediato en ese mismo turno a ejecutar la herramienta correspondiente (`create_trial_tool` en TotalTv USA / `crear_prueba_tvtotal24` en TVTotal24) y entregar las credenciales directamente al cliente.
+    4. **Si falta algún dato**:
+       - Se solicita **única y exclusivamente el dato que falte** (por ejemplo, si ya se conoce el nombre y teléfono, solo se pide el email). En cuanto se suministra, se genera la prueba de inmediato.
+    5. **Objetivo Operativo**:
+       - Lograr un proceso más expedito con menos pasos e interacciones innecesarias para el cliente.
+
+* **Componentes y Archivos Actualizados**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/agent_prompt.md` (TotalTv USA): Actualizado `CRITICAL MANDATE — DATA COLLECTION SCOPE & EXPEDITED TRIAL PROTOCOL` y erradicada la sección `FLEXIBLE TRIAL HANDLING (SELF vs. FAMILY / FRIEND)`.
+     - `prompts/tvtotal24_prompt.md` (TVTotal24 Latina): Actualizado `REGLA GENERAL OBLIGATORIA — PROCESO EXPEDITO DE PRUEBAS Y CERO PREGUNTAS REDUNDANTES`, eliminada la pregunta de destinatario y eliminado el gate previo que bloqueaba la creación inmediata al tener datos completos.
+  2. **Bases de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/totaltv_usa_support.md`: Actualizada FAQ P3 y añadido el nuevo caso aprendido en la Sección 4.
+     - `knowledge/tvtotal24_latina_support.md`: Actualizada FAQ P5 y añadido el nuevo caso aprendido en la Sección 4.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados los nodos `AI Agent` y `AI Agent - TVTotal24`, y **publicada versión activa en producción** (`3db76a6f-29ea-48b3-85eb-6944648d5d02`).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado el nodo `AI Agent` y **publicada versión activa en producción** (`dd949afd-50bc-436f-92d5-7f38e75a936c`).
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado `baseBrandPrompt` en el nodo `Preparar Instrucción Agente Directo` y **publicada versión activa en producción** (`a1b273b0-7419-4227-bab1-0a9e84358822`).
+     - `workflows/agent_totaltv_usa.json`: Sincronizado localmente.
+  4. **Despliegue y Sincronización Total del Repositorio**:
+     - Ejecutado `python3 workflows/export_workflows.py`, sincronizando y sanitizando todos los workflows locales con el servidor de n8n.
+
+

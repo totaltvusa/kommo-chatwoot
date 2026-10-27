@@ -137,7 +137,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
   *(Excepción PayPal / Tarjetas)*: Únicamente si el cliente lo solicita expresamente, se genera un enlace de Card2Crypto con 10% de recargo sobre el plan base.
 
 ### P5: ¿Cómo funciona la prueba gratuita (Free Trial) de TVTotal24?
-- **R:** Ofrecemos una prueba gratuita de 4 horas continuas. Las 4 horas comienzan a correr **de inmediato** en el momento exacto en que se genera la prueba en el sistema. Por ello, antes de generarla, el agente solicita Nombre completo, Correo, Teléfono y confirma que el cliente tenga tiempo disponible en ese instante.
+- **R:** Ofrecemos una prueba gratuita de 4 horas continuas. Las 4 horas comienzan a correr **de inmediato** en el momento exacto en que se genera la prueba en el sistema. Para generarla, se validan los datos de contacto requeridos (Nombre y Apellido mínimo 2 palabras, Correo y Teléfono con código de país). Si ya se tienen los datos, no se pregunta nada y se crea y entrega de inmediato; si falta algún dato, solo se solicita el dato faltante (sin preguntar si es para sí mismo o para otra persona).
 
 ---
 
@@ -178,4 +178,12 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
     1. Responder que **es lo más posible / muy probable** que sí contemos con dicho contenido.
     2. Explicar con claridad y amabilidad que en un universo tan amplio de más de 5,000 canales y más de 20,000 películas y series actualizadas constantemente todos los días, la mejor y más rápida manera de confirmarlo es buscar dicho contenido directamente en el servicio.
     3. Resaltar que para ello **nada mejor que tomar la prueba gratuita de 4 horas continuas** para comprobarlo por sí mismo directamente en su pantalla sin compromiso.
+
+- **Caso — Proceso Expedito de Pruebas Gratuitas y Prohibición de Preguntar Destinatario:**
+  - *Instrucción:* Cuando un cliente solicita una prueba gratuita (sea nuevo o existente):
+    1. **Prohibido preguntar destinatario**: No se debe preguntar si la prueba es para el cliente o para otra persona, ni explicar que si es para otra persona dé sus datos (queda totalmente prohibido preguntar "¿Deseas la prueba a tu nombre o es para algún familiar o amigo?").
+    2. **Validación expedita**: Se valida si ya se cuenta con los 3 datos requeridos (nombre completo con nombre y apellido mínimo 2 palabras, correo electrónico válido y teléfono con código de país).
+    3. **Si ya se tienen los datos**: No se pregunta nada; se procede de inmediato a crear y entregar la prueba para hacer el proceso más expedito con menos pasos para el cliente.
+    4. **Si falta algún dato**: Solo se solicita el dato específico que esté faltando, sin volver a pedir lo que ya se conoce.
+
 
