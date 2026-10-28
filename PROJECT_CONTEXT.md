@@ -3533,4 +3533,36 @@
   4. **Despliegue y Sincronización Total**:
      - Re-exportados y sincronizados los workflows locales mediante `python3 workflows/export_workflows.py`.
 
+---
+
+## 111. POLÍTICA DE SOPORTE PARA PC / COMPUTADORAS EN TVTOTAL24: DEPRECACIÓN DE WEBPLAYER, RECOMENDACIÓN DE VLC/KODI, AVISO DE SIN SOPORTE TÉCNICO Y ENTREGA DE CREDENCIALES CON PLAYLIST M3U
+
+* **Contexto y Solicitud**:
+  - El agente de TVTotal24 debe **dejar de sugerir el reproductor web** (`http://player.cooteg.ch:2095/player` o cualquier otro webplayer).
+  - Para **PC / Computadoras** (Windows, Mac, Linux, laptops), debe indicar el uso de reproductores como **VLC Player**, **Kodi** o similares.
+  - **Aviso de soporte técnico**: Informar expresamente al cliente que *"sin embargo, no ofrecemos soporte técnico para ese tipo de aplicaciones"*.
+  - **Entrega de datos necesarios**: Suministrar únicamente las credenciales y datos requeridos para su configuración:
+    1. **Usuario**: `{usuario}`
+    2. **Contraseña**: `{contraseña}`
+    3. **Servidor / DNS**: `http://wk.wxn.ch:2095`
+    4. **Playlist M3U**: `http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`
+
+* **Archivos y Workflows Modificados**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/tvtotal24_prompt.md`:
+       * Línea 77: Mandato supremo de prohibición estricta de webplayer (`player.cooteg.ch`), especificando la política para PC (VLC/Kodi), aviso de sin soporte técnico y datos requeridos (usuario, clave, DNS y playlist M3U).
+       * Sección 5 (*Computadoras PC / Laptop*): Sustituida la sugerencia del reproductor web por VLC Player / Kodi o similar, aviso obligatorio de sin soporte técnico, entrega de credenciales y URL M3U estructurada, y prohibición terminante del webplayer.
+       * Sección 3.🎯 (*Triaje de Fallas Smarters - Opción PC*): Sustituida la recomendación de webplayer por VLC/Kodi, aviso de soporte técnico y credenciales con enlace M3U.
+  2. **Base de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/tvtotal24_latina_support.md`:
+       * Sección 1.F (*Computadoras PC / Laptop*): Actualizada con recomendación de VLC Player / Kodi, aviso explícito de sin soporte técnico, datos requeridos y prohibición de webplayer.
+       * Sección 2.A (*Triaje PC*): Actualizada recomendación de PC con reproductores VLC/Kodi, aviso y entrega de datos requeridos con M3U.
+       * Sección 4 (*Casos Aprendidos*): Agregado el caso *"Soporte en PC / Computadora y Prohibición de Webplayer"* con instrucciones explícitas de actuación.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizado `systemMessage` del nodo `AI Agent - TVTotal24` y publicada versión activa (`399ba2bc-181b-40f2-a0b3-2ebf0183c4f0`).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado `systemMessage` del nodo `AI Agent` y publicada versión activa (`985ed0e4-1be9-4838-b41a-620cd9cf7dfb`).
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado `baseBrandPrompt` del nodo `Preparar Instrucción Agente Directo` (validada sintaxis con `node -c`) y publicada versión activa (`65297d81-3fef-4f78-b509-0cc19747fa90`).
+  4. **Sincronización Total con n8n**:
+     - Ejecutado `python3 workflows/export_workflows.py` para sincronizar los archivos locales de workflows.
+
 

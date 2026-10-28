@@ -75,9 +75,15 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
 1. Descargar directamente desde el navegador en: **`http://aftv.news/5533902`**.
 2. Abrir la app, seleccionar panel **"TOTALTV LATINA"** e ingresar credenciales.
 
-### F. Computadoras y Consolas de Videojuegos
-- Acceder al reproductor web oficial: **`http://player.cooteg.ch:2095/player`**
-- Ingresar Usuario y Contraseña para ver directamente en el navegador.
+### F. Computadoras PC / Laptop (Windows, Mac, Linux)
+- Recomendar reproductores multimedia como **VLC Player**, **Kodi** o similares.
+- **Aviso de soporte técnico obligatorio**: Indicar al cliente: *"Sin embargo, no ofrecemos soporte técnico para ese tipo de aplicaciones; solo entregamos los datos necesarios para su configuración."*
+- Entregar únicamente los datos requeridos:
+  * **Usuario**: Credencial asignada.
+  * **Contraseña**: Contraseña asignada.
+  * **Servidor / DNS**: `http://wk.wxn.ch:2095`
+  * **M3U Playlist**: `http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`
+- ⛔ **Prohibición**: Queda terminantemente prohibido sugerir el webplayer `http://player.cooteg.ch:2095/player`.
 
 ---
 
@@ -91,7 +97,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
    - **Android / Firestick / Google TV / Onn Box**: Utilizar la app oficial nativa TotalTv Latina descargada con Downloader (código `5533902`). Fallback: SmartOne IPTV.
    - **Smart TV (Samsung, LG, VIDAA)**: SmartOne IPTV (primera opción con 15 días de prueba gratis, activación $5/año o $24 de por vida) o reproductores como IBO Player / IPTV Pro con Servidor / DNS `http://wk.wxn.ch:2095`. (¡Terminantemente prohibido recomendar Smarters!).
    - **Apple (iPhone, iPad, Apple TV, Mac)**: Reproductores compatibles de la App Store como XCIPTV, Xtream Player, Mega OTT, Tivimate, IPTV Pro o IBO Player con Servidor / DNS `http://wk.wxn.ch:2095`.
-   - **Computadoras PC / Laptop**: Reproductor web oficial `http://player.cooteg.ch:2095/player` o reproductores externos con Servidor / DNS `http://wk.wxn.ch:2095`.
+   - **Computadoras PC / Laptop**: Reproductores como VLC Player, Kodi o similares. Aclarar expresamente que no ofrecemos soporte técnico para ese tipo de aplicaciones y entregar únicamente los datos necesarios (Usuario, Contraseña, Servidor / DNS `http://wk.wxn.ch:2095` y Playlist M3U `http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`). (Prohibido sugerir webplayer `player.cooteg.ch`).
 
 ### B. Canales con Buffer o Congelamiento
 1. Recomendar reiniciar la app y borrar caché en *Ajustes de la TV/Firestick → Aplicaciones → TotalTv Latina → Borrar caché*.
@@ -192,5 +198,12 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
     2. **Validación expedita**: Se valida si ya se cuenta con los 3 datos requeridos (nombre completo con nombre y apellido mínimo 2 palabras, correo electrónico válido y teléfono con código de país).
     3. **Si ya se tienen los datos**: No se pregunta nada; se procede de inmediato a crear y entregar la prueba para hacer el proceso más expedito con menos pasos para el cliente.
     4. **Si falta algún dato**: Solo se solicita el dato específico que esté faltando, sin volver a pedir lo que ya se conoce.
+
+- **Caso — Soporte en PC / Computadora y Prohibición de Webplayer:**
+  - *Instrucción:* Para PC o computadoras (Windows, Mac, Linux):
+    1. **Dejar de sugerir webplayer**: Queda TERMINANTEMENTE PROHIBIDO sugerir o entregar el reproductor web (`http://player.cooteg.ch:2095/player`).
+    2. **Recomendar reproductores**: Indicar que use reproductores como **VLC Player**, **Kodi** o similares.
+    3. **Aviso de soporte técnico**: Indicar expresamente al cliente: *"Sin embargo, no ofrecemos soporte técnico para ese tipo de aplicaciones; solo proporcionamos los datos necesarios para su configuración."*
+    4. **Datos a entregar**: Entregar únicamente los datos necesarios: Usuario, Clave, Servidor / DNS (`http://wk.wxn.ch:2095`) y Playlist M3U (`http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`).
 
 
