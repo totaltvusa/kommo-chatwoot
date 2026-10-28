@@ -3494,4 +3494,43 @@
   4. **Despliegue y Sincronización Total del Repositorio**:
      - Ejecutado `python3 workflows/export_workflows.py`, sincronizando y sanitizando todos los workflows locales con el servidor de n8n.
 
+---
+
+### 110. Actualización Oficial de DNS en TVTotal24 (`wk.wxn.ch:2095` y `smrts.wxn.ch:2095`), Deprecación de IPTV Smarters y Protocolo de Fallas (2026-10-27)
+
+* **Directiva y Mandato Operativo**:
+  1. **Actualización y "Olvido" de Servidores / DNS Anteriores**:
+     - El agente de TVTotal24 debe **olvidar por completo** los DNS anteriores sugeridos (`http://wk.mvpl.uk:2082`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`).
+     - **Servidor / DNS General**: Debe sugerir única y exclusivamente **`http://wk.wxn.ch:2095`** para aplicaciones en general (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
+     - **DNS para Smarters**: En caso de aplicaciones tipo Smarters (si el cliente ya la utiliza y requiere el DNS), debe sugerir **`http://smrts.wxn.ch:2095`**.
+  2. **Prohibición Total de Recomendar IPTV Smarters**:
+     - El agente de TVTotal24 debe **dejar de sugerir el uso de IPTV Smarters** (IPTV Smarters Player, IPTV Smarters Pro, Smarters Player Lite, etc.) en cualquier dispositivo (Apple, Smart TVs, Android, PC).
+     - En dispositivos Apple (iOS, Apple TV, Mac), en lugar de Smarters, se recomiendan reproductores de la App Store compatibles con API Xtream Codes (**XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**, **IPTV Pro**, **IBO Player**) configurados con `http://wk.wxn.ch:2095`.
+     - En Smart TVs (Samsung, LG, VIDAA), se recomienda **SmartOne IPTV** como primera opción (o IBO Player, IPTV Pro, etc.) con `http://wk.wxn.ch:2095`, erradicando Smarters incluso ante solicitudes de aplicaciones gratuitas.
+  3. **Protocolo de Atención ante Fallas en Aplicaciones Basadas en Smarters**:
+     - Cuando un cliente manifieste tener problemas con alguna app basada en Smarters (IPTV Smarters Player, IPTV Smarters Pro, Smarters Player Lite, Smarters Player, etc.):
+       a) **Indicar que tales aplicaciones están presentando problemas**: Informar al cliente con total claridad que las aplicaciones de la familia Smarters actualmente están presentando fallas y que es mucho mejor utilizar otra opción.
+       b) **Preguntar por su dispositivo**: Consultarle en qué dispositivo o televisor tiene instalado el servicio para hacerle la recomendación correspondiente sobre qué app utilizar.
+       c) **Recomendar la aplicación adecuada según el dispositivo indicado**:
+          - *Android / Firestick / Google TV*: App oficial nativa TotalTv Latina con Downloader (`5533902`) o SmartOne.
+          - *Smart TV sin Android (Samsung, LG, VIDAA)*: SmartOne IPTV (15 días gratis, activación $5/año o $24 lifetime) o IBO Player con Servidor / DNS `http://wk.wxn.ch:2095`.
+          - *Apple (iPhone, iPad, Apple TV, Mac)*: XCIPTV, Xtream Player, Mega OTT, Tivimate con Servidor / DNS `http://wk.wxn.ch:2095`.
+          - *PC / Computadora*: Webplayer oficial `http://player.cooteg.ch:2095/player` o reproductor externo con Servidor / DNS `http://wk.wxn.ch:2095`.
+
+* **Componentes y Archivos Actualizados**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/tvtotal24_prompt.md`: Actualizada línea 76 (servidores y mandato de olvido), líneas 294-295 (entrega de credenciales de prueba), líneas 410-444 (mandato crítico de DNS, configuración Apple y Smart TVs), líneas 482-483 (credenciales recuperadas) y líneas 650-662 (protocolo de fallas Smarters).
+     - `prompts/agent_prompt.md`: Actualizada línea 97 agregando `wk.wxn.ch` a los servidores restringidos para TotalTv USA.
+  2. **Bases de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/tvtotal24_latina_support.md`: Actualizadas Secciones 1.A, 1.B, 1.C, 2.A (protocolo de atención ante fallas de Smarters), 2.C, 2.D, FAQ P6 y Casos Aprendidos en Sección 4.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/tool_create_mvplay_trial.json` (ID `kh10aaenUURvi7Ji`): Actualizados los nodos `Procesar Respuesta MVPlay` (DNS y m3u_url), `Nota Privada Chatwoot`, `Notificar Administrador` y `Notificar WhatsApp`. Publicada versión activa (`29e4f354-bce0-4f50-aca9-22f61d111bf0`).
+     - `workflows/tool_get_mvplay_credentials.json` (ID `gyTc5A6r5TNRgJCs`): Actualizado el nodo `Procesar Credenciales MVPlay` con `finalDns = http://wk.wxn.ch:2095` y `finalDnsSmarters = http://smrts.wxn.ch:2095`. Publicada versión activa (`e5eb4069-8a0f-41fc-9cb0-6a6a41fc7158`).
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados `AI Agent` y `AI Agent - TVTotal24`. Publicada versión activa (`fb76da9c-606c-4956-a01a-64403fb83d83`).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado nodo `AI Agent`. Publicada versión activa (`5711a4cd-d40d-4e74-9975-461d89af6a11`).
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado nodo `Preparar Instrucción Agente Directo`. Publicada versión activa (`f6d6f8fe-9c35-432d-85d7-1010484c2ceb`).
+     - `workflows/agent_totaltv_usa.json`: Sincronizado localmente.
+  4. **Despliegue y Sincronización Total**:
+     - Re-exportados y sincronizados los workflows locales mediante `python3 workflows/export_workflows.py`.
+
 

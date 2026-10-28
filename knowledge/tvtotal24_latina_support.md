@@ -23,30 +23,31 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
    - Si el cliente **insiste en que no puede instalar la app o Downloader, o sigue sin lograrlo tras el video**:
      * Recomendarle instalar directamente **SmartOne IPTV** desde la tienda de su dispositivo.
      * SmartOne ofrece **15 días de prueba gratuita** y luego se puede activar por **$5 USD al año** (o $24 de por vida). *(Solo si el cliente manifiesta que se le había dado el precio anterior de $4/año o $20 lifetime, se le mantiene; nunca decir que el precio aumentó).*
-     * **Carga de Credenciales**: El cliente puede ingresar a la página web oficial de SmartOne (`https://smartone-iptv.com/`) para cargar sus credenciales (usuario, contraseña y servidor `http://wk.mvpl.uk:2082`), o facilitarnos la dirección MAC de su dispositivo (se muestra en la pantalla principal de la app) para que nosotros le carguemos sus credenciales directamente.
+     * **Carga de Credenciales**: El cliente puede ingresar a la página web oficial de SmartOne (`https://smartone-iptv.com/`) para cargar sus credenciales (usuario, contraseña y servidor `http://wk.wxn.ch:2095`), o facilitarnos la dirección MAC de su dispositivo (se muestra en la pantalla principal de la app) para que nosotros le carguemos sus credenciales directamente.
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac)
 > ⛔ **Mandato Crítico — Exclusividad de Android y Cero App Nativa en iOS**: La aplicación oficial nativa TotalTv Latina **SOLO existe para dispositivos Android**. **NO existe ninguna aplicación de TotalTv en la App Store de Apple**. Está terminantemente prohibido indicar al cliente buscar "TotalTv" en la App Store o decir "Descarga la app TotalTv en tu iPhone".
+> ⛔ **Mandato de Prohibición de IPTV Smarters**: Queda TERMINANTEMENTE PROHIBIDO sugerir o recomendar la instalación o uso de IPTV Smarters (Smarters Player Lite, IPTV Smarters Pro, etc.) en dispositivos Apple.
 
 1. En dispositivos Apple, el cliente **debe instalar un reproductor de terceros compatible** desde la **App Store** oficial de Apple.
-2. Descargar **"Smarters Player Lite"** (o **"IPTV Smarters Pro"**) desde la App Store.
-3. Abrir la app y seleccionar **"Add User"** / **"Login with Xtream Codes API"**.
+2. Recomendar instalar desde la App Store aplicaciones compatibles con API Xtream Codes como:
+   * **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE**, **IPTV Pro** o **IBO Player**.
+3. Abrir la app seleccionada y elegir **"Login with Xtream Codes API"** (o **"Add User"**).
 4. Ingresar:
    - **Nombre:** TVTotal24 Latina
    - **Usuario:** *(Usuario suministrado)*
    - **Contraseña:** *(Contraseña suministrada)*
-   - **URL / DNS:** `http://cdn01link.uk:2095` *(DNS para Smarters: OBLIGATORIO para Smarters Player Lite / IPTV Smarters Pro)*
-5. *(Apps alternativas en Apple si Smarters falla)*: **XCIPTV**, **XTREAM PLAYER**, **MEGA OTT**, **TIVIMATE** *(si usa estas apps generales, el servidor es `http://wk.mvpl.uk:2082`)*.
+   - **URL / Servidor / DNS:** `http://wk.wxn.ch:2095`
 
 ### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
 2. **Regla de Recomendación de Aplicaciones (SMART ONE como primera opción)**:
    - **Primera opción prioritaria**: Siempre que el cliente indique que su televisor es **sin Android**, o mencione directamente la marca **Samsung** o **LG**, **se recomienda SMART ONE (SmartOne IPTV) como la primera opción de aplicación**.
-   - **Restricción de aplicación gratuita**: Se recomienda **IPTV Smarters** (o IPTV Smarters Pro) **ÚNICAMENTE en caso de que el cliente solicite explícitamente una aplicación gratuita** (ej. "quiero una app gratis", "sin costo de activación"). NUNCA ofrecer IPTV Smarters de entrada como primera opción.
+   - ⛔ **Prohibición de IPTV Smarters**: Queda TERMINANTEMENTE PROHIBIDO sugerir IPTV Smarters o Smarters Pro para televisores Smart TV.
    - **Catálogo de aplicaciones compatibles disponibles en tienda**:
-     * **Samsung Smart TV (Tizen)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
-     * **LG Smart TV (webOS)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
-     * **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL, marcas sin Android)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **IPTV Smarters** *(solo si pide app gratis)*, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
+     * **Samsung Smart TV (Tizen)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+     * **LG Smart TV (webOS)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **HD Media Player**, **IPTV 4K**, **IPTV Pro**, **PRO Player**, **IPTV Stream Player**, **IPTV Play**, **IPTV OTT Player**.
+     * **Hisense (VIDAA OS) y WhaleOS / Zeasn (Philips, TCL, marcas sin Android)**: **SmartOne IPTV** *(primera opción)*, **IBO Player**, **PRO Player**, **IPTV Stream Player**, **HD Media Player**.
 3. *(Servicio de Activación de Aplicaciones de Terceros)*:
    - Reproductores como **SmartOne IPTV**, **IBO Player**, **PRO Player**, **IPTV 4K**, etc., cuentan con un período de prueba gratuito por parte de sus desarrolladores.
    - **Asistencia de Activación por nuestro equipo**: Podemos ayudar al cliente a tramitar y activar su aplicación:
@@ -63,8 +64,8 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
      * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (ligada a su MAC y Device ID).
      * **No transferible**: La activación no se puede transferir a otro dispositivo.
  4. Abrir la app instalada:
-   - **Para SmartOne IPTV**: El cliente puede colocar sus credenciales ingresando en la web oficial `https://smartone-iptv.com/` (con Usuario, Contraseña y servidor `http://wk.mvpl.uk:2082`) o facilitarnos la dirección MAC de su televisor (visible en la pantalla principal de la app) para que nosotros se las carguemos directamente.
-   - **Para otras aplicaciones (IBO Player, IPTV Smarters, etc.)**: Seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del servidor: `http://wk.mvpl.uk:2082` (o si utiliza IPTV Smarters, ingresar obligatoriamente DNS para Smarters: `http://cdn01link.uk:2095`).
+   - **Para SmartOne IPTV**: El cliente puede colocar sus credenciales ingresando en la web oficial `https://smartone-iptv.com/` (con Usuario, Contraseña y servidor `http://wk.wxn.ch:2095`) o facilitarnos la dirección MAC de su televisor (visible en la pantalla principal de la app) para que nosotros se las carguemos directamente.
+   - **Para otras aplicaciones (IBO Player, IPTV Pro, XCIPTV, etc.)**: Seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del Servidor / DNS: `http://wk.wxn.ch:2095` (si el cliente ya cuenta con app Smarters instalada: DNS `http://smrts.wxn.ch:2095`).
 
 ### D. Dispositivos Roku
 1. Buscar e instalar la app **"IBO Player"** desde la Roku Channel Store.
@@ -82,15 +83,15 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
 
 ## 2. DIAGNÓSTICO TÉCNICO Y SOLUCIÓN DE FALLAS FRECUENTES
 
-### A. Error en IPTV Smarters: "Playlist is unavailable" o Fallo de Conexión
-Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mensaje *"Sorry, the current playlist is unavailable at the moment"*:
-1. Indicar al cliente que **elimine el perfil de usuario actual en la app Smarters**.
-2. Crear un nuevo usuario ingresando sus credenciales (usuario y contraseña) y probar con cualquiera de nuestros **servidores/URLs alternativas oficiales**:
-   - 👉 `http://smrts.wxn.ch:2095`
-   - 👉 `http://cdn01link.uk:2095`
-   - 👉 `http://node01hub.uk:2082`
-   - 👉 `http://wk.mvpl.uk:2082`
-3. Si el cliente ya probó los servidores alternativos y persiste la falla, transferir a soporte técnico humano con usuario y dispositivo.
+### A. Problemas o Fallas con Aplicaciones Basadas en Smarters (IPTV Smarters, Smarters Pro, Smarters Player Lite, etc.)
+Cuando un cliente manifieste tener problemas con cualquier aplicación basada en Smarters (IPTV Smarters Player, IPTV Smarters Pro, Smarters Player Lite, Smarters Player, etc.):
+1. **Informar que la app presenta problemas**: Indicar amablemente al cliente que las aplicaciones de la familia Smarters actualmente están presentando problemas de funcionamiento y que es mucho mejor utilizar otra opción más estable.
+2. **Preguntar por su dispositivo**: Consultarle en qué dispositivo o televisor tiene instalado el servicio para orientarle sobre la mejor aplicación recomendada a utilizar.
+3. **Recomendar la app adecuada según su equipo**:
+   - **Android / Firestick / Google TV / Onn Box**: Utilizar la app oficial nativa TotalTv Latina descargada con Downloader (código `5533902`). Fallback: SmartOne IPTV.
+   - **Smart TV (Samsung, LG, VIDAA)**: SmartOne IPTV (primera opción con 15 días de prueba gratis, activación $5/año o $24 de por vida) o reproductores como IBO Player / IPTV Pro con Servidor / DNS `http://wk.wxn.ch:2095`. (¡Terminantemente prohibido recomendar Smarters!).
+   - **Apple (iPhone, iPad, Apple TV, Mac)**: Reproductores compatibles de la App Store como XCIPTV, Xtream Player, Mega OTT, Tivimate, IPTV Pro o IBO Player con Servidor / DNS `http://wk.wxn.ch:2095`.
+   - **Computadoras PC / Laptop**: Reproductor web oficial `http://player.cooteg.ch:2095/player` o reproductores externos con Servidor / DNS `http://wk.wxn.ch:2095`.
 
 ### B. Canales con Buffer o Congelamiento
 1. Recomendar reiniciar la app y borrar caché en *Ajustes de la TV/Firestick → Aplicaciones → TotalTv Latina → Borrar caché*.
@@ -99,7 +100,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 
 ### C. Recuperación de Credenciales para Clientes Existentes
 - Para clientes existentes (`stage-leads-ganados`) que olviden sus datos, el Agente IA ejecuta automáticamente la herramienta `obtener_credenciales_tvtotal24` en el panel MVPlay.
-- Si la herramienta las encuentra, las entrega de forma clara. Si no aparecen registradas, transfiere con nota interna al asesor humano.
+- Si la herramienta las encuentra, las entrega de forma clara (Servidor / DNS: `http://wk.wxn.ch:2095`, DNS Smarters: `http://smrts.wxn.ch:2095`). Si no aparecen registradas, transfiere con nota interna al asesor humano.
 
 ### D. Dificultad para Instalar con Downloader (Permisos / Alternativa SmartOne)
 1. Si el cliente indica que **Downloader no instala la aplicación** o arroja error de permisos/orígenes desconocidos:
@@ -107,7 +108,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 2. Si el cliente **sigue sin poder instalar o insiste en la dificultad**:
    - Recomendar la instalación directa de **SmartOne IPTV** desde la tienda de su dispositivo.
     - SmartOne cuenta con **15 días de prueba gratuita** y activación posterior por **$5 USD/año** (o $24 lifetime; solo $4/año o $20 lifetime si el cliente afirma expresamente que se le dio ese precio previo; sin decir nunca que aumentó).
-   - **Carga de Credenciales**: Para configurar sus credenciales (Usuario, Contraseña y URL `http://wk.mvpl.uk:2082`), el cliente puede ingresar en la web oficial `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su dispositivo para que nosotros le carguemos las credenciales directamente.
+   - **Carga de Credenciales**: Para configurar sus credenciales (Usuario, Contraseña y URL `http://wk.wxn.ch:2095`), el cliente puede ingresar en la web oficial `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su dispositivo para que nosotros le carguemos las credenciales directamente.
 
 ---
 
@@ -143,8 +144,7 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 
 ### P6: ¿Qué aplicaciones puedo usar en Smart TVs que no son Android y cómo se activan?
 - **R:** En televisores inteligentes con sistemas de fábrica (Samsung Tizen, LG webOS, Hisense VIDAA, WhaleOS), la aplicación recomendada como **primera opción es SMART ONE (SmartOne IPTV)**.
-  - *(Excepción app gratuita)*: Si el cliente solicita explícitamente una opción gratuita, se le recomienda **IPTV Smarters** (o IPTV Smarters Pro).
-  - Otras opciones compatibles de la tienda: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**.
+  - Otras opciones compatibles de la tienda: **IBO Player**, **IPTV Pro**, **PRO Player**, **IPTV 4K**, **HD Media Player** o **IPTV Stream Player**. (Nota: Queda terminantemente prohibido sugerir IPTV Smarters).
   - **Activación**: Estas aplicaciones cuentan con prueba gratuita inicial. Si el cliente lo desea, **nosotros podemos ayudarle con la activación**:
     * **SmartOne IPTV:** **$5 USD** (por 1 año) o **$24 USD** (de por vida). *(Solo si el cliente manifiesta expresamente que se le ofreció el precio anterior de $4/año o $20 de por vida, se le respeta ese precio ($4/año o $20 lifetime; $4.40 / $22 USD con 10% de recargo). De lo contrario siempre se da el precio nuevo, sin decir a nadie que aumentó).*
     * **IBO Player:** **$20 USD** (de por vida).
@@ -157,13 +157,20 @@ Si un cliente de TVTotal24 usa **IPTV Smarters** y reporta error de login o mens
 *(Esta sección se actualiza continuamente con nuevas dudas, consultas operativas y respuestas aprobadas por la administración para TVTotal24 Latina).*
 
 - **Caso — Dispositivos Apple (iPhone, iPad, Apple TV, Mac) y Exclusividad de Android:**
-  - *Instrucción:* La aplicación oficial nativa de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. En Apple se indica descargar "Smarters Player Lite" (o "IPTV Smarters Pro") e ingresar credenciales obligatoriamente con el DNS para Smarters: `http://cdn01link.uk:2095` (nunca el servidor general `wk.mvpl.uk`).
-- **Caso — Asignación Estricta de DNS para Aplicaciones Smarters vs Otras Apps:**
-  - *Instrucción:* TVTotal24 cuenta con dos URLs/DNS:
-    1. **DNS para Smarters (`http://cdn01link.uk:2095`)**: OBLIGATORIO Y EXCLUSIVO para cualquier aplicación de la familia Smarters (**Smarters Player Lite**, **IPTV Smarters Pro**, **IPTV Smarters**). Si el cliente indica que usa o va a usar Smarters, se le entrega únicamente este DNS para Smarters.
-    2. **Servidor / DNS General (`http://wk.mvpl.uk:2082`)**: Para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
+  - *Instrucción:* La aplicación oficial nativa de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. Queda TERMINANTEMENTE PROHIBIDO sugerir IPTV Smarters o Smarters Player Lite. En Apple se indica descargar reproductores compatibles de la App Store como XCIPTV, Xtream Player, Mega OTT, Tivimate, IPTV Pro o IBO Player e ingresar credenciales con Servidor / DNS: `http://wk.wxn.ch:2095`.
+- **Caso — Asignación Oficial de Servidor / DNS y Olvido de Direcciones Anteriores:**
+  - *Instrucción:* TVTotal24 cuenta con las siguientes direcciones oficiales:
+    1. **Servidor / DNS General (`http://wk.wxn.ch:2095`)**: Dirección oficial y principal para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
+    2. **DNS para Smarters (`http://smrts.wxn.ch:2095`)**: En caso de aplicaciones tipo Smarters (si el cliente ya cuenta con una app Smarters en uso).
+    3. **Olvido Total de Servidores Anteriores**: Los DNS y servidores antiguos (`http://wk.mvpl.uk:2082`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`) quedan totalmente olvidados y en desuso.
+- **Caso — Prohibición de sugerir IPTV Smarters y protocolo de atención ante fallas en apps Smarters:**
+  - *Instrucción:*
+    1. **Prohibición de sugerir Smarters**: El agente de TVTotal24 tiene estrictamente prohibido recomendar o sugerir el uso de IPTV Smarters (IPTV Smarters Player, IPTV Smarters Pro, Smarters Player Lite, etc.) en cualquier dispositivo.
+    2. **Fallas en apps Smarters**: Cuando un cliente manifieste tener problemas con alguna app basada en Smarters (IPTV Smarters Player, IPTV Smarters Pro, Smarters Player Lite, Smarters Player, etc.):
+       - Indicar que tales aplicaciones actualmente están presentando problemas de funcionamiento y que es mejor utilizar otra opción más estable.
+       - Preguntar por su dispositivo o televisor para hacer la recomendación correspondiente sobre qué app utilizar.
 - **Caso — Dificultad para instalar aplicación con Downloader:**
-  - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $5/año o $24 de por vida; solo $4/año o $20 lifetime si indica expresamente que se le dio ese precio previo; sin mencionar jamás que subió el precio), explicándole que para cargar sus credenciales puede visitar `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su equipo para que nosotros se las carguemos directamente.
+  - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $5/año o $24 de por vida; solo $4/año o $20 lifetime si indica expresamente que se le dio ese precio previo; sin mencionar jamás que subió el precio), explicándole que para cargar sus credenciales puede visitar `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su equipo para que nosotros se las carguemos directamente con el Servidor / DNS `http://wk.wxn.ch:2095`.
 - **Caso — Consulta de Tasa de Cambio para Pago Móvil (Tasa Oficial BCV):**
   - *Instrucción:*
     * **Si el cliente NO pregunta la tasa**: Se calcula el monto en Bolívares con las reglas estándar y se entrega únicamente el monto total en Bs y los datos bancarios. No se menciona la tasa proactivamente.

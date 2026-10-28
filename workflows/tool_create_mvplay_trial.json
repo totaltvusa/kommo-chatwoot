@@ -3,12 +3,12 @@
   "name": "Tool - Create MVPlay Trial",
   "active": true,
   "isArchived": false,
-  "versionId": "f4c7bbed-3c4f-4e82-9d5f-febf9ce8d67b",
-  "activeVersionId": "f4c7bbed-3c4f-4e82-9d5f-febf9ce8d67b",
+  "versionId": "29e4f354-bce0-4f50-aca9-22f61d111bf0",
+  "activeVersionId": "29e4f354-bce0-4f50-aca9-22f61d111bf0",
   "triggerCount": 0,
   "nodeCount": 17,
   "createdAt": "2026-08-28T16:29:29.425Z",
-  "updatedAt": "2026-09-02T01:19:07.897Z",
+  "updatedAt": "2026-10-28T01:31:04.675Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true
@@ -309,7 +309,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ { content: \"🤖 TVTotal24 Demo #\" + $('Procesar Respuesta MVPlay').item.json.trial_number + \" Creado\\n• Usuario: \" + $('Procesar Respuesta MVPlay').item.json.username + \"\\n• Contraseña: \" + $('Procesar Respuesta MVPlay').item.json.password + \"\\n• ID Línea: \" + $('Procesar Respuesta MVPlay').item.json.line_id + \"\\n• DNS: http://wk.mvpl.uk:2082\\n• DNS para Smarters: http://cdn01link.uk:2095\", private: true } }}"
+        "jsonBody": "={{ { content: \"🤖 TVTotal24 Demo #\" + $('Procesar Respuesta MVPlay').item.json.trial_number + \" Creado\\n• Usuario: \" + $('Procesar Respuesta MVPlay').item.json.username + \"\\n• Contraseña: \" + $('Procesar Respuesta MVPlay').item.json.password + \"\\n• ID Línea: \" + $('Procesar Respuesta MVPlay').item.json.line_id + \"\\n• DNS: http://wk.wxn.ch:2095\\n• DNS para Smarters: http://smrts.wxn.ch:2095\", private: true } }}"
       }
     },
     {
@@ -446,7 +446,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const resp = $input.first().json || {};\nlet evalData = {};\ntry {\n  evalData = $('Evaluar Historial y Preparar Datos').first().json || {};\n} catch(e) {}\n\nconst isSuccess = resp.status === 'STATUS_SUCCESS';\nconst lineData = resp.data || {};\n\nif (!isSuccess || !lineData.username) {\n  throw new Error(`Error de MVPlay al crear línea: ${resp.status || resp.error_code || 'Fallo desconocido'}`);\n}\n\nconst finalUsername = lineData.username;\nconst finalPassword = lineData.password;\nconst lineId = lineData.id;\n\nconst updatedCustomAttr = { ...(evalData.custom_attributes || {}) };\nconst nowIso = new Date().toISOString();\n\nupdatedCustomAttr.tvtotal_trial_count = evalData.trial_number;\n\nif (evalData.trial_number === 1) {\n  updatedCustomAttr.tvtotal_trial_1_id = lineId;\n  updatedCustomAttr.tvtotal_trial_1_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_1_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_1_created_at = nowIso;\n} else {\n  updatedCustomAttr.tvtotal_trial_2_id = lineId;\n  updatedCustomAttr.tvtotal_trial_2_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_2_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_2_created_at = nowIso;\n}\n\nreturn [{\n  json: {\n    is_success: true,\n    trial_number: evalData.trial_number,\n    username: finalUsername,\n    password: finalPassword,\n    line_id: lineId,\n    account_id: evalData.account_id,\n    conversation_id: evalData.conversation_id,\n    contact_id: evalData.contact_id,\n    custom_attributes: updatedCustomAttr,\n    dns: 'http://wk.mvpl.uk:2082',\n    dns_smarters: 'http://cdn01link.uk:2095',\n    m3u_url: `http://wk.mvpl.uk:2082/get.php?username=${finalUsername}&password=${finalPassword}&type=m3u_plus&output=ts`,\n    instrucciones: 'Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple: Usa Smarters Player Lite con el DNS para Smarters (http://cdn01link.uk:2095)'\n  }\n}];"
+        "jsCode": "const resp = $input.first().json || {};\nlet evalData = {};\ntry {\n  evalData = $('Evaluar Historial y Preparar Datos').first().json || {};\n} catch(e) {}\n\nconst isSuccess = resp.status === 'STATUS_SUCCESS';\nconst lineData = resp.data || {};\n\nif (!isSuccess || !lineData.username) {\n  throw new Error(`Error de MVPlay al crear línea: ${resp.status || resp.error_code || 'Fallo desconocido'}`);\n}\n\nconst finalUsername = lineData.username;\nconst finalPassword = lineData.password;\nconst lineId = lineData.id;\n\nconst updatedCustomAttr = { ...(evalData.custom_attributes || {}) };\nconst nowIso = new Date().toISOString();\n\nupdatedCustomAttr.tvtotal_trial_count = evalData.trial_number;\n\nif (evalData.trial_number === 1) {\n  updatedCustomAttr.tvtotal_trial_1_id = lineId;\n  updatedCustomAttr.tvtotal_trial_1_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_1_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_1_created_at = nowIso;\n} else {\n  updatedCustomAttr.tvtotal_trial_2_id = lineId;\n  updatedCustomAttr.tvtotal_trial_2_username = finalUsername;\n  updatedCustomAttr.tvtotal_trial_2_password = finalPassword;\n  updatedCustomAttr.tvtotal_trial_2_created_at = nowIso;\n}\n\nreturn [{\n  json: {\n    is_success: true,\n    trial_number: evalData.trial_number,\n    username: finalUsername,\n    password: finalPassword,\n    line_id: lineId,\n    account_id: evalData.account_id,\n    conversation_id: evalData.conversation_id,\n    contact_id: evalData.contact_id,\n    custom_attributes: updatedCustomAttr,\n    dns: 'http://wk.wxn.ch:2095',\n    dns_smarters: 'http://smrts.wxn.ch:2095',\n    m3u_url: `http://wk.wxn.ch:2095/get.php?username=${finalUsername}&password=${finalPassword}&type=m3u_plus&output=ts`,\n    instrucciones: 'Para Firestick / Android TV / Móviles Android: Abre la app TotalTV, selecciona el panel TOTALTV LATINA e introduce tu usuario y contraseña. Para Smart TV / Apple / Otros: Usa SmartOne IPTV o reproductor compatible con Servidor / DNS (http://wk.wxn.ch:2095). Si usas app Smarters: DNS (http://smrts.wxn.ch:2095)'\n  }\n}];"
       }
     },
     {
@@ -523,7 +523,7 @@
         "resource": "message",
         "operation": "sendMessage",
         "chatId": "40371837",
-        "text": "=🔔 <b>Prueba Automática Generada (TVTotal24 Latina)</b>\n\n👤 <b>Datos del Cliente:</b>\n- Nombre: {{ $('Evaluar Historial y Preparar Datos').first().json.contact_name }}\n- Email: {{ $('Evaluar Historial y Preparar Datos').first().json.email }}\n- Teléfono: {{ $('Evaluar Historial y Preparar Datos').first().json.phone }}\n\n🔑 <b>Datos de la Prueba (MVPlay):</b>\n- Prueba #: {{ $('Procesar Respuesta MVPlay').first().json.trial_number }}\n- Usuario: <code>{{ $('Procesar Respuesta MVPlay').first().json.username }}</code>\n- Contraseña: <code>{{ $('Procesar Respuesta MVPlay').first().json.password }}</code>\n- DNS: http://wk.mvpl.uk:2082\n- DNS Smarters: http://cdn01link.uk:2095",
+        "text": "=🔔 <b>Prueba Automática Generada (TVTotal24 Latina)</b>\n\n👤 <b>Datos del Cliente:</b>\n- Nombre: {{ $('Evaluar Historial y Preparar Datos').first().json.contact_name }}\n- Email: {{ $('Evaluar Historial y Preparar Datos').first().json.email }}\n- Teléfono: {{ $('Evaluar Historial y Preparar Datos').first().json.phone }}\n\n🔑 <b>Datos de la Prueba (MVPlay):</b>\n- Prueba #: {{ $('Procesar Respuesta MVPlay').first().json.trial_number }}\n- Usuario: <code>{{ $('Procesar Respuesta MVPlay').first().json.username }}</code>\n- Contraseña: <code>{{ $('Procesar Respuesta MVPlay').first().json.password }}</code>\n- DNS: http://wk.wxn.ch:2095\n- DNS Smarters: http://smrts.wxn.ch:2095",
         "additionalFields": {
           "parse_mode": "HTML"
         }
@@ -550,7 +550,7 @@
         "resource": "messages-api",
         "instanceName": "TTvAlertsMovistar",
         "remoteJid": "584146130135",
-        "messageText": "={{ \"🔔 *Prueba Automática Generada (TVTotal24 Latina)*\\n\\n👤 *Datos del Cliente:*\\n• Nombre: \" + $('Evaluar Historial y Preparar Datos').first().json.contact_name + \"\\n• Email: \" + $('Evaluar Historial y Preparar Datos').first().json.email + \"\\n• Teléfono: \" + $('Evaluar Historial y Preparar Datos').first().json.phone + \"\\n\\n🔑 *Datos de la Prueba (MVPlay):*\\n• Prueba #: \" + $('Procesar Respuesta MVPlay').first().json.trial_number + \"\\n• Usuario: \" + $('Procesar Respuesta MVPlay').first().json.username + \"\\n• Contraseña: \" + $('Procesar Respuesta MVPlay').first().json.password + \"\\n• DNS: http://wk.mvpl.uk:2082\\n• DNS Smarters: http://cdn01link.uk:2095\" }}",
+        "messageText": "={{ \"🔔 *Prueba Automática Generada (TVTotal24 Latina)*\\n\\n👤 *Datos del Cliente:*\\n• Nombre: \" + $('Evaluar Historial y Preparar Datos').first().json.contact_name + \"\\n• Email: \" + $('Evaluar Historial y Preparar Datos').first().json.email + \"\\n• Teléfono: \" + $('Evaluar Historial y Preparar Datos').first().json.phone + \"\\n\\n🔑 *Datos de la Prueba (MVPlay):*\\n• Prueba #: \" + $('Procesar Respuesta MVPlay').first().json.trial_number + \"\\n• Usuario: \" + $('Procesar Respuesta MVPlay').first().json.username + \"\\n• Contraseña: \" + $('Procesar Respuesta MVPlay').first().json.password + \"\\n• DNS: http://wk.wxn.ch:2095\\n• DNS Smarters: http://smrts.wxn.ch:2095\" }}",
         "options_message": {}
       },
       "onError": "continueRegularOutput",
