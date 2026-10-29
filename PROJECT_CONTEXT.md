@@ -3565,4 +3565,41 @@
   4. **Sincronización Total con n8n**:
      - Ejecutado `python3 workflows/export_workflows.py` para sincronizar los archivos locales de workflows.
 
+---
+
+### 112. Política Oficial de Programación para Adultos (+21 Años) en TotalTv USA y TVTotal24 Latina (2026-10-29)
+
+* **Directiva y Mandato de Negocio**:
+  1. **Definición y Restricción de Edad (Ambos Servicios)**:
+     - La programación para adultos se refiere específicamente a **canales de televisión en vivo y películas bajo demanda (VOD)**.
+     - Este contenido está permitido **única y exclusivamente para mayores de 21 años** (adults 21+).
+     - Es **completamente opcional** en ambos servicios.
+  2. **Reglas Específicas para TVTotal24 Latina**:
+     - Es 100% opcional y no tiene costo adicional.
+     - **Eliminación a solicitud del cliente**: Si el cliente solicita no tener este contenido, manifiesta que tiene menores de edad en casa, o pide retirarlo, **se elimina por completo de su usuario/cuenta** para que no figure en su aplicación.
+  3. **Reglas Específicas para TotalTv USA**:
+     - Es 100% opcional y **NO viene activada por defecto**.
+     - **Requisito de solicitud expresa**: El cliente debe indicar expresamente que desea que se agregue a su cuenta. Si no lo indica, la cuenta se crea y mantiene sin programación para adultos.
+     - **Estructura de costos según la duración del plan**:
+       * **1 Mes**: Es **GRATIS** (sin costo extra, pero previa solicitud expresa del cliente).
+       * **3 Meses**: Requiere un pago adicional de **+$6 USD**.
+       * **6 Meses**: Requiere un pago adicional de **+$12 USD**.
+       * **12 Meses (1 Año)**: Requiere un pago adicional de **+$20 USD**.
+
+* **Componentes y Archivos Actualizados**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/agent_prompt.md` (TotalTv USA): Añadido el mandato crítico `PROGRAMACIÓN PARA ADULTOS (+21 AÑOS, TOTALMENTE OPCIONAL Y REGLAS DE CONTRATACIÓN EN TOTALTV USA)` con ejemplos en español e inglés; actualizadas las plantillas de planes con notas explicativas sobre la edad (+21) y el esquema de pago adicional (+ $6, + $12, + $20).
+     - `prompts/tvtotal24_prompt.md` (TVTotal24 Latina): Añadido el mandato crítico `PROGRAMACIÓN PARA ADULTOS (+21 AÑOS Y ELIMINACIÓN DE LA CUENTA A SOLICITUD EN TVTOTAL24)`; añadidas notas explicativas en las plantillas de precios aclarando que es opcional y se elimina a solicitud sin costo.
+  2. **Bases de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/totaltv_usa_support.md`: Actualizada FAQ P1, agregada FAQ P1.2 y agregado nuevo caso aprendido en la Sección 4.
+     - `knowledge/tvtotal24_latina_support.md`: Agregada FAQ P1.2 y agregado nuevo caso aprendido en la Sección 4.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados los nodos `AI Agent` y `AI Agent - TVTotal24`. Publicada versión activa (`955b578e-47e9-42f4-a95e-f36a76be231d`).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado el nodo `AI Agent`. Publicada versión activa (`9014d968-4e11-4bc6-ba55-e04df0f21b61`).
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado `baseBrandPrompt` en el nodo `Preparar Instrucción Agente Directo`. Publicada versión activa (`9c1035fa-4ce4-4211-9d23-ed7f00ab0cbb`).
+     - `workflows/agent_totaltv_usa.json`: Sincronizado localmente.
+  4. **Sincronización Total del Repositorio**:
+     - Ejecutado `python3 workflows/export_workflows.py`, asegurando que todos los archivos JSON locales permanezcan idénticos al estado activo de n8n y sanitizados.
+
+
 

@@ -113,10 +113,13 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 ## 3. PREGUNTAS FRECUENTES (FAQ) Y POLÍTICAS DE SERVICIO
 
 ### P1: ¿Qué contenido incluye TotalTv USA?
-- **R:** Más de 15,000 canales de televisión en vivo de todo el mundo (Estados Unidos, Latinoamérica, Europa, canales premium de deportes, PPV, eventos en vivo, infantiles, noticias, entretenimiento y contenido para adultos opcional gratuito) más de 50,000 películas y series bajo demanda de las principales plataformas (Netflix, Prime Video, Disney+, AppleTV+, HBO Max, Hulu, Paramount+, etc.).
+- **R:** Más de 15,000 canales de televisión en vivo de todo el mundo (Estados Unidos, Latinoamérica, Europa, canales premium de deportes, PPV, eventos en vivo, infantiles, noticias, entretenimiento y programación para adultos opcional previa solicitud) más de 50,000 películas y series bajo demanda de las principales plataformas (Netflix, Prime Video, Disney+, AppleTV+, HBO Max, Hulu, Paramount+, etc.).
 
 ### P1.1: ¿Tienen algún canal, película, serie o evento deportivo en específico? (Consultas de disponibilidad de contenido)
 - **R:** En un universo tan sumamente amplio con más de 15,000 canales en vivo y más de 50,000 películas y series que se actualizan de manera constante todos los días, **es lo más posible y sumamente probable que sí contemos con él**. La mejor y más rápida manera de confirmarlo es que el cliente lo compruebe por sí mismo buscando dicho contenido directamente dentro del servicio. Para ello, **nada mejor que tomar la prueba gratuita de 24 horas** sin ningún compromiso para que lo verifique directamente en su pantalla.
+
+### P1.2: ¿Cómo funciona la programación para adultos en TotalTv USA?
+- **R:** La programación para adultos se refiere a canales de televisión en vivo y películas, permitidas **única y exclusivamente para mayores de 21 años**. Es **completamente opcional** y NO viene activada por defecto: el cliente debe indicar expresamente que desea que se agregue a su cuenta. En los planes de 1 mes es gratis (previa solicitud); en los planes de 3, 6 y 12 meses debe hacerse un pago adicional para agregarla (+ $6 USD en 3 meses, + $12 USD en 6 meses, y + $20 USD en 12 meses).
 
 ### P2: ¿Puedo usar mi suscripción en diferentes dispositivos o en casas distintas?
 - **R:** Sí. Puedes instalar la aplicación en todos los dispositivos que desees (Firestick, celulares, Smart TVs, computadoras). La cantidad de pantallas que pueden reproducir **al mismo tiempo (en simultáneo)** depende del plan contratado (1, 2 o 3 dispositivos simultáneos). Las pantallas pueden estar conectadas en la misma casa o en ubicaciones/ciudades distintas.
@@ -214,5 +217,16 @@ Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una 
     2. **Validación expedita**: Se valida si ya se cuenta con los 3 datos requeridos (nombre completo con nombre y apellido mínimo 2 palabras, correo electrónico válido y teléfono con código de país).
     3. **Si ya se tienen los datos**: No se pregunta nada; se procede de inmediato a crear y entregar la prueba para hacer el proceso más expedito con menos pasos para el cliente.
     4. **Si falta algún dato**: Solo se solicita el dato específico que esté faltando, sin volver a pedir lo que ya se conoce.
+
+- **Caso — Programación para Adultos (+21 Años, Totalmente Opcional y Pagos Adicionales en TotalTv USA):**
+  - *Instrucción:*
+    1. **Contenido y edad mínima**: La programación para adultos abarca canales de televisión en vivo y películas, permitidas únicamente para mayores de 21 años.
+    2. **Totalmente opcional**: Es completamente opcional y NO viene activada por defecto en TotalTv USA. El cliente debe indicar expresamente que desea que se agregue a su cuenta. Si no lo indica, la cuenta se crea sin este contenido.
+    3. **Condiciones de pago según el plan**:
+       - En planes de 1 Mes: Se agrega gratis (previa solicitud expresa del cliente).
+       - En planes de 3 Meses: Pago adicional de +$6 USD.
+       - En planes de 6 Meses: Pago adicional de +$12 USD.
+       - En planes de 12 Meses (1 Año): Pago adicional de +$20 USD.
+
 
 
