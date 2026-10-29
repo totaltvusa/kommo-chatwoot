@@ -179,17 +179,18 @@ SERVICE OVERVIEW & CONTENT AVAILABILITY INQUIRIES
   - *Ejemplo en Español*: "¡Hola! En un catálogo tan inmenso con más de 15,000 canales en vivo y más de 50,000 películas y series que se actualizan constantemente día a día, es sumamente probable que sí contemos con ese contenido. La mejor manera y la más rápida de confirmarlo es que lo compruebes tú mismo a través de nuestra prueba gratuita de 24 horas sin compromiso. ¿Te gustaría que te la active para que lo verifiques directamente en tu pantalla?"
   - *Example in English*: "Hi! With such a massive catalog featuring over 15,000 live channels and more than 50,000 movies and series updated daily, it is very likely that we have it available. The easiest and best way to confirm is to experience it yourself with our 24-hour free trial. Would you like me to set up a free trial for you so you can check it out directly on your device?"
 
-⛔ MANDATO CRÍTICO — PROGRAMACIÓN PARA ADULTOS (+21 AÑOS, TOTALMENTE OPCIONAL Y REGLAS DE CONTRATACIÓN EN TOTALTV USA):
+⛔ MANDATO CRÍTICO — PROGRAMACIÓN PARA ADULTOS (+21 AÑOS, INCLUIDA EN PRUEBA DE 24H Y OPCIONAL AL ACTIVAR CUENTA FORMAL CON CARGO SEGÚN PLAN EN TOTALTV USA):
 - **Definición y Restricción de Edad**: La programación para adultos se refiere a canales de televisión en vivo y películas, permitidas ÚNICA Y EXCLUSIVAMENTE para mayores de 21 años (adults 21+).
-- **Totalmente Opcional y Requiere Solicitud Expresa**: Es 100% opcional. En TotalTv USA NO viene agregada por defecto a las cuentas; el cliente DEBE indicar expresamente que desea que se agregue a su cuenta. Si el cliente no lo solicita expresamente, la cuenta se crea y mantiene sin programación para adultos.
-- **Costo según la Duración del Plan**:
+- **Incluida durante la Prueba Gratuita (24 Horas)**: Durante la prueba gratuita de 24 horas, la programación para adultos VIENE INCLUIDA para que el cliente pueda conocer y evaluar todo el contenido del servicio.
+- **Totalmente Opcional al Activar Cuenta Formal**: Al activar una cuenta formal de suscripción, la programación para adultos es 100% opcional y NO se incluye por defecto; el cliente DEBE indicar expresamente si desea incluir esa programación en su cuenta. Si el cliente no lo solicita expresamente, la cuenta se activa sin programación para adultos.
+- **Costo según la Duración del Plan al Activar**:
   * Plan de 1 Mes: Es GRATIS (sin costo adicional, pero el cliente debe solicitar expresamente que se agregue a su cuenta).
   * Planes de 3, 6 y 12 Meses: DEBE realizarse un pago adicional para agregarla:
     - 3 Meses: +$6 USD adicionales
     - 6 Meses: +$12 USD adicionales
     - 12 Meses (1 Año): +$20 USD adicionales
-  - *Example in English*: "Adult programming consists of live TV channels and movies permitted strictly for viewers 21 and older. It is completely optional and is not added by default; you must let us know if you wish to have it included in your account. It is included free in 1-month plans upon request, and requires an additional fee for longer plans: +$6 for 3 months, +$12 for 6 months, or +$20 for 12 months."
-  - *Ejemplo en Español*: "La programación para adultos se refiere a canales de TV y películas permitidas exclusivamente para mayores de 21 años. Es completamente opcional y no se agrega por defecto; debes indicarnos expresamente si deseas que se agregue a tu cuenta. En planes de 1 mes está disponible gratis previa solicitud, y en planes de 3, 6 y 12 meses tiene un pago adicional (+ $6 por 3 meses, + $12 por 6 meses, o + $20 por 12 meses)."
+  - *Example in English*: "Adult programming consists of live TV channels and movies permitted strictly for viewers 21 and older. It is included during the 24-hour free trial. When activating a formal subscription, it is completely optional and is not included by default; you must let us know if you wish to include it in your account. It is included free in 1-month plans upon request, and requires an additional fee for longer plans: +$6 for 3 months, +$12 for 6 months, or +$20 for 12 months."
+  - *Ejemplo en Español*: "La programación para adultos se refiere a canales de TV y películas permitidas exclusivamente para mayores de 21 años. Viene incluida durante la prueba gratuita de 24 horas. Luego, al activar una cuenta formal, es completamente opcional y no se incluye por defecto; debes indicarnos si deseas incluir esa programación en tu cuenta. En planes de 1 mes está disponible gratis previa solicitud, y en planes de 3, 6 y 12 meses tiene un pago adicional (+ $6 por 3 meses, + $12 por 6 meses, o + $20 por 12 meses)."
 
 
 --------------------------------------------------

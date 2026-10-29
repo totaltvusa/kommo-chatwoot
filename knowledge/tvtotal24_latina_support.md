@@ -127,7 +127,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 - **R:** En un universo tan sumamente amplio con más de 5,000 canales en vivo y más de 20,000 películas y series que se actualizan constantemente todos los días, **es lo más posible y sumamente probable que sí contemos con ese contenido**. La mejor y más rápida manera de confirmarlo es que el cliente lo compruebe por sí mismo buscando dicho contenido dentro del servicio. Para ello, **nada mejor que tomar la prueba gratuita de 4 horas continuas** sin ningún compromiso para que lo verifique directamente en su pantalla.
 
 ### P1.2: ¿Cómo funciona la programación para adultos en TVTotal24 Latina?
-- **R:** La programación para adultos se refiere a canales de televisión en vivo y películas, permitidas **única y exclusivamente para mayores de 21 años**. Es **completamente opcional** y no tiene ningún costo adicional. En TVTotal24 Latina, **a solicitud del cliente este tipo de programación se elimina de su cuenta** (si el cliente no desea ver este contenido o hay menores en casa, se retira de inmediato de su usuario para que no aparezca en su aplicación).
+- **R:** La programación para adultos se refiere a canales de televisión en vivo y películas, permitidas **única y exclusivamente para mayores de 21 años**. Está **incluida durante la prueba gratuita de 4 horas continuas** para que el cliente conozca la totalidad de la programación. Es **completamente opcional** y no tiene ningún costo adicional. Al activar una cuenta formal, el cliente debe indicar si quiere eliminarla de su cuenta (si el cliente no desea ver este contenido o hay menores en casa, se retira de inmediato de su usuario para que no aparezca en su aplicación).
 
 ### P2: ¿Cómo son los planes y precios de TVTotal24 Latina?
 - **R:** En TVTotal24 las suscripciones tienen precio único por duración (cada suscripción es una cuenta completa para disfrutar el servicio):
@@ -209,11 +209,11 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
     3. **Aviso de soporte técnico**: Indicar expresamente al cliente: *"Sin embargo, no ofrecemos soporte técnico para ese tipo de aplicaciones; solo proporcionamos los datos necesarios para su configuración."*
     4. **Datos a entregar**: Entregar únicamente los datos necesarios: Usuario, Clave, Servidor / DNS (`http://wk.wxn.ch:2095`) y Playlist M3U (`http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`).
 
-- **Caso — Programación para Adultos (+21 Años y Eliminación de la Cuenta a Solicitud del Cliente):**
+- **Caso — Programación para Adultos (+21 Años, Incluida en Prueba de 4h y Eliminación de la Cuenta a Solicitud al Activar en TVTotal24):**
   - *Instrucción:*
     1. **Contenido y edad mínima**: La programación para adultos comprende canales de TV en vivo y películas, permitidas únicamente para mayores de 21 años.
-    2. **Totalmente opcional**: Es completamente opcional y no tiene costo extra en TVTotal24 Latina.
-    3. **Eliminación a solicitud**: A solicitud del cliente, esta programación se elimina por completo de su usuario/cuenta para que no aparezca en su aplicación.
+    2. **Incluida en la prueba gratuita**: Viene incluida durante la prueba gratuita de 4 horas continuas para que el cliente conozca todo el contenido.
+    3. **Totalmente opcional y eliminación a solicitud**: Al activar una cuenta formal, es completamente opcional y sin costo adicional; el cliente debe indicar si quiere eliminarla de su cuenta para que no aparezca en su aplicación.
 
 
 

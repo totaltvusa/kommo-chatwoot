@@ -3601,5 +3601,37 @@
   4. **Sincronización Total del Repositorio**:
      - Ejecutado `python3 workflows/export_workflows.py`, asegurando que todos los archivos JSON locales permanezcan idénticos al estado activo de n8n y sanitizados.
 
+---
+
+### 113. Clarificación de Duración de Pruebas y Programación de Adultos Durante Pruebas vs Activación Formal (2026-10-29)
+
+* **Directiva y Mandato de Negocio**:
+  1. **Duración Real de las Pruebas Gratuitas**:
+     - **TotalTv USA**: Las pruebas gratuitas son de **24 horas** (1 dispositivo).
+     - **TVTotal24 Latina**: Las pruebas gratuitas son de **4 horas continuas** (inician al momento de creación en el panel).
+     - *Aclaración*: Queda terminantemente erradicada cualquier referencia errónea a pruebas de 3 horas.
+  2. **Inclusión de Programación para Adultos (+21) Durante las Pruebas**:
+     - En ambos servicios, la programación para adultos viene **incluida durante el período de prueba gratuita** para que el cliente pueda explorar la totalidad del catálogo.
+  3. **Comportamiento al Activar Cuenta Formal de Suscripción**:
+     - **TotalTv USA**: Al formalizar/activar una suscripción, la programación para adultos es 100% opcional y NO se agrega por defecto; **el cliente debe indicar expresamente si desea incluir esa programación en su cuenta** (con cargo adicional en planes de 3, 6 y 12 meses: +$6, +$12, +$20; gratis en 1 mes previa solicitud).
+     - **TVTotal24 Latina**: Al formalizar/activar una suscripción, la programación para adultos es opcional sin costo; **el cliente debe indicar si desea eliminarla de su cuenta** (si no desea dicho contenido o hay menores en casa, se retira inmediatamente de su usuario).
+
+* **Componentes y Archivos Actualizados**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/agent_prompt.md`: Actualizado el mandato crítico `PROGRAMACIÓN PARA ADULTOS (+21 AÑOS, INCLUIDA EN PRUEBA DE 24H Y OPCIONAL AL ACTIVAR CUENTA FORMAL CON CARGO SEGÚN PLAN EN TOTALTV USA)` con ejemplos en español e inglés.
+     - `prompts/tvtotal24_prompt.md`: Actualizado el mandato crítico `PROGRAMACIÓN PARA ADULTOS (+21 AÑOS, INCLUIDA EN PRUEBA DE 4H Y ELIMINACIÓN DE LA CUENTA A SOLICITUD AL ACTIVAR EN TVTOTAL24)` con ejemplos en español.
+  2. **Bases de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/totaltv_usa_support.md`: Actualizada FAQ P1.2 y caso aprendido en la Sección 4.
+     - `knowledge/tvtotal24_latina_support.md`: Actualizada FAQ P1.2 y caso aprendido en la Sección 4.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados los nodos `AI Agent` y `AI Agent - TVTotal24`. Publicada versión activa (`65dadf9b-f946-4629-9c73-57077535f384`).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado el nodo `AI Agent`. Publicada versión activa (`9976d31f-ad0f-499f-a508-f22dfab896e3`).
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado `baseBrandPrompt` en el nodo `Preparar Instrucción Agente Directo`. Publicada versión activa (`970dd88d-c343-4e5e-8fc4-2c548cf83c4c`).
+     - `workflows/agent_totaltv_usa.json`: Sincronizado localmente.
+  4. **Exportación y Git**:
+     - Ejecutado `python3 workflows/export_workflows.py`.
+     - Git commit y push a `origin/main`.
+
+
 
 
