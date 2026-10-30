@@ -128,6 +128,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 
 ### P1.2: ¿Cómo funciona la programación para adultos en TVTotal24 Latina?
 - **R:** La programación para adultos se refiere a canales de televisión en vivo y películas, permitidas **única y exclusivamente para mayores de 21 años**. Está **incluida durante la prueba gratuita de 4 horas continuas** para que el cliente conozca la totalidad de la programación. Es **completamente opcional** y no tiene ningún costo adicional. Al activar una cuenta formal, el cliente debe indicar si quiere eliminarla de su cuenta (si el cliente no desea ver este contenido o hay menores en casa, se retira de inmediato de su usuario para que no aparezca en su aplicación).
+- **Regla estricta de comunicación para el Agente IA**: La programación para adultos es opcional y **NO tiene por qué estarse mencionando ni explicando en detalle qué significa o en qué consiste, a menos que el cliente solicite expresamente una explicación o aclaratoria**. Al informar planes y precios, se dice cuáles son y listo. Solo se explica qué significa, que es opcional y que se elimina si el cliente lo pide expresamente.
 
 ### P2: ¿Cómo son los planes y precios de TVTotal24 Latina?
 - **R:** En TVTotal24 las suscripciones tienen precio único por duración (cada suscripción es una cuenta completa para disfrutar el servicio):
@@ -209,11 +210,14 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
     3. **Aviso de soporte técnico**: Indicar expresamente al cliente: *"Sin embargo, no ofrecemos soporte técnico para ese tipo de aplicaciones; solo proporcionamos los datos necesarios para su configuración."*
     4. **Datos a entregar**: Entregar únicamente los datos necesarios: Usuario, Clave, Servidor / DNS (`http://wk.wxn.ch:2095`) y Playlist M3U (`http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`).
 
-- **Caso — Programación para Adultos (+21 Años, Incluida en Prueba de 4h y Eliminación de la Cuenta a Solicitud al Activar en TVTotal24):**
+- **Caso — Programación para Adultos (Prohibición de Mencionar Proactivamente y Reglas en TVTotal24):**
   - *Instrucción:*
-    1. **Contenido y edad mínima**: La programación para adultos comprende canales de TV en vivo y películas, permitidas únicamente para mayores de 21 años.
-    2. **Incluida en la prueba gratuita**: Viene incluida durante la prueba gratuita de 4 horas continuas para que el cliente conozca todo el contenido.
-    3. **Totalmente opcional y eliminación a solicitud**: Al activar una cuenta formal, es completamente opcional y sin costo adicional; el cliente debe indicar si quiere eliminarla de su cuenta para que no aparezca en su aplicación.
+    1. **Regla de comunicación**: La programación para adultos es opcional, pero NO tiene por qué estarse mencionando, ni mucho menos explicando en detalle qué significa o en qué consiste, a menos que el cliente solicite EXPRESAMENTE una explicación o aclaratoria.
+    2. **Presentación de planes y precios**: Se informa cuáles son los planes y precios y listo (1 Mes: 8$, 3 Meses: 24$, etc.), SIN mencionar ni hacer referencia a adultos.
+    3. **Respuesta solo a petición expresa o eliminación**: Únicamente si el cliente solicita una aclaratoria, pregunta qué es o pide eliminarla:
+       - Se explica que comprende canales de televisión en vivo y películas para mayores de 21 años (+21).
+       - Se aclara que es completamente opcional y sin costo adicional.
+       - Si el cliente solicita que se elimine de su cuenta, se confirma de inmediato que se elimina por completo para que no aparezca en su aplicación.
 
 
 

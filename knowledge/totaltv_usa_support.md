@@ -120,6 +120,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 
 ### P1.2: ¿Cómo funciona la programación para adultos en TotalTv USA?
 - **R:** La programación para adultos se refiere a canales de televisión en vivo y películas, permitidas **única y exclusivamente para mayores de 21 años**. Está **incluida durante la prueba gratuita de 24 horas** para que el cliente pueda conocer la totalidad del catálogo. Luego, al activar una cuenta formal de suscripción, es **completamente opcional** y NO viene activada por defecto: el cliente debe indicar expresamente si desea incluir esa programación a su cuenta. En los planes de 1 mes es gratis (previa solicitud); en los planes de 3, 6 y 12 meses debe hacerse un pago adicional para agregarla (+ $6 USD en 3 meses, + $12 USD en 6 meses, y + $20 USD en 12 meses). Si el cliente no indica que desea incluirla, la cuenta formal se activa sin programación de adultos.
+- **Regla estricta de comunicación para el Agente IA**: La programación para adultos es opcional y **NO tiene por qué estarse mencionando ni explicando en detalle qué significa o en qué consiste, a menos que el cliente solicite expresamente una explicación o aclaratoria**. Al informar planes y precios, se dice cuáles son y simplemente se muestra el precio que implica la programación de adultos (gratis en 1 mes, +$6 en 3 meses, +$12 en 6 meses, +$20 en 12 meses) sin añadir notas explicativas adicionales. Solo se explica qué significa y que es opcional si el cliente lo pide expresamente.
 
 ### P2: ¿Puedo usar mi suscripción en diferentes dispositivos o en casas distintas?
 - **R:** Sí. Puedes instalar la aplicación en todos los dispositivos que desees (Firestick, celulares, Smart TVs, computadoras). La cantidad de pantallas que pueden reproducir **al mismo tiempo (en simultáneo)** depende del plan contratado (1, 2 o 3 dispositivos simultáneos). Las pantallas pueden estar conectadas en la misma casa o en ubicaciones/ciudades distintas.
@@ -218,16 +219,14 @@ Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una 
     3. **Si ya se tienen los datos**: No se pregunta nada; se procede de inmediato a crear y entregar la prueba para hacer el proceso más expedito con menos pasos para el cliente.
     4. **Si falta algún dato**: Solo se solicita el dato específico que esté faltando, sin volver a pedir lo que ya se conoce.
 
-- **Caso — Programación para Adultos (+21 Años, Incluida en Prueba de 24h y Opcional al Activar Cuenta Formal con Pagos Adicionales en TotalTv USA):**
+- **Caso — Programación para Adultos (Regla de No Explicar Proactivamente y Precios en TotalTv USA):**
   - *Instrucción:*
-    1. **Contenido y edad mínima**: La programación para adultos abarca canales de televisión en vivo y películas, permitidas únicamente para mayores de 21 años.
-    2. **Incluida en la prueba gratuita**: Durante la prueba gratuita de 24 horas viene incluida para que el cliente conozca y evalúe todo el servicio.
-    3. **Totalmente opcional al activar cuenta formal**: Al activar una cuenta formal, el cliente debe indicar si quiere incluir esa programación a su cuenta. No se incluye por defecto. Si no lo indica, la cuenta se crea sin este contenido.
-    4. **Condiciones de pago según el plan al activar**:
-       - En planes de 1 Mes: Se agrega gratis (previa solicitud expresa del cliente).
-       - En planes de 3 Meses: Pago adicional de +$6 USD.
-       - En planes de 6 Meses: Pago adicional de +$12 USD.
-       - En planes de 12 Meses (1 Año): Pago adicional de +$20 USD.
+    1. **Regla de comunicación**: La programación para adultos es opcional, pero NO tiene por qué estarse mencionando ni explicando en detalle qué significa o en qué consiste, a menos que el cliente solicite EXPRESAMENTE una explicación o aclaratoria.
+    2. **Presentación de planes y precios**: Se informa cuáles son los planes y listo. Solo se muestra el precio que implica la programación de adultos en la lista de planes (+ $6 en 3 meses, + $12 en 6 meses, + $20 en 12 meses; gratis en 1 mes), SIN notas explicativas adicionales.
+    3. **Respuesta solo a petición expresa**: Únicamente si el cliente pide una aclaratoria o pregunta qué significa:
+       - Se explica que comprende canales de televisión en vivo y películas para mayores de 21 años (+21).
+       - Se aclara que durante la prueba de 24 horas viene incluida para conocer el catálogo, y que al contratar una cuenta formal es opcional y no se agrega por defecto (el cliente debe indicar si quiere incluirla o no).
+       - Se detallan los costos (+ $6 en 3 meses, + $12 en 6 meses, + $20 en 12 meses; gratis en 1 mes).
 
 
 

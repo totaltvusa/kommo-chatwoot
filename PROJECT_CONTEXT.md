@@ -3632,6 +3632,36 @@
      - Ejecutado `python3 workflows/export_workflows.py`.
      - Git commit y push a `origin/main`.
 
+---
+
+### 114. Prohibición de Explicar Proactivamente Contenido de Adultos y Presentación Limpia de Planes (2026-10-30)
+
+* **Directiva y Mandato de Negocio**:
+  1. **Regla de Comunicación sobre Programación de Adultos**:
+     - Aunque la programación para adultos sea opcional, **NO tiene por qué estarse mencionando ni explicando en detalle qué significa o en qué consiste**, a menos que el cliente solicite **expresamente una explicación o aclaratoria**.
+  2. **Presentación de Planes y Precios**:
+     - **TVTotal24 Latina**: Al informar planes y precios, se dice cuáles son y listo (1 Mes $8 / Binance $5, etc.), sin mencionar adultos ni incluir notas al pie.
+     - **TotalTv USA**: Dado que la programación para adultos implica un precio adicional (excepto en planes de 1 mes que es gratis), simplemente se muestra el precio que implica la programación de adultos en la lista de planes (`(Con Adultos: GRATIS)`, `(Con Adultos: +$6)`, etc.), **SIN añadir notas explicativas ni discursos no solicitados**.
+  3. **Explicación Únicamente a Petición Expresa**:
+     - Solo si el cliente pregunta directamente qué es, de qué trata o solicita una aclaratoria, el agente explica que comprende canales de televisión en vivo y películas para mayores de 21 años (+21), que es opcional y cómo se maneja en su suscripción formal.
+
+* **Componentes y Archivos Actualizados**:
+  1. **Prompts de Agentes**:
+     - `prompts/agent_prompt.md`: Actualizado mandato crítico sobre programación para adultos; eliminadas notas al pie explicativas de las plantillas de planes en inglés y español.
+     - `prompts/tvtotal24_prompt.md`: Actualizado mandato crítico; eliminadas menciones a adultos de las plantillas de planes de suscripción.
+  2. **Bases de Conocimiento**:
+     - `knowledge/totaltv_usa_support.md`: Actualizada FAQ P1.2 y caso aprendido en Sección 4.
+     - `knowledge/tvtotal24_latina_support.md`: Actualizada FAQ P1.2 y caso aprendido en Sección 4.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Nodos `AI Agent` y `AI Agent - TVTotal24` actualizados. Publicada versión activa (`b79af1c7-9f62-434a-968e-754131473a20`).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Nodo `AI Agent` actualizado. Publicada versión activa (`0aaef7a0-86e2-4c4d-a29c-2b612db138ee`).
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Nodo `Preparar Instrucción Agente Directo` actualizado. Publicada versión activa (`54ba5785-2e2e-4198-bc29-7825f23ba62c`).
+     - `workflows/agent_totaltv_usa.json`: Sincronizado localmente.
+  4. **Exportación y Git**:
+     - Ejecutado `python3 workflows/export_workflows.py`.
+     - Git commit y push a `origin/main`.
+
+
 
 
 
