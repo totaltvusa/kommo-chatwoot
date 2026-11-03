@@ -3,15 +3,19 @@
   "name": "📰 Digest de Noticias IA - Curación Multicanal",
   "active": true,
   "isArchived": false,
-  "versionId": "8731931a-3109-4297-af96-7cc29912aa47",
-  "activeVersionId": "8731931a-3109-4297-af96-7cc29912aa47",
+  "versionId": "6dcb9628-a18b-484a-ac2f-793b50eb0d9a",
+  "activeVersionId": "6dcb9628-a18b-484a-ac2f-793b50eb0d9a",
   "triggerCount": 3,
   "nodeCount": 43,
   "createdAt": "2026-10-11T02:42:50.333Z",
-  "updatedAt": "2026-10-13T17:00:15.673Z",
+  "updatedAt": "2026-11-03T14:55:07.591Z",
   "settings": {
     "executionOrder": "v1",
-    "availableInMCP": true
+    "availableInMCP": true,
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "America/Caracas",
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "tags": [],
   "parentFolderId": null,
@@ -504,8 +508,16 @@
         "rule": {
           "interval": [
             {
-              "field": "cronExpression",
-              "expression": "1 9,12,19 * * *"
+              "triggerAtHour": 9,
+              "triggerAtMinute": 1
+            },
+            {
+              "triggerAtHour": 12,
+              "triggerAtMinute": 1
+            },
+            {
+              "triggerAtHour": 19,
+              "triggerAtMinute": 1
             }
           ]
         }

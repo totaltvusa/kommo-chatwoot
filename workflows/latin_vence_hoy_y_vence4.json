@@ -8,11 +8,14 @@
   "triggerCount": 2,
   "nodeCount": 14,
   "createdAt": "2026-08-09T00:42:42.889Z",
-  "updatedAt": "2026-09-22T15:01:31.756Z",
+  "updatedAt": "2026-11-03T13:23:00.608Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "America/Caracas",
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "tags": [],
   "parentFolderId": null,
