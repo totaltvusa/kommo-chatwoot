@@ -3661,6 +3661,20 @@
      - Ejecutado `python3 workflows/export_workflows.py`.
      - Git commit y push a `origin/main`.
 
+---
+
+### 115. Sincronización de Zona Horaria (America/Caracas) y Schedule Trigger en Digest de Noticias IA y Recordatorios de Vencimiento (2026-11-03)
+
+* **Contexto y Actualización**:
+  1. **Ajuste de Disparador en Digest de Noticias IA (`workflows/digest_noticias_ia.json`)**:
+     - Configurada la zona horaria explícita del workflow a `"America/Caracas"`.
+     - Ajustado el `Schedule Trigger` a horarios fijos de Caracas: **9:01 AM**, **12:01 PM** y **7:01 PM** (`triggerAtHour: 9, 12, 19; triggerAtMinute: 1`).
+     - Activada la versión `6dcb9628-a18b-484a-ac2f-793b50eb0d9a`.
+  2. **Configuración de Workflow de Recordatorios de Vencimiento Latina (`workflows/latin_vence_hoy_y_vence4.json`)**:
+     - Configurada la zona horaria explícita a `"America/Caracas"`.
+     - Ajustadas configuraciones de ejecución (`timeSavedMode: "fixed"`, `callerPolicy: "workflowsFromSameOwner"`).
+     - Sincronizados los archivos de workflow en el repositorio local.
+
 
 
 
