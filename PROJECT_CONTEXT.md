@@ -3675,6 +3675,36 @@
      - Ajustadas configuraciones de ejecución (`timeSavedMode: "fixed"`, `callerPolicy: "workflowsFromSameOwner"`).
      - Sincronizados los archivos de workflow en el repositorio local.
 
+---
+
+### 116. Directiva Estricta de Denominación de Binance: Erradicación de "Binance Pay" y Uso Exclusivo de "Binance" en TVTotal24 (2026-11-05)
+
+* **Contexto y Solicitud del Usuario**:
+  - El agente IA de TVTotal24 seguía mencionando "Binance Pay" en lugar de simplemente "Binance".
+  - Se solicitó erradicar definitivamente la expresión "Binance Pay" de la comunicación del agente y referirse a este método de pago siempre y únicamente como **"Binance"**.
+
+* **Modificaciones Realizadas**:
+  1. **Prompts Principales de los Agentes IA**:
+     - `prompts/tvtotal24_prompt.md`:
+       * Incorporado el **Mandato Supremo de Denominación de Binance** con prohibición explícita de agregar la palabra "Pay" y obligación de llamarlo únicamente "Binance" (ej. "pago por Binance", "descuento con Binance", "ID de Binance: 22628239").
+       * Sustituidas todas las apariciones de "Binance Pay" por "Binance" (en reglas de pago, cotización de planes, presentación de métodos de pago, activaciones y triaje de comprobantes de renovación).
+       * Actualizada la directiva de entrega de credenciales de pago: `ID de Binance: 22628239` (eliminando `Pay ID`).
+     - `prompts/agent_prompt.md`:
+       * Actualizada la prohibición estricta en TotalTv USA para bloquear tanto `Binance (ID 22628239)` como `Binance Pay`.
+  2. **Bases de Conocimiento Técnico (Knowledge Base)**:
+     - `knowledge/tvtotal24_latina_support.md`:
+       * Sustituidas todas las referencias de "Binance Pay" por "Binance".
+       * Incorporado caso aprendido en la Sección 4 (*Casos Aprendidos*): *"Prohibición Estricta de decir 'Binance Pay' (Mencionar siempre simplemente como 'Binance')"*.
+  3. **Workflows en Producción en n8n**:
+     - `workflows/tool_renovar_mvplay_tvtotal24.json` (ID `0Go7n1S2CQZr548G`): Actualizado `Validar y Procesar Renovacion` para establecer `paymentMethodDisplay = 'Binance'` y limpiar motivos de error a "Binance" (publicada versión activa `b4e402af-ba52-47a7-8a80-a043f18598ff`).
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados `AI Agent - TVTotal24`, `AI Agent` y la descripción del nodo `renovar_cuenta_mvplay_tvtotal24` (publicada versión activa `178ec675-35a4-4126-9000-e1d8e607d982`).
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado `AI Agent` (publicada versión activa `eb28b6e1-4dc0-4884-b966-268b7454bd16`).
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado `Preparar Instrucción Agente Directo` (publicada versión activa `57233bd1-6d14-4dd1-9c51-dd125449c11c`).
+  4. **Exportación y Sincronización Total**:
+     - Ejecutado `python3 workflows/export_workflows.py`.
+     - Git commit y push a `origin/main`.
+
+
 
 
 

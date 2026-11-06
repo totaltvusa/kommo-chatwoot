@@ -59,7 +59,7 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
      * **IBO Player**: **$20 USD** (pago único de por vida).
      * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: **$25 USD** (pago único de por vida).
    - **Condiciones Clave y Reglas de Pago**:
-     * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Binance Pay USDT (que tiene descuento en suscripciones), **la activación NO lleva descuento** ($5, $24, $20 o $25 USD netos).
+     * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Binance USDT (que tiene descuento en suscripciones), **la activación NO lleva descuento** ($5, $24, $20 o $25 USD netos).
      * **RECARGOS POR PASARELA**: Si el cliente solicita pagar con Card2Crypto (PayPal/Tarjetas), aplica el 10% de recargo sobre el valor base de la activación (ej. $5 -> $5.50, $24 -> $26.40, $20 -> $22.00, $25 -> $27.50 USD; o si aplica precio anterior: $4 -> $4.40, $20 -> $22 USD). En Zelle o Pago Móvil (a la tasa oficial) se abona el monto base ($5, $24, $20, $25 USD).
      * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (ligada a su MAC y Device ID).
      * **No transferible**: La activación no se puede transferir a otro dispositivo.
@@ -143,7 +143,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 ### P4: ¿Cuáles son los métodos de pago oficiales para TVTotal24 Latina?
 - **R:** Disponemos de 3 métodos estándar:
   1. **Zelle**: Al correo `pagos@totaltvlatina.com` (Beneficiario oficial: **`ACR Enterprises`**).
-  2. **Binance Pay (USDT)**: Al Pay ID **`22628239`** (con súper descuento especial).
+  2. **Binance (USDT)**: Al ID **`22628239`** (con súper descuento especial).
   3. **Pago Móvil (Bolívares)**: Bancamiga, Tel: `04246861135`, RIF: `J405259221`, Beneficiario oficial: **`ArialStore C.A.`** (El agente calcula el monto exacto en Bs con la herramienta oficial).
   *(Excepción PayPal / Tarjetas)*: Únicamente si el cliente lo solicita expresamente, se genera un enlace de Card2Crypto con 10% de recargo sobre el plan base.
 
@@ -219,5 +219,5 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
        - Se aclara que es completamente opcional y sin costo adicional.
        - Si el cliente solicita que se elimine de su cuenta, se confirma de inmediato que se elimina por completo para que no aparezca en su aplicación.
 
-
-
+- **Caso — Prohibición Estricta de decir "Binance Pay" (Mencionar siempre simplemente como "Binance"):**
+  - *Instrucción:* Queda TERMINANTEMENTE PROHIBIDO decir o escribir "Binance Pay". Siempre debe nombrarse y referirse a este medio de pago simplemente como **"Binance"** (ej. "pago por Binance", "descuento con Binance", "ID de Binance: 22628239", etc.). Nunca agregar la palabra "Pay".
