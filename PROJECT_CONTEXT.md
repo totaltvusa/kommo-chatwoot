@@ -135,16 +135,12 @@
 
 ## 4. API Endpoints & Credentials Reference
 
-* **Meta WhatsApp Cloud API (WhatsApp Cloud TVTotal24)**:
-  * Phone Number ID: `1106422772565024`
-  * Display Phone Number: `+1 305-422-9099` (E.164: `+13054229099`, Verified Name: `TTV Mensajes`)
-  * WABA ID: `3483325768503437`
-  * App ID: `27469809309376250`
-  * Business ID: `1323943205921780`
-  * Credential ID in n8n: `5mdJEz0fPigGF7Wc` (`WhatsApp 3054229099`)
-  * Chatwoot Inbox ID: **19** (`WhatsApp Cloud TVTotal24`, `Channel::Whatsapp`)
-  * Chatwoot Webhook Callback URL: `https://project1-chatwoot.efebpb.easypanel.host/webhooks/whatsapp/+13054229099`
-  * Chatwoot Webhook Verify Token: `62f0684bf292fe9dd1e87dbd924044c6`
+* **WhatsApp TVTotal24 (+1 305 422 9099) via Evolution API**:
+  * Phone Number: `+1 305 422 9099` (E.164: `+13054229099`)
+  * Evolution API Instance: `13054229099`
+  * Chatwoot Inbox ID: **20** (`WhatsApp - 13054229099`, `Channel::Api`)
+  * Chatwoot Webhook Outgoing URL: `https://n8n.ac4.club/webhook/chatwoot-evolution-proxy?instance=13054229099`
+  * Note: Migrated from former Meta WhatsApp Cloud API channel (Inbox 19 deleted).
 * **MVPlay (Xtream-Masters) API**:
   * Endpoint: `http://1395.cooteg.ch:2095/pooqkDEG/reseller/index.php`
   * User: `TtvLat2025`
@@ -160,6 +156,7 @@
   * Global API Key: `429683C4C977415CAAFCCE10F7D57E11`
   * Credential ID in n8n: `ecGN8GlLnzNz5Lq5` (`Evolution account 2`)
   * Instances:
+    * `13054229099` (TVTotal24 WhatsApp: `+1 305 422 9099` -> Chatwoot Inbox ID 20).
     * `3059861096` (TotalTv USA WhatsApp: `+1 305 986 1096` -> Chatwoot Inbox ID 18).
     * `lat-whatscol` (TVTotal24 WhatsApp Colombia: `+57 300 9476271` -> Chatwoot Inbox ID 16).
     * `TTvAlertsMovistar` (Administrative / Human Handover Alerts -> Chatwoot Inbox ID 4).
@@ -3703,6 +3700,40 @@
   4. **Exportación y Sincronización Total**:
      - Ejecutado `python3 workflows/export_workflows.py`.
      - Git commit y push a `origin/main`.
+
+---
+
+### 117. Migración de Canal WhatsApp TVTotal24 (+1 305 422 9099) de Cloud API a Evolution API (Inbox 20) (2026-11-11)
+
+* **Contexto y Solicitud del Usuario**:
+  - El número de WhatsApp de TVTotal24 `+1 305 422 9099` (`13054229099`) dejó de operar bajo Meta WhatsApp Cloud API y pasó a gestionarse mediante Evolution API (instancia `13054229099` en Evolution Manager).
+  - Se solicitó actualizar el canal en Chatwoot (eliminando el canal Cloud anterior si era necesario y creando uno nuevo) para que dicho número opere plenamente integrado con Evolution API, conservando todas las reglas, etiquetas, agente IA de TVTotal24 y flujos de automatización previos.
+
+* **Acciones y Cambios Realizados**:
+  1. **Configuración en Evolution API e Integración con Chatwoot**:
+     - Verificada la instancia `13054229099` en Evolution API (estado `open`, conectada al número `13054229099@s.whatsapp.net`).
+     - Creado en Chatwoot un nuevo canal de tipo API (`Channel::Api`) con ID **20**, nombrado `WhatsApp - 13054229099`.
+     - Configurado el Webhook saliente de Inbox 20 hacia el proxy sanitizador en n8n: `https://n8n.ac4.club/webhook/chatwoot-evolution-proxy?instance=13054229099`.
+     - Asignados a Inbox 20 los 4 agentes miembros del equipo (`Alvez Caliman`, `Customer Service`, `Total TV`, `Migracion`).
+     - Eliminado el antiguo canal Cloud en Chatwoot (Inbox 19 `Channel::Whatsapp`) para evitar duplicidades o conflictos de enrutamiento.
+     - Actualizada la configuración en Evolution API (`POST /chatwoot/set/13054229099`) vinculando la instancia a la bandeja `WhatsApp - 13054229099`.
+  2. **Workflows en Producción en n8n Actualizados y Publicados**:
+     - `workflows/proxy_chatwoot_evolution.json` (ID `ecfTEElylV4snTHG`): En `Sanitizar y Reenviar`, añadido mapeo de resguardo para resolver `instance = '13054229099'` cuando `inboxId === 20 || inboxId === 19`. Publicada versión activa `a5be1ce3-bbae-4d70-8983-119a68615665`.
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`):
+       * `Preparar Mensaje`: Incorporado `inboxId === 20` para reconocimiento de marca `tvtotal24` y asignación automática de etiqueta `channel-whatsapp-lite`.
+       * `Formatear Respuesta`: Incorporado `inboxId === 20` para formato de mensaje y toggle de typing status.
+       * `Procesar Resultado Visión`: Añadido `20` a la lista de inboxes de TVTotal24.
+       * `Inyectar Situaciones Temporales`: Añadido `20` a la lista de inboxes de TVTotal24.
+       * Publicada versión activa `c7c369c6-a748-458c-9f91-5c95b1ef9cad`.
+     - `workflows/cron_followup_incoming_leads.json` (ID `1IlXjaNv0rc9laJy`): Añadido `inboxId === 20` al reconocimiento de TVTotal24 y canales Meta/WhatsApp. Publicada versión activa `e8b12a1b-3f25-4e3f-82c1-305521fd830c`.
+     - `workflows/cron_followup_fase_pruebas.json` (ID `XC1jY6Vkbgdu5iIz`): Añadido `inboxId === 20` al formateo de seguimiento de pruebas. Publicada versión activa `5038dd17-dee8-4919-8923-fe6657b02b86`.
+     - `workflows/cron_followup_trials.json` (ID `KRwjH3njrF4qRdph`): Excluido `inboxId === 20` de la lógica exclusiva de TotalTv USA. Publicada versión activa `74e9264b-c49e-45b1-8370-a43b4f46afaf`.
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Añadido `inboxId === 20` en `Preparar Instrucción Agente Directo`. Publicada versión activa `727050f7-c6a9-4307-855b-f89b60bb7fdf`.
+     - `workflows/tool_transfer_to_human.json` y `transfer_to_human_tool.json` (ID `xam0WV65gvTbXcIx`): Añadido `inbox_id === 20` para enrutamiento de alertas y notas privadas a TVTotal24. Publicada versión activa `f419f9ce-5f32-4156-869e-0472e427cba4`.
+  3. **Exportación y Sincronización**:
+     - Sincronizados todos los workflows locales mediante `export_workflows.py`.
+     - Documentación actualizada en `PROJECT_CONTEXT.md`.
+
 
 
 
