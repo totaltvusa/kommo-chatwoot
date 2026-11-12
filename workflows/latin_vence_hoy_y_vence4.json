@@ -3,12 +3,12 @@
   "name": "Latin vence hoy y vence4",
   "active": true,
   "isArchived": false,
-  "versionId": "0514d9b9-4da9-422e-b981-86e37b19b2b9",
-  "activeVersionId": "0514d9b9-4da9-422e-b981-86e37b19b2b9",
+  "versionId": "8f854300-7a32-4c7f-ba4d-16ba9a6d4b7f",
+  "activeVersionId": "8f854300-7a32-4c7f-ba4d-16ba9a6d4b7f",
   "triggerCount": 2,
   "nodeCount": 14,
   "createdAt": "2026-08-09T00:42:42.889Z",
-  "updatedAt": "2026-11-03T13:23:00.608Z",
+  "updatedAt": "2026-11-12T15:12:34.613Z",
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": true,
@@ -87,28 +87,43 @@
         ]
       ]
     },
+    "PrepararBatchRojo": {
+      "main": [
+        [
+          {
+            "node": "PonerTextoRojoVence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Evaluar Categoría": {
       "main": [
         [
           {
-            "node": "marcaSENThoy",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "VenceHoy",
+            "node": "EnviarTelnyxHoy",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "marcaSENT4",
+            "node": "marcaEMAILhoy",
             "type": "main",
             "index": 0
-          },
+          }
+        ],
+        [
           {
-            "node": "Vence4dias",
+            "node": "EnviarTelnyx4dias",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "marcaEMAIL4",
             "type": "main",
             "index": 0
           }
@@ -127,33 +142,22 @@
         ]
       ]
     },
-    "PrepararBatchRojo": {
+    "EnviarTelnyxHoy": {
       "main": [
         [
           {
-            "node": "PonerTextoRojoVence",
+            "node": "marcaSENThoy",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "VenceHoy": {
+    "EnviarTelnyx4dias": {
       "main": [
         [
           {
-            "node": "SyncChatwootVenceHoy",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Vence4dias": {
-      "main": [
-        [
-          {
-            "node": "SyncChatwootVence4dias",
+            "node": "marcaSENT4",
             "type": "main",
             "index": 0
           }
@@ -167,8 +171,8 @@
         "rule": {
           "interval": [
             {
-              "field": "cronExpression",
-              "expression": "0 9 * * *"
+              "triggerAtHour": 9,
+              "triggerAtMinute": 0
             }
           ]
         }
@@ -233,7 +237,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const now = new Date();\nconst caracasOffset = -4 * 60;\nconst localNow = new Date(now.getTime() + (now.getTimezoneOffset() + caracasOffset) * 60000);\n\nconst pad = (n) => String(n).padStart(2, '0');\nconst todayStr = `${localNow.getFullYear()}-${pad(localNow.getMonth() + 1)}-${pad(localNow.getDate())}`;\n\nconst localPlus4 = new Date(localNow.getTime() + 4 * 24 * 60 * 60000);\nconst todayPlus4Str = `${localPlus4.getFullYear()}-${pad(localPlus4.getMonth() + 1)}-${pad(localPlus4.getDate())}`;\n\nconst getField = (obj, regex) => {\n  if (!obj) return '';\n  for (const k of Object.keys(obj)) {\n    if (regex.test(k)) {\n      const v = obj[k];\n      if (v !== undefined && v !== null) return v;\n    }\n  }\n  return '';\n};\n\nconst normalizeDate = (val) => {\n  if (!val) return '';\n  const str = String(val).trim();\n  const raw = str.split(' ')[0].split('T')[0];\n  const p = raw.split(/[\\/\\-]/);\n  if (p.length === 3) {\n    if (p[0].length === 4) {\n      return `${p[0]}-${pad(p[1])}-${pad(p[2])}`;\n    } else if (p[2].length === 4 || p[2].length === 2) {\n      const yr = p[2].length === 2 ? '20' + p[2] : p[2];\n      let day = p[0];\n      let month = p[1];\n      if (parseInt(month, 10) > 12 && parseInt(day, 10) <= 12) {\n        day = p[1];\n        month = p[0];\n      }\n      return `${yr}-${pad(month)}-${pad(day)}`;\n    }\n  }\n  return raw;\n};\n\nconst formatSpanishDate = (isoStr) => {\n  if (!isoStr) return '';\n  const parts = String(isoStr).trim().split(' ')[0].split('T')[0].split(/[\\/\\-]/);\n  const months = [\n    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',\n    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'\n  ];\n  if (parts.length === 3) {\n    if (parts[0].length === 4) {\n      const day = parseInt(parts[2], 10);\n      const monthIdx = parseInt(parts[1], 10) - 1;\n      if (monthIdx >= 0 && monthIdx < 12 && !isNaN(day)) {\n        return `${day} de ${months[monthIdx]}`;\n      }\n    } else {\n      let day = parseInt(parts[0], 10);\n      let monthIdx = parseInt(parts[1], 10) - 1;\n      if (monthIdx >= 12 && day <= 12) {\n        monthIdx = parseInt(parts[0], 10) - 1;\n        day = parseInt(parts[1], 10);\n      }\n      if (monthIdx >= 0 && monthIdx < 12 && !isNaN(day)) {\n        return `${day} de ${months[monthIdx]}`;\n      }\n    }\n  }\n  return isoStr;\n};\n\nconst results = [];\nconst items = $input.all();\n\nfor (let i = 0; i < items.length; i++) {\n  const row = items[i].json;\n  const rawVence = getField(row, /^vence/i);\n  const venceIso = normalizeDate(rawVence);\n  const venceFormatted = formatSpanishDate(venceIso);\n  const play = String(getField(row, /^play/i)).trim();\n  const usuario = String(getField(row, /^usuario/i)).trim();\n  const nombre = String(getField(row, /^nombre/i) || 'Cliente').trim();\n  const apellido = String(getField(row, /^apellido/i)).trim();\n  const telefono = String(getField(row, /^tel|phone/i)).replace(/\\D/g, '');\n  const rowNum = row.row_number ? parseInt(row.row_number, 10) : (i + 2);\n\n  if (!usuario && !telefono && !nombre) continue;\n\n  if (venceIso && venceIso === todayStr && play !== 'SENT' && (usuario || telefono)) {\n    results.push({\n      json: {\n        ...row,\n        row_number: rowNum,\n        Nombre: nombre,\n        Apellido: apellido,\n        Teléfono: telefono,\n        Usuario: usuario,\n        Vence: venceIso,\n        vence_formatted: venceFormatted,\n        PLAY: play,\n        category: 'vence_hoy'\n      }\n    });\n  } else if (venceIso && venceIso === todayPlus4Str && play !== 'SENT4' && play !== 'SENT' && (usuario || telefono)) {\n    results.push({\n      json: {\n        ...row,\n        row_number: rowNum,\n        Nombre: nombre,\n        Apellido: apellido,\n        Teléfono: telefono,\n        Usuario: usuario,\n        Vence: venceIso,\n        vence_formatted: venceFormatted,\n        PLAY: play,\n        category: 'vence_4dias'\n      }\n    });\n  } else if (venceIso && venceIso < todayStr && (usuario || telefono)) {\n    results.push({\n      json: {\n        ...row,\n        row_number: rowNum,\n        Nombre: nombre,\n        Apellido: apellido,\n        Teléfono: telefono,\n        Usuario: usuario,\n        Vence: venceIso,\n        vence_formatted: venceFormatted,\n        PLAY: play,\n        category: 'vencidos_pasados'\n      }\n    });\n  }\n}\n\nreturn results;"
+        "jsCode": "const now = new Date();\nconst caracasOffset = -4 * 60;\nconst localNow = new Date(now.getTime() + (now.getTimezoneOffset() + caracasOffset) * 60000);\n\nconst pad = (n) => String(n).padStart(2, '0');\nconst todayStr = `${localNow.getFullYear()}-${pad(localNow.getMonth() + 1)}-${pad(localNow.getDate())}`;\n\nconst localPlus4 = new Date(localNow.getTime() + 4 * 24 * 60 * 60000);\nconst todayPlus4Str = `${localPlus4.getFullYear()}-${pad(localPlus4.getMonth() + 1)}-${pad(localPlus4.getDate())}`;\n\nconst getField = (obj, regex) => {\n  if (!obj) return '';\n  for (const k of Object.keys(obj)) {\n    if (regex.test(k)) {\n      const v = obj[k];\n      if (v !== undefined && v !== null) return v;\n    }\n  }\n  return '';\n};\n\nconst normalizeDate = (val) => {\n  if (!val) return '';\n  const str = String(val).trim();\n  const raw = str.split(' ')[0].split('T')[0];\n  const p = raw.split(/[\\/\\-]/);\n  if (p.length === 3) {\n    if (p[0].length === 4) {\n      return `${p[0]}-${pad(p[1])}-${pad(p[2])}`;\n    } else if (p[2].length === 4 || p[2].length === 2) {\n      const yr = p[2].length === 2 ? '20' + p[2] : p[2];\n      let day = p[0];\n      let month = p[1];\n      if (parseInt(month, 10) > 12 && parseInt(day, 10) <= 12) {\n        day = p[1];\n        month = p[0];\n      }\n      return `${yr}-${pad(month)}-${pad(day)}`;\n    }\n  }\n  return raw;\n};\n\nconst formatSpanishDate = (isoStr) => {\n  if (!isoStr) return '';\n  const parts = String(isoStr).trim().split(' ')[0].split('T')[0].split(/[\\/\\-]/);\n  const months = [\n    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',\n    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'\n  ];\n  if (parts.length === 3) {\n    if (parts[0].length === 4) {\n      const day = parseInt(parts[2], 10);\n      const monthIdx = parseInt(parts[1], 10) - 1;\n      if (monthIdx >= 0 && monthIdx < 12 && !isNaN(day)) {\n        return `${day} de ${months[monthIdx]}`;\n      }\n    } else {\n      let day = parseInt(parts[0], 10);\n      let monthIdx = parseInt(parts[1], 10) - 1;\n      if (monthIdx >= 12 && day <= 12) {\n        monthIdx = parseInt(parts[0], 10) - 1;\n        day = parseInt(parts[1], 10);\n      }\n      if (monthIdx >= 0 && monthIdx < 12 && !isNaN(day)) {\n        return `${day} de ${months[monthIdx]}`;\n      }\n    }\n  }\n  return isoStr;\n};\n\nconst results = [];\nconst items = $input.all();\n\nfor (let i = 0; i < items.length; i++) {\n  const row = items[i].json;\n  const rawVence = getField(row, /^vence/i);\n  const venceIso = normalizeDate(rawVence);\n  const venceFormatted = formatSpanishDate(venceIso);\n  const play = String(getField(row, /^play/i)).trim().toUpperCase();\n  const usuario = String(getField(row, /^usuario/i)).trim();\n  const nombre = String(getField(row, /^nombre/i) || 'Cliente').trim();\n  const apellido = String(getField(row, /^apellido/i)).trim();\n  const telefono = String(getField(row, /^tel|phone/i)).replace(/\\D/g, '');\n  const rowNum = row.row_number ? parseInt(row.row_number, 10) : (i + 2);\n\n  if (!usuario && !telefono && !nombre) continue;\n\n  // Teléfono de USA: comienza por 1 y tiene longitud de teléfono válida (mínimo 10 u 11 dígitos)\n  const isUSA = telefono.startsWith('1') && telefono.length >= 10;\n\n  if (venceIso && venceIso === todayStr && play !== 'SENT' && play !== 'EMAIL' && (usuario || telefono)) {\n    results.push({\n      json: {\n        ...row,\n        row_number: rowNum,\n        Nombre: nombre,\n        Apellido: apellido,\n        Teléfono: telefono,\n        Telefono: telefono,\n        Usuario: usuario,\n        Vence: venceIso,\n        vence_formatted: venceFormatted,\n        PLAY: play,\n        is_usa: isUSA,\n        category: isUSA ? 'vence_hoy_usa' : 'vence_hoy_no_usa'\n      }\n    });\n  } else if (venceIso && venceIso === todayPlus4Str && play !== 'SENT4' && play !== 'EMAIL4' && play !== 'SENT' && play !== 'EMAIL' && (usuario || telefono)) {\n    results.push({\n      json: {\n        ...row,\n        row_number: rowNum,\n        Nombre: nombre,\n        Apellido: apellido,\n        Teléfono: telefono,\n        Telefono: telefono,\n        Usuario: usuario,\n        Vence: venceIso,\n        vence_formatted: venceFormatted,\n        PLAY: play,\n        is_usa: isUSA,\n        category: isUSA ? 'vence_4dias_usa' : 'vence_4dias_no_usa'\n      }\n    });\n  } else if (venceIso && venceIso < todayStr && (usuario || telefono)) {\n    results.push({\n      json: {\n        ...row,\n        row_number: rowNum,\n        Nombre: nombre,\n        Apellido: apellido,\n        Teléfono: telefono,\n        Telefono: telefono,\n        Usuario: usuario,\n        Vence: venceIso,\n        vence_formatted: venceFormatted,\n        PLAY: play,\n        category: 'vencidos_pasados'\n      }\n    });\n  }\n}\n\nreturn results;"
       },
       "id": "e31723c0-13bf-4fac-93d6-8d7db7d8e6c8",
       "name": "Evaluar Vencimiento y Categorizar",
@@ -258,9 +262,9 @@
                 },
                 "conditions": [
                   {
-                    "id": "cond-vence-hoy",
+                    "id": "cond-vence-hoy-usa",
                     "leftValue": "={{ $json.category }}",
-                    "rightValue": "vence_hoy",
+                    "rightValue": "vence_hoy_usa",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
@@ -270,7 +274,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "Vence hoy"
+              "outputKey": "Vence hoy (USA)"
             },
             {
               "conditions": {
@@ -282,9 +286,9 @@
                 },
                 "conditions": [
                   {
-                    "id": "cond-vence-4dias",
+                    "id": "cond-vence-hoy-no-usa",
                     "leftValue": "={{ $json.category }}",
-                    "rightValue": "vence_4dias",
+                    "rightValue": "vence_hoy_no_usa",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
@@ -294,7 +298,55 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "Vence en 4 días"
+              "outputKey": "Vence hoy (No USA)"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-vence-4dias-usa",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "vence_4dias_usa",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vence en 4 días (USA)"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-vence-4dias-no-usa",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "vence_4dias_no_usa",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vence en 4 días (No USA)"
             },
             {
               "conditions": {
@@ -335,19 +387,6 @@
     },
     {
       "parameters": {
-        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\nconst defaultInboxId = 16;\n\nconst results = [];\nconst items = $input.all();\n\nlet sourceItems = [];\ntry {\n  sourceItems = $('Evaluar Vencimiento y Categorizar').all().map(i => i.json);\n} catch (e) {\n  sourceItems = [];\n}\n\nconst getField = (obj, regex) => {\n  if (!obj) return '';\n  for (const k of Object.keys(obj)) {\n    if (regex.test(k.trim())) {\n      const v = obj[k];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();\n    }\n  }\n  return '';\n};\n\nfor (const item of items) {\n  try {\n    const itJson = item.json || {};\n    // Extract phone from direct fields or Evolution API response\n    const jid = itJson.data?.key?.remoteJid || itJson.remoteJid || '';\n    const cleanJidPhone = String(jid).replace(/@.*/, '').replace(/\\D/g, '');\n    const directPhone = String(itJson.Teléfono || itJson.Telefono || itJson.phone || '').replace(/\\D/g, '');\n    const rawPhone = directPhone || cleanJidPhone;\n    const cleanPhone = rawPhone.length > 0 ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : '';\n\n    // Match source row from Evaluar Vencimiento y Categorizar for rich DnSpace data\n    let sourceRow = itJson;\n    if (sourceItems.length > 0 && rawPhone) {\n      const matched = sourceItems.find(r => {\n        const rPhone = String(r.Teléfono || r.Telefono || '').replace(/\\D/g, '');\n        return rPhone && (rPhone === rawPhone || rawPhone.endsWith(rPhone) || rPhone.endsWith(rawPhone));\n      });\n      if (matched) sourceRow = matched;\n    }\n\n    const sheetNombre = getField(sourceRow, /^nombre/i);\n    const sheetApellido = getField(sourceRow, /^apellido/i);\n    const fullName = [sheetNombre, sheetApellido].filter(Boolean).join(' ').trim();\n    const firstPurchase = getField(sourceRow, /^(1ra.*compra|primera.*compra|fecha.*compra|compra)/i);\n    const sheetEmail = getField(sourceRow, /^(email|correo)/i);\n    const sheetUsuario = getField(sourceRow, /^(usuario|user|username)/i);\n    const venceFormatted = sourceRow.vence_formatted || getField(sourceRow, /^vence/i) || 'el día de HOY';\n\n    if (!cleanPhone) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'skipped_no_phone' } });\n      continue;\n    }\n\n    // 1. Search existing contact by phone\n    let contactId = null;\n    let existingContact = null;\n    try {\n      const searchRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(rawPhone)}`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      if (searchRes.payload && searchRes.payload.length > 0) {\n        existingContact = searchRes.payload[0];\n        contactId = existingContact.id;\n      }\n    } catch (e) {}\n\n    // 2. Create contact if not exists\n    if (!contactId) {\n      try {\n        const createPayload = {\n          name: fullName || sheetNombre || 'Cliente',\n          phone_number: cleanPhone\n        };\n        if (sheetEmail) createPayload.email = sheetEmail;\n        const createRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/contacts`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: createPayload,\n          json: true\n        });\n        existingContact = createRes.payload?.contact;\n        contactId = existingContact?.id;\n      } catch (e) {}\n    }\n\n    if (!contactId) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'contact_failed' } });\n      continue;\n    }\n\n    // 3. Enrich contact with DnSpace data:\n    //    - name -> fullName from sheet (Nombre + Apellido)\n    //    - additional_attributes.company_name -> preserve channel default name\n    //    - additional_attributes.description -> 1ra compra (bio)\n    //    - additional_attributes.usuario & custom_attributes.usuario -> service username\n    try {\n      if (!existingContact || !existingContact.additional_attributes) {\n        const getContactRes = await this.helpers.httpRequest({\n          method: 'GET',\n          url: `${chatwootBase}/contacts/${contactId}`,\n          headers: { 'api_access_token': chatwootToken },\n          json: true\n        });\n        existingContact = getContactRes.payload || existingContact || {};\n      }\n\n      const existingAttrs = existingContact.additional_attributes || {};\n      const existingCustomAttrs = existingContact.custom_attributes || {};\n      const existingCompany = String(existingAttrs.company_name || '').trim();\n      const currentContactName = String(existingContact.name || '').trim();\n\n      let channelDefaultName = existingCompany;\n      if (!channelDefaultName && currentContactName && currentContactName !== fullName) {\n        channelDefaultName = currentContactName;\n      }\n\n      const updatePayload = {\n        additional_attributes: {\n          ...existingAttrs\n        },\n        custom_attributes: {\n          ...existingCustomAttrs\n        }\n      };\n\n      if (channelDefaultName) {\n        updatePayload.additional_attributes.company_name = channelDefaultName;\n      }\n      if (firstPurchase) {\n        updatePayload.additional_attributes.description = firstPurchase;\n      }\n      if (sheetUsuario) {\n        updatePayload.additional_attributes.usuario = sheetUsuario;\n        updatePayload.custom_attributes.usuario = sheetUsuario;\n      }\n      if (fullName) {\n        updatePayload.name = fullName;\n      }\n      if (sheetEmail && !existingContact.email) {\n        updatePayload.email = sheetEmail;\n      }\n\n      await this.helpers.httpRequest({\n        method: 'PATCH',\n        url: `${chatwootBase}/contacts/${contactId}`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: updatePayload,\n        json: true\n      });\n    } catch (e) {}\n\n    // 4. Find or create conversation in Chatwoot\n    let conversationId = null;\n    let convLabels = [];\n    try {\n      const convListRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/${contactId}/conversations`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      const convs = convListRes.payload || [];\n      const match = convs.find(c => (Number(c.inbox_id) === defaultInboxId || Number(c.inbox_id) === 19) && c.status !== 'resolved')\n                 || convs.find(c => Number(c.inbox_id) === defaultInboxId || Number(c.inbox_id) === 19)\n                 || convs.find(c => c.status !== 'resolved')\n                 || convs[0];\n      if (match) {\n        conversationId = match.id;\n        convLabels = Array.isArray(match.labels) ? match.labels : [];\n      }\n    } catch (e) {}\n\n    if (!conversationId) {\n      try {\n        const createConvRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/conversations`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { inbox_id: defaultInboxId, contact_id: contactId },\n          json: true\n        });\n        conversationId = createConvRes.id;\n        convLabels = [];\n      } catch (e) {}\n    }\n\n    if (!conversationId) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'conv_failed' } });\n      continue;\n    }\n\n    // 5. Update conversation labels: ensure stage-leads-ganados and funnel-totaltv-latina\n    try {\n      let cleanLabels = convLabels.filter(l => !l.startsWith('stage-'));\n      if (!cleanLabels.includes('stage-leads-ganados')) cleanLabels.push('stage-leads-ganados');\n      if (!cleanLabels.includes('funnel-totaltv-latina')) cleanLabels.push('funnel-totaltv-latina');\n\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: cleanLabels },\n        json: true\n      });\n    } catch (e) {}\n\n    // 6. Post private note documenting the outbound WhatsApp reminder\n    const templateText = `*MENSAJE URGENTE*\\n\\n☀️Buenos días ${sheetNombre || 'Cliente'},\\n\\n📺Tu suscripción a Total TV *VENCE el día de HOY*\\n\\n💵Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin Límites!\\n\\n¡Gracias por preferirnos!`;\n\n    const noteContent = `📌 *Plantilla WhatsApp Enviada (Outbound)*\\n• Plantilla: \\`vencehoy\\` (es)\\n• Destinatario: ${cleanPhone}\\n• Fecha/Hora: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\\n\\n📝 *Mensaje:*\\n${templateText}`;\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { content: noteContent, private: true },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      json: {\n        ...itJson,\n        chatwoot_contact_id: contactId,\n        chatwoot_conversation_id: conversationId,\n        chatwoot_sync: 'success'\n      }\n    });\n  } catch (err) {\n    results.push({ json: { ...item.json, chatwoot_sync: 'error', error: err.message } });\n  }\n}\n\nreturn results;"
-      },
-      "id": "2bfadfb8-6917-428b-a655-e147d76ff84f",
-      "name": "SyncChatwootVenceHoy",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1056,
-        -96
-      ]
-    },
-    {
-      "parameters": {
         "operation": "update",
         "documentId": {
           "__rl": true,
@@ -366,7 +405,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Usuario": "={{ $json.Usuario }}",
+            "Usuario": "={{ $('Evaluar Vencimiento y Categorizar').item.json.Usuario }}",
             "PLAY": "SENT"
           },
           "matchingColumns": [
@@ -380,8 +419,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        800,
-        64
+        1056,
+        -96
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -389,19 +428,6 @@
           "name": "Google Sheets account"
         }
       }
-    },
-    {
-      "parameters": {
-        "jsCode": "const chatwootToken = 'nuwRKpG2bBAQBpRFznfvrMpT';\nconst chatwootBase = 'https://project1-chatwoot.efebpb.easypanel.host/api/v1/accounts/1';\nconst defaultInboxId = 16;\n\nconst results = [];\nconst items = $input.all();\n\nlet sourceItems = [];\ntry {\n  sourceItems = $('Evaluar Vencimiento y Categorizar').all().map(i => i.json);\n} catch (e) {\n  sourceItems = [];\n}\n\nconst getField = (obj, regex) => {\n  if (!obj) return '';\n  for (const k of Object.keys(obj)) {\n    if (regex.test(k.trim())) {\n      const v = obj[k];\n      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();\n    }\n  }\n  return '';\n};\n\nfor (const item of items) {\n  try {\n    const itJson = item.json || {};\n    // Extract phone from direct fields or Evolution API response\n    const jid = itJson.data?.key?.remoteJid || itJson.remoteJid || '';\n    const cleanJidPhone = String(jid).replace(/@.*/, '').replace(/\\D/g, '');\n    const directPhone = String(itJson.Teléfono || itJson.Telefono || itJson.phone || '').replace(/\\D/g, '');\n    const rawPhone = directPhone || cleanJidPhone;\n    const cleanPhone = rawPhone.length > 0 ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : '';\n\n    // Match source row from Evaluar Vencimiento y Categorizar for rich DnSpace data\n    let sourceRow = itJson;\n    if (sourceItems.length > 0 && rawPhone) {\n      const matched = sourceItems.find(r => {\n        const rPhone = String(r.Teléfono || r.Telefono || '').replace(/\\D/g, '');\n        return rPhone && (rPhone === rawPhone || rawPhone.endsWith(rPhone) || rPhone.endsWith(rawPhone));\n      });\n      if (matched) sourceRow = matched;\n    }\n\n    const sheetNombre = getField(sourceRow, /^nombre/i);\n    const sheetApellido = getField(sourceRow, /^apellido/i);\n    const fullName = [sheetNombre, sheetApellido].filter(Boolean).join(' ').trim();\n    const firstPurchase = getField(sourceRow, /^(1ra.*compra|primera.*compra|fecha.*compra|compra)/i);\n    const sheetEmail = getField(sourceRow, /^(email|correo)/i);\n    const sheetUsuario = getField(sourceRow, /^(usuario|user|username)/i);\n    const venceFormatted = sourceRow.vence_formatted || getField(sourceRow, /^vence/i) || 'el día de HOY';\n\n    if (!cleanPhone) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'skipped_no_phone' } });\n      continue;\n    }\n\n    // 1. Search existing contact by phone\n    let contactId = null;\n    let existingContact = null;\n    try {\n      const searchRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/search?q=${encodeURIComponent(rawPhone)}`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      if (searchRes.payload && searchRes.payload.length > 0) {\n        existingContact = searchRes.payload[0];\n        contactId = existingContact.id;\n      }\n    } catch (e) {}\n\n    // 2. Create contact if not exists\n    if (!contactId) {\n      try {\n        const createPayload = {\n          name: fullName || sheetNombre || 'Cliente',\n          phone_number: cleanPhone\n        };\n        if (sheetEmail) createPayload.email = sheetEmail;\n        const createRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/contacts`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: createPayload,\n          json: true\n        });\n        existingContact = createRes.payload?.contact;\n        contactId = existingContact?.id;\n      } catch (e) {}\n    }\n\n    if (!contactId) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'contact_failed' } });\n      continue;\n    }\n\n    // 3. Enrich contact with DnSpace data:\n    //    - name -> fullName from sheet (Nombre + Apellido)\n    //    - additional_attributes.company_name -> preserve channel default name\n    //    - additional_attributes.description -> 1ra compra (bio)\n    //    - additional_attributes.usuario & custom_attributes.usuario -> service username\n    try {\n      if (!existingContact || !existingContact.additional_attributes) {\n        const getContactRes = await this.helpers.httpRequest({\n          method: 'GET',\n          url: `${chatwootBase}/contacts/${contactId}`,\n          headers: { 'api_access_token': chatwootToken },\n          json: true\n        });\n        existingContact = getContactRes.payload || existingContact || {};\n      }\n\n      const existingAttrs = existingContact.additional_attributes || {};\n      const existingCustomAttrs = existingContact.custom_attributes || {};\n      const existingCompany = String(existingAttrs.company_name || '').trim();\n      const currentContactName = String(existingContact.name || '').trim();\n\n      let channelDefaultName = existingCompany;\n      if (!channelDefaultName && currentContactName && currentContactName !== fullName) {\n        channelDefaultName = currentContactName;\n      }\n\n      const updatePayload = {\n        additional_attributes: {\n          ...existingAttrs\n        },\n        custom_attributes: {\n          ...existingCustomAttrs\n        }\n      };\n\n      if (channelDefaultName) {\n        updatePayload.additional_attributes.company_name = channelDefaultName;\n      }\n      if (firstPurchase) {\n        updatePayload.additional_attributes.description = firstPurchase;\n      }\n      if (sheetUsuario) {\n        updatePayload.additional_attributes.usuario = sheetUsuario;\n        updatePayload.custom_attributes.usuario = sheetUsuario;\n      }\n      if (fullName) {\n        updatePayload.name = fullName;\n      }\n      if (sheetEmail && !existingContact.email) {\n        updatePayload.email = sheetEmail;\n      }\n\n      await this.helpers.httpRequest({\n        method: 'PATCH',\n        url: `${chatwootBase}/contacts/${contactId}`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: updatePayload,\n        json: true\n      });\n    } catch (e) {}\n\n    // 4. Find or create conversation in Chatwoot\n    let conversationId = null;\n    let convLabels = [];\n    try {\n      const convListRes = await this.helpers.httpRequest({\n        method: 'GET',\n        url: `${chatwootBase}/contacts/${contactId}/conversations`,\n        headers: { 'api_access_token': chatwootToken },\n        json: true\n      });\n      const convs = convListRes.payload || [];\n      const match = convs.find(c => (Number(c.inbox_id) === defaultInboxId || Number(c.inbox_id) === 19) && c.status !== 'resolved')\n                 || convs.find(c => Number(c.inbox_id) === defaultInboxId || Number(c.inbox_id) === 19)\n                 || convs.find(c => c.status !== 'resolved')\n                 || convs[0];\n      if (match) {\n        conversationId = match.id;\n        convLabels = Array.isArray(match.labels) ? match.labels : [];\n      }\n    } catch (e) {}\n\n    if (!conversationId) {\n      try {\n        const createConvRes = await this.helpers.httpRequest({\n          method: 'POST',\n          url: `${chatwootBase}/conversations`,\n          headers: {\n            'api_access_token': chatwootToken,\n            'Content-Type': 'application/json'\n          },\n          body: { inbox_id: defaultInboxId, contact_id: contactId },\n          json: true\n        });\n        conversationId = createConvRes.id;\n        convLabels = [];\n      } catch (e) {}\n    }\n\n    if (!conversationId) {\n      results.push({ json: { ...itJson, chatwoot_sync: 'conv_failed' } });\n      continue;\n    }\n\n    // 5. Update conversation labels: ensure stage-leads-ganados and funnel-totaltv-latina\n    try {\n      let cleanLabels = convLabels.filter(l => !l.startsWith('stage-'));\n      if (!cleanLabels.includes('stage-leads-ganados')) cleanLabels.push('stage-leads-ganados');\n      if (!cleanLabels.includes('funnel-totaltv-latina')) cleanLabels.push('funnel-totaltv-latina');\n\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/labels`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { labels: cleanLabels },\n        json: true\n      });\n    } catch (e) {}\n\n    // 6. Post private note documenting the outbound WhatsApp reminder\n    const templateText = `☀️Buenos días ${sheetNombre || 'Cliente'},\\n\\n📺Tu suscripción a Total TV está próxima a vencer el ${venceFormatted}.\\n\\n💵Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin Límites!\\n\\n¡Gracias por preferirnos!`;\n\n    const noteContent = `📌 *Plantilla WhatsApp Enviada (Outbound)*\\n• Plantilla: \\`vencepronto\\` (es)\\n• Destinatario: ${cleanPhone}\\n• Fecha/Hora: ${new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })}\\n\\n📝 *Mensaje:*\\n${templateText}`;\n\n    try {\n      await this.helpers.httpRequest({\n        method: 'POST',\n        url: `${chatwootBase}/conversations/${conversationId}/messages`,\n        headers: {\n          'api_access_token': chatwootToken,\n          'Content-Type': 'application/json'\n        },\n        body: { content: noteContent, private: true },\n        json: true\n      });\n    } catch (e) {}\n\n    results.push({\n      json: {\n        ...itJson,\n        chatwoot_contact_id: contactId,\n        chatwoot_conversation_id: conversationId,\n        chatwoot_sync: 'success'\n      }\n    });\n  } catch (err) {\n    results.push({ json: { ...item.json, chatwoot_sync: 'error', error: err.message } });\n  }\n}\n\nreturn results;"
-      },
-      "id": "ab43e167-3c3a-4da7-9696-14a3911495d2",
-      "name": "SyncChatwootVence4dias",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1056,
-        208
-      ]
     },
     {
       "parameters": {
@@ -423,7 +449,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Usuario": "={{ $json.Usuario }}",
+            "Usuario": "={{ $('Evaluar Vencimiento y Categorizar').item.json.Usuario }}",
             "PLAY": "SENT4"
           },
           "matchingColumns": [
@@ -437,8 +463,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        800,
-        368
+        1056,
+        192
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -531,52 +557,174 @@
       }
     },
     {
-      "parameters": {
-        "resource": "messages-api",
-        "instanceName": "lat-whatscol",
-        "remoteJid": "={{ String($json.Teléfono).replace(/\\D/g, '') }}",
-        "messageText": "=*MENSAJE URGENTE*\n\n☀️Buenos días {{ $json.Nombre }},\n\n📺Tu suscripción a Total TV *VENCE el día de HOY*\n\n💵Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin Límites!\n\n¡Gracias por preferirnos!",
-        "options_message": {
-          "delay": 1200
-        }
-      },
-      "id": "abee13cd-2b4b-4728-87fe-deb1d27cd5a3",
-      "name": "VenceHoy",
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
+      "id": "82786187-2662-4f7f-b0e1-65fb28236d6b",
+      "name": "EnviarTelnyxHoy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
       "position": [
         800,
         -96
       ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telnyx.com/v2/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer KEY_TELNYX_REDACTED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "+18884064744"
+            },
+            {
+              "name": "to",
+              "value": "={{ '+' + ($json.Telefono || $json.Teléfono) }}"
+            },
+            {
+              "name": "text",
+              "value": "Mensaje de TotalTv:  Tenemos problemas con Whatsapp.  Por favor comunícate a través de Telegram (@TvTotal24bot) para renovar tu cuenta"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "4a11798a-27db-42ee-bee3-34fe5dee77ed",
+      "name": "marcaEMAILhoy",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        800,
+        48
+      ],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0",
+          "mode": "list",
+          "cachedResultName": "Clientes TotalTV",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1823373862,
+          "mode": "list",
+          "cachedResultName": "DnSpace",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/edit#gid=1823373862"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Usuario": "={{ $json.Usuario }}",
+            "PLAY": "EMAIL"
+          },
+          "matchingColumns": [
+            "Usuario"
+          ]
+        },
+        "options": {}
+      },
       "credentials": {
-        "evolutionApi": {
-          "id": "ecGN8GlLnzNz5Lq5",
-          "name": "Evolution account 2"
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
         }
       }
     },
     {
-      "parameters": {
-        "resource": "messages-api",
-        "instanceName": "lat-whatscol",
-        "remoteJid": "={{ String($json.Teléfono).replace(/\\D/g, '') }}",
-        "messageText": "=☀️Buenos días {{ $json.Nombre }},\n\n📺Tu suscripción a Total TV está próxima a vencer el {{ $json.vence_formatted || $json.Vence }}.\n\n💵Te invitamos a renovar tu plan, y seguir disfrutando del Entretenimiento sin Límites!\n\n¡Gracias por preferirnos!",
-        "options_message": {
-          "delay": 1200
-        }
-      },
-      "id": "5e1b0d25-7ceb-4b0e-9cfb-d8f9850f0de5",
-      "name": "Vence4dias",
-      "type": "n8n-nodes-evolution-api.evolutionApi",
-      "typeVersion": 1,
+      "id": "8d682d72-0995-44d7-a2b1-231f3b77cce6",
+      "name": "EnviarTelnyx4dias",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
       "position": [
         800,
-        208
+        192
       ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telnyx.com/v2/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer KEY_TELNYX_REDACTED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "+18884064744"
+            },
+            {
+              "name": "to",
+              "value": "={{ '+' + ($json.Telefono || $json.Teléfono) }}"
+            },
+            {
+              "name": "text",
+              "value": "Mensaje de TotalTv:  Tenemos problemas con Whatsapp.  Por favor comunícate a través de Telegram (@TvTotal24bot) para renovar tu cuenta"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "b553442f-63e0-497a-9602-0899217f3553",
+      "name": "marcaEMAIL4",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        800,
+        336
+      ],
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0",
+          "mode": "list",
+          "cachedResultName": "Clientes TotalTV",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1823373862,
+          "mode": "list",
+          "cachedResultName": "DnSpace",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0/edit#gid=1823373862"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Usuario": "={{ $json.Usuario }}",
+            "PLAY": "EMAIL4"
+          },
+          "matchingColumns": [
+            "Usuario"
+          ]
+        },
+        "options": {}
+      },
       "credentials": {
-        "evolutionApi": {
-          "id": "ecGN8GlLnzNz5Lq5",
-          "name": "Evolution account 2"
+        "googleSheetsOAuth2Api": {
+          "id": "Pw5wN2L5UopOruaj",
+          "name": "Google Sheets account"
         }
       }
     }
