@@ -3734,6 +3734,21 @@
      - Sincronizados todos los workflows locales mediante `export_workflows.py`.
      - Documentación actualizada en `PROJECT_CONTEXT.md`.
 
+---
+
+### 118. Actualización de Workflow Latin Vence Hoy y Vence 4 Días con Notificaciones SMS Telnyx y Marcado EMAIL (2026-11-12)
+
+* **Contexto y Modificaciones**:
+  - Se actualizó el flujo de recordatorios automáticos de vencimiento para TVTotal24 Latina (`workflows/latin_vence_hoy_y_vence4.json`, ID `TfILC2hXao6SLQfE`).
+  - Se reemplazaron las notificaciones salientes de WhatsApp por envío de SMS a través de la API de Telnyx (`POST https://api.telnyx.com/v2/messages`) desde el número `+18884064744`:
+    * Mensaje enviado: *"Mensaje de TotalTv: Tenemos problemas con Whatsapp. Por favor comunícate a través de Telegram (@TvTotal24bot) para renovar tu cuenta"*.
+    * Nodos HTTP añadidos: `EnviarTelnyxHoy` y `EnviarTelnyx4dias` (con `onError: continueRegularOutput`).
+  - Se añadieron nodos de actualización en Google Sheets (`marcaEMAILhoy` y `marcaEMAIL4`) en la hoja `DnSpace` del libro *Clientes TotalTV* (`1SNRbfgomUgtac58UmIMlH8UzizBXrTDVogxJEt-z9A0`):
+    * Marca el valor `"EMAIL"` en la columna `PLAY` para los vencimientos de hoy.
+    * Marca el valor `"EMAIL4"` en la columna `PLAY` para los vencimientos de 4 días.
+  - El workflow se encuentra activo en producción en n8n bajo la versión `8f854300-7a32-4c7f-ba4d-16ba9a6d4b7f`.
+
+
 
 
 
