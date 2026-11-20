@@ -3748,6 +3748,34 @@
     * Marca el valor `"EMAIL4"` en la columna `PLAY` para los vencimientos de 4 días.
   - El workflow se encuentra activo en producción en n8n bajo la versión `8f854300-7a32-4c7f-ba4d-16ba9a6d4b7f`.
 
+---
+
+### 119. Descontinuación de Enlaces de Pago para Cash App y Redirección Exclusiva a totaltvusa.com (2026-11-20)
+
+* **Objetivo y Directiva**:
+  - El agente IA de TotalTv USA (`totaltvusa`) ya no ofrecerá ni creará enlaces de pago para Cash App (anteriormente generados como links de pd.cash o facturas Lightning).
+  - Quien desee o solicite pagar mediante Cash App deberá realizar su orden directa y obligatoriamente en el sitio web oficial: **totaltvusa.com**.
+  - Queda prohibido de forma absoluta e ineludible invocar `Call 'getpaymentlink'` con `/cashapp` o `/pdcash`.
+
+* **Modificaciones Realizadas**:
+  1. **Prompt Maestro del Agente TotalTv USA (`prompts/agent_prompt.md`)**:
+     - Sección de presentación de medios de pago actualizada para reflejar Cash App disponible exclusivamente mediante orden directa en `totaltvusa.com` (sin generación de links por el agente).
+     - Sustituida la sección de solicitud específica de Cash App (`OPTION A Lightning` y `OPTION B pd.cash`) por el **⛔ MANDATO SUPREMO — DIRECTIVA DE PAGO CON CASH APP (PROHIBICIÓN TOTAL DE GENERAR ENLACES DE PAGO Y REDIRECCIÓN EXCLUSIVA A TOTALTVUSA.COM)** con respuestas fijas tanto en español como en inglés dirigiendo al sitio web.
+     - Prohibición expresa de Cashtags ($tag), correos o cuentas personales directas.
+     - Exclusión de Cash App del incentivo de 5% de descuento en Zelle (ahora circunscrito a Card2Crypto / Tarjetas / PayPal) y de las tarifas de procesamiento en activaciones de apps.
+  2. **Base de Conocimiento (`knowledge/totaltv_usa_support.md`)**:
+     - Actualizada la P4 (formas de pago aceptadas) para reflejar Cash App directo en `totaltvusa.com`.
+     - Actualizado el caso documentado de soporte para Cash App y ajustadas menciones en activaciones e incentivo Zelle.
+  3. **Herramienta `Call 'getpaymentlink'` en n8n (`router_chatwoot_ia.json` - `n0zgnS1vlOGNcGNY`)**:
+     - Eliminado `/pdcash for CashApp` de los parámetros de la herramienta LangChain.
+     - Añadida nota prohibitiva en la descripción: *"NOTE: Cash App links are NOT supported; customers requesting Cash App must be directed to order directly on totaltvusa.com."*
+  4. **Workflow `Telegram to N8N` (`workflows/telegram_to_n8n.json` - `TS2CADjNNn05jXBW`)**:
+     - Actualizado el código de `Preparar Instrucción Agente Directo` para inyectar el nuevo prompt maestro de TotalTv USA.
+  5. **Despliegue y Publicación en Producción**:
+     - Desplegados y publicados los cambios en los workflows de n8n `n0zgnS1vlOGNcGNY` y `TS2CADjNNn05jXBW`.
+     - Exportados y sincronizados los 26 workflows mediante `workflows/export_workflows.py`.
+
+
 
 
 

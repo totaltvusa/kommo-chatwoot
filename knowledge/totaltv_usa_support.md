@@ -57,7 +57,7 @@ El servicio de TotalTv USA es compatible con una amplia gama de dispositivos de 
      * **Aplicaciones del ecosistema Multi-Player (PRO Player, HD Media Player, IPTV 4K, IPTV Pro, IPTV Stream Player, IPTV Play, IPTV OTT Player, etc.)**: **$25 USD** (pago único de por vida).
    - **Condiciones Clave y Reglas de Pago**:
      * **SIN DESCUENTOS**: A los precios de activación NO aplica ningún tipo de descuento. Incluso si el cliente paga con Criptomonedas (que tienen 20% de descuento en planes de suscripción), **la activación NO lleva descuento**.
-     * **RECARGOS / FEES POR PASARELA**: Si se utilizan métodos de pago que incluyen comisión por procesamiento (CashApp +10%, Card2Crypto / Tarjetas / PayPal +10%), estos fees **SÍ se suman** al valor de la activación (ej. $5 base -> $5.50 USD, $24 base -> $26.40 USD, $20 base -> $22 USD, $25 base -> $27.50 USD; o si aplica precio anterior: $4 -> $4.40 USD, $20 -> $22 USD). En Zelle se abona el precio base exacto ($5, $24, $20 o $25 USD).
+     * **RECARGOS / FEES POR PASARELA**: Si se utilizan métodos de pago que incluyen comisión por procesamiento (Card2Crypto / Tarjetas / PayPal +10%), estos fees **SÍ se suman** al valor de la activación (ej. $5 base -> $5.50 USD, $24 base -> $26.40 USD, $20 base -> $22 USD, $25 base -> $27.50 USD; o si aplica precio anterior: $4 -> $4.40 USD, $20 -> $22 USD). En Zelle se abona el precio base exacto ($5, $24, $20 o $25 USD).
      * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (asociada a su MAC y Device ID).
      * **No transferible**: Las activaciones no se pueden transferir a otro dispositivo.
      * **Autogestión**: El cliente siempre tiene la opción de gestionar el pago y la activación directamente por su cuenta en el sitio web oficial del desarrollador de la app.
@@ -131,10 +131,9 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 ### P4: ¿Cuáles son las formas de pago aceptadas para TotalTv USA?
 - **R:** Aceptamos las siguientes opciones seguras:
 1. **Zelle** (Precio Base — Sin recargo / Sin descuento): Pago directo al correo `acalimanr@gmail.com` (Beneficiario: `ACR Enterprises LLC.`).
-2. **Cash App / Lightning Pay (Instant)** (Precio Base — Sin recargo / Sin descuento): Pago directo e instantáneo escaneando el código QR en pantalla o copiando el invoice de Lightning en Cash App (o Strike / wallet Lightning).
-3. **Criptomonedas (BTC / USDT)** — 🎉 **20% DE DESCUENTO**: Pago directo a nuestra billetera BTC `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo` o enlace con 20% de descuento.
-4. **Cash App (vía pd.cash)** — Precio Base + 10% de recargo por procesamiento: Enlace oficial generado.
-5. **Tarjetas de Débito/Crédito o PayPal (vía Card2Crypto)** — Precio Base + 10% de recargo: Enlace oficial seguro para pagar con tarjetas, Apple Pay, Google Pay o PayPal. También disponible en nuestra web `http://totaltvusa.com`.
+2. **Criptomonedas (BTC / USDT)** — 🎉 **20% DE DESCUENTO**: Pago directo a nuestra billetera BTC `13w3KWDYDDV8aCq7NTRxuHQ8eb5onHQzAo` o enlace con 20% de descuento.
+3. **Tarjetas de Débito/Crédito o PayPal (vía Card2Crypto)** — Precio Base + 10% de recargo: Enlace oficial seguro para pagar con tarjetas, Apple Pay, Google Pay o PayPal.
+4. **Cash App**: Quien desee usar este medio de pago, deberá realizar su orden directamente en nuestro sitio web oficial: `totaltvusa.com`. El agente IA no genera enlaces de pago para Cash App.
 
 ### P5: ¿TotalTv USA tiene canales de eventos deportivos en vivo y Pay-Per-View (PPV)?
 - **R:** Sí, todos los eventos deportivos estelares (UFC, Boxeo PPV, NFL Sunday Ticket, NBA Pass, MLB Extra Innings, Premier League, Champions League, Formula 1, LaLiga, etc.) están incluidos sin costo adicional en nuestras categorías de Deportes y PPV.
@@ -150,7 +149,7 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
       - *Excepción de Precio Anterior (Legacy)*: SOLO si el cliente indica explícitamente que se le dio el precio anterior ($4/año o $20/lifetime), se le respeta ese precio ($4/año o $20 lifetime; $4.40 / $22 USD con 10% fee). De lo contrario, SIEMPRE el precio nuevo, SIN DECIR a nadie que el precio aumentó; simplemente se da el precio actual.
 * **IBO Player:** **$20 USD** (de por vida).
 * **Apps Multi-Player (PRO Player, IPTV 4K, IPTV Pro, etc.):** **$25 USD** (de por vida).
-*(Precios netos: A las activaciones NO aplica ningún descuento, incluso si paga con Crypto. En métodos con comisión como CashApp o Card2Crypto/PayPal se suma el 10% de recargo ($5 -> $5.50, $24 -> $26.40, $20 -> $22, $25 -> $27.50 USD; o precio anterior $4 -> $4.40, $20 -> $22 USD). Son pagos exclusivos para ese dispositivo específico, no transferibles)*.
+*(Precios netos: A las activaciones NO aplica ningún descuento, incluso si paga con Crypto. En métodos con comisión como Card2Crypto/PayPal se suma el 10% de recargo ($5 -> $5.50, $24 -> $26.40, $20 -> $22, $25 -> $27.50 USD; o precio anterior $4 -> $4.40, $20 -> $22 USD). Son pagos exclusivos para ese dispositivo específico, no transferibles)*.
 - Para dispositivos **Android, Firestick o Google TV, siempre es mucho mejor utilizar nuestra app nativa oficial TotalTv USA descargada con Downloader (código 5533902)**.
 
 ## 4. REGISTRO DE CONSULTAS Y NUEVOS CASOS APRENDIDOS
@@ -160,16 +159,8 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
 - *Protocolo de Consulta*: Cuando un cliente existente solicita credenciales, cambio de clave, o reporta fallas de autenticación en Smarters u otras aplicaciones, el agente consulta la plataforma Mega mediante la herramienta de búsqueda (`obtener_credenciales_totaltv_usa`) para conocer su URL general (`dns_general`) y su URL Smarters (`dns_smarters`), y entonces entregarlos.
 - *Fallback*: Si no es posible realizar la consulta o el usuario no se encuentra, el agente responde educadamente indicando al cliente que utilice las credenciales y URLs de servidor con las que debe contar (las suministradas al momento de su activación). Si requiere asistencia adicional, se transfiere a soporte humano.
 
-- **Caso — Dos modalidades de pago con Cash App en TotalTv USA:**
-- *Modalidad 1 — Cash App / Lightning Pay*:
-Instrucciones de pago:
-1-Toca la pestaña de Pagos ‘$’ en tu Cash App para ir a la pantalla principal
-2-Toca el Escáner QR en la esquina superior izquierda de la pantalla
-3-Sostén tu cámara sobre el código QR de la factura Lightning para escanearlo
-4-Elige la fuente de fondos
-5-Sigue las instrucciones para confirmar y pagar la solicitud
-Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una pequeña tarifa de procesamiento. Esto cubre el costo de convertir tus dólares a bitcoin y enviarlos por la red Lightning. La tarifa se muestra en la pantalla de confirmación de la transacción.
-- *Modalidad 2 — Cash App (vía pd.cash)*: Precio Base + 10% de recargo por procesamiento mediante enlace generado.
+- **Caso — Directiva de pago con Cash App (Prohibición de enlaces y redirección a totaltvusa.com):**
+- *Instrucción:* El agente IA de TotalTv USA ya no ofrecerá ni generará enlaces de pago para Cash App. Quien desee usar Cash App como medio de pago, deberá realizar su orden directa y obligatoriamente en nuestro sitio web: **totaltvusa.com**. No se dispone de Cashtag ($tag) ni cuenta personal directa en Cash App para transferencias entre particulares.
 
 - **Caso — Presentación Limpia de Planes y Precios (Cero mención de SmartOne o regalos de apps):**
 - *Instrucción:* Al presentar o explicar planes de suscripción, precios, conexiones simultáneas o contenido de adultos, está TERMINANTEMENTE PROHIBIDO mencionar SmartOne IPTV o el regalo de activación anual. La explicación de planes y precios debe ser 100% limpia y circunscrita a duración, dispositivos y costos. El obsequio de 1 año de SmartOne en planes de 12 meses SOLO se menciona cuando el cliente esté en fase de instalación en un equipo compatible (Samsung, LG, VIDAA) o si no logra instalar en Android. En dispositivos Apple (iPhone, iPad, Apple TV, Mac), JAMÁS se menciona SmartOne (no existe en iOS). En dispositivos Android, la opción primordial y recomendada siempre es la app nativa TotalTv USA.
@@ -182,7 +173,7 @@ Los pagos por Lightning financiados desde tu saldo de Cash balance incluyen una 
 - **Caso — Dificultad para instalar con Downloader / Fallback a SmartOne IPTV:**
 - *Instrucción:* Si el cliente no logra o insiste en que no puede instalar la app con Downloader en su dispositivo Android/Firestick, se le recomienda instalar directamente SmartOne IPTV (15 días de prueba gratis, activación $5/año o $24 de por vida; solo $4/año o $20/vida si el cliente afirma expresamente que se le cotizó ese precio anterior; jamás decir que subió de precio; y gratis por 1 año si compra cualquier plan anual de TotalTv USA). Se le explica que para cargar sus credenciales (usuario, contraseña y servidor `http://hbptsjrw.sljur.com`) puede hacerlo en `https://smartone-iptv.com/` o darnos su dirección MAC.
 - **Caso — Incentivo Especial: Descuento del 5% en Zelle para planes mayores a $30 USD:**
-  - *Condición de activación*: Cuando un cliente de TotalTv USA solicita pagar una **suscripción cuyo monto base supere los $30 USD** (ej. $36, $48, $60, $72, $90, $105, $120) utilizando métodos con 10% de recargo (**CashApp**, **Tarjetas de crédito/débito** o **PayPal vía Card2Crypto**).
+  - *Condición de activación*: Cuando un cliente de TotalTv USA solicita pagar una **suscripción cuyo monto base supere los $30 USD** (ej. $36, $48, $60, $72, $90, $105, $120) utilizando métodos con 10% de recargo (**Tarjetas de crédito/débito** o **PayPal vía Card2Crypto**).
   - *Instrucción para el Agente IA*: Además de generar o suministrar el enlace de pago con el 10% de recargo, se le ofrece proactivamente el incentivo de Zelle:
     - *En Español*: "¿Estás seguro? ¡Puedo ofrecerte un 5% de descuento si pagas usando Zelle! En lugar de pagar $(MontoBase + 10%), pagarías solo $(MontoBase - 5%)."
     - *En English*: "Are you sure? I can offer you a 5% discount if you pay using Zelle! Instead of paying $(BasePrice + 10%), you would pay only $(BasePrice - 5%)."
