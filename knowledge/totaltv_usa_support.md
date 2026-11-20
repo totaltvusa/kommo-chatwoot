@@ -219,5 +219,12 @@ Cuando un cliente reporte problemas con su reproducción o aplicación, se deben
        - Se aclara que durante la prueba de 24 horas viene incluida para conocer el catálogo, y que al contratar una cuenta formal es opcional y no se agrega por defecto (el cliente debe indicar si quiere incluirla o no).
        - Se detallan los costos (+ $6 en 3 meses, + $12 en 6 meses, + $20 en 12 meses; gratis en 1 mes).
 
-
+- **Caso — Promoción Activa de Black Friday (Válida hasta el 30 de Noviembre):**
+  - *Detalle de la oferta*:
+    * Compra 3 Meses y recibe 1 Mes GRATIS adicional (4 Meses de servicio en total).
+    * Compra 12 Meses (1 Año) y recibe 3 Meses GRATIS adicionales (15 Meses de servicio en total).
+  - *Condición de medios de pago elegibles*:
+    * Aplica ÚNICAMENTE pagando con **Zelle** (`acalimanr@gmail.com`), **Criptomonedas** (Bitcoin directo a wallet con 20% de descuento o invoice de NOWPayments), o **Cash App vía Lightning** (exclusiva y directamente ordenando en la página web oficial `totaltvusa.com`).
+    * ⛔ **NO APLICA** si el cliente paga con Tarjetas de Débito/Crédito o PayPal a través de Card2Crypto (+10% fee).
+    * Planes de 1 Mes o 6 Meses NO llevan meses de regalo adicionales (mantienen su duración estándar).
 

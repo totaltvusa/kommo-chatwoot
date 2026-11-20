@@ -221,3 +221,15 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 
 - **Caso — Prohibición Estricta de decir "Binance Pay" (Mencionar siempre simplemente como "Binance"):**
   - *Instrucción:* Queda TERMINANTEMENTE PROHIBIDO decir o escribir "Binance Pay". Siempre debe nombrarse y referirse a este medio de pago simplemente como **"Binance"** (ej. "pago por Binance", "descuento con Binance", "ID de Binance: 22628239", etc.). Nunca agregar la palabra "Pay".
+
+- **Caso — Promoción Activa de Black Friday (Válida hasta el 30 de Noviembre):**
+  - *Detalle de la oferta*:
+    * Compra 3 Meses y recibe 1 Mes GRATIS adicional (4 Meses de servicio en total).
+    * Compra 12 Meses (1 Año) y recibe 3 Meses GRATIS adicionales (15 Meses de servicio en total).
+  - *Precios*: 3 Meses = 24$ USD (Binance: 14$ USD) por 4 Meses; 12 Meses = 84$ USD (Binance: 50$ USD) por 15 Meses.
+  - *Condición de medios de pago elegibles*:
+    * Aplica ÚNICAMENTE pagando con **Zelle** (`pagos@totaltvlatina.com`), **Binance** (ID `22628239` con súper descuento) o **Criptomonedas** (USDT / BTC).
+    * ⛔ **NO APLICA CON MEDIO DE PAGO EN BOLÍVARES (PAGO MÓVIL)**: Si pagan en Bolívares por Pago Móvil, se entrega la duración estándar regular (3 meses son 3 meses, 12 meses son 12 meses).
+    * Tampoco aplica para pagos con tarjetas / PayPal vía Card2Crypto (+10% fee).
+    * Planes de 1 Mes o 6 Meses NO llevan meses de regalo adicionales (mantienen su duración estándar).
+

@@ -3775,6 +3775,36 @@
      - Desplegados y publicados los cambios en los workflows de n8n `n0zgnS1vlOGNcGNY` y `TS2CADjNNn05jXBW`.
      - Exportados y sincronizados los 26 workflows mediante `workflows/export_workflows.py`.
 
+---
+
+### 120. Implementación de Oferta Especial de Black Friday para TotalTv USA y TVTotal24 (2026-11-20)
+
+* **Objetivo y Condiciones de la Promoción**:
+  - Oferta especial por Black Friday activa y válida hasta el **30 de noviembre**:
+    * **Compra 3 Meses ➔ Recibe 1 Mes GRATIS** (4 Meses de servicio en total).
+    * **Compra 12 Meses (1 Año) ➔ Recibe 3 Meses GRATIS** (15 Meses de servicio en total).
+  - **Condiciones para TotalTv USA**:
+    * Medios de pago que aplican: **Zelle** (`acalimanr@gmail.com`), **Criptomonedas** (Bitcoin directo o NOWPayments), y **Cash App vía Lightning** (exclusivamente realizando la orden en la página web oficial `totaltvusa.com`).
+    * Medios que NO aplican: Tarjetas o PayPal vía Card2Crypto (+10% fee). Tampoco aplica a planes de 1 o 6 meses (mantienen duración estándar).
+  - **Condiciones para TVTotal24 (Latina)**:
+    * Medios de pago que aplican: **Zelle** (`pagos@totaltvlatina.com`), **Binance** (USDT al ID `22628239` con súper descuento: 3M = 14$, 12M = 50$), y **Criptomonedas** (USDT / BTC).
+    * Medios que NO aplican: ⛔ **NO APLICA CON MEDIO DE PAGO EN BOLÍVARES (PAGO MÓVIL)**. Si pagan en Bolívares reciben la duración estándar regular (3 meses son 3 meses, 12 meses son 12 meses). Tampoco aplica para Card2Crypto/PayPal ni planes de 1 o 6 meses.
+
+* **Modificaciones Realizadas**:
+  1. **Prompts de los Agentes**:
+     - `prompts/agent_prompt.md`: Añadido mandato y sección destacada de Oferta Black Friday (en inglés y español) con condiciones estrictas y templates de presentación de planes actualizados.
+     - `prompts/tvtotal24_prompt.md`: Añadido mandato y sección destacada de Oferta Black Friday con precios base y descuento Binance, prohibición expresa de aplicar la promo a pagos en Bolívares (Pago Móvil), y templates actualizados en español e inglés.
+  2. **Bases de Conocimiento**:
+     - `knowledge/totaltv_usa_support.md`: Incorporado el caso de soporte con la directiva oficial de Black Friday para TotalTv USA.
+     - `knowledge/tvtotal24_latina_support.md`: Incorporado el caso de soporte con la directiva oficial de Black Friday para TVTotal24 Latina.
+  3. **Workflows en Producción en n8n**:
+     - `router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados los nodos `AI Agent` (TotalTv USA) y `AI Agent - TVTotal24` (Latina). Publicada versión activa `2743c646-c670-44d7-9125-22bce6091684`.
+     - `agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado el nodo `AI Agent`. Publicada versión activa `94fbbeea-f2e9-4a6e-bc12-fa28ac5bd320`.
+     - `telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado `Preparar Instrucción Agente Directo` para ambas marcas. Publicada versión activa `b0ce3ac9-db66-4d07-aa37-42cdbfe921b5`.
+  4. **Exportación y Sincronización**:
+     - Sincronizados los 26 workflows locales con n8n mediante `export_workflows.py`.
+
+
 
 
 
