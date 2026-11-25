@@ -3804,6 +3804,47 @@
   4. **Exportación y Sincronización**:
      - Sincronizados los 26 workflows locales con n8n mediante `export_workflows.py`.
 
+---
+
+### 121. Actualización Oficial de URLs de Conexión en TVTotal24 (`https://nk8ss.coo136.ch:443` y `https://smrtssl.coot36.ch:443`) y Deprecación Definitiva de Servidores Anteriores (2026-11-24)
+
+* **Contexto y Solicitud del Usuario**:
+  - El agente IA de TVTotal24, al sugerir las URLs para utilizar en las aplicaciones, debe emplear única y exclusivamente las siguientes direcciones activas:
+    * **Aplicaciones en general (XCIPTV, SmartOne IPTV, IBO Player, etc.)**: `https://nk8ss.coo136.ch:443`
+    * **Aplicaciones Smarters**: `https://smrtssl.coot36.ch:443`
+  - Todas las URLs y servidores anteriores (`http://wk.wxn.ch:2095`, `http://smrts.wxn.ch:2095`, `http://wk.mvpl.uk:2082`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`, etc.) han quedado definitivamente **FUERA DE SERVICIO**, prohibidas y en desuso total.
+
+* **Modificaciones Realizadas**:
+  1. **Prompt Maestro de TVTotal24 (`prompts/tvtotal24_prompt.md`)**:
+     - Línea 82: Actualizada la prohibición y definición de servidores oficiales de TVTotal24 con `https://nk8ss.coo136.ch:443` (general) y `https://smrtssl.coot36.ch:443` (Smarters), estableciendo que las URLs anteriores han quedado fuera de servicio y prohibidas.
+     - Sección de entrega de pruebas gratuitas (Líneas 311-312): Actualizado a `Servidor / DNS: https://nk8ss.coo136.ch:443` y `DNS para Smarters: https://smrtssl.coot36.ch:443`.
+     - Sección *MANDATO CRÍTICO DE ASIGNACIÓN DE SERVIDOR / DNS* (Líneas 464-469): Actualizada con las nuevas URLs HTTPS y mandato de fuera de servicio para servidores legacy.
+     - Guías de instalación por dispositivo:
+       * Android / SmartOne (Línea 484): Actualizado servidor `https://nk8ss.coo136.ch:443`.
+       * Dispositivos Apple (Línea 495): `Servidor / DNS: https://nk8ss.coo136.ch:443`.
+       * Smart TVs (Líneas 499 y 501): `https://nk8ss.coo136.ch:443`.
+       * PC / Computadoras (Líneas 523-524): `Servidor / DNS: https://nk8ss.coo136.ch:443` y `M3U Playlist: https://nk8ss.coo136.ch:443/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`.
+       * Recuperación de credenciales existentes (Líneas 542-543): `https://nk8ss.coo136.ch:443` y `https://smrtssl.coot36.ch:443`.
+       * Resumen de recomendaciones (Líneas 727, 729, 731, 735): Actualizado a `https://nk8ss.coo136.ch:443` y URL de playlist M3U correspondiente.
+  2. **Prompt Maestro de TotalTv USA (`prompts/agent_prompt.md`)**:
+     - Línea 98: Actualizada la lista de servidores prohibidos de TVTotal24 para incluir `nk8ss.coo136.ch` y `smrtssl.coot36.ch`.
+  3. **Base de Conocimiento de Soporte (`knowledge/tvtotal24_latina_support.md`)**:
+     - Actualizadas todas las menciones operativas de DNS general a `https://nk8ss.coo136.ch:443` y DNS Smarters a `https://smrtssl.coot36.ch:443`.
+     - Actualizada la URL de Playlist M3U a `https://nk8ss.coo136.ch:443/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`.
+     - Actualizado el apartado de Servidores Anteriores declarándolos formalmente FUERA DE SERVICIO.
+  4. **Documentación de API Interna (`docs/mvplay_api.md`)**:
+     - Actualizada la Sección 3 con las URLs oficiales activas (2026) y listado de URLs legacy fuera de servicio.
+  5. **Workflows en Producción en n8n**:
+     - `workflows/tool_get_mvplay_credentials.json` (ID `gyTc5A6r5TNRgJCs`): Actualizado `Procesar Credenciales MVPlay` con `finalDns = 'https://nk8ss.coo136.ch:443'` y `finalDnsSmarters = 'https://smrtssl.coot36.ch:443'`. Publicada versión activa `607c3905-188b-4b10-917e-9081bc13e0c0`.
+     - `workflows/tool_create_mvplay_trial.json` (ID `kh10aaenUURvi7Ji`): Actualizados nodos `Procesar Respuesta MVPlay`, `Nota Privada Chatwoot`, `Notificar Administrador` (Telegram) y `Notificar WhatsApp (Evolution API)` con las nuevas URLs. Publicada versión activa `5ea43577-110f-4f33-89fc-3c4ad705c394`.
+     - `workflows/router_chatwoot_ia.json` (ID `n0zgnS1vlOGNcGNY`): Actualizados `AI Agent` y `AI Agent - TVTotal24`. Publicada versión activa `77b8de28-4778-40e4-9fa9-af745a90290f`.
+     - `workflows/agent_tvtotal24_latina.json` (ID `Vfweu0rjoTT3FUl1`): Actualizado `AI Agent`. Publicada versión activa `6d75f8a5-d7d3-45ad-baa4-84f475cdb439`.
+     - `workflows/telegram_to_n8n.json` (ID `TS2CADjNNn05jXBW`): Actualizado `Preparar Instrucción Agente Directo`. Publicada versión activa `e19f22fa-4838-43a5-af90-f9d15a020bda`.
+     - `workflows/agent_totaltv_usa.json`: Actualizado localmente.
+  6. **Exportación y Sincronización Total**:
+     - Re-exportados y validados los 26 flujos mediante `workflows/export_workflows.py`.
+
+
 
 
 

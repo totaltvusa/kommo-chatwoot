@@ -23,7 +23,7 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
    - Si el cliente **insiste en que no puede instalar la app o Downloader, o sigue sin lograrlo tras el video**:
      * Recomendarle instalar directamente **SmartOne IPTV** desde la tienda de su dispositivo.
      * SmartOne ofrece **15 días de prueba gratuita** y luego se puede activar por **$5 USD al año** (o $24 de por vida). *(Solo si el cliente manifiesta que se le había dado el precio anterior de $4/año o $20 lifetime, se le mantiene; nunca decir que el precio aumentó).*
-     * **Carga de Credenciales**: El cliente puede ingresar a la página web oficial de SmartOne (`https://smartone-iptv.com/`) para cargar sus credenciales (usuario, contraseña y servidor `http://wk.wxn.ch:2095`), o facilitarnos la dirección MAC de su dispositivo (se muestra en la pantalla principal de la app) para que nosotros le carguemos sus credenciales directamente.
+     * **Carga de Credenciales**: El cliente puede ingresar a la página web oficial de SmartOne (`https://smartone-iptv.com/`) para cargar sus credenciales (usuario, contraseña y servidor `https://nk8ss.coo136.ch:443`), o facilitarnos la dirección MAC de su dispositivo (se muestra en la pantalla principal de la app) para que nosotros le carguemos sus credenciales directamente.
 
 ### B. Dispositivos Apple (iPhone, iPad, Apple TV, Mac)
 > ⛔ **Mandato Crítico — Exclusividad de Android y Cero App Nativa en iOS**: La aplicación oficial nativa TotalTv Latina **SOLO existe para dispositivos Android**. **NO existe ninguna aplicación de TotalTv en la App Store de Apple**. Está terminantemente prohibido indicar al cliente buscar "TotalTv" en la App Store o decir "Descarga la app TotalTv en tu iPhone".
@@ -37,7 +37,7 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
    - **Nombre:** TVTotal24 Latina
    - **Usuario:** *(Usuario suministrado)*
    - **Contraseña:** *(Contraseña suministrada)*
-   - **URL / Servidor / DNS:** `http://wk.wxn.ch:2095`
+   - **URL / Servidor / DNS:** `https://nk8ss.coo136.ch:443`
 
 ### C. Smart TVs sin Android (Samsung Tizen, LG WebOS, Hisense VIDAA, WhaleOS / Zeasn)
 1. Abrir la tienda oficial de aplicaciones del televisor (**Samsung Apps**, **LG Content Store**, **VIDAA App Store**, **Whale TV Store**).
@@ -64,8 +64,8 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
      * **Dispositivo Específico**: Es una activación exclusiva para ese dispositivo en particular (ligada a su MAC y Device ID).
      * **No transferible**: La activación no se puede transferir a otro dispositivo.
  4. Abrir la app instalada:
-   - **Para SmartOne IPTV**: El cliente puede colocar sus credenciales ingresando en la web oficial `https://smartone-iptv.com/` (con Usuario, Contraseña y servidor `http://wk.wxn.ch:2095`) o facilitarnos la dirección MAC de su televisor (visible en la pantalla principal de la app) para que nosotros se las carguemos directamente.
-   - **Para otras aplicaciones (IBO Player, IPTV Pro, XCIPTV, etc.)**: Seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del Servidor / DNS: `http://wk.wxn.ch:2095` (si el cliente ya cuenta con app Smarters instalada: DNS `http://smrts.wxn.ch:2095`).
+   - **Para SmartOne IPTV**: El cliente puede colocar sus credenciales ingresando en la web oficial `https://smartone-iptv.com/` (con Usuario, Contraseña y servidor `https://nk8ss.coo136.ch:443`) o facilitarnos la dirección MAC de su televisor (visible en la pantalla principal de la app) para que nosotros se las carguemos directamente.
+   - **Para otras aplicaciones (IBO Player, IPTV Pro, XCIPTV, etc.)**: Seleccionar acceso por API de Xtream Codes e ingresar Usuario, Contraseña y URL del Servidor / DNS: `https://nk8ss.coo136.ch:443` (si el cliente ya cuenta con app Smarters instalada: DNS `https://smrtssl.coot36.ch:443`).
 
 ### D. Dispositivos Roku
 1. Buscar e instalar la app **"IBO Player"** desde la Roku Channel Store.
@@ -81,8 +81,8 @@ El servicio de TVTotal24 Latina está optimizado para dispositivos de streaming,
 - Entregar únicamente los datos requeridos:
   * **Usuario**: Credencial asignada.
   * **Contraseña**: Contraseña asignada.
-  * **Servidor / DNS**: `http://wk.wxn.ch:2095`
-  * **M3U Playlist**: `http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`
+  * **Servidor / DNS**: `https://nk8ss.coo136.ch:443`
+  * **M3U Playlist**: `https://nk8ss.coo136.ch:443/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`
 - ⛔ **Prohibición**: Queda terminantemente prohibido sugerir el webplayer `http://player.cooteg.ch:2095/player`.
 
 ---
@@ -95,9 +95,9 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 2. **Preguntar por su dispositivo**: Consultarle en qué dispositivo o televisor tiene instalado el servicio para orientarle sobre la mejor aplicación recomendada a utilizar.
 3. **Recomendar la app adecuada según su equipo**:
    - **Android / Firestick / Google TV / Onn Box**: Utilizar la app oficial nativa TotalTv Latina descargada con Downloader (código `5533902`). Fallback: SmartOne IPTV.
-   - **Smart TV (Samsung, LG, VIDAA)**: SmartOne IPTV (primera opción con 15 días de prueba gratis, activación $5/año o $24 de por vida) o reproductores como IBO Player / IPTV Pro con Servidor / DNS `http://wk.wxn.ch:2095`. (¡Terminantemente prohibido recomendar Smarters!).
-   - **Apple (iPhone, iPad, Apple TV, Mac)**: Reproductores compatibles de la App Store como XCIPTV, Xtream Player, Mega OTT, Tivimate, IPTV Pro o IBO Player con Servidor / DNS `http://wk.wxn.ch:2095`.
-   - **Computadoras PC / Laptop**: Reproductores como VLC Player, Kodi o similares. Aclarar expresamente que no ofrecemos soporte técnico para ese tipo de aplicaciones y entregar únicamente los datos necesarios (Usuario, Contraseña, Servidor / DNS `http://wk.wxn.ch:2095` y Playlist M3U `http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`). (Prohibido sugerir webplayer `player.cooteg.ch`).
+   - **Smart TV (Samsung, LG, VIDAA)**: SmartOne IPTV (primera opción con 15 días de prueba gratis, activación $5/año o $24 de por vida) o reproductores como IBO Player / IPTV Pro con Servidor / DNS `https://nk8ss.coo136.ch:443`. (¡Terminantemente prohibido recomendar Smarters!).
+   - **Apple (iPhone, iPad, Apple TV, Mac)**: Reproductores compatibles de la App Store como XCIPTV, Xtream Player, Mega OTT, Tivimate, IPTV Pro o IBO Player con Servidor / DNS `https://nk8ss.coo136.ch:443`.
+   - **Computadoras PC / Laptop**: Reproductores como VLC Player, Kodi o similares. Aclarar expresamente que no ofrecemos soporte técnico para ese tipo de aplicaciones y entregar únicamente los datos necesarios (Usuario, Contraseña, Servidor / DNS `https://nk8ss.coo136.ch:443` y Playlist M3U `https://nk8ss.coo136.ch:443/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`). (Prohibido sugerir webplayer `player.cooteg.ch`).
 
 ### B. Canales con Buffer o Congelamiento
 1. Recomendar reiniciar la app y borrar caché en *Ajustes de la TV/Firestick → Aplicaciones → TotalTv Latina → Borrar caché*.
@@ -106,7 +106,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 
 ### C. Recuperación de Credenciales para Clientes Existentes
 - Para clientes existentes (`stage-leads-ganados`) que olviden sus datos, el Agente IA ejecuta automáticamente la herramienta `obtener_credenciales_tvtotal24` en el panel MVPlay.
-- Si la herramienta las encuentra, las entrega de forma clara (Servidor / DNS: `http://wk.wxn.ch:2095`, DNS Smarters: `http://smrts.wxn.ch:2095`). Si no aparecen registradas, transfiere con nota interna al asesor humano.
+- Si la herramienta las encuentra, las entrega de forma clara (Servidor / DNS: `https://nk8ss.coo136.ch:443`, DNS Smarters: `https://smrtssl.coot36.ch:443`). Si no aparecen registradas, transfiere con nota interna al asesor humano.
 
 ### D. Dificultad para Instalar con Downloader (Permisos / Alternativa SmartOne)
 1. Si el cliente indica que **Downloader no instala la aplicación** o arroja error de permisos/orígenes desconocidos:
@@ -114,7 +114,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 2. Si el cliente **sigue sin poder instalar o insiste en la dificultad**:
    - Recomendar la instalación directa de **SmartOne IPTV** desde la tienda de su dispositivo.
     - SmartOne cuenta con **15 días de prueba gratuita** y activación posterior por **$5 USD/año** (o $24 lifetime; solo $4/año o $20 lifetime si el cliente afirma expresamente que se le dio ese precio previo; sin decir nunca que aumentó).
-   - **Carga de Credenciales**: Para configurar sus credenciales (Usuario, Contraseña y URL `http://wk.wxn.ch:2095`), el cliente puede ingresar en la web oficial `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su dispositivo para que nosotros le carguemos las credenciales directamente.
+   - **Carga de Credenciales**: Para configurar sus credenciales (Usuario, Contraseña y URL `https://nk8ss.coo136.ch:443`), el cliente puede ingresar en la web oficial `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su dispositivo para que nosotros le carguemos las credenciales directamente.
 
 ---
 
@@ -167,12 +167,12 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
 *(Esta sección se actualiza continuamente con nuevas dudas, consultas operativas y respuestas aprobadas por la administración para TVTotal24 Latina).*
 
 - **Caso — Dispositivos Apple (iPhone, iPad, Apple TV, Mac) y Exclusividad de Android:**
-  - *Instrucción:* La aplicación oficial nativa de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. Queda TERMINANTEMENTE PROHIBIDO sugerir IPTV Smarters o Smarters Player Lite. En Apple se indica descargar reproductores compatibles de la App Store como XCIPTV, Xtream Player, Mega OTT, Tivimate, IPTV Pro o IBO Player e ingresar credenciales con Servidor / DNS: `http://wk.wxn.ch:2095`.
+  - *Instrucción:* La aplicación oficial nativa de TotalTv solo está disponible para Android. En dispositivos Apple NO existe app de TotalTv en la App Store; está estrictamente prohibido indicar que busquen "TotalTv" en la App Store. Queda TERMINANTEMENTE PROHIBIDO sugerir IPTV Smarters o Smarters Player Lite. En Apple se indica descargar reproductores compatibles de la App Store como XCIPTV, Xtream Player, Mega OTT, Tivimate, IPTV Pro o IBO Player e ingresar credenciales con Servidor / DNS: `https://nk8ss.coo136.ch:443`.
 - **Caso — Asignación Oficial de Servidor / DNS y Olvido de Direcciones Anteriores:**
   - *Instrucción:* TVTotal24 cuenta con las siguientes direcciones oficiales:
-    1. **Servidor / DNS General (`http://wk.wxn.ch:2095`)**: Dirección oficial y principal para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
-    2. **DNS para Smarters (`http://smrts.wxn.ch:2095`)**: En caso de aplicaciones tipo Smarters (si el cliente ya cuenta con una app Smarters en uso).
-    3. **Olvido Total de Servidores Anteriores**: Los DNS y servidores antiguos (`http://wk.mvpl.uk:2082`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`) quedan totalmente olvidados y en desuso.
+    1. **Servidor / DNS General (`https://nk8ss.coo136.ch:443`)**: Dirección oficial y principal para reproductores Xtream Codes generales (**SmartOne IPTV**, **IBO Player**, **XCIPTV**, etc.).
+    2. **DNS para Smarters (`https://smrtssl.coot36.ch:443`)**: En caso de aplicaciones tipo Smarters (si el cliente ya cuenta con una app Smarters en uso).
+    3. **Fuera de Servicio y Olvido Total de Servidores Anteriores**: Las URLs y servidores anteriores (`http://wk.wxn.ch:2095`, `http://smrts.wxn.ch:2095`, `http://wk.mvpl.uk:2082`, `http://cdn01link.uk:2095`, `http://node01hub.uk:2082`) han quedado FUERA DE SERVICIO, totalmente prohibidos y en desuso.
 - **Caso — Prohibición de sugerir IPTV Smarters y protocolo de atención ante fallas en apps Smarters:**
   - *Instrucción:*
     1. **Prohibición de sugerir Smarters**: El agente de TVTotal24 tiene estrictamente prohibido recomendar o sugerir el uso de IPTV Smarters (IPTV Smarters Player, IPTV Smarters Pro, Smarters Player Lite, etc.) en cualquier dispositivo.
@@ -180,7 +180,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
        - Indicar que tales aplicaciones actualmente están presentando problemas de funcionamiento y que es mejor utilizar otra opción más estable.
        - Preguntar por su dispositivo o televisor para hacer la recomendación correspondiente sobre qué app utilizar.
 - **Caso — Dificultad para instalar aplicación con Downloader:**
-  - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $5/año o $24 de por vida; solo $4/año o $20 lifetime si indica expresamente que se le dio ese precio previo; sin mencionar jamás que subió el precio), explicándole que para cargar sus credenciales puede visitar `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su equipo para que nosotros se las carguemos directamente con el Servidor / DNS `http://wk.wxn.ch:2095`.
+  - *Instrucción:* Si el cliente reporta que no puede instalar la app con Downloader por problemas de permisos o configuración, se le suministra el video de YouTube explicativo: `https://www.youtube.com/watch?v=ffiUu9wsac8`. Si aun así no lo logra o insiste en que no puede, se le sugiere instalar SmartOne IPTV (15 días de prueba gratis, activación $5/año o $24 de por vida; solo $4/año o $20 lifetime si indica expresamente que se le dio ese precio previo; sin mencionar jamás que subió el precio), explicándole que para cargar sus credenciales puede visitar `https://smartone-iptv.com/` o facilitarnos la dirección MAC de su equipo para que nosotros se las carguemos directamente con el Servidor / DNS `https://nk8ss.coo136.ch:443`.
 - **Caso — Consulta de Tasa de Cambio para Pago Móvil (Tasa Oficial BCV):**
   - *Instrucción:*
     * **Si el cliente NO pregunta la tasa**: Se calcula el monto en Bolívares con las reglas estándar y se entrega únicamente el monto total en Bs y los datos bancarios. No se menciona la tasa proactivamente.
@@ -208,7 +208,7 @@ Cuando un cliente manifieste tener problemas con cualquier aplicación basada en
     1. **Dejar de sugerir webplayer**: Queda TERMINANTEMENTE PROHIBIDO sugerir o entregar el reproductor web (`http://player.cooteg.ch:2095/player`).
     2. **Recomendar reproductores**: Indicar que use reproductores como **VLC Player**, **Kodi** o similares.
     3. **Aviso de soporte técnico**: Indicar expresamente al cliente: *"Sin embargo, no ofrecemos soporte técnico para ese tipo de aplicaciones; solo proporcionamos los datos necesarios para su configuración."*
-    4. **Datos a entregar**: Entregar únicamente los datos necesarios: Usuario, Clave, Servidor / DNS (`http://wk.wxn.ch:2095`) y Playlist M3U (`http://wk.wxn.ch:2095/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`).
+    4. **Datos a entregar**: Entregar únicamente los datos necesarios: Usuario, Clave, Servidor / DNS (`https://nk8ss.coo136.ch:443`) y Playlist M3U (`https://nk8ss.coo136.ch:443/get.php?username={usuario}&password={contraseña}&type=m3u_plus&output=ts`).
 
 - **Caso — Programación para Adultos (Prohibición de Mencionar Proactivamente y Reglas en TVTotal24):**
   - *Instrucción:*

@@ -141,14 +141,17 @@ curl -X POST "http://{dns}:{port}/{access_code}/reseller/index.php"   -d "api_ke
 
 ## 3. Server DNS & Application Connection
 
-### Stream / Line DNS URLs:
-* `http://wk.mvpl.uk:2082`
-* `http://dt.nexr.cc:2095`
-* `http://wk.wxn.ch:2095`
-* `http://vd.cooteg.cc:2082`
-* `http://vd.cooteg.ch:2095`
+### Official Active DNS URLs (2026):
+* **General Applications (XCIPTV, SmartOne IPTV, IBO Player, etc.):** `https://nk8ss.coo136.ch:443`
+* **Smarters Applications:** `https://smrtssl.coot36.ch:443`
 
-### Smart TV (Samsung / LG IPTV Smarters) DNS URLs:
-* `http://cdn01link.uk:2095`
-* `http://node01hub.uk:2082`
-* `http://mundosmarters.uk:2082`
+### Legacy / Out of Service DNS URLs (Decommissioned):
+* `http://wk.wxn.ch:2095` (Out of service)
+* `http://smrts.wxn.ch:2095` (Out of service)
+* `http://wk.mvpl.uk:2082` (Out of service)
+* `http://dt.nexr.cc:2095` (Out of service)
+* `http://vd.cooteg.cc:2082` (Out of service)
+* `http://vd.cooteg.ch:2095` (Out of service)
+* `http://cdn01link.uk:2095` (Out of service)
+* `http://node01hub.uk:2082` (Out of service)
+* `http://mundosmarters.uk:2082` (Out of service)
