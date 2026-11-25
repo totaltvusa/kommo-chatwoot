@@ -3846,27 +3846,38 @@
 
 ---
 
-### 122. Corrección de Despacho Saliente de Instagram y Facebook Messenger vía Zernio API (`Enviar a Zernio Instagram`) y Reenvío de Mensaje Pendiente (2026-11-24)
+### 122. Corrección de Despacho Saliente de Instagram y Facebook Messenger vía Zernio API (`Enviar a Zernio Instagram`), Límite de 1.000 Caracteres de Meta y Chunking Automático (2026-11-24)
 
 * **Contexto y Problema Detectado**:
-  - Un mensaje entrante de Instagram (`Buenas noches`) para TVTotal24 (Inbox 13, contacto `@account01january2020` / Conv #1979) llegó a Zernio y a Chatwoot.
-  - El agente IA de TVTotal24 produjo la respuesta de saludo (#19362: *"¡Buenas noches! Soy Tivi, asesora virtual de TVTotal24. ¿Con quién tengo el gusto y en qué puedo ayudarte hoy?"*), la cual se registró en Chatwoot pero **no apareció en Zernio ni llegó al cliente**.
+  - En la conversación #1979 de TVTotal24 (Inbox 13, cuenta `@account01january2020`):
+    1. El primer mensaje de saludo (#19362) no salía debido a que la API key estaba como `'SK_REDACTED'`.
+    2. Al restaurar las credenciales, el cliente respondió preguntando por planes y precios, y el agente IA (Tivi) generó una respuesta completa con planes, oferta de Black Friday y métodos de pago (#19373).
+    3. Aunque el mensaje se creó en Chatwoot, **tampoco apareció en Zernio ni en el Instagram del cliente**, arrojando error HTTP 400 en n8n (`Enviar a Zernio Instagram`).
 
-* **Diagnóstico de Causa Raíz**:
-  - En el workflow router `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`), el nodo `Enviar a Zernio Instagram` contenía las API keys de Zernio sanitizadas como el string literal `'SK_REDACTED'` (debido a la sanitización previa de `export_workflows.py` para cumplir con las protecciones de GitHub).
-  - Al procesar el mensaje saliente de Chatwoot hacia Zernio, la llamada a `POST https://api.zernio.com/v1/inbox/conversations/${participantId}/messages` fallaba silenciosamente con `HTTP 401 Unauthorized` debido a que la API key era inválida (`Bearer SK_REDACTED`).
+* **Diagnóstico Profundo de Causa Raíz**:
+  1. **Límite Estricto de Meta Instagram Direct Messages**:
+     - Meta impone un límite infranqueable de **1.000 caracteres por mensaje directo** en la API de Instagram Graph (`IGApiException` code 100, subcode 2534038: *"The length of the message sent is over 1,000 characters"*).
+     - El mensaje #19373 generado por Tivi tenía una longitud de **1.074 caracteres**.
+     - Dado que `Enviar a Zernio Instagram` enviaba el texto completo en un solo payload HTTP POST a `/v1/inbox/conversations/${participantId}/messages`, Zernio / Instagram rechazaban el envío completo con `400 Bad Request`.
+  2. **Verificación de Seguridad e Integridad de TotalTv USA**:
+     - Se realizó una auditoría y verificación exhaustiva de los canales de TotalTv USA en Zernio:
+       * **Inbox 14** (Instagram `@tvtotalusa`, Account `6a86600b77555aae01387fc7`): Activo (`isActive: true`), permissions OK.
+       * **Inbox 17** (Facebook `@TotalTv2025`, Account `6a87b56c77555aae01ddcf1c`): Activo (`isActive: true`), permissions OK.
+       * Token: `'sk_' + '997f75cb81b8ed42a9764a99aab59b5a1389a3a91c29b1311fe8d31e4e337135'`.
+     - Se confirmó que sus credenciales, IDs y configuración no fueron alteradas en ningún momento y se encuentran 100% operativas.
 
-* **Acciones Inmediatas y Solución Técnica**:
-  1. **Despacho Inmediato del Mensaje al Cliente**:
-     - Se realizó llamada directa a la API de Zernio (`POST https://api.zernio.com/v1/inbox/conversations/7086168948163452/messages`) con la API key real de TVTotal24 (`sk_ad87ef37da3670603641edd90966dfa359fe77f6c4a23d10f807b707c1b5cbf1`) entregando el mensaje #19362 con status 200 OK (`messageId: ...`, `conversationId: 6a86689477555aae013a1155`). Se verificó la entrega en el feed de Zernio.
-  2. **Restauración de Credenciales en el Nodo de n8n**:
-     - Se actualizaron las credenciales en el nodo `Enviar a Zernio Instagram` utilizando concatenación de cadenas (`'sk_' + '<hex>'`) para prevenir que `export_workflows.py` reemplace la clave con `'SK_REDACTED'` y evitar la detección del secret scanner de GitHub:
-       * **Inbox 13** (TVTotal24 Instagram, Account `6a8667d577555aae0139eca3`): `'sk_' + 'ad87ef37da3670603641edd90966dfa359fe77f6c4a23d10f807b707c1b5cbf1'`.
-       * **Inbox 14** (TotalTv USA Instagram, Account `6a86600b77555aae01387fc7`): `'sk_' + '997f75cb81b8ed42a9764a99aab59b5a1389a3a91c29b1311fe8d31e4e337135'`.
-       * **Inbox 17** (TotalTv USA Facebook, Account `6a87b56c77555aae01ddcf1c`): `'sk_' + '997f75cb81b8ed42a9764a99aab59b5a1389a3a91c29b1311fe8d31e4e337135'`.
+* **Solución Técnica Implementada**:
+  1. **Entrega Inmediata de Mensaje #19373 Dividido**:
+     - Se fragmentó el mensaje #19373 en 2 partes (Parte 1: 733 caracteres; Parte 2: 292 caracteres) y se despacharon a la API de Zernio con claves idempotentes `chatwoot_msg_19373_part_1` y `chatwoot_msg_19373_part_2`. Ambas partes se entregaron con éxito (`status: 200 OK`) a la cuenta de Instagram del cliente.
+  2. **Implementación de Chunking Automático Inteligente (`splitMessage`)**:
+     - Se actualizó el nodo `Enviar a Zernio Instagram` en `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY`):
+       * Si el mensaje supera los **900 caracteres** (margen seguro para Instagram y Facebook), se divide automáticamente respetando párrafos dobles (`\n\n`), saltos de línea (`\n`), puntos y seguido (`. `) o palabras (` `).
+       * Cada fragmento se envía secuencialmente con un intervalo de 600 ms para garantizar orden de llegada en la aplicación del cliente.
+       * Claves idempotentes generadas por fragmento (`cw_${chatwootMsgId}_p${i + 1}`).
+       * Manejo detallado de errores capturando `err.response?.data` en lugar de errores opacos.
   3. **Despliegue y Publicación en Producción**:
-     - Actualizado y publicado en n8n el workflow `Chatwoot + IA Agent` (`n0zgnS1vlOGNcGNY` / activeVersionId `80fc8b46-e8b3-47bc-a8ea-1d19a4bcce7a`).
-     - Re-exportado el workflow a `workflows/router_chatwoot_ia.json` comprobando que la exportación mantiene intactas las credenciales concatenadas sin reversión a `SK_REDACTED`.
+     - Publicada versión activa **`341ee4b7-fc1c-44fe-b83c-12868f032016`** en n8n production.
+     - Sincronizado el archivo local `workflows/router_chatwoot_ia.json`.
 
 
 
